@@ -15,6 +15,8 @@ import type { Position, RobotState, Task, WarehouseMap, WorldState } from "../ty
 
 export type FleetOptions = {
   localCommit?: boolean;
+  /** undefined preserves task routing; null holds; a position supplies a local lifecycle goal. */
+  goalOverride?: (robot: RobotState) => Position | null | undefined;
   /** Single-agent staged simulation/edge adapter; never a fleet-wide view. */
   motionTransport?: Transport;
   priorityYield?: boolean;
@@ -317,7 +319,8 @@ export class DistributedFleet {
     for (const agent of this.activeAgents) {
       const local = agent.getLocal();
       const robot = this.robots.find((r) => r.id === agent.id)!;
-      const goal = goalOf(robot, this.tasks);
+      const override = this.options.goalOverride?.(robot);
+      const goal = override === undefined ? goalOf(robot, this.tasks) : override;
       if (!goal) {
         if (local.path.length) agent.updateLocal({ ...local, path: [] });
         continue;
