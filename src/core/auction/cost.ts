@@ -1,4 +1,4 @@
-import type { RobotState, Task, WorldState } from "../types";
+import type { Position, RobotState, Task, WorldState } from "../types";
 import { planPath } from "../pathfinding/astar";
 import { manhattanDistance } from "../map/graph";
 import { BATTERY_PERCENT_PER_CELL } from "../simulation/robotModels";
@@ -39,6 +39,20 @@ export type RobotBid = {
   infeasibleReason: "overweight" | "unreachable" | "battery" | null;
 };
 
+/** Experimental scorers only replace soft cost, never hard feasibility.
+ * World-scoped metadata survives dispatcher object spreads without changing
+ * WorldState or installing a process-global override. Default stays WEIGHTS.
+ */
+export type BidScorer = (
+  robot: RobotState, task: Task, world: WorldState,
+  baseline: Readonly<RobotBid>, route: readonly Position[],
+) => number;
+const BID_SCORER = Symbol("auction.bidScorer");
+type ScoredWorld = WorldState & { [BID_SCORER]?: BidScorer };
+export function withBidScorer(world: WorldState, scorer?: BidScorer): WorldState {
+  return { ...world, [BID_SCORER]: scorer } as ScoredWorld;
+}
+
 // ---- Tunable weights ---------------------------------------------------
 // Combined into one scalar so assignTask can just pick the lowest
 // totalCost. A documented starting point, not the result of any tuning
@@ -56,7 +70,7 @@ const WEIGHTS = {
 
 // Hard safety floor: never accept a bid that would leave a robot below
 // this charge. This is an eligibility cutoff, not a soft preference.
-const BATTERY_SAFETY_RESERVE_PERCENT = 15;
+export const BATTERY_SAFETY_RESERVE_PERCENT = 15;
 
 // How much a task's own priority amplifies urgency sensitivity. Priority
 // 0 leaves urgency cost unscaled; higher priority makes the auction weight
@@ -191,7 +205,7 @@ export function calculateBid(robot: RobotState, task: Task, world: WorldState): 
       WEIGHTS.payload * payloadCost
     : Infinity;
 
-  return {
+  const bid: RobotBid = {
     robotId: robot.id,
     taskId: task.id,
     eta,
@@ -205,4 +219,12 @@ export function calculateBid(robot: RobotState, task: Task, world: WorldState): 
     feasible: battery.feasible,
     infeasibleReason: battery.feasible ? null : "battery",
   };
+  const scorer = (world as ScoredWorld)[BID_SCORER];
+  if (bid.feasible && scorer) {
+    const score = scorer(robot, task, world, bid,
+      [...toPickup.path, ...pickupToDropoff.path.slice(1)]);
+    // Invalid predictions cannot poison deterministic auction comparisons.
+    if (Number.isFinite(score)) return { ...bid, totalCost: score };
+  }
+  return bid;
 }

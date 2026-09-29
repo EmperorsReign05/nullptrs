@@ -1,0 +1,335 @@
+{
+  "seed": 5069,
+  "divergent": true,
+  "baseline": {
+    "safety": {
+      "collisions": 0,
+      "swaps": 0,
+      "blockedCells": 0,
+      "zeroBatteryWork": 0,
+      "overloaded": 0,
+      "queueOverflow": 0
+    },
+    "seed": 5069,
+    "completionTime": null,
+    "cappedTime": 400,
+    "completed": 13,
+    "total": 16
+  },
+  "learned": {
+    "safety": {
+      "collisions": 0,
+      "swaps": 0,
+      "blockedCells": 0,
+      "zeroBatteryWork": 0,
+      "overloaded": 0,
+      "queueOverflow": 0
+    },
+    "seed": 5069,
+    "completionTime": null,
+    "cappedTime": 400,
+    "completed": 12,
+    "total": 16
+  },
+  "changes": [
+    {
+      "decision": "24:S5069-T11",
+      "tick": 24,
+      "task": {
+        "id": "S5069-T11",
+        "pickup": {
+          "x": 17,
+          "y": 4
+        },
+        "dropoff": {
+          "x": 1,
+          "y": 0
+        },
+        "weight": 60,
+        "priority": 1,
+        "createdAt": 24,
+        "status": "pending"
+      },
+      "deterministicWinner": "AMR-04",
+      "learnedWinner": "AMR-08",
+      "bidders": [
+        {
+          "robotId": "AMR-02",
+          "deterministicBid": 263,
+          "correction": -17.214062757743392,
+          "finalBid": 245.7859372422566,
+          "battery": 70,
+          "queueDepth": 0,
+          "routeCost": 40,
+          "chargingFeasible": true,
+          "robot": {
+            "id": "AMR-02",
+            "position": {
+              "x": 1,
+              "y": 8
+            },
+            "home": {
+              "x": 1,
+              "y": 8
+            },
+            "battery": 70,
+            "status": "idle",
+            "model": {
+              "model": "Addverb Dynamo 100",
+              "payloadCapacity": 100
+            },
+            "path": [],
+            "priority": 0,
+            "queuedTaskIds": []
+          },
+          "features": {
+            "travel": 40,
+            "congestion": 2,
+            "batteryCost": 50,
+            "workload": 0,
+            "urgency": 0,
+            "payload": 40,
+            "queueDepth": 0,
+            "peerRouteContention": 2,
+            "peerNextIntentContention": 0,
+            "chargerDistance": 5,
+            "postTaskChargerDistance": 5,
+            "energyReserveAfterReturn": 47.5,
+            "chargerUnreachable": 0,
+            "activeRouteRemaining": 0,
+            "hasActiveTask": 0,
+            "battery": 70
+          }
+        },
+        {
+          "robotId": "AMR-04",
+          "deterministicBid": 213,
+          "correction": -5.398404956132936,
+          "finalBid": 207.60159504386706,
+          "battery": 75,
+          "queueDepth": 3,
+          "routeCost": 28,
+          "chargingFeasible": true,
+          "robot": {
+            "id": "AMR-04",
+            "position": {
+              "x": 9,
+              "y": 4
+            },
+            "home": {
+              "x": 14,
+              "y": 3
+            },
+            "battery": 75,
+            "status": "moving",
+            "model": {
+              "model": "Addverb Dynamo 100",
+              "payloadCapacity": 100
+            },
+            "path": [
+              {
+                "x": 9,
+                "y": 4
+              },
+              {
+                "x": 8,
+                "y": 4
+              },
+              {
+                "x": 7,
+                "y": 4
+              },
+              {
+                "x": 6,
+                "y": 4
+              },
+              {
+                "x": 6,
+                "y": 5
+              },
+              {
+                "x": 6,
+                "y": 6
+              },
+              {
+                "x": 6,
+                "y": 7
+              },
+              {
+                "x": 6,
+                "y": 8
+              },
+              {
+                "x": 6,
+                "y": 9
+              }
+            ],
+            "priority": 0,
+            "currentTaskId": "S5069-T1",
+            "queuedTaskIds": [
+              "S5069-T3",
+              "S5069-T6",
+              "S5069-T9"
+            ]
+          },
+          "features": {
+            "travel": 28,
+            "congestion": 2,
+            "batteryCost": 39,
+            "workload": 6,
+            "urgency": 0,
+            "payload": 40,
+            "queueDepth": 3,
+            "peerRouteContention": 1,
+            "peerNextIntentContention": 0,
+            "chargerDistance": 4,
+            "postTaskChargerDistance": 5,
+            "energyReserveAfterReturn": 58.5,
+            "chargerUnreachable": 0,
+            "activeRouteRemaining": 8,
+            "hasActiveTask": 1,
+            "battery": 75
+          }
+        },
+        {
+          "robotId": "AMR-06",
+          "deterministicBid": 302,
+          "correction": -20.663683763682172,
+          "finalBid": 281.3363162363178,
+          "battery": 63,
+          "queueDepth": 0,
+          "routeCost": 43,
+          "chargingFeasible": true,
+          "robot": {
+            "id": "AMR-06",
+            "position": {
+              "x": 3,
+              "y": 11
+            },
+            "home": {
+              "x": 3,
+              "y": 9
+            },
+            "battery": 63,
+            "status": "moving",
+            "model": {
+              "model": "Addverb Dynamo 100",
+              "payloadCapacity": 100
+            },
+            "path": [
+              {
+                "x": 3,
+                "y": 11
+              },
+              {
+                "x": 3,
+                "y": 10
+              },
+              {
+                "x": 3,
+                "y": 9
+              }
+            ],
+            "priority": 0,
+            "queuedTaskIds": []
+          },
+          "features": {
+            "travel": 43,
+            "congestion": 2,
+            "batteryCost": 58.5,
+            "workload": 2,
+            "urgency": 0,
+            "payload": 40,
+            "queueDepth": 0,
+            "peerRouteContention": 2,
+            "peerNextIntentContention": 0,
+            "chargerDistance": 7,
+            "postTaskChargerDistance": 5,
+            "energyReserveAfterReturn": 39,
+            "chargerUnreachable": 0,
+            "activeRouteRemaining": 2,
+            "hasActiveTask": 0,
+            "battery": 63
+          }
+        },
+        {
+          "robotId": "AMR-08",
+          "deterministicBid": 216.5,
+          "correction": -12.99759691954992,
+          "finalBid": 203.50240308045008,
+          "battery": 69.5,
+          "queueDepth": 0,
+          "routeCost": 22,
+          "chargingFeasible": true,
+          "robot": {
+            "id": "AMR-08",
+            "position": {
+              "x": 19,
+              "y": 4
+            },
+            "home": {
+              "x": 18,
+              "y": 4
+            },
+            "battery": 69.5,
+            "status": "waiting",
+            "model": {
+              "model": "Addverb Dynamo 100",
+              "payloadCapacity": 100
+            },
+            "path": [
+              {
+                "x": 19,
+                "y": 4
+              },
+              {
+                "x": 18,
+                "y": 4
+              }
+            ],
+            "priority": 1,
+            "queuedTaskIds": []
+          },
+          "features": {
+            "travel": 22,
+            "congestion": 5,
+            "batteryCost": 41.5,
+            "workload": 1,
+            "urgency": 0,
+            "payload": 40,
+            "queueDepth": 0,
+            "peerRouteContention": 1,
+            "peerNextIntentContention": 1,
+            "chargerDistance": 8,
+            "postTaskChargerDistance": 5,
+            "energyReserveAfterReturn": 56,
+            "chargerUnreachable": 0,
+            "activeRouteRemaining": 1,
+            "hasActiveTask": 0,
+            "battery": 69.5
+          }
+        }
+      ]
+    }
+  ],
+  "reversions": [
+    {
+      "decision": "24:S5069-T11",
+      "result": {
+        "safety": {
+          "collisions": 0,
+          "swaps": 0,
+          "blockedCells": 0,
+          "zeroBatteryWork": 0,
+          "overloaded": 0,
+          "queueOverflow": 0
+        },
+        "seed": 5069,
+        "completionTime": null,
+        "cappedTime": 400,
+        "completed": 13,
+        "total": 16
+      }
+    }
+  ]
+}

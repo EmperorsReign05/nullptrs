@@ -28,3 +28,16 @@ Per-robot state and intent exchange, UDP transport, local sensing and obstructio
 ```sh
 npx vitest run tests/dist.test.ts tests/dist-safety.test.ts tests/dist-liveness.test.ts tests/local-commit.test.ts tests/udp.test.ts
 ```
+
+## Guarded learned bidding
+
+The dependency-free MLP is a bounded correction over deterministic bids. Queue pressure, peer-route contention and charging-route energy feasibility inform scoring. Hard exclusions and a winner-change guard remain authoritative; disabled or failed inference falls back to deterministic bidding. Frozen model files remain in Git. No retraining was done for this PR split.
+
+Compact results remain under `artifacts/`. Original traces and historical reports are available in the [checksummed evidence archive](https://github.com/EmperorsReign05/nullptrs/releases/tag/audit-evidence-2026-09-29). Restore missing files before running opt-in historical diagnostics:
+
+```sh
+python3 scripts/fetch-benchmark-evidence.py
+npx vitest run tests/bid-mlp.test.ts
+```
+
+The manifest identifies source commit 65431a3 and records each original file checksum. Model-only results must not be presented as integrated motion or hardware performance.
