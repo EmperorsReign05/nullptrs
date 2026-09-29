@@ -36,3 +36,16 @@ export function executionActiveTaskAllowed(robot: RobotState, task: Task | undef
       !world.map.cells.some(c => !c.blocked && c.position.x === to.x && c.position.y === to.y)) return false;
   return activeTaskAffordable({ ...robot, position: to, battery: robot.battery - BATTERY_PERCENT_PER_CELL }, task, world);
 }
+
+/** Idle courtesy moves still need a route to charging and the same reserve.
+ * The synthetic zero-distance job is certification only, never announced.
+ */
+export function executionIdleMoveAllowed(robot: RobotState, to: Position, world: WorldState): boolean {
+  if (robot.currentTaskId) return false;
+  if (to.x === robot.position.x && to.y === robot.position.y) return true;
+  if (Math.abs(to.x - robot.position.x) + Math.abs(to.y - robot.position.y) !== 1 ||
+      !world.map.cells.some(c => !c.blocked && c.position.x === to.x && c.position.y === to.y)) return false;
+  const candidate = { ...robot, position: to, battery: robot.battery - BATTERY_PERCENT_PER_CELL };
+  return assessBidEnergy(candidate, { id: "__idle_energy_certificate__", pickup: to, dropoff: to,
+    status: "pending", weight: 0, createdAt: world.tick, priority: 0 }, world).admitted;
+}

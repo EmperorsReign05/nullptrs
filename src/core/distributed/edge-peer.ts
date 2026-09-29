@@ -4,7 +4,8 @@ import type { Transport } from "./transport";
 import type { Message } from "./protocol";
 import { makeLocalBid } from "../ml/bidmodel";
 import frozen from "../../../artifacts/bid-energy-v4/model.json";
-import { executionEnergyAllowed } from "./execution-energy";
+import { executionActiveTaskAllowed, executionIdleMoveAllowed } from "./execution-energy";
+import { DistributedCharging } from "./charging";
 import { BATTERY_PERCENT_PER_CELL } from "../simulation/robotModels";
 import type { Position, RobotState, Task, WarehouseMap, WorldState } from "../types";
 
@@ -19,6 +20,7 @@ export type EdgeConfig = {
 export class EdgePeer {
   readonly world: WorldState;
   readonly ownership: OwnershipPeer;
+  readonly charging = new DistributedCharging();
   readonly fleet: DistributedFleet;
   readonly metrics = { bidAttempts: 0, corrections: 0, fallbacks: 0, moves: 0, energyHolds: 0 };
   aiEnabled: boolean;
@@ -49,12 +51,16 @@ export class EdgePeer {
     this.fleet = new DistributedFleet(this.world.map, [self], this.world.tasks, {
       localCommit: true, motionTransport: motion, commRange: 6, priorityYield: true,
       motionPolicy: config.policy === "stop-and-wait" ? "stop-and-wait" : undefined,
+      goalOverride: () => this.charging.active ? this.charging.goal ?? null : undefined,
       moveAllowed: (r, to) => {
-        const allowed = executionEnergyAllowed(r, this.world.tasks.find(t => t.id === r.currentTaskId), to, this.world);
+        const task = this.world.tasks.find(t => t.id === r.currentTaskId);
+        const allowed = this.charging.active ? this.charging.allowsMove(r, to, this.world) : task
+          ? executionActiveTaskAllowed(r, task, to, this.world) : executionIdleMoveAllowed(r, to, this.world);
         if (!allowed) this.metrics.energyHolds++;
         return allowed;
       },
       arrivalAllowed: (_r, task, phase) => {
+        if (this.charging.active) return false;
         if (!this.ownership.mayExecute(task.id)) return phase === "dropoff" && this.ownership.acknowledged(task.id, "completed");
         return this.ownership.mark(task.id, phase === "pickup" ? "custody" : "completed");
       },
@@ -87,7 +93,8 @@ export class EdgePeer {
     self.currentTaskId = active?.id; self.queuedTaskIds = owned.filter(t => t !== active).map(t => t.id);
     self.status = active ? this.ownership.mayExecute(active.id) ? "assigned" : "waiting" : "idle";
     agent.updateLocal({ ...agent.getLocal(), seq: tick });
-    this.fleet.setInactive(self.id, tick < this.config.motionStartTick || self.battery <= 0 || !!active && !this.ownership.mayExecute(active.id));
+    const charge = this.charging.prepare(self, this.world, tick);
+    this.fleet.setInactive(self.id, tick < this.config.motionStartTick || charge.hold || self.battery <= 0 || charge.mode === "work" && !!active && !this.ownership.mayExecute(active.id));
     this.fleet.observeExternalMotion(tick, contacts);
   }
   propose(tick: number) {
@@ -102,13 +109,14 @@ export class EdgePeer {
     if (self.position.x !== this.before.x || self.position.y !== this.before.y) {
       self.battery = Math.max(0, self.battery - BATTERY_PERCENT_PER_CELL); this.metrics.moves++;
     }
+    this.charging.afterMotion(self, this.world, tick);
     this.prepared = false; this.proposed = false;
     return this.snapshot();
   }
   snapshot() {
     const self = this.world.robots[0];
     return structuredClone({ tick: this.tick, robot: self, tasks: this.world.tasks,
-      metrics: this.metrics, ownershipMetrics: this.ownership.metrics,
+      charging: this.charging.state, metrics: this.metrics, ownershipMetrics: this.ownership.metrics,
       completed: this.world.tasks.filter(t => this.ownership.completed(t.id)).map(t => t.id),
       claims: this.world.tasks.map(t => ({ taskId: t.id, lease: this.ownership.ownership(t.id), recoveryRequired: this.ownership.recoveryRequired(t.id) })),
       peersHeard: [...this.ownership.heard.keys()].filter(id => id !== self.id),
