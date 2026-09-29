@@ -1,30 +1,41 @@
 import { describe, it, expect } from "vitest";
-import { spawn, type ChildProcess } from "child_process";
+import { spawn, execFileSync, type ChildProcess } from "child_process";
 import { fileURLToPath } from "url";
 import path from "path";
+import { createRequire } from "node:module";
+import { createInterface } from "node:readline";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const worker = path.join(here, "../src/core/distributed/worker.ts");
+const worker = path.join(here, "../.fleet-dist/src/core/distributed/worker.js");
+const require = createRequire(import.meta.url);
 
 type Frame = { id: string; tick: number; position: { x: number; y: number }; moved: boolean; reason: string; peers: number; taskStatus: string; decideUs: number; rssMb: number; done?: boolean };
 
 function launch(ids: string[], ports: number[], specs: { pos: string; pickup: string; dropoff: string; bays?: string }[], period = 40) {
   const procs: ChildProcess[] = [];
   const frames: Frame[][] = ids.map(() => []);
+  const ready: Promise<void>[] = [];
+  const errors: string[] = [];
   specs.forEach((s, i) => {
-    const p = spawn("npx", ["tsx", worker,
+    const p = spawn(process.execPath, [worker, "--start-barrier=ipc",
       `--id=${ids[i]}`, `--port=${ports[i]}`, `--peers=${ports.join(",")}`,
       `--ids=${ids.join(",")}`, `--pos=${s.pos}`, `--pickup=${s.pickup}`,
-      `--dropoff=${s.dropoff}`, `--period=${period}`, `--range=6`, `--bays=${s.bays ?? ""}`], { stdio: ["ignore", "pipe", "pipe"] });
-    p.stdout!.on("data", (d) => {
-      for (const line of d.toString().trim().split("\n")) {
-        if (!line.startsWith("{")) continue;
-        try { frames[i].push(JSON.parse(line) as Frame); } catch {}
-      }
+      `--dropoff=${s.dropoff}`, `--period=${period}`, `--range=6`, `--bays=${s.bays ?? ""}`], { stdio: ["ignore", "pipe", "pipe", "ipc"] });
+    ready.push(new Promise<void>((resolve, reject) => {
+      p.once("error", reject);
+      p.once("exit", code => { if (code !== 0) reject(new Error(`worker ${ids[i]} exited ${code}`)); });
+      p.on("message", message => { if ((message as { ready?: boolean }).ready) resolve(); });
+    }));
+    p.stderr!.on("data", chunk => errors.push(`${ids[i]}: ${chunk}`));
+    // A stdout chunk need not contain complete JSON lines.
+    createInterface({ input: p.stdout! }).on("line", line => {
+      if (!line.startsWith("{")) return;
+      try { frames[i].push(JSON.parse(line) as Frame); }
+      catch { errors.push(`Malformed worker frame: ${line}`); }
     });
     procs.push(p);
   });
-  return { procs, frames };
+  return { procs, frames, ready: Promise.all(ready), errors };
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -39,9 +50,22 @@ describe("UDP: three real OS processes, peer-to-peer, no coordinator", () => {
       { pos: "6,10", pickup: "6,10", dropoff: "6,1", bays: "5,3;7,3;5,5;7,5;5,7;7,7;5,9;7,9;5,11;7,11" },
       { pos: "6,6", pickup: "6,6", dropoff: "5,8", bays: "5,3;7,3;5,5;7,5;5,7;7,7;5,9;7,9;5,11;7,11" },
     ];
-    const { procs, frames } = launch(ids, ports, specs);
-    await sleep(16000);
-    procs.forEach((p) => p.kill());
+    execFileSync(process.execPath, [require.resolve("typescript/bin/tsc"), "-p", path.join(here, "../tsconfig.fleet.json")], { timeout: 15000 });
+    const { procs, frames, ready, errors } = launch(ids, ports, specs);
+    let startupTimeout: ReturnType<typeof setTimeout> | undefined;
+    try {
+      await Promise.race([ready, new Promise<never>((_resolve, reject) => {
+        startupTimeout = setTimeout(() => reject(new Error(`Workers did not become ready: ${errors.join("; ")}`)), 15000);
+      })]);
+      if (startupTimeout) clearTimeout(startupTimeout);
+      procs.forEach(p => p.send!("start"));
+      const deadline = Date.now() + 30000;
+      while (Date.now() < deadline && !frames.every(f => f.some(x => x.done))) await sleep(50);
+    } finally {
+      if (startupTimeout) clearTimeout(startupTimeout);
+      procs.forEach(p => { if (p.exitCode === null && p.signalCode === null) p.kill(); });
+    }
+    expect(errors, "worker errors").toEqual([]);
 
     for (let i = 0; i < ids.length; i++) {
       const f = frames[i];

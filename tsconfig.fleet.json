@@ -14,7 +14,8 @@
   "include": [
     "src/server/fleet-http.ts",
     "src/server/edge-agent.ts",
-    "src/core/bench/edge-choke.ts"
+    "src/core/bench/edge-choke.ts",
+    "src/core/distributed/worker.ts"
   ],
   "exclude": [
     "node_modules",
