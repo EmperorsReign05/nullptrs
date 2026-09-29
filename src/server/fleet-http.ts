@@ -2,7 +2,7 @@ import { createServer } from "node:http";
 import { fleetService } from "./fleet-service";
 import type { RuntimeCommand } from "../core/distributed/runtime";
 const fleet = fleetService(); // Runtime begins independently of any dashboard request.
-const port = Number(process.env.FLEET_PORT ?? 4010);
+const port = Number(process.env.PORT || process.env.FLEET_PORT || 4010);
 createServer(async (request, response) => {
   response.setHeader("Content-Type", "application/json");
   response.setHeader("Cache-Control", "no-store");
@@ -22,4 +22,4 @@ createServer(async (request, response) => {
     response.statusCode = 400;
     response.end(JSON.stringify({ error: error instanceof Error ? error.message : "Invalid command" }));
   }
-}).listen(port, "127.0.0.1", () => console.log(`Fleet runtime listening on 127.0.0.1:${port}`));
+}).listen(port, "0.0.0.0", () => console.log(`Fleet runtime listening on 0.0.0.0:${port}`));
