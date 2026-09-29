@@ -1,1 +1,0 @@
-Edge simulation on 127.0.0.1:4011; start dashboard with FLEET_URL=http://127.0.0.1:4011 npm run dev

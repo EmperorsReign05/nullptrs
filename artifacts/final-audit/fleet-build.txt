@@ -1,4 +1,0 @@
-
-> dashboard@0.1.0 fleet:build
-> tsc -p tsconfig.fleet.json
-

@@ -200,3 +200,15 @@ FLEET_URL=http://127.0.0.1:4011 npm run dev
 ```
 
 Each robot runs in its own Node process. The dashboard is a monitor/control input; the separate simulator supplies physics and phase timing. No Raspberry Pi/Jetson execution has been measured. Run `npm run edge:measure` for the paired choke-point benchmark; `scripts/smoke-edge.mjs` exercises process failure and recovery.
+
+## Benchmark evidence
+
+Large historical measurement files are distributed as a [downloadable evidence archive](https://github.com/aetosdios27/TeamRocket/releases/tag/audit-evidence-2026-09-29), rather than embedded in code-review diffs. Models, protocols and compact results remain in Git. The archive and all original files are SHA-256 checked against `artifacts/evidence-manifest.json`. Restore missing historical inputs before opt-in diagnosis/reproduction commands:
+
+```sh
+python3 scripts/fetch-benchmark-evidence.py
+```
+
+The command requires Python 3.9+ and leaves existing files untouched. Use `--destination /tmp/fleet-evidence` for a separate complete copy. Summary files are explicitly derived views; archived original measurements are unchanged.
+
+Latest integrated warehouse acceptance: 173/200 completed runs versus stop-and-wait's 176/200; 166 jointly completed pairs give 0.575% aggregate improvement with a 95% interval of −0.064% to 1.457%. This does not establish better overall reliability or a speedup. Three-process choke acceptance completed 40/40 versus 0/40, so it establishes recovery in that workload, not a valid percentage-speedup estimate. Hardware validation and the ≥20% integrated target remain outstanding.

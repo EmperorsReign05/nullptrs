@@ -1,0 +1,61 @@
+{
+  "purpose": "PR split verification; no model or planner retuning",
+  "sourceCommit": "65431a3",
+  "runtimeAndTestsByteIdentical": true,
+  "layers": [
+    {
+      "branch": "review/01-simulator-dashboard",
+      "typecheck": "passed after Next type generation",
+      "productionBuild": "passed",
+      "targetedPassed": 59
+    },
+    {
+      "branch": "review/02-distributed-motion",
+      "typecheck": "passed",
+      "productionBuild": "passed",
+      "targetedPassed": 15
+    },
+    {
+      "branch": "review/03-guarded-bidding",
+      "typecheck": "passed",
+      "productionBuild": "passed",
+      "targetedPassed": 21,
+      "targetedSkipped": 11
+    },
+    {
+      "branch": "review/04-fleet-integration",
+      "typecheck": "passed",
+      "productionBuild": "passed",
+      "fleetBuild": "passed",
+      "fullSuite": {
+        "passed": 325,
+        "failed": 3,
+        "skipped": 14,
+        "failures": [
+          "compare.test.ts: 10-robot cycle assertion",
+          "compare.test.ts: 20-robot cycle assertion",
+          "udp.test.ts: completion assertion under full-suite load"
+        ]
+      },
+      "targetedRerun": {
+        "passed": 22,
+        "skipped": 1,
+        "files": [
+          "udp.test.ts",
+          "edge-peer.test.ts",
+          "ownership.test.ts",
+          "fleet-e2e.test.ts"
+        ]
+      }
+    }
+  ],
+  "archive": {
+    "filesVerified": 110,
+    "downloadChecksumVerified": true,
+    "corruptArchiveRejected": true
+  },
+  "notes": [
+    "Two cycle assertions are known failures; UDP has previously failed under full-suite load. No failures have been weakened or hidden.",
+    "Archive contains original measurements; newly named summary files omit per-seed rows and reference their original reports."
+  ]
+}

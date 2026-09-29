@@ -1,0 +1,559 @@
+{
+  "sourceCommit": "65431a32ef2aebbc76b1dd301c16ae9699f1f46a",
+  "archive": "teamrocket-benchmark-evidence-65431a3.tar.gz",
+  "sha256": "5797f3a8656df0a43a0d5e86c85b6a546b44f37f88933668c5e58fb4eb2ec6fc",
+  "files": [
+    {
+      "path": "artifacts/ab.ts",
+      "bytes": 6743,
+      "sha256": "b31ad2376f7b61855c379a462ee42a6187ac215fdb379a4890c47855ccb9866d"
+    },
+    {
+      "path": "artifacts/abOrig.ts",
+      "bytes": 4706,
+      "sha256": "a34860e2ffaa259b560cabcf4fc083bbc8809ad91001242f86b1b5e9ff2d224c"
+    },
+    {
+      "path": "artifacts/agentMain.ts",
+      "bytes": 30146,
+      "sha256": "ec92607fa623ed4fea7a48f108cf0fda42f06af8941185c634ffc11f6bda1dbe"
+    },
+    {
+      "path": "artifacts/agentMainFixed.ts",
+      "bytes": 29679,
+      "sha256": "dbf3ad1bf19db9ba10cdf7c72a7a73a592ba481b57054963dc106bcfd4f6a806"
+    },
+    {
+      "path": "artifacts/agentOrig.ts",
+      "bytes": 20138,
+      "sha256": "4996120bdd9b6c8ed73d8f9d8d8297bb294ae77cba9f0021254e20b7dc1565d9"
+    },
+    {
+      "path": "artifacts/archive/tune-stall-history.sh",
+      "bytes": 392,
+      "sha256": "5ac5e30759ad5a6c32efe75a5c3b40de94e477e1320d22deb7cddbc80643357d"
+    },
+    {
+      "path": "artifacts/bid-energy-v4/acceptance.json",
+      "bytes": 258407,
+      "sha256": "06d6fdd2c3d2ea5c7e0571f21773c961dedc666a424223ede66d09cd46cc1207"
+    },
+    {
+      "path": "artifacts/bid-energy-v4/development.json",
+      "bytes": 216344,
+      "sha256": "66d9f0b34111f87e202b27073d979035885f7474ffe7a0727582a5cffcc78af5"
+    },
+    {
+      "path": "artifacts/bid-energy-v4/diagnosis.json",
+      "bytes": 12370671,
+      "sha256": "ce33f83c2ff0fb692f8939b72f692f1aa78e0299fb71377d02c98141ec7d497a"
+    },
+    {
+      "path": "artifacts/bid-energy-v4/model.json",
+      "bytes": 9052,
+      "sha256": "5aad9ac9dad7ee4facb7b719154147e95d2069612d9cae1e3e59ef7a4fe455d1"
+    },
+    {
+      "path": "artifacts/bid-energy-v4/prior-bidfeatures.ts.txt",
+      "bytes": 5028,
+      "sha256": "5f33506634cf1e21a2c61ec374534d91c770ec855676c60c675a625548a0d08c"
+    },
+    {
+      "path": "artifacts/bid-energy-v4/prior-bidmodel.ts.txt",
+      "bytes": 11872,
+      "sha256": "6b35f20e4b6fdbf44ece335ab534c6011367995f5ed43187783eb1f5cbabc050"
+    },
+    {
+      "path": "artifacts/bid-guard-v3/acceptance.json",
+      "bytes": 226570,
+      "sha256": "f0fdf34f07a983ad32edfd2df0b7f2856c63ca130b23c49b4bfdfeae5e7e0a9e"
+    },
+    {
+      "path": "artifacts/bid-guard-v3/causal-5069.json",
+      "bytes": 8184,
+      "sha256": "5e3bd2c9ca27df3e7a2cf0f718095419f700af89b74bbb40efcde586d6be4df0"
+    },
+    {
+      "path": "artifacts/bid-guard-v3/development-strict.json",
+      "bytes": 1337529,
+      "sha256": "9c4dc428f4e370c3fb4678830d955a51778fbb6fdb87cb822a440a2f63ec6ef9"
+    },
+    {
+      "path": "artifacts/bid-guard-v3/development.json",
+      "bytes": 1339620,
+      "sha256": "f20695ecbe9ae40a381ad02ed06409ad7cf817bc5473e3820fe9a2da532ce679"
+    },
+    {
+      "path": "artifacts/bid-guard-v3/divergent-seeds.json",
+      "bytes": 381679,
+      "sha256": "4c7e1f852e12c8c87c03d1219b0084492fd3cbd6b28d1caea7956f3ab9d47388"
+    },
+    {
+      "path": "artifacts/bid-guard-v3/model.json",
+      "bytes": 9012,
+      "sha256": "552d2e924b82b223b96c982888a7fe338dd23bd223519a40264aedc342cda4c7"
+    },
+    {
+      "path": "artifacts/bid-local-v5/acceptance.json",
+      "bytes": 375437,
+      "sha256": "3744858ecc4a8b567abde5f184e2521b55b82bdf2a920c1136c90046328ba3c1"
+    },
+    {
+      "path": "artifacts/bid-local-v5/development.json",
+      "bytes": 443689,
+      "sha256": "0b644ff16bbf53175e40440079adb2a3b5f61fd4bfa1bf094fbc33c252f45128"
+    },
+    {
+      "path": "artifacts/bid-local-v5/frozen.json",
+      "bytes": 13058,
+      "sha256": "0d9d4b7d8d780f349d5f39a5d86b2c2c8a6d6946042edabba547f5051cb369a5"
+    },
+    {
+      "path": "artifacts/bid-local-v5/host-timing.json",
+      "bytes": 762,
+      "sha256": "18c8b2c4f272e46006a0ba5abedbee2bb475db858e45c7cfb76448eff0cdbbe9"
+    },
+    {
+      "path": "artifacts/central-ceiling.ts",
+      "bytes": 4264,
+      "sha256": "7194d26c7f86e48a49b8f9dad31f05c4510e78faf64177383d1aa85630a103d9"
+    },
+    {
+      "path": "artifacts/decide-desync.ts",
+      "bytes": 1969,
+      "sha256": "82e7f984cd16ed5f81d60e6ac5600eb44b062356a6462d34e8817901ab6edccd"
+    },
+    {
+      "path": "artifacts/edge-choke-probe.ts",
+      "bytes": 3684,
+      "sha256": "57cb3d58e7d292bef07fae6d329e79f91a392edefb1d868d0317bc72cbc8e2d2"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/acceptance-protocol.json",
+      "bytes": 1257,
+      "sha256": "e6088799b91cf51fe1b220ba95f3bc4df9f871d52cbe5494a0945d55b92e06a0"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/acceptance-report.json",
+      "bytes": 2729,
+      "sha256": "8fa893a70b4d6d45457e42fb13c0108c79545eee81d47e70c3aaa3569428bb4b"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/acceptance-rows.json",
+      "bytes": 14177681,
+      "sha256": "b40b9815d7c069ea1cf7a724f68a8f99defacfac1120a2019acef4a95cf922c6"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/acceptance-run.txt",
+      "bytes": 3488,
+      "sha256": "293d21a39eecfcd8ac8b08549512b14f089cda5e4ac32d2b56c4e565d9cb06cb"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/before-priority-hold-report.json",
+      "bytes": 2635,
+      "sha256": "7d82356527bf1ae04a760febe80ef405e1855557ac3fa3c3eff7b2d2b17e42d7"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/before-priority-hold-rows.json",
+      "bytes": 1427072,
+      "sha256": "c96825920e5553d16de2143baa7b5a3f428417051a384bb037c31e1f0241c6dd"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/build.txt",
+      "bytes": 777,
+      "sha256": "b3e2754a1a5dbbba5bfed6a45d076b1988087c03b460b05220db1a19d338a9ff"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/dashboard-backend.txt",
+      "bytes": 100,
+      "sha256": "46d4a09f64f5233adb17f0c869fcfbe0511220d9870af0c028b1d2b729f40f8e"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/dashboard-next.txt",
+      "bytes": 650,
+      "sha256": "0aaa0ea21ccb39604bf25f43bd2004a1e94742865611d13d254e2e6bc1933b3a"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/dashboard-smoke.json",
+      "bytes": 50423,
+      "sha256": "e59ca842b24d8c0079bbaa32e8894a3efe6014e50a5e5a75ff46c6adb6b6f117"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/development-protocol.json",
+      "bytes": 1082,
+      "sha256": "22207fc4ba6ecbf1bacc2f2e61141d52073517a3fc07d40390e557c0f29ef606"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/development-report.json",
+      "bytes": 2684,
+      "sha256": "5cca91b9772ac687be44c113795d3b1a7538aaa6581f4aa0994d6b78e2554dd4"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/development-rows.json",
+      "bytes": 1408419,
+      "sha256": "23ac28ef90eaaa9de0e5108e71bb42eeeda85c5da7eadb150dad25dbb9252c10"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/energy-guard-development.json",
+      "bytes": 7145,
+      "sha256": "f9c20ec6e73b01514275353edd2ed0f3335d4b4d3f290c031ea1c8d25f184674"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/fault-smoke-adjacent-pickup.json",
+      "bytes": 157156,
+      "sha256": "75a94cfe9949ddb32a1f86dabf338344bb3633712d6b1a5920b920f1d1b09a63"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/fault-smoke-before-unsafe-destination-memory.json",
+      "bytes": 157389,
+      "sha256": "29c366ac8e56c8d0340e9fde050fc6938193c48ec56259276d6e5d7da117ea4f"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/fault-smoke.json",
+      "bytes": 157245,
+      "sha256": "5d233724aa4ca22f49212fc7d213c290fb6d879465688629a2e6011545b6aa1e"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/freeze.json",
+      "bytes": 1763,
+      "sha256": "48f69376bae6d4d34ec568cb0af10cc2b61f1d065db37c02fbde71077baf9fcc"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/full-suite.txt",
+      "bytes": 102692,
+      "sha256": "c8f607c4bc1c9797a19710696032913a7f05b0e425f5e978d77aa0f2657b00d8"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/targeted-tests.txt",
+      "bytes": 405,
+      "sha256": "1bf75b6fb62230b41460d88b9ad52e32176c0e441f92148a5e4db61c8983384a"
+    },
+    {
+      "path": "artifacts/edge-choke-v1/verdict.json",
+      "bytes": 544,
+      "sha256": "66bc98e194d95e9f7da9b05d4dc356eb72285784595655d8f27c3c2e34525c51"
+    },
+    {
+      "path": "artifacts/extract-main.py",
+      "bytes": 2654,
+      "sha256": "b1dc92d956780112544ee4dd8c8e1899fd680e356b3ff8d6281d2116f4a28514"
+    },
+    {
+      "path": "artifacts/final-audit/baseline-tests.txt",
+      "bytes": 101543,
+      "sha256": "d34ff0f1c29410c48600241eebb44a64f7ba7070ec30694c062c587239f69e22"
+    },
+    {
+      "path": "artifacts/final-audit/build.txt",
+      "bytes": 774,
+      "sha256": "dac14c126a8008a45b56af1928458f34e1fc377be30311cb9b3216cc38bf2393"
+    },
+    {
+      "path": "artifacts/final-audit/end-to-end.json",
+      "bytes": 50986,
+      "sha256": "340c405e591a4d014f981877454f6e8f0c0b5b09b3432a0799a8b8fc6e110ed6"
+    },
+    {
+      "path": "artifacts/final-audit/fleet-build.txt",
+      "bytes": 61,
+      "sha256": "d4e66df29bc4e2cd3c589adeb3b3f1af1d48a028d9221a8364430fc2f0980c48"
+    },
+    {
+      "path": "artifacts/final-audit/frozen-bid-reproduction.json",
+      "bytes": 258407,
+      "sha256": "06d6fdd2c3d2ea5c7e0571f21773c961dedc666a424223ede66d09cd46cc1207"
+    },
+    {
+      "path": "artifacts/final-audit/full-suite.txt",
+      "bytes": 102945,
+      "sha256": "c3a6f51dcba8f3397d734e1c9b955e2633056adbe5bf8bb5ff616a2959d547e0"
+    },
+    {
+      "path": "artifacts/final-audit/http-smoke.json",
+      "bytes": 48203,
+      "sha256": "7301e1f6ab37614e6922fb422122571d82e93f798d0393296f2ba7a15c721f04"
+    },
+    {
+      "path": "artifacts/final-audit/http-smoke.txt",
+      "bytes": 95,
+      "sha256": "d6ed85f9b09524d96bdd925fc42c4715346efe1a890573915a9a42192fef2f98"
+    },
+    {
+      "path": "artifacts/final-audit/initial-status.txt",
+      "bytes": 229,
+      "sha256": "c7bfbcaca225725b71db7ae01a9b2698af25fef54deb0feddb9d8a159f7059b9"
+    },
+    {
+      "path": "artifacts/final-audit/orig-new-20-seeds.txt",
+      "bytes": 1208,
+      "sha256": "d6016f97dbd317dcb46f9e47d34b4e301f1dd1a0bed1bba5b129bef7b44ed63b"
+    },
+    {
+      "path": "artifacts/final-audit/ownership-final.txt",
+      "bytes": 313,
+      "sha256": "b9565534c976c0d7ed04cd04a5cfbe8f1edc044838fc53555828c44e66d078d5"
+    },
+    {
+      "path": "artifacts/final-audit/parallel-snapshot-provenance.json",
+      "bytes": 1160,
+      "sha256": "59542815970e8a0f75b7ddc2d5225fee249bf961be77afeacf5234e3c63bb734"
+    },
+    {
+      "path": "artifacts/final-audit/pre-audit.patch",
+      "bytes": 13443,
+      "sha256": "7edc23fb8ed881db5dd1e471892317dc7e0929e4ca7e714fe18e93554027e846"
+    },
+    {
+      "path": "artifacts/final-audit/targeted-tests.txt",
+      "bytes": 953,
+      "sha256": "e25f3fa0c0d71bcd2a43be9b58323927beba8cf1d9ad8efc73441347276ee314"
+    },
+    {
+      "path": "artifacts/final-audit/typecheck.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/final-audit/udp-standalone.txt",
+      "bytes": 1461,
+      "sha256": "068f466a017d2316a885f3d45ad9a983168eaf061b858f1c3fe71ab3c1e020e4"
+    },
+    {
+      "path": "artifacts/final-audit/verification.json",
+      "bytes": 3242,
+      "sha256": "89fc4e37f6d5749c3b543586d7bf4f11ef0ae3eefc116b5714bd1756fbc8dcf5"
+    },
+    {
+      "path": "artifacts/fleetBase.ts",
+      "bytes": 19982,
+      "sha256": "84aad2b6e9579c6d6bf19f42b812251daa85589193e2e92668c7928862b4b326"
+    },
+    {
+      "path": "artifacts/fleetMain.ts",
+      "bytes": 23604,
+      "sha256": "49284e7effd1065fb5592a477f1d74db9760f80fe84a3af11f384496dc904b22"
+    },
+    {
+      "path": "artifacts/fleetMainFixed.ts",
+      "bytes": 23614,
+      "sha256": "296ca4ad4783b5d2c5dcc1d29b1c8fd7c538c406514847febbdd0c0c435a0920"
+    },
+    {
+      "path": "artifacts/fleetOrig.ts",
+      "bytes": 19964,
+      "sha256": "aa477939afb9d5827922678df9312d77f2b39e4cfec3fa08d142e5616ea6121d"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v1/diagnosis-run.txt",
+      "bytes": 389,
+      "sha256": "9eed73808a3030d907a885f4ca47601560c0d2337201069fd44aabababdb0557"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v1/energy-diagnosis.json",
+      "bytes": 1259368,
+      "sha256": "6b8cb240f21100594be760c8547afbb6cfb696fe7f9e6cdfd834f98bc3ac3a83"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v1/full-suite.txt",
+      "bytes": 102977,
+      "sha256": "db5115d83534ac75953879c77d4874b15044b9c9e8e745bc639240780a7bc777"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v1/protocol.json",
+      "bytes": 1070,
+      "sha256": "faf49824c2fc820a62d5426db6e79f640c0fc63254d5321bbf9f8fa2481548dc"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v1/provenance.json",
+      "bytes": 1340,
+      "sha256": "e8b3b7196363fb624286d670608792d69a957cb07bd113e17b98a2e4a8196d37"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v1/report.json",
+      "bytes": 243800,
+      "sha256": "3286397d46ef1a68eaf7a267597560d0e0a9e80858dba512869d81143bdbbb3a"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v1/run.txt",
+      "bytes": 5291,
+      "sha256": "a5ba4c99d32987ce9aeb151c8e4abd8f4a8f5a116c890e36da185965946a5f34"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v1/udp-standalone.txt",
+      "bytes": 1446,
+      "sha256": "994133777e477b4ad96504091708796327b6c7c4b07edac5b6f51d451f162e15"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v1/verdict.json",
+      "bytes": 956,
+      "sha256": "954924d6c77ab7f5c404392927f5d1996373447327a304ac1d80d1c497792336"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v2/protocol.json",
+      "bytes": 1070,
+      "sha256": "06283028a97f5fdfee8686c50250d1f0fd78a1d5ec06f588fede1998bd84977f"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v2/report.json",
+      "bytes": 259472,
+      "sha256": "e6a3540bd8e85bf667c8598092c334ebc8a3b0610c50b35a95b28aad9ad9a776"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v2/run.txt",
+      "bytes": 5465,
+      "sha256": "e62d955fe0142df20bb92f37cb44ba3a047fb1912feb52a766c6f96099098880"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v2/verdict.json",
+      "bytes": 310,
+      "sha256": "fae5c17e268ccf015ef34c3923c4532a9542e17e965b09a4fd5ed62b10aca884"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v3/protocol.json",
+      "bytes": 1070,
+      "sha256": "9add8c8bbd76ae2190e6985c8ef8f2075ccaa823c354305c8055c437ce44330f"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v3/report.json",
+      "bytes": 256967,
+      "sha256": "e020ad2ebbefe0d771a6dfd8f35c95313e1dbedaf0d2b31b5e74c39907c3ba74"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v3/run.txt",
+      "bytes": 5442,
+      "sha256": "ad0857b19ed292a554f768cbfefc421067c2fb6f303f606eb3e9d439570e76f7"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v3/verdict.json",
+      "bytes": 1741,
+      "sha256": "53a32f5fa4dfee6e34c35cbcbd7279119effe6177861450cda17e42bbfbe200c"
+    },
+    {
+      "path": "artifacts/liveness-probe.ts",
+      "bytes": 5300,
+      "sha256": "f5c2b56b6ac0e4f311f343099234f8a565381ef82b54af1342c7ebfd5bd884aa"
+    },
+    {
+      "path": "artifacts/localcommit-audit.ts",
+      "bytes": 2598,
+      "sha256": "e61af16ec834f645a3ffb04cc0683725e2c15f03a94efa1b63ff28c44735dfbc"
+    },
+    {
+      "path": "artifacts/measure-main.ts",
+      "bytes": 2300,
+      "sha256": "851453b46860a271d750234c191407d494c78bf5cda9ca05f8acaecdeaec55ee"
+    },
+    {
+      "path": "artifacts/mk-agent-orig.py",
+      "bytes": 4479,
+      "sha256": "ddf73745e10312b6b2464ad02af78a0b9232c4741e08e825f2ef2c6a300d4b4c"
+    },
+    {
+      "path": "artifacts/ml/deadlock-risk-expanded.json",
+      "bytes": 788562,
+      "sha256": "ce3113ee0df9d44bbe0e6cf70e26d5fb72dad18f6f5e3525c39d24865a9a6950"
+    },
+    {
+      "path": "artifacts/ml/deadlock-risk-experiment.json",
+      "bytes": 22076,
+      "sha256": "d3a1256d09515da9946aecb317c3c8a3d3d93274728fe3e58dd374d0a702606b"
+    },
+    {
+      "path": "artifacts/ml/deadlock-risk-temporal.json",
+      "bytes": 2443868,
+      "sha256": "c64cc0861e70f5bd907fd86636626915697d1ea44aeac5cb41ffe35fddc3a106"
+    },
+    {
+      "path": "artifacts/ml/temporal-development.json",
+      "bytes": 8309,
+      "sha256": "10fe0bf57743ac14faaa10fe93eba3b8ccd8658e78d423c89089f8ede4079f1d"
+    },
+    {
+      "path": "artifacts/overlap-audit-orig.ts",
+      "bytes": 2671,
+      "sha256": "e51e1c76d993c533519093aae9f261ed660bab6a75290ffe7f634f72ffd0d646"
+    },
+    {
+      "path": "artifacts/overlap-audit.ts",
+      "bytes": 2779,
+      "sha256": "e58235ad3f819849b467cb07d9439a8d67de6a38d42cc2e75e7c99a642dc5e95"
+    },
+    {
+      "path": "artifacts/overlap-dump.ts",
+      "bytes": 1782,
+      "sha256": "06a9bf5463349f6d2409955e7f4231181b90334bb2b4b7738ddaa18dc7030894"
+    },
+    {
+      "path": "artifacts/overlap-hunt.ts",
+      "bytes": 1790,
+      "sha256": "049365b208077be7eed85bf93fc956add646d5fd8645bfbc5eda30a08d9bfb01"
+    },
+    {
+      "path": "artifacts/path-compare.ts",
+      "bytes": 2459,
+      "sha256": "97527d3d99a877e314e9a6f9003dbecc33f7ad0290a1a0a75a6e94cd85c64647"
+    },
+    {
+      "path": "artifacts/progress-shape.ts",
+      "bytes": 3732,
+      "sha256": "6763ac231cd8b3037df6828f5018d913a475229bd16c17d9c33b29fde2593594"
+    },
+    {
+      "path": "artifacts/protocolReal.ts",
+      "bytes": 3571,
+      "sha256": "fd79907f2264acd8df364fd6a3d20c39242473d204be4e0ed137c318edbb0d7e"
+    },
+    {
+      "path": "artifacts/send-count.ts",
+      "bytes": 1350,
+      "sha256": "8f8ebbb384a27754d824f97a4885b26712a5faa10bfb674d0e2eede855a536e2"
+    },
+    {
+      "path": "artifacts/sensorReal.ts",
+      "bytes": 6213,
+      "sha256": "17c20d2a44f9e4a42225d45d605080421124dfe37eb914b08959007f8213a10c"
+    },
+    {
+      "path": "artifacts/sweep.sh",
+      "bytes": 1316,
+      "sha256": "161b2d441b8eb03675194bb97d80b2973e6bca6df2c37e016f066850fb03447c"
+    },
+    {
+      "path": "artifacts/tick-dump.ts",
+      "bytes": 1715,
+      "sha256": "7539e2195aeee89891fe599b47aa85fbd9e86f657aa4638b651ec7ca06f41be6"
+    },
+    {
+      "path": "artifacts/trace-agent.ts",
+      "bytes": 2362,
+      "sha256": "1c662aab2e4d1ef0ebaad235e9bce798a0e09f8d57ac4b666298c829cdeb9f4b"
+    },
+    {
+      "path": "artifacts/transportReal.ts",
+      "bytes": 6272,
+      "sha256": "d939297e0cf890df4157911e6de4c094637ac2ae6e2bcfaf72b713f594138a00"
+    },
+    {
+      "path": "artifacts/two-pass.ts",
+      "bytes": 1947,
+      "sha256": "3a28ab647249c243c1c6f056a0b1ee3283a955b52b3c52850b1172f759cd5aeb"
+    },
+    {
+      "path": "artifacts/walled-in.ts",
+      "bytes": 2748,
+      "sha256": "d870e0d29016111a48ea4f248dfbbfb0669f0134dbca25859456da1619c679ea"
+    },
+    {
+      "path": "artifacts/why-stuck.ts",
+      "bytes": 3189,
+      "sha256": "58c1d7918037f04b9038409dbf67260b348307b1d70a2c32923918a0224e09cb"
+    },
+    {
+      "path": "artifacts/why-stuck2.ts",
+      "bytes": 3202,
+      "sha256": "ade2ffe790d56e6545d9b2f24f335cee26e179382c00843846c8fed344981b1e"
+    }
+  ],
+  "releaseUrl": "https://github.com/aetosdios27/TeamRocket/releases/tag/audit-evidence-2026-09-29",
+  "downloadUrl": "https://github.com/aetosdios27/TeamRocket/releases/download/audit-evidence-2026-09-29/teamrocket-benchmark-evidence-65431a3.tar.gz"
+}
