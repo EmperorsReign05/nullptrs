@@ -1,0 +1,147 @@
+{
+  "sourceCommit": "e7dd0cdec4092415a53c0915491c03f84683a359",
+  "worktree": "/home/aetos/dev/personal/sih/TeamRocket",
+  "build": "passed",
+  "fleetBuild": "passed",
+  "fullSuite": {
+    "passed": 356,
+    "skipped": 17,
+    "failed": 0
+  },
+  "freshAcceptance": {
+    "seedStart": 31000,
+    "seeds": 200,
+    "completedRuns": 198,
+    "baselineCompletedRuns": 170,
+    "completedTasks": 1197,
+    "baselineCompletedTasks": 1147,
+    "gates": {
+      "reliability": true,
+      "safety": true,
+      "twentyPercent": false
+    },
+    "paired": {
+      "count": 170,
+      "baselineMeanTicks": 191.76470588235293,
+      "integratedMeanTicks": 190.43529411764706,
+      "baselineMedianTicks": 187,
+      "integratedMedianTicks": 187,
+      "meanTicksSaved": 1.3294117647058823,
+      "medianTicksSaved": 0,
+      "aggregateImprovementPercent": 0.6932515337423233,
+      "ticksSaved95CI": [
+        -0.4823529411764706,
+        3.4705882352941178
+      ],
+      "improvementPercent95CI": [
+        -0.25382281929053424,
+        1.7899688435457266
+      ],
+      "wins": 46,
+      "ties": 100,
+      "losses": 24
+    }
+  },
+  "ros2Fleet": {
+    "completed": true,
+    "completedTasks": 3,
+    "ticks": 143,
+    "safety": {
+      "overlaps": 0,
+      "swaps": 0,
+      "blockedCells": 0,
+      "zeroBatteryWork": 0,
+      "queueOverflow": 0,
+      "payloadViolations": 0,
+      "nonAdjacentMoves": 0
+    }
+  },
+  "ros2Fault": {
+    "killed": {
+      "index": 0,
+      "id": "AMR-01",
+      "task": "CHOKE-1",
+      "tick": 7
+    },
+    "reassigned": true,
+    "rerouted": true,
+    "partitionStopped": true,
+    "completed": true,
+    "completedTasks": 3,
+    "ticks": 241,
+    "safety": {
+      "overlaps": 0,
+      "swaps": 0,
+      "blockedCells": 0,
+      "zeroBatteryWork": 0,
+      "queueOverflow": 0,
+      "payloadViolations": 0,
+      "nonAdjacentMoves": 0
+    }
+  },
+  "nav2": {
+    "schema": 1,
+    "deployment": "real ROS2 Jazzy / Nav2 controller and collision monitor, ideal kinematic simulated sensors; no physical hardware",
+    "samples": {
+      "scan": 805,
+      "imu": 805,
+      "wheel_odometry": 805,
+      "filtered_odometry": 483
+    },
+    "events": [
+      {
+        "state": "authorized"
+      },
+      {
+        "state": "executing"
+      },
+      {
+        "state": "finished",
+        "status": 4,
+        "error_code": 0
+      },
+      {
+        "state": "authorized"
+      },
+      {
+        "state": "executing"
+      },
+      {
+        "state": "replacement_queued"
+      },
+      {
+        "state": "finished",
+        "status": 5,
+        "error_code": 0
+      },
+      {
+        "state": "revoked"
+      }
+    ],
+    "raw_commands_while_blocked": 60,
+    "filtered_stops_while_blocked": 21,
+    "blocked_drift_m": 0.0,
+    "final_x_m": 1.9433054709862403,
+    "release_x_m": 0.33000644159910736,
+    "collision_ticks": 0,
+    "elapsed_seconds": 16.117101056996034,
+    "passed": true,
+    "revocation": {
+      "started_second_route": true,
+      "settled_drift_m": 0.0,
+      "cancelled_action": true,
+      "revoked_reported": true
+    },
+    "final_x_after_revocation_m": 2.1605430548518902
+  },
+  "frozenModelUnchanged": true,
+  "baselineUnchanged": true,
+  "limitations": [
+    "Two fresh warehouse runs remain incomplete.",
+    "No statistically established completion-time speedup; no 20% result.",
+    "ROS2 fleet uses shared grid simulation clock; no durable controller restart guarantee.",
+    "Nav2 validation is one continuous simulated robot, not yet wired to three grid controllers.",
+    "No real edge boards, physical sensors or AMRs tested.",
+    "Carried-cargo energy failures require explicit manual recovery."
+  ]
+}

@@ -211,7 +211,7 @@ python3 scripts/fetch-benchmark-evidence.py
 
 The command requires Python 3.9+ and leaves existing files untouched. Use `--destination /tmp/fleet-evidence` for a separate complete copy. Summary files are explicitly derived views; archived original measurements are unchanged.
 
-Latest integrated warehouse acceptance: 173/200 completed runs versus stop-and-wait's 176/200; 166 jointly completed pairs give 0.575% aggregate improvement with a 95% interval of −0.064% to 1.457%. This does not establish better overall reliability or a speedup. Three-process choke acceptance completed 40/40 versus 0/40, so it establishes recovery in that workload, not a valid percentage-speedup estimate. Hardware validation and the ≥20% integrated target remain outstanding.
+Historical v3 integrated warehouse acceptance: 173/200 completed runs versus stop-and-wait's 176/200; 166 jointly completed pairs give 0.575% aggregate improvement with a 95% interval of −0.064% to 1.457%. This does not establish better overall reliability or a speedup. Three-process choke acceptance completed 40/40 versus 0/40, so it establishes recovery in that workload, not a valid percentage-speedup estimate. Hardware validation and the ≥20% integrated target remain outstanding.
 
 ## ROS2 / Fast DDS and continuous navigation
 
@@ -237,3 +237,15 @@ The Nav2 package follows trusted coordinator-authorized paths through FollowPath
 Distributed charging retains task ownership, reaches a charger, recharges and resumes pre-pickup work. Each active job is recertified; queued jobs can span multiple charging visits. Cargo already picked up is never silently reassigned or diverted: an uncertifiable delivery holds for manual recovery. Local safety controls shared charger occupancy; charger fairness is not guaranteed.
 
 New acceptance results are recorded separately from historical v1–v3 outputs. Development results on inspected seeds are not fresh acceptance evidence. No physical Pi/Jetson or real-sensor validation has occurred.
+
+## Current integrated validation
+
+Code frozen at `e7dd0cd`, after the parallel reliability/charging/ROS work was merged into the main worktree:
+
+- Production and fleet builds pass. Full suite: **356 passed, 17 skipped, zero failures**. The former cycle and UDP tests now pass with their completion/safety assertions retained.
+- **200 untouched warehouse seeds (31000–31199): 198/200 completed runs, 1197/1200 tasks**, versus fair stop-and-wait **170/200 runs, 1147/1200 tasks**. No baseline-successful run becomes incomplete; all six audited safety counters are zero in both arms.
+- On **170 jointly successful pairs**, mean completion-time saving is 1.329 ticks, median 0; aggregate improvement **0.693%**, 95% interval **−0.254% to 1.790%**, wins/ties/losses **46/100/24**. This is not a statistically established speedup and does not meet the 20% target. Failed capped runs are excluded from speed estimates.
+- Three real Node controllers using actual ROS2/Fast DDS complete the development choke smoke at tick143. The combined pre-pickup process failure, reassignment, blocked-route reroute, partition/heal and AI-fallback smoke completes at tick241, with zero audited violations. These are development smoke checks, not another fresh seed sweep.
+- Real Nav2/Collision Monitor/EKF validation passes separately: route execution, obstacle stop/resume, and route cancellation with zero measured collision ticks. It remains a single continuous simulated robot integration.
+
+See `artifacts/fleet-integration/validation.json` and `artifacts/integrated-stopwait-v4/report.json`. Historical measurements are preserved; model weights and the stop-and-wait baseline are unchanged.
