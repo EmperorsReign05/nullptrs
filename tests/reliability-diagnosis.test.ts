@@ -1,7 +1,6 @@
 import { it, expect } from "vitest";
 import { writeFileSync, mkdirSync } from "node:fs";
 import { FleetRuntime } from "../src/core/distributed/runtime";
-import { assessBidEnergy } from "../src/core/ml/bidfeatures";
 import { createInitialWorld } from "../src/core/simulation/state";
 function rng(seed: number) {
   let s = seed >>> 0;
@@ -29,18 +28,8 @@ function scenario(seed: number, n: number) {
   return w;
 }
 
-// Temporary measurement adapter until runtime idle-energy integration is merged.
-// It certifies the destination plus charging route and reserve through the
-// frozen energy assessor, without enabling tasks, bypassing a gate or retraining.
 function runtimeFor(seed: number, baseline=false) {
- const runtime=new FleetRuntime(scenario(seed,seed%2?6:3),undefined,baseline?{motionPolicy:"stop-and-wait"}:{});
- if(process.env.RELIABILITY_IDLE_GATE==="1"){
-  const options=runtime.fleet["options"], original=options.moveAllowed!;
-  options.moveAllowed=(robot,to)=>robot.currentTaskId?original(robot,to):assessBidEnergy(
-   {...robot,position:to,battery:robot.battery-0.5},
-   {id:"idle-relocation",pickup:to,dropoff:to,weight:0,priority:0,createdAt:0,status:"pending"},runtime.world).admitted;
- }
- return runtime;
+ return new FleetRuntime(scenario(seed,seed%2?6:3),undefined,baseline?{motionPolicy:"stop-and-wait"}:{});
 }
 
 it.skipIf(process.env.RELIABILITY_DIAG !== "1")("inspect ten baseline-only development failures", () => {

@@ -121,6 +121,7 @@ export class Agent {
   }
   private sensorFeed: Position[] = [];
   private idleYieldAllowed = false;
+  private courtesyPreferred: Position | null = null;
   /** Lifecycle authorization, never inferred merely from a one-cell route. */
   setIdleYieldAllowed(allowed: boolean): void { this.idleYieldAllowed = allowed; }
 
@@ -391,6 +392,7 @@ export class Agent {
   }
 
   decide(currentTick: number): AgentDecision {
+    this.courtesyPreferred = null;
     const from = this.local.position;
     const sensorScan = this.observeMotion(currentTick);
     // Two agents adjacent in a corridor each forbid the other's cell purely
@@ -471,6 +473,18 @@ export class Agent {
         .filter(p => isLocallySafe(sensorScan, p) && this.bayIsFree(p))
         .sort((a, b) => manhattanDistance(b, requester.position) - manhattanDistance(a, requester.position) ||
           getNeighbors(b, this.map).length - getNeighbors(a, this.map).length)[0] : undefined;
+      if (requester && !escape) {
+        // An idle chain may fill the only exit. Forward the same local
+        // request one hop, but HOLD until sensing proves the exit empty.
+        // Without this, a parked neighbor can prevent another idle robot
+        // clearing a task goal forever. Never request the sender's cell.
+        const exit = getNeighbors(from, this.map).find(p =>
+          !positionsEqual(p, requester.position) &&
+          [...this.peers.values()].some(peer => peer.id !== requester.id && !peer.docked &&
+            peer.seq >= this.local.seq - 1 && positionsEqual(peer.position, p) &&
+            this.scanSees(sensorScan, p)));
+        this.courtesyPreferred = exit ?? null;
+      }
       this.lastDecision = escape ? { from, to: escape, reason: "step-aside" } : decision;
       return this.lastDecision;
     }
@@ -657,7 +671,7 @@ export class Agent {
       seq: this.local.seq,
       position: this.local.position,
       intent: positionsEqual(decision.to, this.local.position) ? null : decision.to,
-      preferred: this.local.path[1] ?? null,
+      preferred: this.local.path[1] ?? this.courtesyPreferred,
       priority: this.local.priority,
       docked: this.local.docked,
       stallTicks: this.stallTicks,

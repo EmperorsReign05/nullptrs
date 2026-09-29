@@ -1,4 +1,5 @@
 import { expect, it } from "vitest";
+import { mapFromOpen } from "../src/core/bench/scenarios";
 import { DistributedFleet } from "../src/core/distributed/fleet";
 import { createInitialWorld } from "../src/core/simulation/state";
 it("local lifecycle goal overrides routing without changing task ownership", () => {
@@ -33,4 +34,17 @@ it.each(["charging", "active-task", "energy-denied", "partition"])("idle courtes
   severed:mode==="partition"?[[mover.id,parked.id]]:[]});
  for(let tick=0;tick<20;tick++)fleet.advance(tick);
  expect(parked.position).toEqual({x:0,y:1});expect(task.status).toBe("in_progress");
+});
+
+it("propagates a courtesy request through idle blockers without entering occupied cells",()=>{
+ const world=createInitialWorld();
+ const robots=world.robots.slice(0,3).map((r,i)=>({...r,position:{x:i,y:0},status:"idle" as const,currentTaskId:i===0?"job":undefined,queuedTaskIds:[]}));
+ const task={id:"job",pickup:{x:0,y:0},dropoff:{x:1,y:0},weight:1,priority:1,createdAt:0,status:"in_progress" as const,assignedRobotId:robots[0].id};
+ const map=mapFromOpen([{x:0,y:0},{x:1,y:0},{x:2,y:0},{x:2,y:1}]);
+ const fleet=new DistributedFleet(map,robots,[task],{localCommit:true});
+ for(let tick=0;tick<20;tick++){
+  fleet.advance(tick);
+  expect(new Set(robots.map(r=>`${r.position.x},${r.position.y}`)).size).toBe(3);
+ }
+ expect(task.status).toBe("completed");
 });
