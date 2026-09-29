@@ -1,13 +1,14 @@
 # Team Rocket — AMR Fleet Control Dashboard
 
-Two software modes are available:
+Three software modes are available:
 
 - **`/` — integrated fleet demo:** a standalone Node fleet process runs peer task ownership, frozen guarded learned bids and local motion decisions. The Next dashboard monitors state and submits commands. Agents are private simulated contexts with shared tick rounds and simulated sensors.
+- **`npm run edge:demo` — three-process fleet demo:** each robot process runs its own complete ownership, frozen MLP bidding and planning stack, communicating directly over UDP. The same dashboard connects through the simulation host on port 4011. Shared simulation timing and sensors are explicit.
 - **`/simulator` — original central simulator:** A*, PIBT, deterministic auctioning, task queues and charging run in the browser.
 
-The separate UDP worker demo runs independent processes with preassigned tasks; it is not the integrated auction deployment. ROS2, Fast DDS, Nav2 and physical robot hardware are not implemented.
+The legacy `worker.ts` UDP demo remains preassigned-task-only. The new `edge-agent.ts` deployment includes live auctions and ownership. ROS2, Fast DDS, Nav2 and physical robot hardware are not implemented.
 
-See the [final audit](artifacts/final-audit/summary.md) and [implementation matrix](artifacts/final-audit/final-matrix.md) for measured results, exact tests and claim limits. The existing [hosted demo link](https://amr-edge-ai.vercel.app/) has not been updated by this audit; the new fleet runtime requires a long-lived Node process.
+See [three-process deployment and hardware limits](docs/edge/README.md), the [choke-point acceptance report](artifacts/edge-choke-v1/summary.md), and the [final audit](artifacts/final-audit/summary.md) and [implementation matrix](artifacts/final-audit/final-matrix.md) for measured results, exact tests and claim limits. The existing [hosted demo link](https://amr-edge-ai.vercel.app/) has not been updated by this audit; the new fleet runtime requires a long-lived Node process.
 
 ## Central Simulator Capabilities (`/simulator`)
 
@@ -189,3 +190,13 @@ Every button acts directly on the live `WorldState`:
 * `src/core/` is intentionally decoupled from Next.js/React, so the
   simulation engine can be reasoned about, tested, and reused
   independently of the dashboard UI.
+
+### Three-process choke-point demo
+
+```sh
+npm run edge:demo
+# In another terminal:
+FLEET_URL=http://127.0.0.1:4011 npm run dev
+```
+
+Each robot runs in its own Node process. The dashboard is a monitor/control input; the separate simulator supplies physics and phase timing. No Raspberry Pi/Jetson execution has been measured. See [deployment instructions](docs/edge/README.md) for the controller executable, fault checks, and paired benchmark commands.

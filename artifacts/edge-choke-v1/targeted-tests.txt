@@ -1,0 +1,12 @@
+
+ RUN  v2.1.9 /tmp/opencode/tr-core
+
+ ✓ tests/integrated-measurement.test.ts (3 tests | 2 skipped) 9ms
+ ✓ tests/ownership.test.ts (11 tests) 83ms
+ ✓ tests/edge-peer.test.ts (9 tests | 1 skipped) 277ms
+
+ Test Files  3 passed (3)
+      Tests  20 passed | 3 skipped (23)
+   Start at  15:20:26
+   Duration  1.62s (transform 655ms, setup 0ms, collect 1.06s, tests 369ms, environment 1ms, prepare 479ms)
+

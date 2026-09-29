@@ -1,0 +1,5 @@
+[
+  { "id": "AMR-01", "host": "192.168.1.101", "controlPort": 17401, "ownershipPort": 17501, "motionPort": 17601 },
+  { "id": "AMR-02", "host": "192.168.1.102", "controlPort": 17402, "ownershipPort": 17502, "motionPort": 17602 },
+  { "id": "AMR-03", "host": "192.168.1.103", "controlPort": 17403, "ownershipPort": 17503, "motionPort": 17603 }
+]

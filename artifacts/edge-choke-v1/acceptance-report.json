@@ -1,0 +1,80 @@
+{
+  "protocol": {
+    "mode": "acceptance",
+    "seedStart": 24000,
+    "seeds": 40,
+    "fleetSize": 3,
+    "horizon": 512,
+    "motionStartTick": 112,
+    "map": "two rooms, sole bridge cell (9,6), charger stubs do not bypass bridge",
+    "tasks": "three opposing journeys, announced to only AMR-01; distributed auction; simultaneous motion release",
+    "allocation": "same frozen guarded MLP and quorum ownership in both arms",
+    "energy": "same per-move remaining-work + charging + reserve gate",
+    "motion": "fresh pose/desired-step exchange, then proposals and local confirmation; negotiated head-on winner holds while loser yields; baseline preferred-cell-only",
+    "sharedPlanning": "same A*, obstruction memory including unknown-contender safety envelope, and per-move energy gate",
+    "deployment": "three OS processes on this host, peer-to-peer UDP, simulated sensors/time",
+    "controls": "physics host advances time, supplies local contacts, audits moves; no route or movement-winner computation",
+    "performance": "both-completed pairs only; end-to-end and motion-window ticks; capped failures excluded",
+    "hardwareValidated": false,
+    "network": "connected; 8ms delivery opportunity, unknown/late contender means local hold; no delivery guarantee",
+    "modelRetrained": false
+  },
+  "summary": {
+    "byPolicy": {
+      "stop-and-wait": {
+        "completedRuns": 0,
+        "completedTasks": 0,
+        "runsAllThreeCrossed": 0,
+        "runsAllThreeAssignedAtRelease": 40,
+        "safety": {
+          "overlaps": 0,
+          "swaps": 0,
+          "blockedCells": 0,
+          "zeroBatteryWork": 0,
+          "queueOverflow": 0,
+          "payloadViolations": 0,
+          "nonAdjacentMoves": 0
+        }
+      },
+      "negotiated": {
+        "completedRuns": 40,
+        "completedTasks": 120,
+        "runsAllThreeCrossed": 40,
+        "runsAllThreeAssignedAtRelease": 40,
+        "safety": {
+          "overlaps": 0,
+          "swaps": 0,
+          "blockedCells": 0,
+          "zeroBatteryWork": 0,
+          "queueOverflow": 0,
+          "payloadViolations": 0,
+          "nonAdjacentMoves": 0
+        }
+      }
+    },
+    "endToEnd": {
+      "pairs": 0,
+      "baselineMean": null,
+      "negotiatedMean": null,
+      "meanTicksSaved": null,
+      "medianTicksSaved": null,
+      "improvementPercent": null,
+      "improvement95CI": null,
+      "wins": 0,
+      "ties": 0,
+      "losses": 0
+    },
+    "motionWindow": {
+      "pairs": 0,
+      "baselineMean": null,
+      "negotiatedMean": null,
+      "meanTicksSaved": null,
+      "medianTicksSaved": null,
+      "improvementPercent": null,
+      "improvement95CI": null,
+      "wins": 0,
+      "ties": 0,
+      "losses": 0
+    }
+  }
+}
