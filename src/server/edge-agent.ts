@@ -60,6 +60,7 @@ async function main() {
     if(token&&req.headers.authorization!==`Bearer ${token}`){res.writeHead(401);res.end('{"error":"unauthorized"}');return;}
     try{
       if(req.method==="GET"&&req.url==="/state"){res.end(JSON.stringify(state()));return;}
+      if(req.method==="GET"&&req.url==="/diagnostics"){res.end(JSON.stringify(controller?controller.ownershipDiagnostics():null));return;}
       if(req.method!=="POST")throw new Error("POST required");
       let raw="";for await(const chunk of req){raw+=chunk;if(raw.length>2_000_000)throw new Error("Body too large");}
       const body=JSON.parse(raw);

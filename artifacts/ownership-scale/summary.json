@@ -1,0 +1,363 @@
+{
+  "schema": 1,
+  "subject": "Ownership liveness and task-admission scale pass",
+  "implementation": {
+    "commit": "e7a936eaea5a82b7f22d03a669189367717c7fd2",
+    "baselineCommit": "e7a936eaea5a82b7f22d03a669189367717c7fd2",
+    "changes": [
+      "liveness measured against observed network progress, not the local tick",
+      "bounded announce / checkpoint / grant gossip instead of per-tick rebroadcast",
+      "proposal retried only when the bid set grows",
+      "admission frontier derived from membership (floor(N/2)) instead of 1"
+    ]
+  },
+  "rootCause": "isLive() compares a peer's last observed heartbeat tick against the receiver's OWN logical tick, with a 6-tick window. A healthy peer's heartbeat is only delivered through the Fast DDS bridge, so when the transport backs up the peer looks dead even though it is running.",
+  "rootCauseDetail": {
+    "summary": "isLive() compares a peer's last observed heartbeat tick against the receiver's OWN logical tick, with a 6-tick window. A healthy peer's heartbeat is only delivered through the Fast DDS bridge, so when the transport backs up the peer looks dead even though it is running.",
+    "selfDeliveryIsSynchronous": "OwnershipPeer.send() also calls receive() locally, so a peer always sees its own heartbeat at age 0. Only remote heartbeats traverse the bridge. The measurement shows self at age 0 and every remote peer at age 8-211, which isolates the fault to remote delivery rather than the protocol clock.",
+    "notPhysicalExecution": "The same failure reproduces with the grid executor and no Nav2 action at all (baseline-dds-*), and does NOT reproduce over UDP at the same N (baseline-udp-*). Nav2 serialised execution is therefore not the cause.",
+    "tickRateIsTheHiddenVariable": "Because the failure is transport-throughput-bound, whether a given N passes depends on how slowly its ticks happen to run. N=6 Nav2 passed only because Nav2 actions throttled the tick rate below the transport ceiling; at N=7/N=8 no ownership was ever formed, so no Nav2 action ran, ticks ran fast, message rate rose, and the fleet locked into a backlog it could never drain.",
+    "volumeDriver": "Every peer re-announced EVERY known task on EVERY tick. The receiver ignores an announce for a task it already has, so this is pure waste, and it makes per-tick traffic O(N^2 x tasks): at N=8 with 8 tasks that is ~504 Fast DDS publications per tick.",
+    "measuredTransportCeiling": "N=8 DDS + grid: settle 8ms -> remote lag 105-140 ticks (unbounded backlog); settle 25ms -> lag 8-9 ticks; settle 116ms -> lag 4 ticks and all peers live. Lag is a direct function of message rate."
+  },
+  "fleetSizesTested": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "nav2CompletionByN": [
+    {
+      "n": 1,
+      "passed": true,
+      "tasksCompleted": 1,
+      "totalTasks": 1,
+      "ticks": 118,
+      "nav2Actions": 5,
+      "wallSeconds": 29.7,
+      "ddsPeersReady": 1,
+      "safetyAllZero": true,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    },
+    {
+      "n": 3,
+      "passed": true,
+      "tasksCompleted": 3,
+      "totalTasks": 3,
+      "ticks": 119,
+      "nav2Actions": 12,
+      "wallSeconds": 33.3,
+      "ddsPeersReady": 3,
+      "safetyAllZero": true,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    },
+    {
+      "n": 5,
+      "passed": true,
+      "tasksCompleted": 5,
+      "totalTasks": 5,
+      "ticks": 120,
+      "nav2Actions": 16,
+      "wallSeconds": 33.9,
+      "ddsPeersReady": 5,
+      "safetyAllZero": true,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    },
+    {
+      "n": 6,
+      "passed": true,
+      "tasksCompleted": 6,
+      "totalTasks": 6,
+      "ticks": 120,
+      "nav2Actions": 18,
+      "wallSeconds": 36,
+      "ddsPeersReady": 6,
+      "safetyAllZero": true,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    },
+    {
+      "n": 7,
+      "passed": true,
+      "tasksCompleted": 7,
+      "totalTasks": 7,
+      "ticks": 120,
+      "nav2Actions": 20,
+      "wallSeconds": 39,
+      "ddsPeersReady": 7,
+      "safetyAllZero": true,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    },
+    {
+      "n": 8,
+      "passed": true,
+      "tasksCompleted": 8,
+      "totalTasks": 8,
+      "ticks": 140,
+      "nav2Actions": 22,
+      "wallSeconds": 47.9,
+      "ddsPeersReady": 8,
+      "safetyAllZero": true,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    }
+  ],
+  "nav2MaxN": 8,
+  "fastDdsCompletionByN": {
+    "transport": "Fast DDS (UDPv4, no shared memory, no broker)",
+    "completed": true,
+    "tasksCompleted": "8/8",
+    "ticks": 271,
+    "wallSeconds": 21.356,
+    "quorum": 5,
+    "liveCountAtEnd": 8,
+    "freshnessAtEnd": 266,
+    "ownTickAtEnd": 267,
+    "ownershipMsgsPerTick": {
+      "announce": 1.169,
+      "checkpoint": 1.101,
+      "heartbeat": 1.004,
+      "grant": 0.521,
+      "propose": 0.315,
+      "bid": 0.228,
+      "ack": 0.124,
+      "mark": 0.019
+    },
+    "transportCounters": {
+      "allocation": {
+        "sent": 1196,
+        "received": 6281,
+        "dropped": 0
+      },
+      "motion": {
+        "sent": 536,
+        "received": 3752,
+        "dropped": 0
+      }
+    }
+  },
+  "peerFailureDetection": {
+    "mechanism": "consecutive ticks without peer heartbeat, measured on observed network progress",
+    "peerTimeoutTicks": 6,
+    "note": "unchanged; the liveness clock is now robust to transport backlog rather than the window being widened",
+    "verifiedBy": [
+      "tests/ownership-concurrency.test.ts",
+      "artifacts/ownership-scale/faults.json"
+    ]
+  },
+  "concurrentTaskAdmission": {
+    "ownershipEpochTicks": 32,
+    "frontierFormula": "max(1, floor(N/2))",
+    "benchmark": [
+      {
+        "n": 3,
+        "before": {
+          "tasksPer100Ticks": 3.51,
+          "medianCertificationLatencyTicks": 132,
+          "p95CertificationLatencyTicks": 228
+        },
+        "after": {
+          "tasksPer100Ticks": 3.51,
+          "medianCertificationLatencyTicks": 132,
+          "p95CertificationLatencyTicks": 228
+        },
+        "duplicateExecutableOwners": 0
+      },
+      {
+        "n": 5,
+        "before": {
+          "tasksPer100Ticks": 3.51,
+          "medianCertificationLatencyTicks": 132,
+          "p95CertificationLatencyTicks": 228
+        },
+        "after": {
+          "tasksPer100Ticks": 8,
+          "medianCertificationLatencyTicks": 68,
+          "p95CertificationLatencyTicks": 100
+        },
+        "duplicateExecutableOwners": 0
+      },
+      {
+        "n": 8,
+        "before": {
+          "tasksPer100Ticks": 3.51,
+          "medianCertificationLatencyTicks": 132,
+          "p95CertificationLatencyTicks": 228
+        },
+        "after": {
+          "tasksPer100Ticks": 22.22,
+          "medianCertificationLatencyTicks": 36,
+          "p95CertificationLatencyTicks": 36
+        },
+        "duplicateExecutableOwners": 0
+      }
+    ]
+  },
+  "safetyCounters": {
+    "nav2RunsAllZero": true,
+    "faultScenarios": 30,
+    "faultScenariosSafe": true,
+    "invariant": "For every task, live peers allowed to execute <= 1; and 0 when quorum is unreachable (except N=1)."
+  },
+  "ddsN8": {
+    "fastDds": {
+      "transport": "Fast DDS (UDPv4, no shared memory, no broker)",
+      "completed": true,
+      "tasksCompleted": "8/8",
+      "ticks": 271,
+      "wallSeconds": 21.356,
+      "quorum": 5,
+      "liveCountAtEnd": 8,
+      "freshnessAtEnd": 266,
+      "ownTickAtEnd": 267,
+      "ownershipMsgsPerTick": {
+        "announce": 1.169,
+        "checkpoint": 1.101,
+        "heartbeat": 1.004,
+        "grant": 0.521,
+        "propose": 0.315,
+        "bid": 0.228,
+        "ack": 0.124,
+        "mark": 0.019
+      },
+      "transportCounters": {
+        "allocation": {
+          "sent": 1196,
+          "received": 6281,
+          "dropped": 0
+        },
+        "motion": {
+          "sent": 536,
+          "received": 3752,
+          "dropped": 0
+        }
+      }
+    },
+    "udp": {
+      "transport": "UDP datagram",
+      "completed": true,
+      "tasksCompleted": "8/8",
+      "ticks": 175,
+      "wallSeconds": 11.819,
+      "quorum": 5,
+      "liveCountAtEnd": 8,
+      "freshnessAtEnd": 170,
+      "ownTickAtEnd": 171,
+      "ownershipMsgsPerTick": {
+        "announce": 1.684,
+        "checkpoint": 1.661,
+        "heartbeat": 1.006,
+        "grant": 0.398,
+        "ack": 0.24,
+        "bid": 0.199,
+        "propose": 0.199,
+        "mark": 0.035
+      },
+      "transportCounters": {
+        "allocation": {
+          "sent": 6489,
+          "received": 6244,
+          "dropped": 0
+        },
+        "motion": {
+          "sent": 2408,
+          "received": 2408,
+          "dropped": 0
+        }
+      }
+    },
+    "note": "Traffic is per-peer outbound ownership messages. Fast DDS fans each broadcast out once per recipient, so mesh-wide delivery is roughly (N-1) x per-peer sends."
+  },
+  "testCounts": {
+    "passed": 488,
+    "failed": 0,
+    "pending": 20,
+    "total": 508
+  },
+  "vitestStdoutTail": "JSON report written to /tmp/vitest-scale.json\n",
+  "artifacts": [
+    "admission-after.json",
+    "admission-before.json",
+    "baseline-dds-n6",
+    "baseline-dds-n7",
+    "baseline-dds-n8",
+    "baseline-nav2-n6",
+    "baseline-nav2-n7",
+    "baseline-nav2-n8",
+    "baseline-udp-n6",
+    "baseline-udp-n7",
+    "baseline-udp-n8",
+    "baseline.json",
+    "dds-n8.json",
+    "faults.json",
+    "liveness-n1.fleet.json",
+    "liveness-n1.json",
+    "liveness-n3.fleet.json",
+    "liveness-n3.json",
+    "liveness-n5.fleet.json",
+    "liveness-n5.json",
+    "liveness-n6.fleet.json",
+    "liveness-n6.json",
+    "liveness-n7.fleet.json",
+    "liveness-n7.json",
+    "liveness-n8.fleet.json",
+    "liveness-n8.json",
+    "nav2-n3"
+  ],
+  "knownRemainingLimitations": [
+    "Admission is still bounded by one ownership generation per certification round; a task that loses its auction retries next generation.",
+    "commRange remains 6, so large fleets are effectively fully connected and per-tick cost still grows toward O(N^2).",
+    "Fast DDS throughput, not the protocol, is now the wall: N=8 completes with margin, but per-tick traffic is still O(N^2) in broadcasts and a much larger fleet would need transport work.",
+    "No hardware validation; Nav2 remains a simulated continuous world with a shared logical clock."
+  ]
+}

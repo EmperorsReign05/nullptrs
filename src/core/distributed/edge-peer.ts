@@ -132,6 +132,8 @@ export class EdgePeer {
     this.prepared = false; this.proposed = false; this.executing = false;
     return this.snapshot();
   }
+  /** Opt-in scale instrumentation for ownership scale work. */
+  ownershipDiagnostics() { return this.ownership.diagnostics(); }
   snapshot() {
     const self = this.world.robots[0];
     return structuredClone({ tick: this.tick, robot: self, tasks: this.world.tasks,

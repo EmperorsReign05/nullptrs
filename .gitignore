@@ -120,3 +120,8 @@ __pycache__/
 /artifacts/n-robot/**/build.log
 /artifacts/n-robot/**/launch.log
 /artifacts/n-robot/**/smoke.log
+
+# Per-call ownership scale traces (bulky raw evidence; compact reports are tracked)
+/artifacts/ownership-scale/**/phase-timing.json
+/artifacts/ownership-scale/**/samples.json
+/artifacts/ownership-scale/**/build.log

@@ -1,0 +1,69 @@
+{
+  "cellMetres": 0.6,
+  "rosDomainId": 96,
+  "robots": [
+    {
+      "id": "AMR-01",
+      "namespace": "AMR_01",
+      "origin": {
+        "x": 1,
+        "y": 1
+      },
+      "executorPort": 19700
+    },
+    {
+      "id": "AMR-02",
+      "namespace": "AMR_02",
+      "origin": {
+        "x": 1,
+        "y": 4
+      },
+      "executorPort": 19701
+    },
+    {
+      "id": "AMR-03",
+      "namespace": "AMR_03",
+      "origin": {
+        "x": 1,
+        "y": 7
+      },
+      "executorPort": 19702
+    },
+    {
+      "id": "AMR-04",
+      "namespace": "AMR_04",
+      "origin": {
+        "x": 1,
+        "y": 10
+      },
+      "executorPort": 19703
+    },
+    {
+      "id": "AMR-05",
+      "namespace": "AMR_05",
+      "origin": {
+        "x": 1,
+        "y": 13
+      },
+      "executorPort": 19704
+    },
+    {
+      "id": "AMR-06",
+      "namespace": "AMR_06",
+      "origin": {
+        "x": 1,
+        "y": 16
+      },
+      "executorPort": 19705
+    },
+    {
+      "id": "AMR-07",
+      "namespace": "AMR_07",
+      "origin": {
+        "x": 1,
+        "y": 19
+      },
+      "executorPort": 19706
+    }
+  ]
+}

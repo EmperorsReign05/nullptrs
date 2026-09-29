@@ -257,6 +257,36 @@ Changing fleet size is a config edit, never a code edit. Ownership quorum is
 `floor(N/2) + 1` and is derived from membership, so it is correct for even and
 odd N; the ownership suite covers N=1, 2, 3, 4, 5 and 8.
 
+### Liveness and task admission
+
+Peer liveness is measured against the newest tick a peer has actually **observed
+on the network**, not against its own tick counter. The local counter is driven by
+the host and runs ahead of real fleet progress whenever delivery is backed up, so
+comparing against it declared healthy peers dead purely because their heartbeats
+were in flight. When the transport produces no peer news at all in a tick, the
+clock falls back to the local tick, which is what still detects a lone dead peer
+and a total stall. Failure detection therefore stays bounded by the 6-tick
+`PEER_TIMEOUT_TICKS` window, and healthy peers no longer time out because other
+robots were slow.
+
+Ownership traffic is bounded rather than re-broadcast every tick. A task is
+announced when it is first learned and re-healed once per generation; custody and
+completion proofs and our own grant are gossiped the same way; and a proposal is
+retried only when the bid set has actually grown. Per-tick traffic falls from
+about 11 messages per peer to about 4.5 at N=8, which is what keeps the transport
+under its throughput ceiling.
+
+Admission is no longer one task per 32-tick generation. Up to `floor(N/2)` new
+tasks may be auctioned at once, which still bounds how much of a robot's queue and
+energy headroom one generation can consume. At N=1/2/3 this evaluates to 1, so the
+small-fleet protocol is unchanged. Measured on 8 independent tasks with movement
+disabled: median certification latency is unchanged at N=3, improves 1.9x at N=5
+and 3.7x at N=8, with no duplicate executable owner in any arm.
+
+Nav2 continuous execution is verified at N=1, 3, 5, 6, 7 and 8, and software
+fleets over real Fast DDS at N=1, 3, 5 and 8. Evidence lives in
+`artifacts/ownership-scale/`.
+
 ## ROS2 / Fast DDS and continuous navigation
 
 The following commands require rootless Podman (or the container engine configured by the scripts). No system ROS installation is required.
