@@ -125,7 +125,8 @@ export class InMemoryTransport<T = Message> implements Transport<T> {
 }
 
 /**
- * Real UDP transport, one socket per agent on the loopback interface.
+ * Real UDP transport, one socket per agent. Loopback by default; explicit
+ * host/port endpoints and bind address support a trusted edge-device LAN.
  *
  * This is the implementation that satisfies "the planning stack runs on
  * separate nodes communicating peer to peer" without needing physical
@@ -138,18 +139,25 @@ export class UdpTransport<T = Message> implements Transport<T> {
   readonly kind = "udp";
   private socket: dgram.Socket;
   private inbox: T[] = [];
+  private blocked = new Set<string>();
+  readonly stats = { sent: 0, received: 0, dropped: 0 };
+  setReachable(id: string, reachable: boolean) { if (reachable) this.blocked.delete(id); else this.blocked.add(id); }
 
   constructor(
     private selfId: PeerId,
     private port: number,
     /** Map of peerId -> their UDP port. Supplied by a tiny discovery file
      *  or CLI flag; there is no coordinator at runtime. */
-    private peers: Record<PeerId, number>
+    private peers: Record<PeerId, number | { host: string; port: number }>,
+    private bindAddress = "127.0.0.1"
   ) {
     this.socket = dgram.createSocket("udp4");
     this.socket.on("message", (buf) => {
       try {
-        this.inbox.push(JSON.parse(buf.toString()) as T);
+        const msg = JSON.parse(buf.toString()) as T;
+        const from = (msg as { from?: string }).from;
+        if (!from || !(from in this.peers) || this.blocked.has(from)) { this.stats.dropped++; return; }
+        this.stats.received++; this.inbox.push(msg);
       } catch {
         /* a corrupt datagram must never take an agent down */
       }
@@ -159,21 +167,17 @@ export class UdpTransport<T = Message> implements Transport<T> {
   bind(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.socket.once("error", reject);
-      this.socket.bind(this.port, "127.0.0.1", () => resolve());
+      this.socket.bind(this.port, this.bindAddress, () => resolve());
     });
   }
 
   send(to: PeerId | undefined, msg: T): void {
     const payload = Buffer.from(JSON.stringify(msg));
-    if (to !== undefined) {
-      const port = this.peers[to];
-      if (port === undefined) return;
-      this.socket.send(payload, port, "127.0.0.1");
-      return;
-    }
-    for (const [id, port] of Object.entries(this.peers)) {
-      if (id === this.selfId) continue;
-      this.socket.send(payload, port, "127.0.0.1");
+    for (const id of to === undefined ? Object.keys(this.peers) : [to]) {
+      if (id === this.selfId || this.blocked.has(id)) continue;
+      const endpoint = this.peers[id]; if (!endpoint) continue;
+      const target = typeof endpoint === "number" ? { host: "127.0.0.1", port: endpoint } : endpoint;
+      this.stats.sent++; this.socket.send(payload, target.port, target.host);
     }
   }
 

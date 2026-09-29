@@ -101,7 +101,8 @@ export class Agent {
      * PIBT had, and the same fix.
      */
     private bays: ReadonlySet<string> = EMPTY_BAYS,
-    private sensorRange: number = SENSOR_RANGE_CELLS
+    private sensorRange: number = SENSOR_RANGE_CELLS,
+    private priorityYield = false
   ) {
     this.transport = transport;
     this.commRange = commRange;
@@ -298,7 +299,14 @@ export class Agent {
     for (const contact of scanNow.contacts) {
       if (manhattanDistance(contact.position, decision.to) > 1) continue;
       const peer = [...this.peers.values()].find(p => positionsEqual(p.position, contact.position) && p.seq === this.local.seq);
-      if (!peer) return hold();
+      if (!peer) {
+        // A missing contender's adjacent cell is unsafe even if empty.
+        // Reuse the existing two-observation planning hint so the external
+        // controller can route around a crashed body's safety envelope.
+        // This changes planning only; the unknown-contender veto remains.
+        if (this.priorityYield) this.noteBlocker(decision.to, scanNow, currentTick);
+        return hold();
+      }
       if (peer.intent && positionsEqual(peer.intent, decision.to) && !this.winsAgainst({ id: this.id, priority: this.local.priority }, peer)) return hold();
     }
     return decision;
@@ -317,6 +325,7 @@ export class Agent {
         id: msg.from,
         position: msg.position,
         intent: msg.intent,
+        preferred: msg.preferred,
         priority: msg.priority,
         docked: msg.docked,
         stallTicks: msg.stallTicks,
@@ -360,6 +369,13 @@ export class Agent {
     return sensorScan;
   }
 
+  /** Preferred-cell-only baseline. Same sensing/memory and commit protocol. */
+  decideStopWait(currentTick: number): AgentDecision {
+    const scan = this.observeMotion(currentTick), from = this.local.position, to = this.local.path[1];
+    return this.lastDecision = to && isTraversable(to, this.map) && manhattanDistance(from, to) === 1 && isLocallySafe(scan, to)
+      ? { from, to, reason: "free" } : { from, to: from, reason: "no-move" };
+  }
+
   decide(currentTick: number): AgentDecision {
     const from = this.local.position;
     const sensorScan = this.observeMotion(currentTick);
@@ -377,6 +393,15 @@ export class Agent {
     // colleague works next to you.
     const preferredCell = this.local.path.length > 1 ? this.local.path[1] : null;
     if (preferredCell && !isLocallySafe(sensorScan, preferredCell)) {
+      // In the staged edge deployment, avoid symmetric retreat/re-entry.
+      // Only a fresh, reciprocal head-on claim permits the priority winner
+      // to hold while its peer yields. This never permits an occupied move.
+      const opponent = this.priorityYield && [...this.peers.values()].find(p =>
+        positionsEqual(p.position, preferredCell) && p.seq >= this.local.seq - 1 &&
+        p.preferred && positionsEqual(p.preferred, from) && !p.docked);
+      if (opponent && this.winsAgainst({ id: this.id, priority: this.local.priority }, opponent))
+        return this.lastDecision = { from, to: from, reason: "occupied" };
+
       // A robot is physically sitting on the cell I was about to enter. Note
       // it: if the SAME cell keeps blocking me, the route through it is not
       // merely slow, it is impossible, and I have to plan around it. See
@@ -606,6 +631,7 @@ export class Agent {
       seq: this.local.seq,
       position: this.local.position,
       intent: positionsEqual(decision.to, this.local.position) ? null : decision.to,
+      preferred: this.local.path[1] ?? null,
       priority: this.local.priority,
       docked: this.local.docked,
       stallTicks: this.stallTicks,

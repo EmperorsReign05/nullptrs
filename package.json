@@ -9,7 +9,9 @@
     "lint": "eslint",
     "test": "vitest run",
     "fleet:build": "tsc -p tsconfig.fleet.json",
-    "fleet": "npm run fleet:build && node .fleet-dist/src/server/fleet-http.js"
+    "fleet": "npm run fleet:build && node .fleet-dist/src/server/fleet-http.js",
+    "edge:measure": "npm run fleet:build && node scripts/measure-edge-choke.mjs",
+    "edge:demo": "npm run fleet:build && node scripts/edge-demo.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.42.0",

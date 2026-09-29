@@ -22,6 +22,8 @@ export type TickMessage = {
   position: { x: number; y: number };
   /** The single cell we intend to occupy next tick, or null if idle. */
   intent: { x: number; y: number } | null;
+  /** Desired route step, distinct from a held/alternate move proposal. */
+  preferred?: { x: number; y: number } | null;
   /** Higher wins a contested cell. Derived from how long we have waited. */
   priority: number;
   /** True while we are parked on a charging dock and must not be pushed. */
@@ -62,6 +64,8 @@ export type PeerView = {
   id: PeerId;
   position: { x: number; y: number };
   intent: { x: number; y: number } | null;
+  /** Desired route step, distinct from a held/alternate move proposal. */
+  preferred?: { x: number; y: number } | null;
   priority: number;
   docked: boolean;
   seq: number;

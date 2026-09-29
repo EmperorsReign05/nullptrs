@@ -1,3 +1,4 @@
+import { executionEnergyAllowed } from "./execution-energy";
 import { createInitialWorld } from "../simulation/state";
 import { BATTERY_PERCENT_PER_CELL } from "../simulation/robotModels";
 import { assessBidEnergy, type LocalBidInput } from "../ml/bidfeatures";
@@ -19,7 +20,7 @@ export class FleetRuntime {
   readonly fleet: DistributedFleet;
   readonly events: { tick: number; text: string }[] = [];
   readonly safety = { overlaps: 0, swaps: 0, blockedCells: 0, zeroBatteryWork: 0, queueOverflow: 0, payloadViolations: 0 };
-  readonly metrics = { aiBidAttempts: 0, nonzeroCorrections: 0, disabledFallbacks: 0, failedModelFallbacks: 0, moves: 0, reroutes: 0 };
+  readonly metrics = { aiBidAttempts: 0, nonzeroCorrections: 0, disabledFallbacks: 0, failedModelFallbacks: 0, moves: 0, reroutes: 0, energyHolds: 0 };
   private channels = new Map<string, InMemoryTransport<OwnershipMessage>>();
   private dead = new Set<string>();
   running = true;
@@ -34,6 +35,11 @@ export class FleetRuntime {
       this.peers.set(r.id, new OwnershipPeer(r.id, ids, channel, (task, tick) => this.bid(r.id, task, tick)));
     }
     this.fleet = new DistributedFleet(this.world.map, this.world.robots, this.world.tasks, { commRange: 6, localCommit: true, motionPolicy: options.motionPolicy,
+      moveAllowed: (r, to) => {
+        const allowed = executionEnergyAllowed(r, this.world.tasks.find(t => t.id === r.currentTaskId), to, this.world);
+        if (!allowed) this.metrics.energyHolds++;
+        return allowed;
+      },
       arrivalAllowed: (r, t, phase) => {
         const peer = this.peers.get(r.id)!;
         if (!peer.mayExecute(t.id)) return phase === "dropoff" && peer.acknowledged(t.id, "completed");

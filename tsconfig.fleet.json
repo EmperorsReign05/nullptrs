@@ -11,6 +11,14 @@
     "isolatedModules": true,
     "plugins": []
   },
-  "include": ["src/server/fleet-http.ts"],
-  "exclude": ["node_modules", ".next", ".fleet-dist"]
+  "include": [
+    "src/server/fleet-http.ts",
+    "src/server/edge-agent.ts",
+    "src/core/bench/edge-choke.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    ".fleet-dist"
+  ]
 }

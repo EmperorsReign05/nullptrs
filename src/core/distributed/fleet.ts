@@ -15,6 +15,10 @@ import type { Position, RobotState, Task, WarehouseMap, WorldState } from "../ty
 
 export type FleetOptions = {
   localCommit?: boolean;
+  /** Single-agent staged simulation/edge adapter; never a fleet-wide view. */
+  motionTransport?: Transport;
+  priorityYield?: boolean;
+  moveAllowed?: (robot: RobotState, to: Position) => boolean;
   /** Measurement-only comparator; keeps allocation and planning unchanged. */
   motionPolicy?: "stop-and-wait";
   arrivalAllowed?: (robot: RobotState, task: Task, phase: "pickup" | "dropoff") => boolean;
@@ -46,6 +50,7 @@ export class DistributedFleet {
     private tasks: Task[],
     private options: FleetOptions = {}
   ) {
+    if (options.motionTransport && robots.length !== 1) throw new Error("External transport requires one local robot");
     const ids = robots.map((r) => r.id);
     // One shared delivery fabric, one private Transport per agent. The bus
     // routes a message to its RECIPIENT; it is a socket abstraction, not a
@@ -58,7 +63,7 @@ export class DistributedFleet {
       this.transports.set(r.id, t);
       this.agents.set(
         r.id,
-        new Agent(r.id, localOf(r, tasks), map, t, options.commRange ?? DEFAULT_COMM_RANGE, options.bays, options.localCommit ? 2 : undefined)
+        new Agent(r.id, localOf(r, tasks), map, options.motionTransport ?? t, options.commRange ?? DEFAULT_COMM_RANGE, options.bays, options.localCommit ? 2 : undefined, options.priorityYield)
       );
     }
     for (const [a, b] of options.severed ?? []) {
@@ -66,6 +71,45 @@ export class DistributedFleet {
       this.transports.get(b)?.setReachable(a, false);
       this.severed.push([a, b]);
     }
+  }
+
+  private gateMove(agent: Agent) {
+    const d = agent.getLastDecision(), robot = this.robots.find(r => r.id === agent.id)!;
+    if (d && !positionsEqual(d.from, d.to) && this.options.moveAllowed && !this.options.moveAllowed(robot, d.to))
+      agent.overrideDecision({ from: d.from, to: d.from, reason: "no-move" });
+  }
+
+  /** Simulator supplies ONLY this robot's sensor contacts and clock. */
+  observeExternalMotion(tick: number, contacts: Position[]) {
+    if (!this.options.motionTransport) throw new Error("Not an external single-agent fleet");
+    const agent = [...this.agents.values()][0];
+    agent.setSensorFeed(contacts);
+    this.replanAll(tick);
+    agent.updateLocal({ ...agent.getLocal(), seq: tick * 2 });
+    const from = agent.getLocal().position;
+    agent.overrideDecision({ from, to: from, reason: "no-move" });
+    agent.tick(tick); // Fresh pose + preferred route, before any choice.
+  }
+
+  proposeExternalMotion(tick: number) {
+    if (!this.options.motionTransport) throw new Error("Not an external single-agent fleet");
+    const agent = [...this.agents.values()][0];
+    agent.updateLocal({ ...agent.getLocal(), seq: tick * 2 + 1 });
+    if (this.inactive.has(agent.id)) {
+      agent.observeMotion(tick);
+      const from = agent.getLocal().position;
+      agent.overrideDecision({ from, to: from, reason: "no-move" });
+    } else if (this.options.motionPolicy === "stop-and-wait") agent.decideStopWait(tick);
+    else agent.decide(tick);
+    this.gateMove(agent);
+    agent.tick(tick);
+  }
+
+  commitExternalMotion(tick: number) {
+    if (!this.options.motionTransport) throw new Error("Not an external single-agent fleet");
+    const agent = [...this.agents.values()][0];
+    if (!this.inactive.has(agent.id)) agent.confirmDecision(tick);
+    this.applyMoves(tick);
   }
 
   /** Heal every severed link — used to show recovery in the demo. */
@@ -104,7 +148,7 @@ export class DistributedFleet {
       for (const move of moves) this.agents.get(move.robotId)!.overrideDecision({
         from: move.from, to: move.to, reason: positionsEqual(move.from, move.to) ? "no-move" : "free",
       });
-      for (const agent of this.activeAgents) agent.tick(tick);
+      for (const agent of this.activeAgents) { this.gateMove(agent); agent.tick(tick); }
       for (const t of this.transports.values()) t.advanceClock();
       return new Set(moves.filter(m => !positionsEqual(m.from, m.to)).map(m => m.robotId));
     }
@@ -113,6 +157,7 @@ export class DistributedFleet {
     for (const agent of this.activeAgents) decisions.set(agent.id, agent.decide(tick));
 
     for (const agent of this.activeAgents) {
+      this.gateMove(agent);
       agent.tick(tick);
     }
     // Deliver this tick's broadcasts.
