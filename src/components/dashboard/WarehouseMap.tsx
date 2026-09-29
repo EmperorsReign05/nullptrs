@@ -98,7 +98,7 @@ export function WarehouseMap({
   };
 
   return (
-    <div className="border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-md rounded-xl flex flex-col overflow-hidden shadow-2xl relative min-h-[580px]">
+    <div id="tour-warehouse-map" className="border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-md rounded-xl flex flex-col overflow-hidden shadow-2xl relative min-h-[580px]">
       
       <div className="h-12 border-b border-zinc-800/80 flex items-center justify-between px-6 bg-zinc-950/40 backdrop-blur-sm shrink-0 z-10 select-none">
         <h2 className="font-mono text-sm font-semibold tracking-wide text-zinc-200">

@@ -15,7 +15,7 @@ export function FleetStatus({ robots, selectedRobotId, onSelectRobot }: FleetSta
   const onlineCount = robots.filter(r => r.status !== 'failed').length;
 
   return (
-    <div className="bg-[#12161F]/35 backdrop-blur-xl rounded-xl border border-white/10 flex flex-col shadow-xl overflow-hidden">
+    <div id="tour-fleet-status" className="bg-[#12161F]/35 backdrop-blur-xl rounded-xl border border-white/10 flex flex-col shadow-xl overflow-hidden">
       <div className="h-12 px-5 border-b border-white/10 flex justify-between items-center bg-white/[0.03] backdrop-blur-sm shrink-0">
         <h3 className="font-mono text-sm font-semibold tracking-wide text-zinc-200">fleet status</h3>
         <span className="text-xs font-mono text-zinc-400">
