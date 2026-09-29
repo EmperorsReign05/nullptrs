@@ -44,8 +44,9 @@ try{
     if(tick>208&&sim.snapshot().world.tasks.every(t=>t.status==="completed"))break;
   }
   const result={killed,reassigned,blocked,rerouted,partitionStopped,pids,result:sim.result()};
-  await mkdir("artifacts/edge-choke-v1",{recursive:true});
-  await writeFile("artifacts/edge-choke-v1/fault-smoke.json",JSON.stringify(result,null,2)+"\n");
+  const output=process.env.FAULT_SMOKE_DIR ?? "artifacts/edge-choke-v1";
+  await mkdir(output,{recursive:true});
+  await writeFile(`${output}/fault-smoke.json`,JSON.stringify(result,null,2)+"\n");
   assert.ok(sim.result().completed);
   assert.ok(killed);assert.ok(reassigned);assert.ok(blocked);assert.ok(rerouted);assert.ok(partitionStopped);
   assert.ok(sim.states.some(s=>s.state.metrics.corrections>0));

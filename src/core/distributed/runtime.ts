@@ -1,7 +1,8 @@
-import { executionEnergyAllowed } from "./execution-energy";
+import { executionActiveTaskAllowed, executionIdleMoveAllowed } from "./execution-energy";
+import { DistributedCharging } from "./charging";
 import { createInitialWorld } from "../simulation/state";
 import { BATTERY_PERCENT_PER_CELL } from "../simulation/robotModels";
-import { assessBidEnergy, type LocalBidInput } from "../ml/bidfeatures";
+import { type LocalBidInput } from "../ml/bidfeatures";
 import { makeLocalBid, type BidModel, type LocalBidPacket } from "../ml/bidmodel";
 import frozen from "../../../artifacts/bid-energy-v4/model.json";
 import { DistributedFleet } from "./fleet";
@@ -17,6 +18,7 @@ export type RuntimeCommand = { kind: "run" | "pause" | "ai-on" | "ai-off" | "hea
 export class FleetRuntime {
   readonly world: WorldState;
   readonly peers = new Map<string, OwnershipPeer>();
+  readonly charging = new Map<string, DistributedCharging>();
   readonly fleet: DistributedFleet;
   readonly events: { tick: number; text: string }[] = [];
   readonly safety = { overlaps: 0, swaps: 0, blockedCells: 0, zeroBatteryWork: 0, queueOverflow: 0, payloadViolations: 0 };
@@ -31,16 +33,21 @@ export class FleetRuntime {
     this.world.robots.forEach(r => { r.currentTaskId = undefined; r.queuedTaskIds = []; r.path = []; r.status = "idle"; });
     const ids = this.world.robots.map(r => r.id), bus = new InMemoryBus<OwnershipMessage>();
     for (const r of this.world.robots) {
+      this.charging.set(r.id, new DistributedCharging());
       const channel = new InMemoryTransport(r.id, bus); ids.filter(id => id !== r.id).forEach(id => channel.addPeer(id)); this.channels.set(r.id, channel);
       this.peers.set(r.id, new OwnershipPeer(r.id, ids, channel, (task, tick) => this.bid(r.id, task, tick)));
     }
     this.fleet = new DistributedFleet(this.world.map, this.world.robots, this.world.tasks, { commRange: 6, localCommit: true, motionPolicy: options.motionPolicy,
+      goalOverride: r => this.charging.get(r.id)!.active ? this.charging.get(r.id)!.goal ?? null : undefined,
       moveAllowed: (r, to) => {
-        const allowed = executionEnergyAllowed(r, this.world.tasks.find(t => t.id === r.currentTaskId), to, this.world);
+        const charge = this.charging.get(r.id)!, task = this.world.tasks.find(t => t.id === r.currentTaskId);
+        const allowed = charge.active ? charge.allowsMove(r, to, this.world) : task
+          ? executionActiveTaskAllowed(r, task, to, this.world) : executionIdleMoveAllowed(r, to, this.world);
         if (!allowed) this.metrics.energyHolds++;
         return allowed;
       },
       arrivalAllowed: (r, t, phase) => {
+        if (this.charging.get(r.id)!.active) return false;
         const peer = this.peers.get(r.id)!;
         if (!peer.mayExecute(t.id)) return phase === "dropoff" && peer.acknowledged(t.id, "completed");
         return peer.mark(t.id, phase === "pickup" ? "custody" : "completed");
@@ -146,8 +153,8 @@ export class FleetRuntime {
       // Ownership is necessary but not sufficient: before installing a new
       // commitment, energy must cover task + charging + reserve. No movement
       // with depleted battery. Existing active certified routes remain intact.
-      const safe = !active || active.status === "in_progress" || assessBidEnergy({ ...r, currentTaskId: undefined }, active, this.world).admitted;
-      this.fleet.setInactive(r.id, !safe || r.battery <= 0 || !!active && !peer.mayExecute(active.id));
+      const charge = this.charging.get(r.id)!.prepare(r, this.world, tick);
+      this.fleet.setInactive(r.id, charge.hold || r.battery <= 0 || charge.mode === "work" && !!active && !peer.mayExecute(active.id));
       if (active && active.status === "in_progress" && !peer.acknowledged(active.id, "custody")) peer.mark(active.id, "custody");
     }
     const before = this.world.robots.map(r => ({ ...r.position }));
@@ -157,6 +164,7 @@ export class FleetRuntime {
       const path = this.fleet.getAgent(r.id)!.getLocal().path; r.path = path;
       const moved = before[i].x !== r.position.x || before[i].y !== r.position.y;
       if (moved) { r.battery = Math.max(0, r.battery - BATTERY_PERCENT_PER_CELL); this.metrics.moves++; }
+      if (!this.dead.has(r.id)) this.charging.get(r.id)!.afterMotion(r, this.world, tick);
       if (!moved && paths[i] !== JSON.stringify(path)) { this.metrics.reroutes++; this.world.metrics.replans++; }
       if (!moved && r.currentTaskId) this.world.metrics.waitMoves++;
       if (r.battery <= 0 && r.currentTaskId) this.safety.zeroBatteryWork++;
@@ -170,6 +178,7 @@ export class FleetRuntime {
   }
   snapshot() {
     return structuredClone({ world: this.world, running: this.running, aiEnabled: this.aiEnabled, events: this.events, safety: this.safety, metrics: this.metrics,
+      charging: [...this.charging].map(([id, c]) => ({ id, ...c.state })),
       deployment: "Node-hosted distributed-peer simulation; synchronous local commit; simulated sensors; no ROS2/hardware",
       ownership: [...this.peers].map(([id, p]) => ({ id, metrics: p.metrics, tasks: [...p.tasks.keys()].map(taskId => ({ taskId, lease: (p.ownership(taskId)?.expires ?? 0) > this.world.tick ? p.ownership(taskId) : undefined, recoveryRequired: p.recoveryRequired(taskId), completed: p.completed(taskId) })) })) });
   }

@@ -12,12 +12,14 @@
 //                         invariant that makes starvation unreachable,
 //                         rather than merely unlikely.
 //
-//   I3  CYCLE-FREE       Every wait-for cycle is broken deterministically.
+//   I3  CYCLE RECOVERY   Stationary wait cycles yield when a safe vacancy
+//                        chain exists; failed/exhausted blockers can prevent it.
 //
 // Measured against the baseline, same seed, same workload.
 import { isTraversable, WAITING_ZONES, CHARGING_STATIONS, PICKUP_STATIONS, DROPOFF_STATIONS } from "../map/warehouse";
 import { getNeighbors, manhattanDistance, positionKey, positionsEqual } from "../map/graph";
 import type { Position, RobotState, WarehouseMap, WorldState } from "../types";
+import { BATTERY_PERCENT_PER_CELL } from "../simulation/robotModels";
 
 export function inRect(p: Position, r: { x: number; y: number; width: number; height: number }): boolean {
   return p.x >= r.x && p.x < r.x + r.width && p.y >= r.y && p.y < r.y + r.height;
@@ -185,6 +187,35 @@ function resolveCandidate(robotId: string, callerId: string | null, state: Resol
   return !positionsEqual(to, robot.position);
 }
 
+// A cycle can be boxed in by other stationary robots even when there is
+// room farther down the aisle. Shift a shortest chain into one free cell;
+// every robot still moves only one edge and no swap/overlap is introduced.
+function escapeChain(victim: RobotState, state: ResolutionState): Position[] | null {
+  const queue: Position[][] = [[victim.position]];
+  const seen = new Set([positionKey(victim.position)]);
+  for (let i = 0; i < queue.length; i++) {
+    const path = queue[i];
+    for (const next of getNeighbors(path[path.length - 1], state.map)) {
+      const key = positionKey(next);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const reserved = state.reservedNext.get(key);
+      if (!reserved) {
+        const tail = path[path.length - 1];
+        if ([...state.decided.values()].some(move =>
+          positionsEqual(move.from, next) && positionsEqual(move.to, tail))) continue;
+        return [...path, next];
+      }
+      const holder = state.robotsById.get(reserved)!;
+      const move = state.decided.get(reserved)!;
+      if (holder.status === "failed" || holder.battery < BATTERY_PERCENT_PER_CELL ||
+          !positionsEqual(move.from, move.to)) continue;
+      queue.push([...path, next]);
+    }
+  }
+  return null;
+}
+
 export function resolvePIBT(robots: RobotState[], world: WorldState): PIBTResult {
   const map = world.map;
   const state: ResolutionState = {
@@ -213,68 +244,65 @@ export function resolvePIBT(robots: RobotState[], world: WorldState): PIBTResult
     if (!state.decided.has(robot.id)) resolveCandidate(robot.id, null, state);
   }
 
-  // ---- I3: break every remaining wait-for cycle, deterministically. ----
-  // After resolution, a robot that is stationary while wanting the cell
-  // another stationary robot holds forms a wait-for edge. Any cycle in that
-  // graph is a permanent deadlock. We find the cycles and force the
-  // lowest-priority (then highest-id) member of each to yield to a free
-  // neighbour, which is guaranteed to exist because the map has slack.
-  for (let pass = 0; pass < 4; pass++) {
-    const at = new Map<string, string>();
-    for (const r of robots) at.set(positionKey(r.position), r.id);
+  // Break actual stationary wait cycles. Moving robots' old paths are not
+  // wait dependencies. A free cell elsewhere on the map does not guarantee
+  // that every cycle member has an adjacent escape, so try each member.
+  for (let pass = 0; pass < robots.length; pass++) {
     const edges = new Map<string, string>();
     for (const r of robots) {
-      const mv = state.decided.get(r.id);
-      if (!mv) continue;
-      if (positionsEqual(mv.from, mv.to)) continue; // not waiting
-      if (r.path.length > 1) {
-        const holder = at.get(positionKey(r.path[1]));
-        if (holder && holder !== r.id) edges.set(r.id, holder);
+      const move = state.decided.get(r.id)!;
+      if (!positionsEqual(move.from, move.to) || r.path.length < 2) continue;
+      const holder = state.occupantByCell.get(positionKey(r.path[1]));
+      const heldMove = holder ? state.decided.get(holder) : undefined;
+      if (holder && holder !== r.id && heldMove && positionsEqual(heldMove.from, heldMove.to)) {
+        edges.set(r.id, holder);
       }
     }
-    // find a cycle
-    const color = new Map<string, number>();
-    const stack: string[] = [];
-    let cycle: string[] | null = null;
-    const visit = (id: string) => {
-      color.set(id, 1); stack.push(id);
-      const nx = edges.get(id);
-      if (nx) {
-        if (color.get(nx) === 1) { cycle = stack.slice(stack.indexOf(nx)); return true; }
-        if (!color.has(nx) && visit(nx)) return true;
+    const cycles: string[][] = [];
+    const done = new Set<string>();
+    for (const start of edges.keys()) {
+      const chain: string[] = [];
+      let id: string | undefined = start;
+      while (id && !done.has(id)) {
+        const index = chain.indexOf(id);
+        if (index >= 0) { cycles.push(chain.slice(index)); break; }
+        chain.push(id);
+        id = edges.get(id);
       }
-      stack.pop(); color.set(id, 2);
-      return false;
-    };
-    for (const id of edges.keys()) { if (!color.has(id) && visit(id)) break; }
-    if (!cycle) break;
-
-    // pick the victim: lowest priority, then lexicographically largest id
-    const members: string[] = [...cycle];
-    const victimId = members.sort((a, b) => {
-      const pa = state.robotsById.get(a)!.priority;
-      const pb = state.robotsById.get(b)!.priority;
-      if (pa !== pb) return pa - pb;
-      return a.localeCompare(b);
-    })[0];
-    const victim = state.robotsById.get(victimId)!;
-    const occupiedNow = new Set([...state.reservedNext.keys()]);
-    let escape: Position | null = null;
-    for (const n of getNeighbors(victim.position, map)) {
-      if (occupiedNow.has(positionKey(n))) continue;
-      if (callerSafe(state, victim, n)) { escape = n; break; }
+      for (const member of chain) done.add(member);
     }
-    if (!escape) break; // genuinely boxed in; leave it, next pass retries
-    state.decided.set(victimId, { robotId: victimId, from: victim.position, to: escape });
-    state.reservedNext.set(positionKey(escape), victimId);
-    state.metrics.cyclesBroken += 1;
+    let changed = false;
+    for (const cycle of cycles) {
+      // An earlier escape chain can also have cleared this cycle.
+      if (cycle.some(id => {
+        const move = state.decided.get(id)!;
+        return !positionsEqual(move.from, move.to);
+      })) continue;
+      const victims = cycle.map(id => state.robotsById.get(id)!)
+        .filter(r => r.status !== "failed" && r.battery >= BATTERY_PERCENT_PER_CELL)
+        .sort((a, b) => a.priority - b.priority || b.id.localeCompare(a.id));
+      for (const victim of victims) {
+        const chain = escapeChain(victim, state);
+        if (!chain) continue;
+        // Clear all old stationary reservations before claiming the shifted
+        // destinations; otherwise later writes could erase a new reservation.
+        const shifted = chain.slice(0, -1).map(position => state.occupantByCell.get(positionKey(position))!);
+        for (const id of shifted) state.reservedNext.delete(positionKey(state.robotsById.get(id)!.position));
+        for (let i = 0; i < shifted.length; i++) {
+          const robot = state.robotsById.get(shifted[i])!;
+          state.decided.set(robot.id, { robotId: robot.id, from: robot.position, to: chain[i + 1] });
+          state.reservedNext.set(positionKey(chain[i + 1]), robot.id);
+          state.metrics.waitMoves -= 1;
+          if (!isLegalStop(robot.position)) state.metrics.illegalStopForced -= 1;
+        }
+        state.metrics.cyclesBroken += 1;
+        changed = true;
+        break;
+      }
+    }
+    if (!changed) break;
   }
 
   const moves = ordered.map((r) => state.decided.get(r.id)!);
   return { moves, metrics: state.metrics };
-}
-
-function callerSafe(state: ResolutionState, robot: RobotState, target: Position): boolean {
-  // don't step onto a cell someone else is committed to entering
-  return !state.reservedNext.has(positionKey(target));
 }

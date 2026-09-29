@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "deployment": "real ROS2 Jazzy / Nav2 controller and collision monitor, ideal kinematic simulated sensors; no physical hardware",
+  "samples": {
+    "scan": 806,
+    "imu": 806,
+    "wheel_odometry": 805,
+    "filtered_odometry": 483
+  },
+  "events": [
+    {
+      "state": "authorized"
+    },
+    {
+      "state": "executing"
+    },
+    {
+      "state": "finished",
+      "status": 4,
+      "error_code": 0
+    },
+    {
+      "state": "authorized"
+    },
+    {
+      "state": "executing"
+    },
+    {
+      "state": "replacement_queued"
+    },
+    {
+      "state": "finished",
+      "status": 5,
+      "error_code": 0
+    },
+    {
+      "state": "revoked"
+    }
+  ],
+  "raw_commands_while_blocked": 60,
+  "filtered_stops_while_blocked": 21,
+  "blocked_drift_m": 0.0,
+  "final_x_m": 1.9417064735242808,
+  "release_x_m": 0.3479658231008216,
+  "collision_ticks": 0,
+  "elapsed_seconds": 16.12183774600271,
+  "passed": true,
+  "revocation": {
+    "started_second_route": true,
+    "settled_drift_m": 0.0,
+    "cancelled_action": true,
+    "revoked_reported": true
+  },
+  "final_x_after_revocation_m": 2.1722009577066164
+}

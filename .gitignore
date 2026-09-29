@@ -100,3 +100,11 @@ next-env.d.ts
 
 # Python helper cache
 __pycache__/
+
+# New validation raw traces (compact summaries are tracked)
+/artifacts/integrated-stopwait-v4/rows.json
+/artifacts/ros2-integration/edge-smoke.json
+/artifacts/ros2-integration/fault-smoke.json
+/ros2/**/build/
+/ros2/**/install/
+/ros2/**/log/

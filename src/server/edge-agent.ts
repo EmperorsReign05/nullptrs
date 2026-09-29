@@ -7,13 +7,15 @@ import { readFileSync } from "node:fs";
 import { EdgePeer, type EdgeConfig } from "../core/distributed/edge-peer";
 import { UdpTransport, type Transport } from "../core/distributed/transport";
 import type { OwnershipMessage } from "../core/distributed/ownership";
+import { RosBridge } from "../core/distributed/ros-transport";
 import type { Message } from "../core/distributed/protocol";
 
 export type EdgeEndpoint = { id: string; host: string; controlPort: number; ownershipPort: number; motionPort: number };
+type Wire<T> = Transport<T> & { stats: { sent: number; received: number; dropped: number }; setReachable(id: string, reachable: boolean): void };
 type Envelope<T> = { from: string; session: string; payload: T };
 class SessionTransport<T> implements Transport<T> {
-  readonly kind = "session-udp";
-  constructor(private id: string, private session: string, private wire: UdpTransport<Envelope<T>>) {}
+  get kind() { return `session-${this.wire.kind}`; }
+  constructor(private id: string, private session: string, private wire: Wire<Envelope<T>>) {}
   send(to: string | undefined, payload: T) { this.wire.send(to,{from:this.id,session:this.session,payload}); }
   drain() { return this.wire.drain().filter(m=>m.session===this.session).map(m=>m.payload); }
   close() {}
@@ -25,14 +27,23 @@ async function main() {
   const self=endpoints.find(p=>p.id===id); if(!self)throw new Error("Unknown self");
   const bind=process.env.EDGE_BIND??"127.0.0.1",token=process.env.EDGE_TOKEN;
   if(bind!=="127.0.0.1"&&!token)throw new Error("EDGE_TOKEN is required for non-loopback control");
-  const allocation=new UdpTransport<Envelope<OwnershipMessage>>(id,self.ownershipPort,
-    Object.fromEntries(endpoints.filter(p=>p.id!==id).map(p=>[p.id,{host:p.host,port:p.ownershipPort}])),bind);
-  const motion=new UdpTransport<Envelope<Message>>(id,self.motionPort,
-    Object.fromEntries(endpoints.filter(p=>p.id!==id).map(p=>[p.id,{host:p.host,port:p.motionPort}])),bind);
-  await allocation.bind();await motion.bind();
+  const transportKind = process.env.EDGE_TRANSPORT ?? "udp";
+  if (!["udp", "ros2"].includes(transportKind)) throw new Error("Unknown EDGE_TRANSPORT");
+  let allocation: Wire<Envelope<OwnershipMessage>> | undefined, motion: Wire<Envelope<Message>> | undefined, bridge: RosBridge | undefined;
+  if (transportKind === "udp") {
+    const a = new UdpTransport<Envelope<OwnershipMessage>>(id,self.ownershipPort,
+      Object.fromEntries(endpoints.filter(p=>p.id!==id).map(p=>[p.id,{host:p.host,port:p.ownershipPort}])),bind);
+    const m = new UdpTransport<Envelope<Message>>(id,self.motionPort,
+      Object.fromEntries(endpoints.filter(p=>p.id!==id).map(p=>[p.id,{host:p.host,port:p.motionPort}])),bind);
+    await a.bind();await m.bind();allocation=a;motion=m;
+  }
   let controller:EdgePeer|undefined,session="",cpuUs=0;
-  const state=()=>({pid:process.pid,id,session,cpuUs,rssMb:process.memoryUsage().rss/1048576,
-    datagrams:{allocation:allocation.stats,motion:motion.stats},state:controller?.snapshot()});
+  const state=()=>{
+    bridge?.refreshDiscovery();
+    return {pid:process.pid,id,session,cpuUs,rssMb:process.memoryUsage().rss/1048576,
+      transport:{kind:transportKind,subscriptions:bridge?.discovery},
+      datagrams:{allocation:allocation?.stats,motion:motion?.stats},state:controller?.snapshot()};
+  };
   const server=http.createServer(async(req,res)=>{
     res.setHeader("Content-Type","application/json");
     if(token&&req.headers.authorization!==`Bearer ${token}`){res.writeHead(401);res.end('{"error":"unauthorized"}');return;}
@@ -47,9 +58,17 @@ async function main() {
           const config=body.config as EdgeConfig;
           if(typeof body.session!=="string"||!body.session||config.self.id!==id||
             JSON.stringify([...config.members].sort())!==JSON.stringify(endpoints.map(p=>p.id).sort()))throw new Error("Invalid session membership");
-          session=body.session;allocation.drain();motion.drain();
-          for(const p of endpoints){allocation.setReachable(p.id,true);motion.setReachable(p.id,true);}
-          controller=new EdgePeer(config,new SessionTransport(id,session,allocation),new SessionTransport(id,session,motion));cpuUs=0;break;
+          session=body.session;
+          if(transportKind==="ros2") {
+            controller=undefined;bridge?.close();
+            const command=JSON.parse(process.env.ROS_BRIDGE_COMMAND ?? '["podman","run","--rm","-i","--network=host","-e","ROS_DOMAIN_ID=83","localhost/teamrocket-ros2:jazzy"]');
+            if(!Array.isArray(command)||!command.length||command.some(v=>typeof v!=="string"))throw new Error("ROS_BRIDGE_COMMAND must be a JSON argv array");
+            bridge=await RosBridge.start({id,members:endpoints.map(p=>p.id),session,command});
+            allocation=bridge.channel("ownership");motion=bridge.channel("motion");
+          }
+          allocation!.drain();motion!.drain();
+          for(const p of endpoints){allocation!.setReachable(p.id,true);motion!.setReachable(p.id,true);}
+          controller=new EdgePeer(config,new SessionTransport(id,session,allocation!),new SessionTransport(id,session,motion!));cpuUs=0;break;
         }
         case "/prepare": {
           if(!controller||body.session!==session)throw new Error("Wrong session");
@@ -65,7 +84,7 @@ async function main() {
           controller.commit(body.tick);break;
         case "/link":
           if(!endpoints.some(p=>p.id===body.peer)||typeof body.reachable!=="boolean")throw new Error("Invalid link");
-          allocation.setReachable(body.peer,body.reachable);motion.setReachable(body.peer,body.reachable);break;
+          allocation!.setReachable(body.peer,body.reachable);motion!.setReachable(body.peer,body.reachable);break;
         case "/announce": {
           if(!controller)throw new Error("Not initialized");
           const t=body.task;
@@ -83,7 +102,7 @@ async function main() {
     }catch(e){res.writeHead(400);res.end(JSON.stringify({error:String(e)}));}
   });
   server.listen(self.controlPort,bind,()=>process.stdout.write(JSON.stringify({ready:true,id,pid:process.pid})+"\n"));
-  const stop=()=>{server.close();allocation.close();motion.close();};
+  const stop=()=>{server.close();allocation?.close();motion?.close();bridge?.close();};
   process.on("SIGTERM",()=>{stop();process.exit(0);});
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});

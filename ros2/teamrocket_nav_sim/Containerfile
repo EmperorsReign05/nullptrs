@@ -1,0 +1,5 @@
+FROM localhost/teamrocket-ros2:jazzy
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends ros-jazzy-nav2-controller ros-jazzy-nav2-regulated-pure-pursuit-controller ros-jazzy-nav2-collision-monitor ros-jazzy-nav2-lifecycle-manager ros-jazzy-nav2-costmap-2d ros-jazzy-nav2-msgs ros-jazzy-tf2-ros ros-jazzy-robot-localization && rm -rf /var/lib/apt/lists/*
+ENTRYPOINT ["/bin/bash", "-c"]
+CMD ["source /opt/ros/jazzy/setup.bash; exec bash"]

@@ -6,7 +6,7 @@ Three software modes are available:
 - **`npm run edge:demo` — three-process fleet demo:** each robot process runs its own complete ownership, frozen MLP bidding and planning stack, communicating directly over UDP. The same dashboard connects through the simulation host on port 4011. Shared simulation timing and sensors are explicit.
 - **`/simulator` — original central simulator:** A*, PIBT, deterministic auctioning, task queues and charging run in the browser.
 
-The legacy `worker.ts` UDP demo remains preassigned-task-only. The new `edge-agent.ts` deployment includes live auctions and ownership. ROS2, Fast DDS, Nav2 and physical robot hardware are not implemented.
+The legacy `worker.ts` UDP demo remains preassigned-task-only. The new `edge-agent.ts` deployment includes live auctions and ownership. ROS2/Fast DDS can carry real peer messages via one sidecar per controller. A separate Nav2 simulation validates continuous path following, simulated sensors and Collision Monitor. Nav2 is not yet connected to all three grid controllers; physical hardware remains unvalidated.
 
 Machine-readable benchmark results are preserved under `artifacts/`. The existing [hosted demo link](https://amr-edge-ai.vercel.app/) has not been updated by this audit; the new fleet runtime requires a long-lived Node process.
 
@@ -26,7 +26,7 @@ Machine-readable benchmark results are preserved under `artifacts/`. The existin
   work (up to a cap) instead of the fleet ignoring pending tasks just
   because every robot already has one.
 
-The suite includes seeded safety and stress checks. Tests establish behavior in their modeled regimes, not universal physical safety. The audit records two pre-existing prototype wait-cycle failures and a load-sensitive UDP test; the full suite is not claimed green.
+The suite includes seeded safety and stress checks. Tests establish behavior in their modeled regimes, not universal physical safety. The historical prototype cycle failures and legacy UDP stale-route defect have regression fixes; current full-suite results are recorded with the integration artifacts.
 
 ## Technologies Used
 
@@ -212,3 +212,28 @@ python3 scripts/fetch-benchmark-evidence.py
 The command requires Python 3.9+ and leaves existing files untouched. Use `--destination /tmp/fleet-evidence` for a separate complete copy. Summary files are explicitly derived views; archived original measurements are unchanged.
 
 Latest integrated warehouse acceptance: 173/200 completed runs versus stop-and-wait's 176/200; 166 jointly completed pairs give 0.575% aggregate improvement with a 95% interval of −0.064% to 1.457%. This does not establish better overall reliability or a speedup. Three-process choke acceptance completed 40/40 versus 0/40, so it establishes recovery in that workload, not a valid percentage-speedup estimate. Hardware validation and the ≥20% integrated target remain outstanding.
+
+## ROS2 / Fast DDS and continuous navigation
+
+The following commands require rootless Podman (or the container engine configured by the scripts). No system ROS installation is required.
+
+```sh
+# Build the bridge image and test real Fast DDS peer exchange.
+npm run ros2:test
+# Run the actual three-controller grid fleet over ROS2/Fast DDS.
+npm run ros2:smoke
+# Interactive fleet over DDS (dashboard still connects to port 4011).
+EDGE_TRANSPORT=ros2 npm run edge:demo
+# In a separate terminal:
+FLEET_URL=http://127.0.0.1:4011 npm run dev
+# Validate actual Nav2 + EKF + simulated LiDAR/IMU/odometry + Collision Monitor.
+npm run nav2:test -- /tmp/nav2-validation
+```
+
+ROS peer traffic uses rmw_fastrtps_cpp with UDP transport; Fast DDS shared memory is disabled in the supplied profile. The Node/ROS bridge is local to each robot, not a message broker. Discovery must find the configured roster before simulation ticks begin. `ROS_BRIDGE_COMMAND` accepts a JSON argv array to use another installed ROS launch command or container engine.
+
+The Nav2 package follows trusted coordinator-authorized paths through FollowPath and cancels on revocation. Its validation is currently **one continuous simulated robot**, separate from the three grid agents. Multi-robot namespaces, coordinate mapping and binding route authorization to fleet ownership remain an integration gap; do not present the separate tests as one complete Nav2 fleet deployment.
+
+Distributed charging retains task ownership, reaches a charger, recharges and resumes pre-pickup work. Each active job is recertified; queued jobs can span multiple charging visits. Cargo already picked up is never silently reassigned or diverted: an uncertifiable delivery holds for manual recovery. Local safety controls shared charger occupancy; charger fairness is not guaranteed.
+
+New acceptance results are recorded separately from historical v1–v3 outputs. Development results on inspected seeds are not fresh acceptance evidence. No physical Pi/Jetson or real-sensor validation has occurred.

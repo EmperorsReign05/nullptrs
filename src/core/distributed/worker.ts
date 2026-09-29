@@ -104,6 +104,20 @@ async function main() {
     process.stdout.write(JSON.stringify({ id, tick, position: agent.getLocal().position, ...extra }) + "\n");
   };
 
+  // Optional test/startup barrier: never controls routes or per-tick movement.
+  // Bind every socket before any worker begins its independent local clock.
+  if (arg("start-barrier") === "ipc") {
+    if (!process.send) throw new Error("IPC startup barrier requires an IPC channel");
+    await new Promise<void>((resolve, reject) => {
+      const timeout = setTimeout(() => reject(new Error("Startup barrier timed out")), 15000);
+      process.once("message", message => {
+        clearTimeout(timeout);
+        if (message !== "start") reject(new Error("Invalid startup signal"));
+        else resolve();
+      });
+      process.send!({ ready: true, id });
+    });
+  }
   const timer = setInterval(() => {
     const t0 = process.hrtime.bigint();
     const goal = task.status === "in_progress" ? dropoff : pickup;
@@ -125,7 +139,7 @@ async function main() {
 
     const l = agent.getLocal();
     const goalChanged = !lastGoal || !positionsEqual(lastGoal, goal);
-    if (goalChanged || l.path.length === 0) {
+    if (goalChanged || l.path.length === 0 || !positionsEqual(l.path[0], l.position) || l.path.length === 1 && !positionsEqual(l.position, goal)) {
       const res = planPath(l.position, goal, world);
       agent.updateLocal({ ...l, path: res.found ? res.path : [] });
       lastGoal = goal;
@@ -135,7 +149,11 @@ async function main() {
     agent.tick(tick);
 
     if (!positionsEqual(decision.to, l.position)) {
-      const nextPath = l.path.length > 1 ? l.path.slice(1) : [];
+      // A side-step did not consume the preferred route edge. Clear that
+      // route so the next tick replans from the actual committed position.
+      // Also read the path AFTER any planning performed above this tick.
+      const planned = agent.getLocal().path;
+      const nextPath = planned.length > 1 && positionsEqual(planned[1], decision.to) ? planned.slice(1) : [];
       agent.commit(decision, nextPath, false);
     }
 
@@ -169,4 +187,4 @@ async function main() {
   }, periodMs);
 }
 
-main();
+main().catch(error => { console.error(error); process.exitCode = 1; });
