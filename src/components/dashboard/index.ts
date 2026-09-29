@@ -6,3 +6,4 @@ export * from './MetricsBar';
 export * from './FleetStatus';
 export * from './ActiveTasks';
 export * from './EventLog';
+export * from './JudgeTutorial';
