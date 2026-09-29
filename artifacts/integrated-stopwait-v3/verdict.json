@@ -1,0 +1,82 @@
+{
+  "codeCommit": "938af2c",
+  "freshSeeds": [
+    26000,
+    26199
+  ],
+  "reliabilityPass": false,
+  "safetyCountersZero": true,
+  "twentyPercentDemonstrated": false,
+  "statisticallyPositiveSpeedup": false,
+  "overall": {
+    "seeds": 200,
+    "baseline": {
+      "completedRuns": 176,
+      "completedTasks": 1159,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "nonzeroBidCorrections": 11742
+    },
+    "integrated": {
+      "completedRuns": 173,
+      "completedTasks": 1165,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "nonzeroBidCorrections": 10369
+    },
+    "paired": {
+      "count": 166,
+      "baselineMeanTicks": 191.8132530120482,
+      "integratedMeanTicks": 190.710843373494,
+      "baselineMedianTicks": 188,
+      "integratedMedianTicks": 188,
+      "meanTicksSaved": 1.1024096385542168,
+      "medianTicksSaved": 0,
+      "aggregateImprovementPercent": 0.5747306931314917,
+      "ticksSaved95CI": [
+        -0.12048192771084337,
+        2.8313253012048194
+      ],
+      "improvementPercent95CI": [
+        -0.06365169790904172,
+        1.4572801597703302
+      ],
+      "wins": 24,
+      "ties": 130,
+      "losses": 12
+    },
+    "baselineOnlyComplete": [
+      26015,
+      26045,
+      26059,
+      26087,
+      26088,
+      26107,
+      26111,
+      26113,
+      26151,
+      26169
+    ],
+    "integratedOnlyComplete": [
+      26005,
+      26017,
+      26031,
+      26044,
+      26103,
+      26153,
+      26175
+    ]
+  }
+}
