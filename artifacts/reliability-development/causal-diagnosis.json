@@ -1,0 +1,2496 @@
+{
+  "scope": "Development diagnosis only; inspected historical acceptance seeds",
+  "originalCommit": "b8d34cbb61a73c8fcbdaa358ad0bc96c3453705a",
+  "failures": [
+    {
+      "seed": 26015,
+      "completedTasks": 4,
+      "energyHolds": 850,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      }
+    },
+    {
+      "seed": 26045,
+      "completedTasks": 5,
+      "energyHolds": 460,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      }
+    },
+    {
+      "seed": 26059,
+      "completedTasks": 5,
+      "energyHolds": 400,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      }
+    },
+    {
+      "seed": 26087,
+      "completedTasks": 4,
+      "energyHolds": 1020,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      }
+    },
+    {
+      "seed": 26088,
+      "completedTasks": 5,
+      "energyHolds": 440,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      }
+    },
+    {
+      "seed": 26107,
+      "completedTasks": 4,
+      "energyHolds": 929,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      }
+    },
+    {
+      "seed": 26111,
+      "completedTasks": 4,
+      "energyHolds": 894,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      }
+    },
+    {
+      "seed": 26113,
+      "completedTasks": 5,
+      "energyHolds": 399,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      }
+    },
+    {
+      "seed": 26151,
+      "completedTasks": 5,
+      "energyHolds": 461,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      }
+    },
+    {
+      "seed": 26169,
+      "completedTasks": 4,
+      "energyHolds": 474,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      }
+    }
+  ],
+  "causalReplay": {
+    "seed": 26059,
+    "robot": "AMR-02",
+    "interventionTick": 165,
+    "intervention": "Override only this sensor-yield decision to hold, then resume original decisions unchanged",
+    "original": {
+      "completedTasks": 5,
+      "ticks": 800,
+      "moves": 245,
+      "energyHolds": 400
+    },
+    "singleHold": {
+      "completedTasks": 6,
+      "ticks": 209,
+      "moves": 141,
+      "energyHolds": 0
+    },
+    "safetyBoth": {
+      "overlaps": 0,
+      "swaps": 0,
+      "blockedCells": 0,
+      "zeroBatteryWork": 0,
+      "queueOverflow": 0,
+      "payloadViolations": 0
+    },
+    "trace": [
+      {
+        "tick": 165,
+        "robots": [
+          {
+            "id": "AMR-01",
+            "p": {
+              "x": 16,
+              "y": 12
+            },
+            "b": 85.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 16,
+                "y": 12
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 16,
+                "y": 12
+              },
+              "to": {
+                "x": 16,
+                "y": 12
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-02",
+            "p": {
+              "x": 6,
+              "y": 3
+            },
+            "b": 100,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 3
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 3
+              },
+              "to": {
+                "x": 6,
+                "y": 3
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-03",
+            "p": {
+              "x": 6,
+              "y": 4
+            },
+            "b": 92,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 4
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 4
+              },
+              "to": {
+                "x": 6,
+                "y": 4
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-04",
+            "p": {
+              "x": 0,
+              "y": 0
+            },
+            "b": 86.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 0,
+                "y": 0
+              },
+              "to": {
+                "x": 0,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-05",
+            "p": {
+              "x": 8,
+              "y": 0
+            },
+            "b": 88.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 8,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 8,
+                "y": 0
+              },
+              "to": {
+                "x": 8,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-06",
+            "p": {
+              "x": 6,
+              "y": 6
+            },
+            "b": 95,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 6
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 6
+              },
+              "to": {
+                "x": 6,
+                "y": 6
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          }
+        ]
+      },
+      {
+        "tick": 166,
+        "robots": [
+          {
+            "id": "AMR-01",
+            "p": {
+              "x": 16,
+              "y": 12
+            },
+            "b": 85.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 16,
+                "y": 12
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 16,
+                "y": 12
+              },
+              "to": {
+                "x": 16,
+                "y": 12
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-02",
+            "p": {
+              "x": 6,
+              "y": 2
+            },
+            "b": 99.5,
+            "task": "M-5",
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 2
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 3
+              },
+              "to": {
+                "x": 6,
+                "y": 2
+              },
+              "reason": "sensor-yield"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-03",
+            "p": {
+              "x": 6,
+              "y": 4
+            },
+            "b": 92,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 4
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 4
+              },
+              "to": {
+                "x": 6,
+                "y": 4
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-04",
+            "p": {
+              "x": 0,
+              "y": 0
+            },
+            "b": 86.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 0,
+                "y": 0
+              },
+              "to": {
+                "x": 0,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-05",
+            "p": {
+              "x": 8,
+              "y": 0
+            },
+            "b": 88.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 8,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 8,
+                "y": 0
+              },
+              "to": {
+                "x": 8,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-06",
+            "p": {
+              "x": 6,
+              "y": 6
+            },
+            "b": 95,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 6
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 6
+              },
+              "to": {
+                "x": 6,
+                "y": 6
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          }
+        ]
+      },
+      {
+        "tick": 167,
+        "robots": [
+          {
+            "id": "AMR-01",
+            "p": {
+              "x": 16,
+              "y": 12
+            },
+            "b": 85.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 16,
+                "y": 12
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 16,
+                "y": 12
+              },
+              "to": {
+                "x": 16,
+                "y": 12
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-02",
+            "p": {
+              "x": 6,
+              "y": 1
+            },
+            "b": 99,
+            "task": "M-5",
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 1
+              },
+              {
+                "x": 6,
+                "y": 0
+              },
+              {
+                "x": 7,
+                "y": 0
+              },
+              {
+                "x": 8,
+                "y": 0
+              },
+              {
+                "x": 9,
+                "y": 0
+              },
+              {
+                "x": 10,
+                "y": 0
+              },
+              {
+                "x": 11,
+                "y": 0
+              },
+              {
+                "x": 12,
+                "y": 0
+              },
+              {
+                "x": 13,
+                "y": 0
+              },
+              {
+                "x": 14,
+                "y": 0
+              },
+              {
+                "x": 14,
+                "y": 1
+              },
+              {
+                "x": 14,
+                "y": 2
+              },
+              {
+                "x": 14,
+                "y": 3
+              },
+              {
+                "x": 14,
+                "y": 4
+              },
+              {
+                "x": 14,
+                "y": 5
+              },
+              {
+                "x": 14,
+                "y": 6
+              },
+              {
+                "x": 14,
+                "y": 7
+              },
+              {
+                "x": 14,
+                "y": 8
+              },
+              {
+                "x": 15,
+                "y": 8
+              },
+              {
+                "x": 16,
+                "y": 8
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 2
+              },
+              "to": {
+                "x": 6,
+                "y": 1
+              },
+              "reason": "free"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-03",
+            "p": {
+              "x": 6,
+              "y": 4
+            },
+            "b": 92,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 4
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 4
+              },
+              "to": {
+                "x": 6,
+                "y": 4
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-04",
+            "p": {
+              "x": 0,
+              "y": 0
+            },
+            "b": 86.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 0,
+                "y": 0
+              },
+              "to": {
+                "x": 0,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-05",
+            "p": {
+              "x": 8,
+              "y": 0
+            },
+            "b": 88.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 8,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 8,
+                "y": 0
+              },
+              "to": {
+                "x": 8,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-06",
+            "p": {
+              "x": 6,
+              "y": 6
+            },
+            "b": 95,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 6
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 6
+              },
+              "to": {
+                "x": 6,
+                "y": 6
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          }
+        ]
+      },
+      {
+        "tick": 168,
+        "robots": [
+          {
+            "id": "AMR-01",
+            "p": {
+              "x": 16,
+              "y": 12
+            },
+            "b": 85.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 16,
+                "y": 12
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 16,
+                "y": 12
+              },
+              "to": {
+                "x": 16,
+                "y": 12
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-02",
+            "p": {
+              "x": 6,
+              "y": 0
+            },
+            "b": 98.5,
+            "task": "M-5",
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 0
+              },
+              {
+                "x": 7,
+                "y": 0
+              },
+              {
+                "x": 8,
+                "y": 0
+              },
+              {
+                "x": 9,
+                "y": 0
+              },
+              {
+                "x": 10,
+                "y": 0
+              },
+              {
+                "x": 11,
+                "y": 0
+              },
+              {
+                "x": 12,
+                "y": 0
+              },
+              {
+                "x": 13,
+                "y": 0
+              },
+              {
+                "x": 14,
+                "y": 0
+              },
+              {
+                "x": 14,
+                "y": 1
+              },
+              {
+                "x": 14,
+                "y": 2
+              },
+              {
+                "x": 14,
+                "y": 3
+              },
+              {
+                "x": 14,
+                "y": 4
+              },
+              {
+                "x": 14,
+                "y": 5
+              },
+              {
+                "x": 14,
+                "y": 6
+              },
+              {
+                "x": 14,
+                "y": 7
+              },
+              {
+                "x": 14,
+                "y": 8
+              },
+              {
+                "x": 15,
+                "y": 8
+              },
+              {
+                "x": 16,
+                "y": 8
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 1
+              },
+              "to": {
+                "x": 6,
+                "y": 0
+              },
+              "reason": "free"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-03",
+            "p": {
+              "x": 6,
+              "y": 4
+            },
+            "b": 92,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 4
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 4
+              },
+              "to": {
+                "x": 6,
+                "y": 4
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-04",
+            "p": {
+              "x": 0,
+              "y": 0
+            },
+            "b": 86.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 0,
+                "y": 0
+              },
+              "to": {
+                "x": 0,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-05",
+            "p": {
+              "x": 8,
+              "y": 0
+            },
+            "b": 88.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 8,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 8,
+                "y": 0
+              },
+              "to": {
+                "x": 8,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-06",
+            "p": {
+              "x": 6,
+              "y": 6
+            },
+            "b": 95,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 6
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 6
+              },
+              "to": {
+                "x": 6,
+                "y": 6
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          }
+        ]
+      },
+      {
+        "tick": 169,
+        "robots": [
+          {
+            "id": "AMR-01",
+            "p": {
+              "x": 16,
+              "y": 12
+            },
+            "b": 85.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 16,
+                "y": 12
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 16,
+                "y": 12
+              },
+              "to": {
+                "x": 16,
+                "y": 12
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-02",
+            "p": {
+              "x": 7,
+              "y": 0
+            },
+            "b": 98,
+            "task": "M-5",
+            "queue": [],
+            "path": [
+              {
+                "x": 7,
+                "y": 0
+              },
+              {
+                "x": 8,
+                "y": 0
+              },
+              {
+                "x": 9,
+                "y": 0
+              },
+              {
+                "x": 10,
+                "y": 0
+              },
+              {
+                "x": 11,
+                "y": 0
+              },
+              {
+                "x": 12,
+                "y": 0
+              },
+              {
+                "x": 13,
+                "y": 0
+              },
+              {
+                "x": 14,
+                "y": 0
+              },
+              {
+                "x": 14,
+                "y": 1
+              },
+              {
+                "x": 14,
+                "y": 2
+              },
+              {
+                "x": 14,
+                "y": 3
+              },
+              {
+                "x": 14,
+                "y": 4
+              },
+              {
+                "x": 14,
+                "y": 5
+              },
+              {
+                "x": 14,
+                "y": 6
+              },
+              {
+                "x": 14,
+                "y": 7
+              },
+              {
+                "x": 14,
+                "y": 8
+              },
+              {
+                "x": 15,
+                "y": 8
+              },
+              {
+                "x": 16,
+                "y": 8
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 0
+              },
+              "to": {
+                "x": 7,
+                "y": 0
+              },
+              "reason": "free"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-03",
+            "p": {
+              "x": 6,
+              "y": 4
+            },
+            "b": 92,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 4
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 4
+              },
+              "to": {
+                "x": 6,
+                "y": 4
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-04",
+            "p": {
+              "x": 0,
+              "y": 0
+            },
+            "b": 86.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 0,
+                "y": 0
+              },
+              "to": {
+                "x": 0,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-05",
+            "p": {
+              "x": 8,
+              "y": 0
+            },
+            "b": 88.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 8,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 8,
+                "y": 0
+              },
+              "to": {
+                "x": 8,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-06",
+            "p": {
+              "x": 6,
+              "y": 6
+            },
+            "b": 95,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 6
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 6
+              },
+              "to": {
+                "x": 6,
+                "y": 6
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          }
+        ]
+      },
+      {
+        "tick": 170,
+        "robots": [
+          {
+            "id": "AMR-01",
+            "p": {
+              "x": 16,
+              "y": 12
+            },
+            "b": 85.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 16,
+                "y": 12
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 16,
+                "y": 12
+              },
+              "to": {
+                "x": 16,
+                "y": 12
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-02",
+            "p": {
+              "x": 6,
+              "y": 0
+            },
+            "b": 97.5,
+            "task": "M-5",
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 7,
+                "y": 0
+              },
+              "to": {
+                "x": 6,
+                "y": 0
+              },
+              "reason": "sensor-yield"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-03",
+            "p": {
+              "x": 6,
+              "y": 4
+            },
+            "b": 92,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 4
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 4
+              },
+              "to": {
+                "x": 6,
+                "y": 4
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-04",
+            "p": {
+              "x": 0,
+              "y": 0
+            },
+            "b": 86.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 0,
+                "y": 0
+              },
+              "to": {
+                "x": 0,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-05",
+            "p": {
+              "x": 8,
+              "y": 0
+            },
+            "b": 88.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 8,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 8,
+                "y": 0
+              },
+              "to": {
+                "x": 8,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-06",
+            "p": {
+              "x": 6,
+              "y": 6
+            },
+            "b": 95,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 6
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 6
+              },
+              "to": {
+                "x": 6,
+                "y": 6
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          }
+        ]
+      },
+      {
+        "tick": 171,
+        "robots": [
+          {
+            "id": "AMR-01",
+            "p": {
+              "x": 16,
+              "y": 12
+            },
+            "b": 85.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 16,
+                "y": 12
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 16,
+                "y": 12
+              },
+              "to": {
+                "x": 16,
+                "y": 12
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-02",
+            "p": {
+              "x": 6,
+              "y": 1
+            },
+            "b": 97,
+            "task": "M-5",
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 1
+              },
+              {
+                "x": 6,
+                "y": 2
+              },
+              {
+                "x": 6,
+                "y": 3
+              },
+              {
+                "x": 6,
+                "y": 4
+              },
+              {
+                "x": 7,
+                "y": 4
+              },
+              {
+                "x": 8,
+                "y": 4
+              },
+              {
+                "x": 9,
+                "y": 4
+              },
+              {
+                "x": 10,
+                "y": 4
+              },
+              {
+                "x": 11,
+                "y": 4
+              },
+              {
+                "x": 12,
+                "y": 4
+              },
+              {
+                "x": 13,
+                "y": 4
+              },
+              {
+                "x": 14,
+                "y": 4
+              },
+              {
+                "x": 14,
+                "y": 5
+              },
+              {
+                "x": 14,
+                "y": 6
+              },
+              {
+                "x": 14,
+                "y": 7
+              },
+              {
+                "x": 14,
+                "y": 8
+              },
+              {
+                "x": 15,
+                "y": 8
+              },
+              {
+                "x": 16,
+                "y": 8
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 0
+              },
+              "to": {
+                "x": 6,
+                "y": 1
+              },
+              "reason": "free"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-03",
+            "p": {
+              "x": 6,
+              "y": 4
+            },
+            "b": 92,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 4
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 4
+              },
+              "to": {
+                "x": 6,
+                "y": 4
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-04",
+            "p": {
+              "x": 0,
+              "y": 0
+            },
+            "b": 86.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 0,
+                "y": 0
+              },
+              "to": {
+                "x": 0,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-05",
+            "p": {
+              "x": 8,
+              "y": 0
+            },
+            "b": 88.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 8,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 8,
+                "y": 0
+              },
+              "to": {
+                "x": 8,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-06",
+            "p": {
+              "x": 6,
+              "y": 6
+            },
+            "b": 95,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 6
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 6
+              },
+              "to": {
+                "x": 6,
+                "y": 6
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          }
+        ]
+      },
+      {
+        "tick": 172,
+        "robots": [
+          {
+            "id": "AMR-01",
+            "p": {
+              "x": 16,
+              "y": 12
+            },
+            "b": 85.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 16,
+                "y": 12
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 16,
+                "y": 12
+              },
+              "to": {
+                "x": 16,
+                "y": 12
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-02",
+            "p": {
+              "x": 6,
+              "y": 2
+            },
+            "b": 96.5,
+            "task": "M-5",
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 2
+              },
+              {
+                "x": 6,
+                "y": 3
+              },
+              {
+                "x": 6,
+                "y": 4
+              },
+              {
+                "x": 7,
+                "y": 4
+              },
+              {
+                "x": 8,
+                "y": 4
+              },
+              {
+                "x": 9,
+                "y": 4
+              },
+              {
+                "x": 10,
+                "y": 4
+              },
+              {
+                "x": 11,
+                "y": 4
+              },
+              {
+                "x": 12,
+                "y": 4
+              },
+              {
+                "x": 13,
+                "y": 4
+              },
+              {
+                "x": 14,
+                "y": 4
+              },
+              {
+                "x": 14,
+                "y": 5
+              },
+              {
+                "x": 14,
+                "y": 6
+              },
+              {
+                "x": 14,
+                "y": 7
+              },
+              {
+                "x": 14,
+                "y": 8
+              },
+              {
+                "x": 15,
+                "y": 8
+              },
+              {
+                "x": 16,
+                "y": 8
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 1
+              },
+              "to": {
+                "x": 6,
+                "y": 2
+              },
+              "reason": "free"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-03",
+            "p": {
+              "x": 6,
+              "y": 4
+            },
+            "b": 92,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 4
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 4
+              },
+              "to": {
+                "x": 6,
+                "y": 4
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-04",
+            "p": {
+              "x": 0,
+              "y": 0
+            },
+            "b": 86.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 0,
+                "y": 0
+              },
+              "to": {
+                "x": 0,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-05",
+            "p": {
+              "x": 8,
+              "y": 0
+            },
+            "b": 88.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 8,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 8,
+                "y": 0
+              },
+              "to": {
+                "x": 8,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-06",
+            "p": {
+              "x": 6,
+              "y": 6
+            },
+            "b": 95,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 6
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 6
+              },
+              "to": {
+                "x": 6,
+                "y": 6
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          }
+        ]
+      },
+      {
+        "tick": 173,
+        "robots": [
+          {
+            "id": "AMR-01",
+            "p": {
+              "x": 16,
+              "y": 12
+            },
+            "b": 85.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 16,
+                "y": 12
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 16,
+                "y": 12
+              },
+              "to": {
+                "x": 16,
+                "y": 12
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-02",
+            "p": {
+              "x": 6,
+              "y": 3
+            },
+            "b": 96,
+            "task": "M-5",
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 3
+              },
+              {
+                "x": 6,
+                "y": 4
+              },
+              {
+                "x": 7,
+                "y": 4
+              },
+              {
+                "x": 8,
+                "y": 4
+              },
+              {
+                "x": 9,
+                "y": 4
+              },
+              {
+                "x": 10,
+                "y": 4
+              },
+              {
+                "x": 11,
+                "y": 4
+              },
+              {
+                "x": 12,
+                "y": 4
+              },
+              {
+                "x": 13,
+                "y": 4
+              },
+              {
+                "x": 14,
+                "y": 4
+              },
+              {
+                "x": 14,
+                "y": 5
+              },
+              {
+                "x": 14,
+                "y": 6
+              },
+              {
+                "x": 14,
+                "y": 7
+              },
+              {
+                "x": 14,
+                "y": 8
+              },
+              {
+                "x": 15,
+                "y": 8
+              },
+              {
+                "x": 16,
+                "y": 8
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 2
+              },
+              "to": {
+                "x": 6,
+                "y": 3
+              },
+              "reason": "free"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-03",
+            "p": {
+              "x": 6,
+              "y": 4
+            },
+            "b": 92,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 4
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 4
+              },
+              "to": {
+                "x": 6,
+                "y": 4
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-04",
+            "p": {
+              "x": 0,
+              "y": 0
+            },
+            "b": 86.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 0,
+                "y": 0
+              },
+              "to": {
+                "x": 0,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-05",
+            "p": {
+              "x": 8,
+              "y": 0
+            },
+            "b": 88.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 8,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 8,
+                "y": 0
+              },
+              "to": {
+                "x": 8,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-06",
+            "p": {
+              "x": 6,
+              "y": 6
+            },
+            "b": 95,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 6
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 6
+              },
+              "to": {
+                "x": 6,
+                "y": 6
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          }
+        ]
+      },
+      {
+        "tick": 174,
+        "robots": [
+          {
+            "id": "AMR-01",
+            "p": {
+              "x": 16,
+              "y": 12
+            },
+            "b": 85.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 16,
+                "y": 12
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 16,
+                "y": 12
+              },
+              "to": {
+                "x": 16,
+                "y": 12
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-02",
+            "p": {
+              "x": 6,
+              "y": 2
+            },
+            "b": 95.5,
+            "task": "M-5",
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 2
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 3
+              },
+              "to": {
+                "x": 6,
+                "y": 2
+              },
+              "reason": "sensor-yield"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-03",
+            "p": {
+              "x": 6,
+              "y": 4
+            },
+            "b": 92,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 4
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 4
+              },
+              "to": {
+                "x": 6,
+                "y": 4
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-04",
+            "p": {
+              "x": 0,
+              "y": 0
+            },
+            "b": 86.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 0,
+                "y": 0
+              },
+              "to": {
+                "x": 0,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-05",
+            "p": {
+              "x": 8,
+              "y": 0
+            },
+            "b": 88.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 8,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 8,
+                "y": 0
+              },
+              "to": {
+                "x": 8,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-06",
+            "p": {
+              "x": 6,
+              "y": 6
+            },
+            "b": 95,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 6
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 6
+              },
+              "to": {
+                "x": 6,
+                "y": 6
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          }
+        ]
+      },
+      {
+        "tick": 175,
+        "robots": [
+          {
+            "id": "AMR-01",
+            "p": {
+              "x": 16,
+              "y": 12
+            },
+            "b": 85.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 16,
+                "y": 12
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 16,
+                "y": 12
+              },
+              "to": {
+                "x": 16,
+                "y": 12
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-02",
+            "p": {
+              "x": 6,
+              "y": 1
+            },
+            "b": 95,
+            "task": "M-5",
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 1
+              },
+              {
+                "x": 6,
+                "y": 0
+              },
+              {
+                "x": 7,
+                "y": 0
+              },
+              {
+                "x": 8,
+                "y": 0
+              },
+              {
+                "x": 9,
+                "y": 0
+              },
+              {
+                "x": 10,
+                "y": 0
+              },
+              {
+                "x": 11,
+                "y": 0
+              },
+              {
+                "x": 12,
+                "y": 0
+              },
+              {
+                "x": 13,
+                "y": 0
+              },
+              {
+                "x": 14,
+                "y": 0
+              },
+              {
+                "x": 14,
+                "y": 1
+              },
+              {
+                "x": 14,
+                "y": 2
+              },
+              {
+                "x": 14,
+                "y": 3
+              },
+              {
+                "x": 14,
+                "y": 4
+              },
+              {
+                "x": 14,
+                "y": 5
+              },
+              {
+                "x": 14,
+                "y": 6
+              },
+              {
+                "x": 14,
+                "y": 7
+              },
+              {
+                "x": 14,
+                "y": 8
+              },
+              {
+                "x": 15,
+                "y": 8
+              },
+              {
+                "x": 16,
+                "y": 8
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 2
+              },
+              "to": {
+                "x": 6,
+                "y": 1
+              },
+              "reason": "free"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-03",
+            "p": {
+              "x": 6,
+              "y": 4
+            },
+            "b": 92,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 4
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 4
+              },
+              "to": {
+                "x": 6,
+                "y": 4
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-04",
+            "p": {
+              "x": 0,
+              "y": 0
+            },
+            "b": 86.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 0,
+                "y": 0
+              },
+              "to": {
+                "x": 0,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-05",
+            "p": {
+              "x": 8,
+              "y": 0
+            },
+            "b": 88.5,
+            "queue": [],
+            "path": [
+              {
+                "x": 8,
+                "y": 0
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 8,
+                "y": 0
+              },
+              "to": {
+                "x": 8,
+                "y": 0
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          },
+          {
+            "id": "AMR-06",
+            "p": {
+              "x": 6,
+              "y": 6
+            },
+            "b": 95,
+            "queue": [],
+            "path": [
+              {
+                "x": 6,
+                "y": 6
+              }
+            ],
+            "decision": {
+              "from": {
+                "x": 6,
+                "y": 6
+              },
+              "to": {
+                "x": 6,
+                "y": 6
+              },
+              "reason": "no-move"
+            },
+            "blockers": []
+          }
+        ]
+      }
+    ]
+  },
+  "rootCause": "Blocker A evidence erased on first encounter with blocker B; safety yielding alternates routes, never retaining either obstruction. Repeated detours spend energy until safe reserve gate holds."
+}

@@ -319,6 +319,7 @@ export class DistributedFleet {
     for (const agent of this.activeAgents) {
       const local = agent.getLocal();
       const robot = this.robots.find((r) => r.id === agent.id)!;
+      agent.setIdleYieldAllowed(robot.status === "idle" && !robot.currentTaskId && !(robot.queuedTaskIds?.length));
       const override = this.options.goalOverride?.(robot);
       const goal = override === undefined ? goalOf(robot, this.tasks) : override;
       if (!goal) {

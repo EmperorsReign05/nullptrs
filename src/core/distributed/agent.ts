@@ -37,7 +37,7 @@ const EMPTY_BAYS: ReadonlySet<string> = new Set<string>();
 export const COMMIT_WINDOW = 3;
 
 /**
- * Consecutive ticks the same physical cell must block my next step before I
+ * Distinct encounters where the same physical cell blocks my next step before I
  * treat it as a wall for planning. One tick of blockage is ordinary traffic and
  * must not re-plan; a robot standing still in a single-file corridor blocks me
  * on every tick, and that is the case A* cannot see through on its own.
@@ -81,8 +81,8 @@ export class Agent {
   private lastScan: SensorScan | null = null;
   /** Cell -> when I learned it was impassable for me. Learned from my sensor. */
   private rememberedBlockers = new Map<string, { pos: Position; until: number }>();
-  /** Consecutive ticks each candidate blocker has denied me my next step. */
-  private blockerStreak = new Map<string, number>();
+  /** Per-cell denied-step observations, retained across safety displacements. */
+  private blockerStreak = new Map<string, { observations: number; tick: number }>();
 
   constructor(
     public id: PeerId,
@@ -120,6 +120,9 @@ export class Agent {
     this.sensorFeed = positions;
   }
   private sensorFeed: Position[] = [];
+  private idleYieldAllowed = false;
+  /** Lifecycle authorization, never inferred merely from a one-cell route. */
+  setIdleYieldAllowed(allowed: boolean): void { this.idleYieldAllowed = allowed; }
 
   getScan(): SensorScan {
     return scan(this.local.position, this.sensorFeed, this.map, this.sensorRange);
@@ -179,9 +182,20 @@ export class Agent {
       if (this.scanSees(sensorScan, entry.pos) && !isLocallySafe(sensorScan, entry.pos)) continue;
       if (this.scanSees(sensorScan, entry.pos)) this.rememberedBlockers.delete(bk);
     }
-    const streak = (this.blockerStreak.get(k) ?? 0) + 1;
-    this.blockerStreak.set(k, streak);
-    for (const other of this.blockerStreak.keys()) if (other !== k) this.blockerStreak.delete(other);
+    // Count repeated encounters with EACH occupied cell. A safety yield can
+    // move us away before the next tick, and a second stationary blocker can
+    // send us back. Forgetting every other cell on each encounter made that
+    // cycle invisible forever (seed 26059 alternated between (6,4)/(8,0)).
+    // Expiration bounds memory; a locally observed empty cell resets evidence.
+    for (const [key, evidence] of this.blockerStreak) {
+      const [x, y] = key.split(",").map(Number);
+      const visible = manhattanDistance(this.local.position, { x, y }) <= this.sensorRange;
+      if (currentTick - evidence.tick >= BLOCKER_MEMORY_TICKS ||
+        (key !== k && visible && isLocallySafe(sensorScan, { x, y }))) this.blockerStreak.delete(key);
+    }
+    const previous = this.blockerStreak.get(k);
+    const streak = previous?.tick === currentTick ? previous.observations : (previous?.observations ?? 0) + 1;
+    this.blockerStreak.set(k, { observations: streak, tick: currentTick });
     if (streak < PERSISTENT_BLOCK_TICKS) return;
     if (this.rememberedBlockers.has(k)) return;
     this.rememberedBlockers.set(k, { pos: { ...cell }, until: currentTick + BLOCKER_MEMORY_TICKS });
@@ -445,8 +459,20 @@ export class Agent {
     const decision: AgentDecision = { from, to: from, reason: preferred ? "free" : "no-move" };
 
     if (!preferred) {
-      this.lastDecision = decision;
-      return decision;
+      // An idle robot is still a physical obstacle. A fresh adjacent peer
+      // explicitly targeting our cell may ask us to clear it. This is only a
+      // local proposal: sensing, normal intent confirmation and the caller's
+      // energy/lifecycle gate still have to approve the relocation.
+      const requester = this.idleYieldAllowed && !this.local.docked && [...this.peers.values()].find(p =>
+        p.preferred && positionsEqual(p.preferred, from) && p.seq >= this.local.seq - 1 &&
+        manhattanDistance(p.position, from) === 1 &&
+        (this.scanSees(sensorScan, p.position) || !!p.intent && this.scanSees(sensorScan, p.intent)));
+      const escape = requester ? getNeighbors(from, this.map)
+        .filter(p => isLocallySafe(sensorScan, p) && this.bayIsFree(p))
+        .sort((a, b) => manhattanDistance(b, requester.position) - manhattanDistance(a, requester.position) ||
+          getNeighbors(b, this.map).length - getNeighbors(a, this.map).length)[0] : undefined;
+      this.lastDecision = escape ? { from, to: escape, reason: "step-aside" } : decision;
+      return this.lastDecision;
     }
     if (!isTraversable(preferred, this.map) || manhattanDistance(preferred, from) !== 1) {
       // Stale route: let the planner own this, just report it.
