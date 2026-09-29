@@ -350,17 +350,19 @@ export class Agent {
     return me.id < other.id;
   }
 
-  decide(currentTick: number): AgentDecision {
+  /** Shared observations for both motion policies; no yielding side effects. */
+  observeMotion(currentTick: number): SensorScan {
     this.refreshPeers(currentTick);
-
-    const from = this.local.position;
-
-    // ---- LAYER 1: local safety, independent of the network ----
-    // Checked before anything a peer told us, because a sensed robot is a
-    // fact while a message is a claim. On a partitioned fleet this is the
-    // ONLY thing preventing two robots from occupying one cell.
     const sensorScan = this.getScan();
     this.lastScan = sensorScan;
+    const preferred = this.local.path[1];
+    if (preferred && !isLocallySafe(sensorScan, preferred)) this.noteBlocker(preferred, sensorScan, currentTick);
+    return sensorScan;
+  }
+
+  decide(currentTick: number): AgentDecision {
+    const from = this.local.position;
+    const sensorScan = this.observeMotion(currentTick);
     // Two agents adjacent in a corridor each forbid the other's cell purely
     // because the other is NEAR, and neither is on its own next step, so
     // neither the sensor gate nor the peer logic offers a move: measured as
@@ -379,7 +381,7 @@ export class Agent {
       // it: if the SAME cell keeps blocking me, the route through it is not
       // merely slow, it is impossible, and I have to plan around it. See
       // noteBlocker() for why A* will not do this on its own.
-      this.noteBlocker(preferredCell, sensorScan, currentTick);
+
       // Try any safe neighbour that makes progress, then any safe
       // neighbour, then retreat. Never hold position with a robot about to
       // enter this cell.

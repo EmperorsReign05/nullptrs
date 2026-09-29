@@ -4,6 +4,7 @@
 // radius-two simulated sensor; there is no global winner/arbitration pass.
 // Both modes use shared simulation tick boundaries, not asynchronous hardware.
 
+import { resolveStopAndWait } from "../bench/stopwait";
 import { computeCongestion } from "../map/warehouse";
 import { planPath } from "../pathfinding/astar";
 import { positionsEqual } from "../map/graph";
@@ -14,6 +15,8 @@ import type { Position, RobotState, Task, WarehouseMap, WorldState } from "../ty
 
 export type FleetOptions = {
   localCommit?: boolean;
+  /** Measurement-only comparator; keeps allocation and planning unchanged. */
+  motionPolicy?: "stop-and-wait";
   arrivalAllowed?: (robot: RobotState, task: Task, phase: "pickup" | "dropoff") => boolean;
   commRange?: number;
   /** Passing bays this fleet may step aside into. */
@@ -91,6 +94,21 @@ export class DistributedFleet {
     // inbox and so read a peer set that earlier-iterated agents had already
     // updated — making the outcome depend on iteration order, and letting an
     // agent execute a move that commit-time arbitration had never judged.
+    if (this.options.motionPolicy === "stop-and-wait") {
+      for (const agent of this.activeAgents) agent.observeMotion(tick);
+      // Include inactive bodies as obstacles, with no desired movement.
+      const robots = this.robots.map(r => ({ ...r, path: this.inactive.has(r.id) ? [] : this.agents.get(r.id)!.getLocal().path }));
+      const world: WorldState = { map: this.map, robots, tasks: this.tasks, tick,
+        metrics: { replans: 0, conflictCount: 0, waitMoves: 0, inheritedPriorities: 0, backtracks: 0 } };
+      const { moves } = resolveStopAndWait(robots, world);
+      for (const move of moves) this.agents.get(move.robotId)!.overrideDecision({
+        from: move.from, to: move.to, reason: positionsEqual(move.from, move.to) ? "no-move" : "free",
+      });
+      for (const agent of this.activeAgents) agent.tick(tick);
+      for (const t of this.transports.values()) t.advanceClock();
+      return new Set(moves.filter(m => !positionsEqual(m.from, m.to)).map(m => m.robotId));
+    }
+
     const decisions = new Map<PeerId, ReturnType<Agent["decide"]>>();
     for (const agent of this.activeAgents) decisions.set(agent.id, agent.decide(tick));
 

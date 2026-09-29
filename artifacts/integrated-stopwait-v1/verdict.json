@@ -1,0 +1,38 @@
+{
+  "target20PercentEstablished": false,
+  "statisticallyEstablishedSpeedup": false,
+  "aggregateReliabilityNonRegression": true,
+  "perSeedReliabilityNonRegression": false,
+  "zeroBatteryWorkNonRegression": false,
+  "collisionMetricsNonRegression": true,
+  "diagnosticSeeds": 16,
+  "exhaustionSeeds": 13,
+  "underpoweredMovesInDiagnosticReplays": 0,
+  "validation": {
+    "typescript": "passed",
+    "fleetBuild": "passed",
+    "fullSuite": {
+      "passed": 317,
+      "failed": 3,
+      "skipped": 13,
+      "knownFailures": [
+        "compare.test.ts n=10 cycles",
+        "compare.test.ts n=20 cycles",
+        "udp.test.ts datagram timing under suite load"
+      ]
+    },
+    "targetedOwnershipAuctionEndToEnd": {
+      "passed": 40
+    },
+    "localCommitAndLiveness": {
+      "passed": 8
+    },
+    "measurementAndAdapter": {
+      "passed": 2
+    },
+    "energyDiagnosticAndAdapter": {
+      "passed": 2
+    },
+    "udpStandalone": "passed"
+  }
+}

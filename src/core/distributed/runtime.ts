@@ -24,7 +24,7 @@ export class FleetRuntime {
   private dead = new Set<string>();
   running = true;
   aiEnabled = true;
-  constructor(world?: WorldState, private model: BidModel = frozen.model) {
+  constructor(world?: WorldState, private model: BidModel = frozen.model, options: { motionPolicy?: "stop-and-wait" } = {}) {
     this.world = structuredClone(world ?? createInitialWorld());
     if (!world) { this.world.robots = this.world.robots.slice(0, 3); this.world.tasks = []; }
     this.world.robots.forEach(r => { r.currentTaskId = undefined; r.queuedTaskIds = []; r.path = []; r.status = "idle"; });
@@ -33,7 +33,7 @@ export class FleetRuntime {
       const channel = new InMemoryTransport(r.id, bus); ids.filter(id => id !== r.id).forEach(id => channel.addPeer(id)); this.channels.set(r.id, channel);
       this.peers.set(r.id, new OwnershipPeer(r.id, ids, channel, (task, tick) => this.bid(r.id, task, tick)));
     }
-    this.fleet = new DistributedFleet(this.world.map, this.world.robots, this.world.tasks, { commRange: 6, localCommit: true,
+    this.fleet = new DistributedFleet(this.world.map, this.world.robots, this.world.tasks, { commRange: 6, localCommit: true, motionPolicy: options.motionPolicy,
       arrivalAllowed: (r, t, phase) => {
         const peer = this.peers.get(r.id)!;
         if (!peer.mayExecute(t.id)) return phase === "dropoff" && peer.acknowledged(t.id, "completed");

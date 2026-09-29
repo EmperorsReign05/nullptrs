@@ -74,3 +74,7 @@ npx vitest run                     # known failures are documented above
 ```
 
 `FLEET_PORT` configures the backend port; `FLEET_URL` configures the Next proxy's backend address. The compiled fleet uses Node built-ins and the existing TypeScript toolchain; no middleware/dependency framework was added.
+
+## Subsequent integrated measurement
+
+The previously missing integrated stop-and-wait comparison is now recorded in [integrated-stopwait-v1](../integrated-stopwait-v1/summary.md). Across 200 paired seeds, completion was 176→180 runs; jointly completed pairs showed only 0.335% faster mean completion (95% interval −0.171% to +1.027%). The ≥20% claim is not established. Thirteen integrated runs exhausted battery with unfinished work; this supersedes any inference of energy safety beyond the original audit scenarios. Historical audit measurements above are unchanged.
