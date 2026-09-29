@@ -1,0 +1,256 @@
+{
+  "schema": 1,
+  "subject": "N-robot generalization: one fleet config drives controllers, ROS namespaces, Nav2 stacks, DDS peers and executors",
+  "fleetConfig": "config/fleet.json, overridable per run with FLEET_CONFIG",
+  "launchAnyN": "npm run fleet:n -- --robots <N>   (software fleet over real Fast DDS)\nnpm run fleet:n:nav2 -- --robots <N>  (same fleet through real Nav2)",
+  "maxN": {
+    "nav2ContinuousExecution": 6,
+    "softwareFastDds": 8,
+    "ownershipQuorumTests": 8,
+    "note": "Nav2 N=7 and N=8 start every controller/stack/peer with zero safety violations but complete no task: the serialized lockstep commit makes one logical tick span N real Nav2 moves, which exceeds the 6-tick peer liveness window. Changing that constant is an ownership-semantics change and is out of scope for this pass."
+  },
+  "results": [
+    {
+      "run": "nav2-n1",
+      "robots": 1,
+      "nav2": true,
+      "passed": true,
+      "controllersStarted": 1,
+      "ddsPeersReady": 1,
+      "tasksCompleted": 1,
+      "totalTasks": 1,
+      "killedController": null,
+      "nav2Actions": 5,
+      "ticks": 118,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    },
+    {
+      "run": "nav2-n3",
+      "robots": 3,
+      "nav2": true,
+      "passed": true,
+      "controllersStarted": 3,
+      "ddsPeersReady": 3,
+      "tasksCompleted": 3,
+      "totalTasks": 3,
+      "killedController": null,
+      "nav2Actions": 12,
+      "ticks": 119,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    },
+    {
+      "run": "nav2-n5",
+      "robots": 5,
+      "nav2": true,
+      "passed": true,
+      "controllersStarted": 5,
+      "ddsPeersReady": 5,
+      "tasksCompleted": 5,
+      "totalTasks": 5,
+      "killedController": null,
+      "nav2Actions": 16,
+      "ticks": 143,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    },
+    {
+      "run": "nav2-n6",
+      "robots": 6,
+      "nav2": true,
+      "passed": true,
+      "controllersStarted": 6,
+      "ddsPeersReady": 6,
+      "tasksCompleted": 6,
+      "totalTasks": 6,
+      "killedController": null,
+      "nav2Actions": 18,
+      "ticks": 278,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    },
+    {
+      "run": "software-n1",
+      "robots": 1,
+      "nav2": false,
+      "passed": true,
+      "controllersStarted": 1,
+      "ddsPeersReady": 1,
+      "tasksCompleted": 1,
+      "totalTasks": 1,
+      "killedController": null,
+      "nav2Actions": null,
+      "ticks": 138,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    },
+    {
+      "run": "software-n3-nokill",
+      "robots": 3,
+      "nav2": false,
+      "passed": true,
+      "controllersStarted": 3,
+      "ddsPeersReady": 3,
+      "tasksCompleted": 3,
+      "totalTasks": 3,
+      "killedController": null,
+      "nav2Actions": null,
+      "ticks": 143,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    },
+    {
+      "run": "software-n3",
+      "robots": 3,
+      "nav2": false,
+      "passed": true,
+      "controllersStarted": 3,
+      "ddsPeersReady": 3,
+      "tasksCompleted": 2,
+      "totalTasks": 3,
+      "killedController": "AMR-03",
+      "nav2Actions": null,
+      "ticks": 420,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    },
+    {
+      "run": "software-n5-nokill",
+      "robots": 5,
+      "nav2": false,
+      "passed": true,
+      "controllersStarted": 5,
+      "ddsPeersReady": 5,
+      "tasksCompleted": 5,
+      "totalTasks": 5,
+      "killedController": null,
+      "nav2Actions": null,
+      "ticks": 169,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    },
+    {
+      "run": "software-n5",
+      "robots": 5,
+      "nav2": false,
+      "passed": true,
+      "controllersStarted": 5,
+      "ddsPeersReady": 5,
+      "tasksCompleted": 3,
+      "totalTasks": 5,
+      "killedController": "AMR-03",
+      "nav2Actions": null,
+      "ticks": 700,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    },
+    {
+      "run": "software-n8-nokill",
+      "robots": 8,
+      "nav2": false,
+      "passed": true,
+      "controllersStarted": 8,
+      "ddsPeersReady": 8,
+      "tasksCompleted": 8,
+      "totalTasks": 8,
+      "killedController": null,
+      "nav2Actions": null,
+      "ticks": 313,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    },
+    {
+      "run": "software-n8",
+      "robots": 8,
+      "nav2": false,
+      "passed": true,
+      "controllersStarted": 8,
+      "ddsPeersReady": 8,
+      "tasksCompleted": 6,
+      "totalTasks": 8,
+      "killedController": "AMR-03",
+      "nav2Actions": null,
+      "ticks": 1120,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0,
+        "nonAdjacentMoves": 0
+      }
+    }
+  ]
+}

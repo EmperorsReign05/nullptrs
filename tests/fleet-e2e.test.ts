@@ -4,9 +4,16 @@ import { FleetRuntime } from "../src/core/distributed/runtime";
 import { createInitialWorld } from "../src/core/simulation/state";
 import type { BidModel } from "../src/core/ml/bidmodel";
 import type { Task } from "../src/core/types";
-function setup() {
+function setup(fleetSize = 3) {
   const world = createInitialWorld(); world.tasks = [];
-  world.robots = world.robots.slice(0, 3).map((r, i) => ({ ...r, position: { x: [3,9,12][i], y: 0 }, home: { x: [3,9,12][i], y: 0 }, battery: 95, currentTaskId: undefined, queuedTaskIds: [], path: [], status: "idle" as const }));
+  // Spawn on the open bottom row, so fleet size is the only thing that changes.
+  const lane = world.map.cells.filter(c => !c.blocked && c.position.y === 0).map(c => c.position.x);
+  const spawn = (i: number) => {
+    const x = lane[i * 2]; // every other cell, so starts are never adjacent
+    if (x === undefined) throw new Error(`spawn pool exhausted for fleetSize=${fleetSize}`);
+    return { x, y: 0 };
+  };
+  world.robots = world.robots.slice(0, fleetSize).map((r, i) => ({ ...r, position: spawn(i), home: spawn(i), battery: 95, currentTaskId: undefined, queuedTaskIds: [], path: [], status: "idle" as const }));
   return world;
 }
 const task = (id: string): Task => ({ id, pickup: { x: 6, y: 4 }, dropoff: { x: 12, y: 10 }, weight: 10, createdAt: 0, priority: 1, status: "pending" });

@@ -12,7 +12,8 @@ it("profiling preserves runtime outcomes and partitions all robot ticks",()=>{
   expect(measured.ticks).toBe(plain.world.tick);
   expect(measured.safety).toEqual(plain.safety);
   expect(measured.metrics).toEqual(plain.metrics);
-  expect(Object.values(measured.categories).reduce((a,b)=>a+b,0)).toBe(measured.ticks*3);
+  // Fleet size comes from the run, not a literal in the invariant.
+  expect(Object.values(measured.categories).reduce((a,b)=>a+b,0)).toBe(measured.ticks*measured.n);
   expect(measured.taskTrace["M-0"].firstBid).toBe(3);
   expect(measured.taskTrace["M-5"].firstBid).toBe(163);
  }

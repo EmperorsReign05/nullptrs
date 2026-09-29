@@ -1,16 +1,18 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { EdgeSimulation, startAgents } from "./edge-sim.mjs";
+import { buildEndpoints, loadFleetConfig } from "./fleet-config.mjs";
 const accepting=process.argv.includes("--accept");
 const remote=process.argv.find(a=>a.startsWith("--endpoints="))?.split("=")[1];
-const endpoints=remote?JSON.parse(await readFile(remote,"utf8")):[0,1,2].map(i=>({id:`AMR-0${i+1}`,host:"127.0.0.1",controlPort:17401+i,ownershipPort:17501+i,motionPort:17601+i}));
+const fleet=loadFleetConfig();
+const endpoints=remote?JSON.parse(await readFile(remote,"utf8")):buildEndpoints(fleet,Number(process.env.MEASURE_PORT_BASE??17401),"127.0.0.1",{executors:false});
 const dir="artifacts/edge-choke-v1";await mkdir(dir,{recursive:true});
 const protocol={mode:accepting?"acceptance":"development",seedStart:accepting?24000:23000,seeds:accepting?40:4,
-  fleetSize:3,horizon:512,motionStartTick:112,map:"two rooms, sole bridge cell (9,6), charger stubs do not bypass bridge",
-  tasks:"three opposing journeys, announced to only AMR-01; distributed auction; simultaneous motion release",
+  fleetSize:endpoints.length,horizon:512,motionStartTick:112,map:"two rooms, sole bridge cell (9,6), charger stubs do not bypass bridge",
+  tasks:`${fleet.robots.length} opposing journeys, announced to only ${endpoints[0].id}; distributed auction; simultaneous motion release`,
   allocation:"same frozen guarded MLP and quorum ownership in both arms",energy:"same per-move remaining-work + charging + reserve gate",
   motion:"fresh pose/desired-step exchange, then proposals and local confirmation; negotiated head-on winner holds while loser yields; baseline preferred-cell-only",
   sharedPlanning:"same A*, obstruction memory including unknown-contender safety envelope, and per-move energy gate",
-  deployment:remote?"provided endpoints; hardware identity must be verified separately":"three OS processes on this host, peer-to-peer UDP, simulated sensors/time",
+  deployment:remote?"provided endpoints; hardware identity must be verified separately":`${fleet.robots.length} OS processes on this host, peer-to-peer UDP, simulated sensors/time`,
   controls:"physics host advances time, supplies local contacts, audits moves; no route or movement-winner computation",
   performance:"both-completed pairs only; end-to-end and motion-window ticks; capped failures excluded",
   hardwareValidated:false,network:"connected; 8ms delivery opportunity, unknown/late contender means local hold; no delivery guarantee",
@@ -43,7 +45,7 @@ try {
   };
   const summary={byPolicy:Object.fromEntries(["stop-and-wait","negotiated"].map(p=>[p,{
     completedRuns:rows.filter(r=>r[p].completed).length,completedTasks:rows.reduce((a,r)=>a+r[p].completedTasks,0),
-    runsAllThreeCrossed:rows.filter(r=>r[p].allThreeCrossed).length,runsAllThreeAssignedAtRelease:rows.filter(r=>r[p].allThreeAssignedAtRelease).length,
+    runsAllThreeCrossed:rows.filter(r=>r[p].allCrossed).length,runsAllThreeAssignedAtRelease:rows.filter(r=>r[p].allAssignedAtRelease).length,
     safety:Object.fromEntries(Object.keys(rows[0][p].safety).map(k=>[k,rows.reduce((a,r)=>a+r[p].safety[k],0)])),
   }])),endToEnd:performance("ticks"),motionWindow:performance("motionTicks")};
   await writeFile(`${dir}/${protocol.mode}-report.json`,JSON.stringify({protocol,summary},null,2)+"\n");

@@ -27,9 +27,16 @@ export class FleetRuntime {
   private dead = new Set<string>();
   running = true;
   aiEnabled = true;
-  constructor(world?: WorldState, private model: BidModel = frozen.model, options: { motionPolicy?: "stop-and-wait" } = {}) {
+  constructor(world?: WorldState, private model: BidModel = frozen.model, options: { motionPolicy?: "stop-and-wait"; fleetSize?: number } = {}) {
     this.world = structuredClone(world ?? createInitialWorld());
-    if (!world) { this.world.robots = this.world.robots.slice(0, 3); this.world.tasks = []; }
+    if (!world) {
+      this.world.tasks = [];
+      // Only the self-constructed default world is sized. A caller-supplied
+      // world defines its own membership and is never truncated.
+      const fleetSize = options.fleetSize ?? 3;
+      if (!Number.isInteger(fleetSize) || fleetSize < 1) throw new Error(`fleetSize must be a positive integer, got ${fleetSize}`);
+      if (fleetSize < this.world.robots.length) this.world.robots = this.world.robots.slice(0, fleetSize);
+    }
     this.world.robots.forEach(r => { r.currentTaskId = undefined; r.queuedTaskIds = []; r.path = []; r.status = "idle"; });
     const ids = this.world.robots.map(r => r.id), bus = new InMemoryBus<OwnershipMessage>();
     for (const r of this.world.robots) {

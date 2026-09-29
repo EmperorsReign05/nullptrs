@@ -17,16 +17,17 @@ export type MapTooltip = {
   position: Position;
 };
 
-export const ROBOT_COLORS: Record<string, string> = {
-  'AMR-01': '#38BDF8',
-  'AMR-02': '#FB923C',
-  'AMR-03': '#C084FC',
-};
-
-export function getRobotColor(id: string, index: number): string {
-  if (ROBOT_COLORS[id]) return ROBOT_COLORS[id];
-  const palette = ['#38BDF8', '#FB923C', '#C084FC', '#F472B6', '#818CF8'];
-  return palette[index % palette.length];
+/** Robot colour is derived from the robot id, never from its position in a list.
+ * Index-based colouring collides once the fleet is larger than the palette and
+ * silently changes a robot's colour when an earlier robot fails or is filtered
+ * out. Hashing the id keeps identity stable and the palette unbounded. */
+export function getRobotColor(id: string): string {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  // Spread hues away from the muddy yellow-green band and keep saturation and
+  // lightness fixed so every robot reads equally well on the dark map.
+  const hue = (hash % 320 + 200) % 360;
+  return `hsl(${hue} 78% 62%)`;
 }
 
 export function getRobotHeading(robot: RobotState): 'up' | 'down' | 'left' | 'right' | undefined {

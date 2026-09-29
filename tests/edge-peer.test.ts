@@ -26,6 +26,8 @@ it("all opposing routes require the single bridge and retain reachable chargers"
   for(const t of s.tasks) expect(planPath(t.pickup,t.dropoff,w).found).toBe(false);
 });
 
+// Kept as the explicit three-robot regression. Arbitrary N is covered by
+// tests/edge-n-robot.test.ts.
 it("three private controllers bid, exchange intents and retain collision safety",()=>{
   const {peers}=setup(23000,"negotiated");
   for(let tick=0;tick<200;tick++){

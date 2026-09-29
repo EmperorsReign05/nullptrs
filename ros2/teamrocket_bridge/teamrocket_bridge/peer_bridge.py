@@ -11,6 +11,7 @@ import queue
 import re
 import sys
 import threading
+from collections import deque
 
 import rclpy
 from rclpy.node import Node
@@ -20,6 +21,10 @@ from std_msgs.msg import String
 
 CHANNELS = ('motion', 'ownership')
 MAX_FRAME = 2_000_000
+# Bounded work per callback. Deliveries are decoupled from the executor so a
+# growing fleet cannot starve the outbound command path (see flush_inbox).
+MAX_COMMANDS_PER_TICK = 256
+MAX_DELIVERIES_PER_FLUSH = 512
 
 
 def emit(value):
@@ -35,7 +40,12 @@ class PeerBridge(Node):
         self.commands = queue.Queue(maxsize=4096)
         self.finished = False
         self.stats = dict(sent=0, received=0, dropped=0, invalid=0)
-        qos = QoSProfile(depth=256, reliability=ReliabilityPolicy.RELIABLE,
+        # KEEP_LAST discards the OLDEST sample when history is full, silently even
+        # under RELIABLE. A broadcast is published once per recipient, so inbound
+        # work per peer is O(N^2); at 256 samples a busy reader overflowed, lost
+        # heartbeats, made live peers look dead, and quorum was never reached.
+        # Depth must cover a full tick's burst across every writer.
+        qos = QoSProfile(depth=4096, reliability=ReliabilityPolicy.RELIABLE,
                          durability=DurabilityPolicy.VOLATILE,
                          history=HistoryPolicy.KEEP_LAST)
         self.publishers_by_channel = {
@@ -46,6 +56,13 @@ class PeerBridge(Node):
             lambda msg, channel=channel: self.receive(channel, msg), qos)
             for channel in CHANNELS]
         self.timer = self.create_timer(0.002, self.process_commands)
+        # Inbound frames are queued, not written from the subscription callback.
+        # A broadcast is published once per recipient, so a peer's inbound work is
+        # O(N^2) across the mesh. Emitting inline from the callback blocked the
+        # single-threaded executor and starved process_commands, which stalled
+        # heartbeats and made live peers look dead to the quorum.
+        self.inbox = deque()
+        self.inbox_timer = self.create_timer(0.001, self.flush_inbox)
         threading.Thread(target=self.read_commands, daemon=True).start()
 
     def read_commands(self):
@@ -88,12 +105,20 @@ class PeerBridge(Node):
             if not isinstance(payload, dict) or payload.get('from') != sender:
                 raise ValueError('sender mismatch')
             self.stats['received'] += 1
-            emit({'event': 'message', 'channel': channel, 'message': payload})
+            # Hand off instead of writing: the callback stays O(1) regardless of N.
+            self.inbox.append((channel, payload))
         except (ValueError, TypeError, KeyError):
             self.stats['invalid'] += 1
 
+    def flush_inbox(self):
+        for _ in range(MAX_DELIVERIES_PER_FLUSH):
+            if not self.inbox:
+                return
+            channel, payload = self.inbox.popleft()
+            emit({'event': 'message', 'channel': channel, 'message': payload})
+
     def process_commands(self):
-        for _ in range(256):
+        for _ in range(MAX_COMMANDS_PER_TICK):
             try:
                 command = self.commands.get_nowait()
             except queue.Empty:

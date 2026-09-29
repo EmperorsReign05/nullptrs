@@ -43,6 +43,9 @@ next-env.d.ts
 # Standalone fleet runtime build
 .fleet-dist/
 
+# Scratch roster generated per run by scripts/ros2-test.sh
+/artifacts/.ros2-test-fleet.json
+
 # Downloaded historical evidence (see artifacts/evidence-manifest.json)
 /artifacts/bid-energy-v4/acceptance.json
 /artifacts/bid-energy-v4/development.json
@@ -112,3 +115,8 @@ __pycache__/
 /artifacts/integrated-stopwait-v5/rows.json
 /artifacts/reliability-v5-development/rows.json
 /artifacts/parallel-v5/*.tar.gz
+
+# Per-run ROS/Nav2 build and launch logs (bulky raw evidence)
+/artifacts/n-robot/**/build.log
+/artifacts/n-robot/**/launch.log
+/artifacts/n-robot/**/smoke.log

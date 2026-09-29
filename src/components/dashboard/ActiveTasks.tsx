@@ -22,9 +22,8 @@ export function ActiveTasks({ tasks, robots }: ActiveTasksProps) {
       </div>
       <div className="p-2 flex flex-col max-h-[220px] overflow-y-auto divide-y divide-white/[0.06]">
         {tasks.map((t) => {
-          const assignedIdx = robots.findIndex(r => r.id === t.assignedRobotId);
-          const robotColor = t.assignedRobotId 
-            ? getRobotColor(t.assignedRobotId, assignedIdx >= 0 ? assignedIdx : 0) 
+          const robotColor = t.assignedRobotId
+            ? getRobotColor(t.assignedRobotId)
             : '#545C6B';
 
           return (
