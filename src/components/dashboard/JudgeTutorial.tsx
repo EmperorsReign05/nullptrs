@@ -96,9 +96,11 @@ export function JudgeTutorial({ isOpen, onClose }: JudgeTutorialProps) {
   });
 
   useEffect(() => {
-    if (isOpen) {
-      setCurrentStepIdx(0);
-    }
+    if (!isOpen) return;
+    // In a callback, not synchronously in the effect body: a synchronous
+    // setState here cascades a render and trips react-hooks/set-state-in-effect.
+    const id = setTimeout(() => setCurrentStepIdx(0), 0);
+    return () => clearTimeout(id);
   }, [isOpen]);
 
   const step = TUTORIAL_STEPS[currentStepIdx];
@@ -181,7 +183,10 @@ export function JudgeTutorial({ isOpen, onClose }: JudgeTutorialProps) {
       }
     }
 
-    setArrowPoints({ startX, startY, endX, endY });
+    // Deferred for the same reason as above: this runs synchronously inside the
+    // effect, and a synchronous setState in an effect body cascades a render.
+    const id = setTimeout(() => setArrowPoints({ startX, startY, endX, endY }), 0);
+    return () => clearTimeout(id);
   }, [isOpen, step]);
 
   useEffect(() => {
@@ -192,7 +197,12 @@ export function JudgeTutorial({ isOpen, onClose }: JudgeTutorialProps) {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    updateTargetRect();
+    // All three measurements are in timers: updateTargetRect ends in a
+    // setState, and calling it synchronously from the effect body cascades a
+    // render (react-hooks/set-state-in-effect).
+    const timer0 = setTimeout(() => {
+      updateTargetRect();
+    }, 0);
     const timer1 = setTimeout(() => {
       updateTargetRect();
     }, 150);
@@ -204,6 +214,7 @@ export function JudgeTutorial({ isOpen, onClose }: JudgeTutorialProps) {
     window.addEventListener('scroll', updateTargetRect, true);
 
     return () => {
+      clearTimeout(timer0);
       clearTimeout(timer1);
       clearTimeout(timer2);
       window.removeEventListener('resize', updateTargetRect);

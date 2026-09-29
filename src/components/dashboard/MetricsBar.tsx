@@ -24,7 +24,7 @@ export function MetricsBar({ tasks, robots, metrics }: MetricsBarProps) {
     <div className="w-full bg-zinc-900/40 backdrop-blur-md rounded-xl border border-zinc-800/80 flex shadow-2xl divide-x divide-zinc-800/80">
       <div className="flex-1 p-3 flex flex-col justify-center gap-1 transition-all">
         <div className="flex items-center justify-between text-zinc-500 gap-1">
-          <span className="text-[10px] font-mono tracking-wider whitespace-nowrap overflow-hidden text-ellipsis">total tasks</span>
+          <span className="text-[11px] tracking-wider whitespace-nowrap overflow-hidden text-ellipsis">total tasks</span>
           <div className="w-5 h-5 rounded-md bg-zinc-950/60 border border-zinc-800/60 flex items-center justify-center shrink-0 text-zinc-400">
             <ListTodo size={12} strokeWidth={2} />
           </div>
@@ -34,7 +34,7 @@ export function MetricsBar({ tasks, robots, metrics }: MetricsBarProps) {
 
       <div className="flex-1 p-3 flex flex-col justify-center gap-1 transition-all">
         <div className="flex items-center justify-between gap-1">
-          <span className="text-[10px] font-mono tracking-wider text-zinc-500 whitespace-nowrap overflow-hidden text-ellipsis">completed</span>
+          <span className="text-[11px] tracking-wider text-zinc-400 whitespace-nowrap overflow-hidden text-ellipsis">completed</span>
           <div className="w-5 h-5 rounded-md bg-[#C9F27D]/15 border border-[#C9F27D]/30 text-[#C9F27D] flex items-center justify-center shrink-0">
             <CheckCircle2 size={12} strokeWidth={2} />
           </div>
@@ -44,7 +44,7 @@ export function MetricsBar({ tasks, robots, metrics }: MetricsBarProps) {
 
       <div className="flex-1 p-3 flex flex-col justify-center gap-1 transition-all">
         <div className="flex items-center justify-between gap-1">
-          <span className="text-[10px] font-mono tracking-wider text-zinc-500 whitespace-nowrap overflow-hidden text-ellipsis">conflicts</span>
+          <span className="text-[11px] tracking-wider text-zinc-400 whitespace-nowrap overflow-hidden text-ellipsis">conflicts</span>
           <div className="w-5 h-5 rounded-md bg-red-500/15 border border-red-500/30 text-red-400 flex items-center justify-center shrink-0">
             <AlertTriangle size={12} strokeWidth={2} />
           </div>
@@ -54,7 +54,7 @@ export function MetricsBar({ tasks, robots, metrics }: MetricsBarProps) {
 
       <div className="flex-1 p-3 flex flex-col justify-center gap-1">
         <div className="flex items-center justify-between gap-1">
-          <span className="text-[10px] font-mono tracking-wider text-zinc-500 whitespace-nowrap overflow-hidden text-ellipsis">replans</span>
+          <span className="text-[11px] tracking-wider text-zinc-400 whitespace-nowrap overflow-hidden text-ellipsis">replans</span>
           <div className="w-5 h-5 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0">
             <Clock size={12} strokeWidth={2} />
           </div>
@@ -64,7 +64,7 @@ export function MetricsBar({ tasks, robots, metrics }: MetricsBarProps) {
 
       <div className="flex-1 p-3 flex flex-col justify-center gap-1">
         <div className="flex items-center justify-between gap-1">
-          <span className="text-[10px] font-mono tracking-wider text-zinc-500 whitespace-nowrap overflow-hidden text-ellipsis">fleet util</span>
+          <span className="text-[11px] tracking-wider text-zinc-400 whitespace-nowrap overflow-hidden text-ellipsis">fleet util</span>
           <div className="w-5 h-5 rounded-md bg-zinc-950/60 border border-zinc-800/60 text-zinc-400 flex items-center justify-center shrink-0">
             <TrendingUp size={12} strokeWidth={2} />
           </div>
@@ -74,7 +74,7 @@ export function MetricsBar({ tasks, robots, metrics }: MetricsBarProps) {
 
       <div className="flex-1 p-3 flex flex-col justify-center gap-1">
         <div className="flex items-center justify-between gap-1">
-          <span className="text-[10px] font-mono tracking-wider text-zinc-500 whitespace-nowrap overflow-hidden text-ellipsis">avg battery</span>
+          <span className="text-[11px] tracking-wider text-zinc-400 whitespace-nowrap overflow-hidden text-ellipsis">avg battery</span>
           <div className={`w-5 h-5 rounded-md ${batteryBadgeBg} ${batteryStatusColor} border border-current/20 flex items-center justify-center shrink-0`}>
             <BatteryMedium size={12} strokeWidth={2} />
           </div>

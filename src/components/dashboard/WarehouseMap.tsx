@@ -154,7 +154,7 @@ export function WarehouseMap({
             {Array.from({ length: mapWidth }).map((_, i) => (
               <div 
                 key={`col-${i}`} 
-                className="absolute top-[-22px] text-[10px] text-[#8A93A3] font-mono font-medium -translate-x-1/2" 
+                className="absolute top-[-24px] text-[11px] text-[#A8B2C4] font-mono font-medium -translate-x-1/2" 
                 style={{ left: `calc((100% / ${mapWidth}) * ${i + 0.5})` }}
               >
                 {i}
@@ -163,7 +163,7 @@ export function WarehouseMap({
             {Array.from({ length: mapHeight }).map((_, i) => (
               <div 
                 key={`row-${i}`} 
-                className="absolute left-[-22px] text-[10px] text-[#8A93A3] font-mono font-medium -translate-y-1/2" 
+                className="absolute left-[-24px] text-[11px] text-[#A8B2C4] font-mono font-medium -translate-y-1/2" 
                 style={{ top: `calc((100% / ${mapHeight}) * ${i + 0.5})` }}
               >
                 {i}
@@ -219,7 +219,7 @@ export function WarehouseMap({
                   display: zone.x >= mapWidth || zone.y >= mapHeight ? 'none' : 'flex'
                 }}
               >
-                 <span className="text-[10px] text-[#38bdf8] font-mono font-bold text-center leading-tight">
+                 <span className="text-[11px] text-[#7DD3FC] font-bold text-center leading-tight">
                    waiting zone<br/>{zone.id.toLowerCase()}
                  </span>
               </div>
@@ -374,7 +374,7 @@ export function WarehouseMap({
                      </div>
                    )}
 
-                   <span className="bg-[#090C11]/90 border border-[#1F2633] px-1.5 py-0.2 rounded text-[10px] font-mono font-bold text-[#E6E9EF] shadow-md absolute top-[102%] whitespace-nowrap">
+                   <span className="bg-[#090C11]/90 border border-[#1F2633] px-1.5 py-0.2 rounded text-[11px] font-mono font-bold text-[#E6E9EF] shadow-md absolute top-[102%] whitespace-nowrap">
                      {robot.id}
                    </span>
                 </div>
@@ -391,7 +391,7 @@ export function WarehouseMap({
                   transform: 'translate(-50%, -135%)'
                 }}
               >
-                <div className="relative bg-[#1c1206]/95 border border-[#f59e0b] text-[#f59e0b] text-[10px] font-mono font-semibold px-2 py-1 rounded-md shadow-[0_0_12px_rgba(245,158,11,0.5)] whitespace-nowrap">
+                <div className="relative bg-[#1c1206]/95 border border-[#f59e0b] text-[#fbbf24] text-[11px] font-mono font-semibold px-2 py-1 rounded-md shadow-[0_0_12px_rgba(245,158,11,0.5)] whitespace-nowrap">
                   {tip.text}
                   <div className="absolute left-1/2 top-full -translate-x-1/2 w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[5px] border-t-[#f59e0b]" />
                 </div>
@@ -410,22 +410,22 @@ export function WarehouseMap({
                  />
                  <span className="font-mono font-bold text-xs text-[#E6E9EF]">{selectedRobot.id}</span>
                </div>
-               <div className="text-[11px] font-mono text-[#8A93A3] flex items-center gap-1.5">
+               <div className="text-[12px] text-[#A8B2C4] flex items-center gap-1.5">
                  <Navigation size={12} className="text-[#8A93A3]" />
                  <span>pos [{selectedRobot.position.x}, {selectedRobot.position.y}]</span>
                </div>
-               <div className="text-[11px] font-mono flex items-center gap-1.5">
+               <div className="text-[12px] flex items-center gap-1.5">
                  <Zap size={12} className="text-[#8A93A3]" />
                  <span className={`font-bold ${selectedRobot.status === 'failed' ? 'text-[#F87171]' : 'text-[#8A93A3]'}`}>
                    {selectedRobot.status}
                  </span>
                </div>
-               <div className="text-[11px] font-mono flex items-center gap-1.5">
+               <div className="text-[12px] flex items-center gap-1.5">
                  <BatteryCharging size={12} className={selectedRobot.battery > 70 ? 'text-[#34D399]' : selectedRobot.battery > 30 ? 'text-[#FBBF24]' : 'text-[#F87171]'} />
                  <span className={selectedRobot.battery > 70 ? 'text-[#34D399]' : selectedRobot.battery > 30 ? 'text-[#FBBF24]' : 'text-[#F87171]'}>{selectedRobot.battery}%</span>
                </div>
                {selectedRobot.path && selectedRobot.path.length > 1 && (
-                 <div className="text-[11px] font-mono text-[#8A93A3]">
+                 <div className="text-[12px] text-[#A8B2C4]">
                    {selectedRobot.path.length - 1} steps to target
                  </div>
                )}

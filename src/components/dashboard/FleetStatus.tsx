@@ -17,8 +17,8 @@ export function FleetStatus({ robots, selectedRobotId, onSelectRobot }: FleetSta
   return (
     <div id="tour-fleet-status" className="bg-[#12161F]/35 backdrop-blur-xl rounded-xl border border-white/10 flex flex-col shadow-xl overflow-hidden">
       <div className="h-12 px-5 border-b border-white/10 flex justify-between items-center bg-white/[0.03] backdrop-blur-sm shrink-0">
-        <h3 className="font-mono text-sm font-semibold tracking-wide text-zinc-200">fleet status</h3>
-        <span className="text-xs font-mono text-zinc-400">
+        <h3 className="text-sm font-semibold tracking-wide text-zinc-100">fleet status</h3>
+        <span className="text-xs text-zinc-300">
           active: <span className="text-[#C9F27D] font-semibold">{onlineCount} / {robots.length}</span>
         </span>
       </div>
@@ -50,12 +50,12 @@ export function FleetStatus({ robots, selectedRobotId, onSelectRobot }: FleetSta
                   <div className="font-mono font-bold text-sm text-[#E6E9EF] tracking-wide flex items-center gap-2">
                     <span>{r.id}</span>
                     {isSelected && (
-                      <span className="text-[9px] font-mono bg-[#C9F27D]/20 text-[#C9F27D] border border-[#C9F27D]/40 font-bold px-1.5 py-0.5 rounded">
+                      <span className="text-[11px] bg-[#C9F27D]/20 text-[#C9F27D] border border-[#C9F27D]/40 font-bold px-1.5 py-0.5 rounded">
                         selected
                       </span>
                     )}
                   </div>
-                  <div className="text-[11px] font-mono text-zinc-400 mt-0.5 tracking-wide flex items-center gap-1.5">
+                  <div className="text-[12px] text-zinc-300 mt-0.5 flex items-center gap-1.5">
                     {r.status === 'moving' && <span className="w-1.5 h-1.5 rounded-full bg-[#C9F27D] animate-pulse"></span>}
                     {r.status === 'failed' ? <span className="text-[#F87171] font-bold">failed</span> : r.status}
                   </div>

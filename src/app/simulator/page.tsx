@@ -125,14 +125,17 @@ export default function Dashboard() {
   const [isTutorialOpen, setIsTutorialOpen] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window === 'undefined') return;
+    // setState in a callback, not synchronously in the effect body — a
+    // synchronous setState here triggers a cascading render and trips
+    // `react-hooks/set-state-in-effect`.
+    const id = setTimeout(() => {
       const searchParams = new URLSearchParams(window.location.search);
       const forceTour = searchParams.get('tour') === 'true' || searchParams.get('tutorial') === 'true';
       const hasCompleted = localStorage.getItem('amr_judge_tour_completed_v2');
-      if (forceTour || !hasCompleted) {
-        setIsTutorialOpen(true);
-      }
-    }
+      if (forceTour || !hasCompleted) setIsTutorialOpen(true);
+    }, 0);
+    return () => clearTimeout(id);
   }, []);
 
   const addLog = useCallback((text: string, type: 'info' | 'warning' | 'error' = 'info') => {
@@ -386,7 +389,11 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-[#09090b] text-[#fafafa] bg-[url('/bg.png')] bg-cover bg-fixed bg-center font-sans py-6 px-4 md:px-8 lg:px-12 flex justify-center items-start selection:bg-[#C9F27D]/30">
       <div className="w-full max-w-[1520px] bg-black/40 backdrop-blur-2xl rounded-2xl border border-zinc-800/80 shadow-[0_25px_70px_-15px_rgba(0,0,0,0.85)] flex flex-col overflow-hidden">
-        <Header onOpenTutorial={() => setIsTutorialOpen(true)} />
+        <Header
+          onOpenTutorial={() => setIsTutorialOpen(true)}
+          subtitle="central simulation • A* routing • PIBT coordination"
+          source="source: simulated state"
+        />
 
         <div className="p-4 flex gap-4">
           <div className="w-[72%] flex flex-col gap-4 min-w-0">
