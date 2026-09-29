@@ -28,7 +28,7 @@ export class EdgeSimulation {
   async request(i,route,body) {
     const e=this.endpoints[i],response=await fetch(`http://${e.host}:${e.controlPort}${route}`,{
       method:body===undefined?"GET":"POST",headers:{"Content-Type":"application/json",...(process.env.EDGE_TOKEN?{Authorization:`Bearer ${process.env.EDGE_TOKEN}`}:{})},
-      body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(5000)});
+      body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(route==="/initialize"?25000:route==="/commit"&&process.env.NAV2_EXECUTOR_BASE_PORT?45000:5000)});
     const result=await response.json();if(!response.ok)throw new Error(JSON.stringify(result));return result;
   }
   async initialize(seed,policy,session,configure=()=>{}) {
@@ -37,6 +37,14 @@ export class EdgeSimulation {
     this.safety={overlaps:0,swaps:0,blockedCells:0,zeroBatteryWork:0,queueOverflow:0,payloadViolations:0,nonAdjacentMoves:0};
     this.crossed=new Set();this.trace=[];this.pendingBlocks=[];this.releaseState=null;
     this.states=await Promise.all(this.scenario.configs.map((config,i)=>this.request(i,"/initialize",{config,session})));
+    if(this.states.some(s=>s.transport?.kind==="ros2")) {
+      const deadline=Date.now()+20000;
+      while(!this.states.every(s=>s.transport?.subscriptions?.motion>=this.endpoints.length&&s.transport?.subscriptions?.ownership>=this.endpoints.length)) {
+        if(Date.now()>deadline)throw new Error("ROS2 discovery did not reach the configured roster");
+        await sleep(100);
+        this.states=await Promise.all(this.endpoints.map((_e,i)=>this.request(i,"/state")));
+      }
+    }
   }
   snapshot(){
     const robots=this.states.map((s,i)=>({...s.state.robot,...(this.failed.has(i)?{status:"failed"}:{})}));
@@ -55,8 +63,9 @@ export class EdgeSimulation {
       metrics:{aiBidAttempts:this.states.reduce((n,s)=>n+s.state.metrics.bidAttempts,0),
         nonzeroCorrections:this.states.reduce((n,s)=>n+s.state.metrics.corrections,0),
         disabledFallbacks:this.states.reduce((n,s)=>n+s.state.metrics.fallbacks,0),failedModelFallbacks:0},
+      execution:this.states.map(s=>({robotId:s.id,...s.execution})),
       ownership:this.states.map(s=>({id:s.id,metrics:s.state.ownershipMetrics,tasks:s.state.claims})),
-      deployment:"Three OS-process robot controllers; direct UDP ownership and intents; simulated clock and sensors; no physical edge hardware"};
+      deployment:this.states.some(s=>s.execution?.kind==="nav2")?"Three independent controllers with actual Nav2 execution and DDS; lockstep continuous simulation with ideal sensors, no edge hardware":"Three OS-process robot controllers; direct peer ownership and intents; simulated clock and sensors; no physical edge hardware"};
   }
   async command(command){
     const live=this.endpoints.map((_,i)=>i).filter(i=>!this.failed.has(i));

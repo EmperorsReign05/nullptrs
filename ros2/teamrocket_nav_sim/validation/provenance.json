@@ -1,0 +1,21 @@
+{
+  "test": "scripts/nav2-acceptance.sh /tmp/nav2-final",
+  "base_image": "localhost/teamrocket-ros2:jazzy",
+  "tested_nav2_image_sha256": "a007fe30929518399e352b032f0992aae7a1d0e1e81958490f12e54b24101cf5",
+  "installed_versions": {
+    "ros-jazzy-nav2-controller": "1.3.13-1noble.20260903.032018",
+    "ros-jazzy-nav2-collision-monitor": "1.3.13-1noble.20260903.031125",
+    "ros-jazzy-robot-localization": "3.8.3-1noble.20260903.023731"
+  },
+  "source_sha256": {
+    "ros2/teamrocket_nav_sim/setup.py": "ae892745ee21284ce2dee31416d7a447630dd425bb0d764f59d7b1b3763ef0e2",
+    "ros2/teamrocket_nav_sim/package.xml": "f027800c1c3bf31fd418f9e9b8c32d98c14e42cb2080806cafdb95c17929f84b",
+    "ros2/teamrocket_nav_sim/config/nav2.yaml": "ff096fe59d1a9a1c661f6d3f7dfea06de94cb7f4dc23e615d7cf9e2a3d46327e",
+    "ros2/teamrocket_nav_sim/launch/simulation.launch.py": "b41bf612614c61dee2ff5db3f132f0c86718d9d8dd18d7f2592bd3273d6abdd9",
+    "ros2/teamrocket_nav_sim/teamrocket_nav_sim/executor.py": "679dc548f104c03a209ac84a29363e6b3a357f125ce12cee7f6ab62dc13854c1",
+    "ros2/teamrocket_nav_sim/teamrocket_nav_sim/acceptance.py": "3bd567f6076ef63a6adac4da1b8f02e4189be919f4bd98b1f73c5b6c384a673d",
+    "ros2/teamrocket_nav_sim/teamrocket_nav_sim/base.py": "069c13d5674e1fcc2137c9f3fa7ae170641822b4d16212846f0e7e15786e9b91",
+    "ros2/teamrocket_nav_sim/teamrocket_nav_sim/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "limits": "Single ideal simulated robot; no fleet integration or hardware inference from this result."
+}

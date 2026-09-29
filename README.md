@@ -6,7 +6,7 @@ Three software modes are available:
 - **`npm run edge:demo` — three-process fleet demo:** each robot process runs its own complete ownership, frozen MLP bidding and planning stack, communicating directly over UDP. The same dashboard connects through the simulation host on port 4011. Shared simulation timing and sensors are explicit.
 - **`/simulator` — original central simulator:** A*, PIBT, deterministic auctioning, task queues and charging run in the browser.
 
-The legacy `worker.ts` UDP demo remains preassigned-task-only. The new `edge-agent.ts` deployment includes live auctions and ownership. ROS2, Fast DDS, Nav2 and physical robot hardware are not implemented.
+The legacy `worker.ts` UDP demo remains preassigned-task-only. The new `edge-agent.ts` deployment includes live auctions and ownership. ROS2/Fast DDS can carry real peer messages via one sidecar per controller. Three independent controllers can also execute through actual Nav2, with measured arrival gating grid/task progress, simulated sensors, EKF and Collision Monitor. This continuous simulation has a fixed three-robot fixture and shared clock; physical hardware remains unvalidated.
 
 Machine-readable benchmark results are preserved under `artifacts/`. The existing [hosted demo link](https://amr-edge-ai.vercel.app/) has not been updated by this audit; the new fleet runtime requires a long-lived Node process.
 
@@ -26,7 +26,7 @@ Machine-readable benchmark results are preserved under `artifacts/`. The existin
   work (up to a cap) instead of the fleet ignoring pending tasks just
   because every robot already has one.
 
-The suite includes seeded safety and stress checks. Tests establish behavior in their modeled regimes, not universal physical safety. The audit records two pre-existing prototype wait-cycle failures and a load-sensitive UDP test; the full suite is not claimed green.
+The suite includes seeded safety and stress checks. Tests establish behavior in their modeled regimes, not universal physical safety. The historical prototype cycle failures and legacy UDP stale-route defect have regression fixes; current full-suite results are recorded with the integration artifacts.
 
 ## Technologies Used
 
@@ -211,4 +211,70 @@ python3 scripts/fetch-benchmark-evidence.py
 
 The command requires Python 3.9+ and leaves existing files untouched. Use `--destination /tmp/fleet-evidence` for a separate complete copy. Summary files are explicitly derived views; archived original measurements are unchanged.
 
-Latest integrated warehouse acceptance: 173/200 completed runs versus stop-and-wait's 176/200; 166 jointly completed pairs give 0.575% aggregate improvement with a 95% interval of −0.064% to 1.457%. This does not establish better overall reliability or a speedup. Three-process choke acceptance completed 40/40 versus 0/40, so it establishes recovery in that workload, not a valid percentage-speedup estimate. Hardware validation and the ≥20% integrated target remain outstanding.
+Historical v3 integrated warehouse acceptance: 173/200 completed runs versus stop-and-wait's 176/200; 166 jointly completed pairs give 0.575% aggregate improvement with a 95% interval of −0.064% to 1.457%. This does not establish better overall reliability or a speedup. Three-process choke acceptance completed 40/40 versus 0/40, so it establishes recovery in that workload, not a valid percentage-speedup estimate. Hardware validation and the ≥20% integrated target remain outstanding.
+
+## ROS2 / Fast DDS and continuous navigation
+
+The following commands require rootless Podman (or the container engine configured by the scripts). No system ROS installation is required.
+
+```sh
+# Build the bridge image and test real Fast DDS peer exchange.
+npm run ros2:test
+# Run the actual three-controller grid fleet over ROS2/Fast DDS.
+npm run ros2:smoke
+# Interactive fleet over DDS (dashboard still connects to port 4011).
+EDGE_TRANSPORT=ros2 npm run edge:demo
+# In a separate terminal:
+FLEET_URL=http://127.0.0.1:4011 npm run dev
+# Validate actual Nav2 + EKF + simulated LiDAR/IMU/odometry + Collision Monitor.
+npm run nav2:test -- /tmp/nav2-validation
+```
+
+ROS peer traffic uses rmw_fastrtps_cpp with UDP transport; Fast DDS shared memory is disabled in the supplied profile. The Node/ROS bridge is local to each robot, not a message broker. Discovery must find the configured roster before simulation ticks begin. `ROS_BRIDGE_COMMAND` accepts a JSON argv array to use another installed ROS launch command or container engine.
+
+The Nav2 fleet adapter follows each robot controller’s locally authorized cell move through real FollowPath. Separate namespaces and TF graphs isolate robot frames; a shared simulated physical world supplies peer bodies and initial blocked-cell geometry. Logical movement and task progress wait for successful action completion and fresh measured arrival. Cancellation or lost controller heartbeat stops execution and retains partial pose; recovery requires restart/relocalization.
+
+After building the ROS and Nav2 images with the commands above:
+
+```sh
+# Three-robot crossing, transient obstacle, real Nav2 arrival checks.
+bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-fleet-crossing
+# Separate runs validate cancellation and actual controller SIGKILL.
+NAV2_FLEET_MODE=fault bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-fleet-cancel
+NAV2_FLEET_MODE=crash bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-fleet-crash
+# Interactive continuous simulation; connect the dashboard as above.
+NAV2_FLEET_DEMO=1 bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-fleet-demo
+```
+
+This is a fixed three-robot simulation fixture, not general hardware deployment. Ownership uses logical time, which pauses during physical cell execution. Dynamic grid-block and simulated-failure dashboard commands are explicitly rejected in Nav2 mode; they remain supported in the grid demo. The Nav2 fault tests use real cancellation/process termination. Do not claim automatic mid-cell recovery or an asynchronous physical-robot lease protocol.
+
+Distributed charging retains task ownership, reaches a charger, recharges and resumes pre-pickup work. Each active job is recertified; queued jobs can span multiple charging visits. Cargo already picked up is never silently reassigned or diverted: an uncertifiable delivery holds for manual recovery. Local safety controls shared charger occupancy; charger fairness is not guaranteed.
+
+New acceptance results are recorded separately from historical v1–v3 outputs. Development results on inspected seeds are not fresh acceptance evidence. No physical Pi/Jetson or real-sensor validation has occurred.
+
+## Historical integrated validation (v4)
+
+Code frozen at `e7dd0cd`. These results remain unchanged as historical evidence. Seeds 31000–31199 have since informed the clearance fix and are now development data, not a fresh acceptance set for newer code:
+
+- Production and fleet builds pass. Full suite: **356 passed, 17 skipped, zero failures**. The former cycle and UDP tests now pass with their completion/safety assertions retained.
+- **200 untouched warehouse seeds (31000–31199): 198/200 completed runs, 1197/1200 tasks**, versus fair stop-and-wait **170/200 runs, 1147/1200 tasks**. No baseline-successful run becomes incomplete; all six audited safety counters are zero in both arms.
+- On **170 jointly successful pairs**, mean completion-time saving is 1.329 ticks, median 0; aggregate improvement **0.693%**, 95% interval **−0.254% to 1.790%**, wins/ties/losses **46/100/24**. This is not a statistically established speedup and does not meet the 20% target. Failed capped runs are excluded from speed estimates.
+- Three real Node controllers using actual ROS2/Fast DDS complete the development choke smoke at tick143. The combined pre-pickup process failure, reassignment, blocked-route reroute, partition/heal and AI-fallback smoke completes at tick241, with zero audited violations. These are development smoke checks, not another fresh seed sweep.
+- Real Nav2/Collision Monitor/EKF validation passes separately: route execution, obstacle stop/resume, and route cancellation with zero measured collision ticks. It remains a single continuous simulated robot integration.
+
+See `artifacts/fleet-integration/validation.json` and `artifacts/integrated-stopwait-v4/report.json`. Historical measurements are preserved; model weights and the stop-and-wait baseline are unchanged.
+
+
+## Latest integrated validation (v5)
+
+Runtime frozen at `c4c5b3a`. The local terminal-aisle clearance fix recovers both inspected v4 failures; all 200 old seeds complete in development. This does not imply universal completion.
+
+- **Fresh seeds 42000–42199:** integrated **198/200 runs, 1197/1200 tasks**; unchanged stop-and-wait **174/200 runs, 1155/1200 tasks**. No baseline-successful run is lost. All six audited safety counters are zero for both. Two new incomplete cases remain, with no acceptance-driven tuning.
+- **174 jointly completed pairs:** baseline mean **192.730 ticks**, integrated **191.609**; mean saving **1.121 ticks**, median paired saving **0**, wins/ties/losses **49/105/20**. Aggregate improvement **0.581%**, 95% interval **−0.249% to 1.462%**. No statistically established speedup; **20% target unmet**. Failed capped runs are excluded.
+- Builds pass; full suite **361 passed, 20 skipped, zero failures**. Frozen MLP and stop-and-wait source hashes are unchanged.
+- Main-worktree real Nav2 crossing: **3 tasks, 12 real path actions, 119 logical ticks, 33.264 wall seconds**, zero measured continuous/grid collisions. A transient obstacle stops motion with zero settled drift. Separate actual cancellation and controller-SIGKILL tests preserve partial pose and prevent false arrival/task completion.
+- Development profiling across 400 seeds identifies serialized admission as the main delay. A 16-tick lease experiment is **rejected**: it introduces a failed run and fails three existing ownership tests. Production retains the 32-tick protocol. Faster admission requires quorum-certified capacity reservations, not simply reducing a timer.
+
+The fresh warehouse comparison remains a one-process grid simulation with identical learned scoring in both arms. It is neither an AI ablation nor a 200-seed Nav2 evaluation. The historical **1.56% AI-only improvement** compares learned bidding with deterministic bidding, not stop-and-wait.
+
+Evidence: `artifacts/parallel-v5/validation.json`, `artifacts/integrated-stopwait-v5/report.json`, `artifacts/nav2-fleet-v1/report.json`, and `artifacts/completion-profile/`. Raw traces and logs are preserved separately with checksums in `artifacts/parallel-v5/evidence.json`.

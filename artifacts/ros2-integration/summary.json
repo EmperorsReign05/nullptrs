@@ -1,0 +1,48 @@
+{
+  "scope": "Development integration smoke, shared grid clock and simulated sensors; not hardware or integrated Nav2 proof",
+  "ddsFleet": {
+    "completed": true,
+    "completedTasks": 3,
+    "ticks": 143,
+    "safety": {
+      "overlaps": 0,
+      "swaps": 0,
+      "blockedCells": 0,
+      "zeroBatteryWork": 0,
+      "queueOverflow": 0,
+      "payloadViolations": 0,
+      "nonAdjacentMoves": 0
+    }
+  },
+  "faultRecovery": {
+    "killed": {
+      "index": 0,
+      "id": "AMR-01",
+      "task": "CHOKE-1",
+      "tick": 7
+    },
+    "reassigned": true,
+    "rerouted": true,
+    "partitionStopped": true
+  },
+  "faultResult": {
+    "completed": true,
+    "completedTasks": 3,
+    "ticks": 241,
+    "safety": {
+      "overlaps": 0,
+      "swaps": 0,
+      "blockedCells": 0,
+      "zeroBatteryWork": 0,
+      "queueOverflow": 0,
+      "payloadViolations": 0,
+      "nonAdjacentMoves": 0
+    }
+  },
+  "rosVersions": {
+    "distribution": "Jazzy",
+    "rclpy": "7.1.12",
+    "rmw_fastrtps_cpp": "8.4.4",
+    "fastDDS": "2.14.6"
+  }
+}

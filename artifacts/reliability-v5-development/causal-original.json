@@ -1,0 +1,94 @@
+[
+  {
+    "seed": 31015,
+    "intervention": false,
+    "ticks": 800,
+    "done": 5,
+    "metrics": {
+      "aiBidAttempts": 180,
+      "nonzeroCorrections": 162,
+      "disabledFallbacks": 0,
+      "failedModelFallbacks": 0,
+      "moves": 282,
+      "reroutes": 13,
+      "energyHolds": 424
+    },
+    "safety": {
+      "overlaps": 0,
+      "swaps": 0,
+      "blockedCells": 0,
+      "zeroBatteryWork": 0,
+      "queueOverflow": 0,
+      "payloadViolations": 0
+    }
+  },
+  {
+    "seed": 31015,
+    "intervention": true,
+    "ticks": 199,
+    "done": 6,
+    "metrics": {
+      "aiBidAttempts": 66,
+      "nonzeroCorrections": 66,
+      "disabledFallbacks": 0,
+      "failedModelFallbacks": 0,
+      "moves": 166,
+      "reroutes": 13,
+      "energyHolds": 0
+    },
+    "safety": {
+      "overlaps": 0,
+      "swaps": 0,
+      "blockedCells": 0,
+      "zeroBatteryWork": 0,
+      "queueOverflow": 0,
+      "payloadViolations": 0
+    }
+  },
+  {
+    "seed": 31042,
+    "intervention": false,
+    "ticks": 800,
+    "done": 4,
+    "metrics": {
+      "aiBidAttempts": 144,
+      "nonzeroCorrections": 70,
+      "disabledFallbacks": 0,
+      "failedModelFallbacks": 0,
+      "moves": 239,
+      "reroutes": 9,
+      "energyHolds": 462
+    },
+    "safety": {
+      "overlaps": 0,
+      "swaps": 0,
+      "blockedCells": 0,
+      "zeroBatteryWork": 0,
+      "queueOverflow": 0,
+      "payloadViolations": 0
+    }
+  },
+  {
+    "seed": 31042,
+    "intervention": true,
+    "ticks": 217,
+    "done": 6,
+    "metrics": {
+      "aiBidAttempts": 27,
+      "nonzeroCorrections": 27,
+      "disabledFallbacks": 0,
+      "failedModelFallbacks": 0,
+      "moves": 155,
+      "reroutes": 10,
+      "energyHolds": 0
+    },
+    "safety": {
+      "overlaps": 0,
+      "swaps": 0,
+      "blockedCells": 0,
+      "zeroBatteryWork": 0,
+      "queueOverflow": 0,
+      "payloadViolations": 0
+    }
+  }
+]

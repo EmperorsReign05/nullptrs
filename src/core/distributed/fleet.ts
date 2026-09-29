@@ -15,6 +15,8 @@ import type { Position, RobotState, Task, WarehouseMap, WorldState } from "../ty
 
 export type FleetOptions = {
   localCommit?: boolean;
+  /** undefined preserves task routing; null holds; a position supplies a local lifecycle goal. */
+  goalOverride?: (robot: RobotState) => Position | null | undefined;
   /** Single-agent staged simulation/edge adapter; never a fleet-wide view. */
   motionTransport?: Transport;
   priorityYield?: boolean;
@@ -106,9 +108,23 @@ export class DistributedFleet {
   }
 
   commitExternalMotion(tick: number) {
+    this.confirmExternalMotion(tick);
+    this.finishExternalMotion(tick);
+  }
+
+  /** Freeze the locally confirmed cell decision before external actuation. */
+  confirmExternalMotion(tick: number) {
     if (!this.options.motionTransport) throw new Error("Not an external single-agent fleet");
     const agent = [...this.agents.values()][0];
-    if (!this.inactive.has(agent.id)) agent.confirmDecision(tick);
+    if (this.inactive.has(agent.id)) {
+      const from = agent.getLocal().position;
+      agent.overrideDecision({from, to: from, reason: "no-move"});
+    } else agent.confirmDecision(tick);
+    return structuredClone(agent.getLastDecision());
+  }
+
+  /** External executor must acknowledge physical arrival before this call. */
+  finishExternalMotion(tick: number) {
     this.applyMoves(tick);
   }
 
@@ -317,7 +333,9 @@ export class DistributedFleet {
     for (const agent of this.activeAgents) {
       const local = agent.getLocal();
       const robot = this.robots.find((r) => r.id === agent.id)!;
-      const goal = goalOf(robot, this.tasks);
+      agent.setIdleYieldAllowed(robot.status === "idle" && !robot.currentTaskId && !(robot.queuedTaskIds?.length));
+      const override = this.options.goalOverride?.(robot);
+      const goal = override === undefined ? goalOf(robot, this.tasks) : override;
       if (!goal) {
         if (local.path.length) agent.updateLocal({ ...local, path: [] });
         continue;

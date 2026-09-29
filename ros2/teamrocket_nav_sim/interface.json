@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "purpose": "Execute coordinator-authorized continuous paths through actual ROS2 Jazzy Nav2 FollowPath; never assign tasks or generate a fleet route",
+  "input": {
+    "authorized_path": {
+      "type": "nav_msgs/msg/Path",
+      "frame": "map",
+      "units": "metres",
+      "semantics": "Replacement cancels old FollowPath action before starting a new one. Empty path revokes motion. Trusted coordinator interface; topic alone is not an ownership certificate."
+    },
+    "sim/obstacle": {
+      "type": "std_msgs/msg/Bool",
+      "semantics": "true inserts a stationary 8cm radius obstacle 36cm ahead of current robot, false removes it"
+    }
+  },
+  "output": {
+    "execution_status": "std_msgs/msg/String JSON; authorized/executing/finished/revoked; Nav2 action status and error_code",
+    "odometry/filtered": "nav_msgs/msg/Odometry from actual robot_localization EKF",
+    "scan": "sensor_msgs/msg/LaserScan from ideal ray casting, 361 beams",
+    "imu": "sensor_msgs/msg/Imu ideal angular rate and body acceleration",
+    "wheel/odometry": "nav_msgs/msg/Odometry ideal simulated wheel odometry",
+    "sim/ground_truth": "geometry_msgs/msg/PoseStamped for validation only",
+    "sim/collisions": "std_msgs/msg/Int32 cumulative robot/inserted-obstacle overlap ticks"
+  },
+  "actuation": "Nav2 controller_server -> cmd_vel_nav -> actual nav2_collision_monitor -> cmd_vel -> kinematic base; stale final command stops after 0.3s",
+  "localization": "Actual robot_localization EKF fuses ideal wheel velocity and IMU angular velocity/acceleration. Static map->odom transform anchors known simulation origin. No AMCL/SLAM or physical localization claim.",
+  "limits": [
+    "Continuous three-robot development smoke, not a fresh multi-seed throughput acceptance",
+    "Lockstep simulated clock pauses during cell execution; ownership leases are logical, not asynchronous hardware leases",
+    "No physical sensors, edge hardware, Gazebo, traction/slip/noise or safety certification",
+    "Dynamic grid block control rejected in Nav2 mode until physical-map update propagation is implemented; transient lidar obstacle fixture tested",
+    "Mid-cell fault requires stop/relocalization/restart, not automatic cargo or physical recovery",
+    "Trusted local authorized-path and executor HTTP interfaces; no hostile-client security claim",
+    "Three-robot deployment currently uses fixed development origins matched to launch; general warehouse deployment configuration remains work"
+  ],
+  "references": [
+    "https://docs.nav2.org/jazzy/tutorials/general_tutorials/using_collision_monitor/using_collision_monitor/",
+    "https://docs.nav2.org/jazzy/configuration_and_development/configuration_guide/core_servers/collision_monitor/configuring_collision_monitor_node/",
+    "https://api.nav2.org/nav2-jazzy/html/md_nav2_collision_monitor_README.html"
+  ],
+  "fleet": {
+    "launch": "fleet.launch.py",
+    "controllers": "Three independent Node EdgePeer controllers with ROS2/Fast DDS allocation and intent traffic",
+    "namespace": "AMR_01, AMR_02, AMR_03; tf and tf_static remapped into each namespace, frame names scoped by isolated TF buses",
+    "physicalWorld": "Shared /fleet/physical_poses; transformed into peer lidar circles. Initial WarehouseMap cells become identical global rectangles transformed into each local map/costmap. Ideal physics does not repair overlaps.",
+    "coordinates": "0.6 metres per grid cell, per-robot map origin at initial cell; scenario fixture and simulator origins must match",
+    "commit": "Confirm locally negotiated decision, await actual Nav2 FollowPath terminal success plus fresh EKF endpoint within 0.09m, then settle logical pose/task. No teleportation on failure.",
+    "failure": "2s wall-clock Node heartbeat expiry requests Nav2 cancellation. Failed/cancelled/partial execution latches, retains measured pose and leaves logical tick uncommitted. Cancellation unconfirmed is explicitly reported as a physical execution fault; no physical-stop claim.",
+    "http": "Trusted loopback per-robot ports19700..19702, not exposed remote control/security boundary",
+    "demo": "NAV2_FLEET_DEMO=1 bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-demo; then FLEET_URL=http://127.0.0.1:4011 npm run dev",
+    "checks": [
+      "bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-crossing",
+      "NAV2_FLEET_MODE=fault bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-cancel",
+      "NAV2_FLEET_MODE=crash bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-crash"
+    ]
+  }
+}

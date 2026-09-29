@@ -37,7 +37,7 @@ const EMPTY_BAYS: ReadonlySet<string> = new Set<string>();
 export const COMMIT_WINDOW = 3;
 
 /**
- * Consecutive ticks the same physical cell must block my next step before I
+ * Distinct encounters where the same physical cell blocks my next step before I
  * treat it as a wall for planning. One tick of blockage is ordinary traffic and
  * must not re-plan; a robot standing still in a single-file corridor blocks me
  * on every tick, and that is the case A* cannot see through on its own.
@@ -81,8 +81,8 @@ export class Agent {
   private lastScan: SensorScan | null = null;
   /** Cell -> when I learned it was impassable for me. Learned from my sensor. */
   private rememberedBlockers = new Map<string, { pos: Position; until: number }>();
-  /** Consecutive ticks each candidate blocker has denied me my next step. */
-  private blockerStreak = new Map<string, number>();
+  /** Per-cell denied-step observations, retained across safety displacements. */
+  private blockerStreak = new Map<string, { observations: number; tick: number }>();
 
   constructor(
     public id: PeerId,
@@ -120,6 +120,16 @@ export class Agent {
     this.sensorFeed = positions;
   }
   private sensorFeed: Position[] = [];
+  private idleYieldAllowed = false;
+  private courtesyPreferred: Position | null = null;
+  // A retreat is advertised from the old position. Allow the next round
+  // for the idle peer to propose its exit, and one more to observe that exit
+  // committed before re-entering. This is bounded courtesy, never permission
+  // to bypass sensing, fresh-intent confirmation or execution energy gates.
+  private clearanceUntil = -1;
+  private clearanceRequest: { id: string; until: number } | null = null;
+  /** Lifecycle authorization, never inferred merely from a one-cell route. */
+  setIdleYieldAllowed(allowed: boolean): void { this.idleYieldAllowed = allowed; }
 
   getScan(): SensorScan {
     return scan(this.local.position, this.sensorFeed, this.map, this.sensorRange);
@@ -179,9 +189,20 @@ export class Agent {
       if (this.scanSees(sensorScan, entry.pos) && !isLocallySafe(sensorScan, entry.pos)) continue;
       if (this.scanSees(sensorScan, entry.pos)) this.rememberedBlockers.delete(bk);
     }
-    const streak = (this.blockerStreak.get(k) ?? 0) + 1;
-    this.blockerStreak.set(k, streak);
-    for (const other of this.blockerStreak.keys()) if (other !== k) this.blockerStreak.delete(other);
+    // Count repeated encounters with EACH occupied cell. A safety yield can
+    // move us away before the next tick, and a second stationary blocker can
+    // send us back. Forgetting every other cell on each encounter made that
+    // cycle invisible forever (seed 26059 alternated between (6,4)/(8,0)).
+    // Expiration bounds memory; a locally observed empty cell resets evidence.
+    for (const [key, evidence] of this.blockerStreak) {
+      const [x, y] = key.split(",").map(Number);
+      const visible = manhattanDistance(this.local.position, { x, y }) <= this.sensorRange;
+      if (currentTick - evidence.tick >= BLOCKER_MEMORY_TICKS ||
+        (key !== k && visible && isLocallySafe(sensorScan, { x, y }))) this.blockerStreak.delete(key);
+    }
+    const previous = this.blockerStreak.get(k);
+    const streak = previous?.tick === currentTick ? previous.observations : (previous?.observations ?? 0) + 1;
+    this.blockerStreak.set(k, { observations: streak, tick: currentTick });
     if (streak < PERSISTENT_BLOCK_TICKS) return;
     if (this.rememberedBlockers.has(k)) return;
     this.rememberedBlockers.set(k, { pos: { ...cell }, until: currentTick + BLOCKER_MEMORY_TICKS });
@@ -377,8 +398,10 @@ export class Agent {
   }
 
   decide(currentTick: number): AgentDecision {
+    this.courtesyPreferred = null;
     const from = this.local.position;
     const sensorScan = this.observeMotion(currentTick);
+    if (currentTick <= this.clearanceUntil) return this.lastDecision = { from, to: from, reason: "no-move" };
     // Two agents adjacent in a corridor each forbid the other's cell purely
     // because the other is NEAR, and neither is on its own next step, so
     // neither the sensor gate nor the peer logic offers a move: measured as
@@ -436,6 +459,10 @@ export class Agent {
       // the comment above noteBlocker: the routes it shuffled between pointed
       // straight through robots, so the shuffling never resolved anything.
       const chosen = progressing[0] ?? safe[0] ?? emergencyEscape(from, sensorScan, this.map);
+      const parked = [...this.peers.values()].find(p => !p.preferred && !p.docked &&
+        p.seq >= this.local.seq - 1 && positionsEqual(p.position, preferredCell));
+      if (chosen && parked && getNeighbors(preferredCell, this.map).length <= 2)
+        this.clearanceUntil = currentTick + 2;
       this.lastDecision = chosen
         ? { from, to: chosen, reason: "sensor-yield" }
         : { from, to: from, reason: "sensor-stop" };
@@ -445,8 +472,45 @@ export class Agent {
     const decision: AgentDecision = { from, to: from, reason: preferred ? "free" : "no-move" };
 
     if (!preferred) {
-      this.lastDecision = decision;
-      return decision;
+      // An idle robot is still a physical obstacle. A fresh adjacent peer
+      // explicitly targeting our cell may ask us to clear it. This is only a
+      // local proposal: sensing, normal intent confirmation and the caller's
+      // energy/lifecycle gate still have to approve the relocation.
+      const observedRequester = this.idleYieldAllowed && !this.local.docked && [...this.peers.values()].find(p =>
+        p.preferred && positionsEqual(p.preferred, from) && p.seq >= this.local.seq - 1 &&
+        manhattanDistance(p.position, from) === 1 &&
+        (this.scanSees(sensorScan, p.position) || !!p.intent && this.scanSees(sensorScan, p.intent)));
+      if (observedRequester) this.clearanceRequest = { id: observedRequester.id, until: currentTick + 2 };
+      const rememberedRequester = this.clearanceRequest && currentTick <= this.clearanceRequest.until
+        ? this.peers.get(this.clearanceRequest.id) : undefined;
+      const requester = observedRequester || (this.idleYieldAllowed && !this.local.docked && rememberedRequester && !rememberedRequester.docked &&
+        rememberedRequester.seq >= this.local.seq - 1 && manhattanDistance(rememberedRequester.position, from) <= 2
+        ? rememberedRequester : undefined);
+      const escape = requester ? getNeighbors(from, this.map)
+        .filter(p => isLocallySafe(sensorScan, p) && this.bayIsFree(p))
+        // Do not choose a terminal leaf when another physically clear exit
+        // exists but is awaiting peer confirmation. That parks us on the next
+        // delivery cell. A leaf remains usable when it is the ONLY exit (for
+        // example the last robot clearing an occupied single-file chain).
+        .filter(p => getNeighbors(p, this.map).length > 1 || !getNeighbors(from, this.map)
+          .some(q => !positionsEqual(q, p) && isLocallySafe(sensorScan, q)))
+        .sort((a, b) => manhattanDistance(b, requester.position) - manhattanDistance(a, requester.position) ||
+          getNeighbors(b, this.map).length - getNeighbors(a, this.map).length)[0] : undefined;
+      if (requester && !escape) {
+        // An idle chain may fill the only exit. Forward the same local
+        // request one hop, but HOLD until sensing proves the exit empty.
+        // Without this, a parked neighbor can prevent another idle robot
+        // clearing a task goal forever. Never request the sender's cell.
+        const exit = getNeighbors(from, this.map).find(p =>
+          !positionsEqual(p, requester.position) &&
+          [...this.peers.values()].some(peer => peer.id !== requester.id && !peer.docked &&
+            peer.seq >= this.local.seq - 1 && positionsEqual(peer.position, p) &&
+            this.scanSees(sensorScan, p)));
+        this.courtesyPreferred = exit ?? null;
+      }
+      if (escape) this.clearanceRequest = null;
+      this.lastDecision = escape ? { from, to: escape, reason: "step-aside" } : decision;
+      return this.lastDecision;
     }
     if (!isTraversable(preferred, this.map) || manhattanDistance(preferred, from) !== 1) {
       // Stale route: let the planner own this, just report it.
@@ -631,7 +695,7 @@ export class Agent {
       seq: this.local.seq,
       position: this.local.position,
       intent: positionsEqual(decision.to, this.local.position) ? null : decision.to,
-      preferred: this.local.path[1] ?? null,
+      preferred: this.local.path[1] ?? this.courtesyPreferred,
       priority: this.local.priority,
       docked: this.local.docked,
       stallTicks: this.stallTicks,

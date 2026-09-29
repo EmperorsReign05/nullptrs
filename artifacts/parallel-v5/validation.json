@@ -1,0 +1,385 @@
+{
+  "schema": 1,
+  "frozenCommit": "c4c5b3a38d7afa7be209bbb7b88cf9a314d20435",
+  "worktree": "/home/aetos/dev/personal/sih/TeamRocket",
+  "build": "passed",
+  "fleetBuild": "passed",
+  "fullSuite": {
+    "passed": 361,
+    "skipped": 20,
+    "failed": 0
+  },
+  "frozenModelUnchanged": true,
+  "stopwaitSourceUnchanged": true,
+  "freshAcceptance": {
+    "protocol": {
+      "version": 5,
+      "seedStart": 42000,
+      "seeds": 200,
+      "fleetSizes": [
+        3,
+        6
+      ],
+      "tasksPerRun": 6,
+      "horizon": 800,
+      "map": "stock warehouse",
+      "battery": 100,
+      "taskWeight": 1,
+      "release": "all six pending tasks announced at tick zero",
+      "starts": "uniform open cells without replacement",
+      "endpoints": "uniform open cells; pickup differs from dropoff",
+      "communications": "connected, zero simulated latency",
+      "ai": "identical frozen model and guarded 10% correction in both arms",
+      "comparator": "unchanged resolveStopAndWait, including all stationary bodies; shared obstruction observation and replanning",
+      "asymmetry": "baseline has synchronous global conflict resolution; treatment confirms locally. No packet-loss claims.",
+      "performance": "jointly completed pairs only; bootstrap paired seeds, 10000 resamples, 95% percentile interval",
+      "charging": "same local charging lifecycle and active-job energy reserve in both arms",
+      "limitations": [
+        "shared simulation clock",
+        "one Node process",
+        "six tasks admitted serially by existing ownership epochs",
+        "not an AI ablation"
+      ]
+    },
+    "overall": {
+      "seeds": 200,
+      "baseline": {
+        "completedRuns": 174,
+        "completedTasks": 1155,
+        "safety": {
+          "overlaps": 0,
+          "swaps": 0,
+          "blockedCells": 0,
+          "zeroBatteryWork": 0,
+          "queueOverflow": 0,
+          "payloadViolations": 0
+        },
+        "nonzeroBidCorrections": 12350
+      },
+      "integrated": {
+        "completedRuns": 198,
+        "completedTasks": 1197,
+        "safety": {
+          "overlaps": 0,
+          "swaps": 0,
+          "blockedCells": 0,
+          "zeroBatteryWork": 0,
+          "queueOverflow": 0,
+          "payloadViolations": 0
+        },
+        "nonzeroBidCorrections": 7421
+      },
+      "paired": {
+        "count": 174,
+        "baselineMeanTicks": 192.72988505747125,
+        "integratedMeanTicks": 191.60919540229884,
+        "baselineMedianTicks": 190,
+        "integratedMedianTicks": 188,
+        "meanTicksSaved": 1.1206896551724137,
+        "medianTicksSaved": 0,
+        "aggregateImprovementPercent": 0.5814820336961379,
+        "ticksSaved95CI": [
+          -0.47701149425287354,
+          2.839080459770115
+        ],
+        "improvementPercent95CI": [
+          -0.24873385477539034,
+          1.4624202316237296
+        ],
+        "wins": 49,
+        "ties": 105,
+        "losses": 20
+      },
+      "baselineOnlyComplete": [],
+      "integratedOnlyComplete": [
+        42004,
+        42013,
+        42027,
+        42045,
+        42073,
+        42075,
+        42091,
+        42095,
+        42101,
+        42107,
+        42123,
+        42128,
+        42129,
+        42131,
+        42136,
+        42141,
+        42145,
+        42154,
+        42159,
+        42165,
+        42175,
+        42183,
+        42189,
+        42199
+      ]
+    },
+    "gates": {
+      "reliability": true,
+      "safety": true,
+      "twentyPercent": false
+    }
+  },
+  "mainNav2Crossing": {
+    "schema": 1,
+    "passed": true,
+    "wallSeconds": 33.264,
+    "scope": "Three independent Node fleet controllers and Fast DDS peers, each executing locally authorized cell moves through actual Nav2 FollowPath, EKF and CollisionMonitor. Shared ideal continuous physical pose bus ray-casts other robots into lidar. Lockstep clock waits for measured Nav2 arrival before committing cell or task progress.",
+    "limitations": [
+      "Development smoke on crossing routes with transient sensed obstacle, not throughput or choke-point acceptance",
+      "Logical ownership time is frozen while a cell executes; not asynchronous physical robot leases",
+      "Ideal sensors and kinematics, no hardware",
+      "Initial grid blocked cells become continuous lidar/costmap geometry; dynamic block updates are not yet forwarded",
+      "Faults latch with measured partial pose; restart/relocalization is required, no automatic mid-cell recovery"
+    ],
+    "obstacleEvidence": {
+      "settledDrift": 0,
+      "first": {
+        "x": 0.21001581930031532,
+        "y": 0
+      },
+      "last": {
+        "x": 0.21001581930031532,
+        "y": 0
+      }
+    },
+    "completed": true,
+    "completedTasks": 3,
+    "ticks": 119,
+    "safety": {
+      "overlaps": 0,
+      "swaps": 0,
+      "blockedCells": 0,
+      "zeroBatteryWork": 0,
+      "queueOverflow": 0,
+      "payloadViolations": 0,
+      "nonAdjacentMoves": 0
+    },
+    "physical": [
+      {
+        "id": "AMR-01",
+        "pid": 782789,
+        "execution": {
+          "kind": "nav2",
+          "fault": null,
+          "feedback": {
+            "ok": true,
+            "error": null,
+            "pose": {
+              "x": 1.200127954655616,
+              "y": 1.7435246598623095
+            },
+            "groundTruth": {
+              "x": 1.1947214754261744,
+              "y": 1.7458548562094738
+            },
+            "origin": {
+              "x": 1,
+              "y": 1
+            },
+            "cellMetres": 0.6,
+            "actions": 5,
+            "collisions": 0,
+            "fault": null,
+            "poseAgeSeconds": 0.02278008199937176,
+            "cancellationPending": false
+          }
+        },
+        "transport": {
+          "kind": "ros2",
+          "subscriptions": {
+            "motion": 3,
+            "ownership": 3
+          }
+        },
+        "metrics": {
+          "bidAttempts": 9,
+          "corrections": 9,
+          "fallbacks": 0,
+          "moves": 5,
+          "energyHolds": 0
+        }
+      },
+      {
+        "id": "AMR-02",
+        "pid": 782790,
+        "execution": {
+          "kind": "nav2",
+          "fault": null,
+          "feedback": {
+            "ok": true,
+            "error": null,
+            "pose": {
+              "x": 1.1457955720636976,
+              "y": -1.7990339346659197
+            },
+            "groundTruth": {
+              "x": 1.1424313625875233,
+              "y": -1.7953737095858993
+            },
+            "origin": {
+              "x": 1,
+              "y": 4
+            },
+            "cellMetres": 0.6,
+            "actions": 5,
+            "collisions": 0,
+            "fault": null,
+            "poseAgeSeconds": 0.03307162399869412,
+            "cancellationPending": false
+          }
+        },
+        "transport": {
+          "kind": "ros2",
+          "subscriptions": {
+            "motion": 3,
+            "ownership": 3
+          }
+        },
+        "metrics": {
+          "bidAttempts": 9,
+          "corrections": 9,
+          "fallbacks": 0,
+          "moves": 5,
+          "energyHolds": 0
+        }
+      },
+      {
+        "id": "AMR-03",
+        "pid": 782791,
+        "execution": {
+          "kind": "nav2",
+          "fault": null,
+          "feedback": {
+            "ok": true,
+            "error": null,
+            "pose": {
+              "x": 1.145240092954515,
+              "y": 0
+            },
+            "groundTruth": {
+              "x": 1.145193812197318,
+              "y": 0
+            },
+            "origin": {
+              "x": 1,
+              "y": 7
+            },
+            "cellMetres": 0.6,
+            "actions": 2,
+            "collisions": 0,
+            "fault": null,
+            "poseAgeSeconds": 0.019624137989012524,
+            "cancellationPending": false
+          }
+        },
+        "transport": {
+          "kind": "ros2",
+          "subscriptions": {
+            "motion": 3,
+            "ownership": 3
+          }
+        },
+        "metrics": {
+          "bidAttempts": 9,
+          "corrections": 9,
+          "fallbacks": 0,
+          "moves": 2,
+          "energyHolds": 0
+        }
+      }
+    ]
+  },
+  "nav2FaultChecks": {
+    "cancellation": {
+      "passed": true,
+      "mode": "fault",
+      "scope": "Actual Nav2 cancellation during first cell. Grid/task state must not claim arrival; partial continuous pose retained and executor latches.",
+      "faultEvidence": {
+        "error": "Error: {\"error\":\"Error: {\\\"ok\\\":false,\\\"error\\\":\\\"Timeout terminal status=5; partial pose retained\\\",\\\"pose\\\":{\\\"x\\\":0.17700277310832765,\\\"y\\\":0},\\\"groundTruth\\\":{\\\"x\\\":0.17998399620264538,\\\"y\\\":0},\\\"origin\\\":{\\\"x\\\":1,\\\"y\\\":1},\\\"cellMetres\\\":0.6,\\\"actions\\\":1,\\\"collisions\\\":0,\\\"fault\\\":\\\"Timeout terminal status=5; partial pose retained\\\",\\\"poseAgeSeconds\\\":0.012443302999599837,\\\"cancellationPending\\\":false}\"}",
+        "committedCell": {
+          "x": 1,
+          "y": 1
+        },
+        "actual": {
+          "ok": true,
+          "error": null,
+          "pose": {
+            "x": 0.17700277310832765,
+            "y": 0
+          },
+          "groundTruth": {
+            "x": 0.17998399620264538,
+            "y": 0
+          },
+          "origin": {
+            "x": 1,
+            "y": 1
+          },
+          "cellMetres": 0.6,
+          "actions": 1,
+          "collisions": 0,
+          "fault": "Timeout terminal status=5; partial pose retained",
+          "poseAgeSeconds": 0.018402682995656505,
+          "cancellationPending": false
+        },
+        "completedTasks": 0
+      }
+    },
+    "controllerCrash": {
+      "passed": true,
+      "mode": "crash",
+      "wallSeconds": 15.972,
+      "scope": "Actual Nav2 cancellation or controller SIGKILL during first cell. Grid/task state must not claim arrival; partial continuous pose retained and executor latches.",
+      "faultEvidence": {
+        "error": "TypeError: fetch failed",
+        "committedCell": {
+          "x": 1,
+          "y": 1
+        },
+        "actual": {
+          "ok": true,
+          "error": null,
+          "pose": {
+            "x": 0.5364781885948197,
+            "y": 0
+          },
+          "groundTruth": {
+            "x": 0.5365217586387468,
+            "y": 0
+          },
+          "origin": {
+            "x": 1,
+            "y": 1
+          },
+          "cellMetres": 0.6,
+          "actions": 1,
+          "collisions": 0,
+          "fault": "Timeout terminal status=5; partial pose retained",
+          "poseAgeSeconds": 0.02353832800872624,
+          "cancellationPending": false
+        },
+        "completedTasks": 0
+      }
+    }
+  },
+  "profiling": {
+    "developmentSeeds": 400,
+    "report": "artifacts/completion-profile/report.json",
+    "rejectedExperiment": "artifacts/completion-profile/epoch16/report.json",
+    "productionOwnershipEpochTicks": 32
+  },
+  "limitations": [
+    "Two fresh integrated warehouse runs remain incomplete; no tuning after this acceptance.",
+    "No statistically established speedup, and 20% target unmet.",
+    "Warehouse acceptance is grid simulation in one Node process, not Nav2 acceptance or an AI ablation.",
+    "Nav2 is a fixed three-robot shared-clock continuous simulation fixture; logical leases pause during motion.",
+    "Nav2 dynamic grid-block and simulated-failure controls are rejected; grid demo retains them.",
+    "Nav2 partial-motion faults require restart/relocalization.",
+    "No Pi/Jetson, physical AMR or real sensor validation."
+  ]
+}

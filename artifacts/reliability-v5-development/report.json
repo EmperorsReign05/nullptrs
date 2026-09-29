@@ -1,0 +1,266 @@
+{
+  "protocol": {
+    "version": 5,
+    "seedStart": 31000,
+    "seeds": 200,
+    "fleetSizes": [
+      3,
+      6
+    ],
+    "tasksPerRun": 6,
+    "horizon": 800,
+    "map": "stock warehouse",
+    "battery": 100,
+    "taskWeight": 1,
+    "release": "all six pending tasks announced at tick zero",
+    "starts": "uniform open cells without replacement",
+    "endpoints": "uniform open cells; pickup differs from dropoff",
+    "communications": "connected, zero simulated latency",
+    "ai": "identical frozen model and guarded 10% correction in both arms",
+    "comparator": "unchanged resolveStopAndWait, including all stationary bodies; shared obstruction observation and replanning",
+    "asymmetry": "baseline has synchronous global conflict resolution; treatment confirms locally. No packet-loss claims.",
+    "performance": "jointly completed pairs only; bootstrap paired seeds, 10000 resamples, 95% percentile interval",
+    "charging": "same local charging lifecycle and active-job energy reserve in both arms",
+    "limitations": [
+      "shared simulation clock",
+      "one Node process",
+      "six tasks admitted serially by existing ownership epochs",
+      "not an AI ablation"
+    ],
+    "evaluation": "development: previously inspected v4 acceptance seeds"
+  },
+  "provenance": {
+    "commit": "5fb5a7ce14aa9da2885966f04553ba200d065397",
+    "baselineSHA256": "da6c16356705314a4cd758c6e4a3c100fe94883a7ac1d6b75904f821cb91bc86",
+    "modelSHA256": "5aad9ac9dad7ee4facb7b719154147e95d2069612d9cae1e3e59ef7a4fe455d1",
+    "candidateAgentSHA256": "8faee8101770d91e183edb11fa57087ca675b8dfd66bbe6c32cb814e9cf02d33"
+  },
+  "overall": {
+    "seeds": 200,
+    "baseline": {
+      "completedRuns": 170,
+      "completedTasks": 1147,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "nonzeroBidCorrections": 12318
+    },
+    "integrated": {
+      "completedRuns": 200,
+      "completedTasks": 1200,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "nonzeroBidCorrections": 7245
+    },
+    "paired": {
+      "count": 170,
+      "baselineMeanTicks": 191.76470588235293,
+      "integratedMeanTicks": 190.8235294117647,
+      "baselineMedianTicks": 187,
+      "integratedMedianTicks": 187.5,
+      "meanTicksSaved": 0.9411764705882353,
+      "medianTicksSaved": 0,
+      "aggregateImprovementPercent": 0.4907975460122682,
+      "ticksSaved95CI": [
+        -0.8588235294117647,
+        3.0588235294117645
+      ],
+      "improvementPercent95CI": [
+        -0.45274299809535706,
+        1.577765641119
+      ],
+      "wins": 40,
+      "ties": 103,
+      "losses": 27
+    },
+    "baselineOnlyComplete": [],
+    "integratedOnlyComplete": [
+      31001,
+      31010,
+      31011,
+      31015,
+      31021,
+      31026,
+      31028,
+      31039,
+      31042,
+      31043,
+      31045,
+      31047,
+      31061,
+      31063,
+      31067,
+      31084,
+      31089,
+      31099,
+      31112,
+      31128,
+      31129,
+      31131,
+      31141,
+      31145,
+      31149,
+      31155,
+      31171,
+      31179,
+      31183,
+      31191
+    ]
+  },
+  "byFleetSize": [
+    {
+      "n": 3,
+      "seeds": 100,
+      "baseline": {
+        "completedRuns": 93,
+        "completedTasks": 582,
+        "safety": {
+          "overlaps": 0,
+          "swaps": 0,
+          "blockedCells": 0,
+          "zeroBatteryWork": 0,
+          "queueOverflow": 0,
+          "payloadViolations": 0
+        },
+        "nonzeroBidCorrections": 3354
+      },
+      "integrated": {
+        "completedRuns": 100,
+        "completedTasks": 600,
+        "safety": {
+          "overlaps": 0,
+          "swaps": 0,
+          "blockedCells": 0,
+          "zeroBatteryWork": 0,
+          "queueOverflow": 0,
+          "payloadViolations": 0
+        },
+        "nonzeroBidCorrections": 2370
+      },
+      "paired": {
+        "count": 93,
+        "baselineMeanTicks": 192.31182795698925,
+        "integratedMeanTicks": 190,
+        "baselineMedianTicks": 187,
+        "integratedMedianTicks": 187,
+        "meanTicksSaved": 2.3118279569892475,
+        "medianTicksSaved": 0,
+        "aggregateImprovementPercent": 1.202124685490635,
+        "ticksSaved95CI": [
+          -0.12903225806451613,
+          5.731182795698925
+        ],
+        "improvementPercent95CI": [
+          -0.0679732638495525,
+          2.9282254513430206
+        ],
+        "wins": 21,
+        "ties": 63,
+        "losses": 9
+      },
+      "baselineOnlyComplete": [],
+      "integratedOnlyComplete": [
+        31010,
+        31026,
+        31028,
+        31042,
+        31084,
+        31112,
+        31128
+      ]
+    },
+    {
+      "n": 6,
+      "seeds": 100,
+      "baseline": {
+        "completedRuns": 77,
+        "completedTasks": 565,
+        "safety": {
+          "overlaps": 0,
+          "swaps": 0,
+          "blockedCells": 0,
+          "zeroBatteryWork": 0,
+          "queueOverflow": 0,
+          "payloadViolations": 0
+        },
+        "nonzeroBidCorrections": 8964
+      },
+      "integrated": {
+        "completedRuns": 100,
+        "completedTasks": 600,
+        "safety": {
+          "overlaps": 0,
+          "swaps": 0,
+          "blockedCells": 0,
+          "zeroBatteryWork": 0,
+          "queueOverflow": 0,
+          "payloadViolations": 0
+        },
+        "nonzeroBidCorrections": 4875
+      },
+      "paired": {
+        "count": 77,
+        "baselineMeanTicks": 191.1038961038961,
+        "integratedMeanTicks": 191.8181818181818,
+        "baselineMedianTicks": 187,
+        "integratedMedianTicks": 189,
+        "meanTicksSaved": -0.7142857142857143,
+        "medianTicksSaved": 0,
+        "aggregateImprovementPercent": -0.3737682636765248,
+        "ticksSaved95CI": [
+          -3.3896103896103895,
+          1.5584415584415585
+        ],
+        "improvementPercent95CI": [
+          -1.7807943014582353,
+          0.8163265306122449
+        ],
+        "wins": 19,
+        "ties": 40,
+        "losses": 18
+      },
+      "baselineOnlyComplete": [],
+      "integratedOnlyComplete": [
+        31001,
+        31011,
+        31015,
+        31021,
+        31039,
+        31043,
+        31045,
+        31047,
+        31061,
+        31063,
+        31067,
+        31089,
+        31099,
+        31129,
+        31131,
+        31141,
+        31145,
+        31149,
+        31155,
+        31171,
+        31179,
+        31183,
+        31191
+      ]
+    }
+  ],
+  "gates": {
+    "reliability": true,
+    "safety": true,
+    "twentyPercent": false
+  }
+}
