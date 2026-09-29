@@ -12,12 +12,28 @@ interface ControlPanelProps {
   onToggleSimulation: () => void;
   onSimulateConflict: () => void;
   onSimulateDeadlock: () => void;
+  /**
+   * Controls that have no honest implementation on the distributed runtime, with
+   * the one-line reason to show on them.
+   *
+   * These used to render as fully enabled primary-styled buttons whose only
+   * effect was to append an internal error string to the event log. On a demo
+   * screen that is the worst of both worlds: it looks live, it accepts the
+   * click, and it does nothing. A disabled control with a visible reason is
+   * honest and is also a standing to-do list. Keyed by prop name.
+   */
+  unavailable?: Partial<Record<'simConflict' | 'simDeadlock' | 'reset' | 'robotCount' | 'shelfColCount', string>>;
   onFailAMR: () => void;
   onBlockAisle: () => void;
   onReset: () => void;
   onRobotCountChange: (count: number) => void;
   onShelfColCountChange: (count: number) => void;
 }
+
+/** Visibly inert, and legible as inert. Never a hover-highlight, never a pointer. */
+const DISABLED =
+  'bg-white/[0.02] border border-white/[0.07] text-zinc-600 px-3.5 py-2 rounded-md text-[12px] font-semibold ' +
+  'tracking-wider flex items-center gap-1.5 whitespace-nowrap cursor-not-allowed select-none';
 
 export function ControlPanel({
   isSimulating,
@@ -33,6 +49,7 @@ export function ControlPanel({
   onReset,
   onRobotCountChange,
   onShelfColCountChange,
+  unavailable,
 }: ControlPanelProps) {
   return (
     <div id="tour-control-panel" className="bg-[#12161F]/35 backdrop-blur-xl p-4 rounded-xl border border-white/10 flex flex-col justify-between shadow-xl">
@@ -63,17 +80,23 @@ export function ControlPanel({
           {isSimulating ? <Pause size={15} strokeWidth={2.5} /> : <Play size={15} strokeWidth={2.5} />}
           {isSimulating ? 'pause sim' : 'start sim'}
         </button>
-        <button 
+        <button
           id="tour-sim-conflict"
-          onClick={onSimulateConflict} 
-          className="bg-[#C9F27D]/10 border border-[#C9F27D]/40 text-[#C9F27D] hover:bg-[#C9F27D] hover:text-[#090C11] hover:border-[#C9F27D] hover:shadow-[0_0_15px_rgba(201,242,125,0.35)] px-3.5 py-2 rounded-md text-[12px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-150 hover:-translate-y-0.5 active:scale-95 whitespace-nowrap cursor-pointer"
+          onClick={onSimulateConflict}
+          disabled={!!unavailable?.simConflict}
+          title={unavailable?.simConflict}
+          className={unavailable?.simConflict ? DISABLED :
+            "bg-[#C9F27D]/10 border border-[#C9F27D]/40 text-[#C9F27D] hover:bg-[#C9F27D] hover:text-[#090C11] hover:border-[#C9F27D] hover:shadow-[0_0_15px_rgba(201,242,125,0.35)] px-3.5 py-2 rounded-md text-[12px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-150 hover:-translate-y-0.5 active:scale-95 whitespace-nowrap cursor-pointer"}
         >
           <AlertTriangle size={15} strokeWidth={2.5} /> sim conflict
         </button>
         <div id="tour-fault-controls" className="flex flex-wrap gap-2">
-          <button 
-            onClick={onSimulateDeadlock} 
-            className="bg-[#C9F27D]/10 border border-[#C9F27D]/40 text-[#C9F27D] hover:bg-[#C9F27D] hover:text-[#090C11] hover:border-[#C9F27D] hover:shadow-[0_0_15px_rgba(201,242,125,0.35)] px-3.5 py-2 rounded-md text-[12px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-150 hover:-translate-y-0.5 active:scale-95 whitespace-nowrap cursor-pointer"
+          <button
+            onClick={onSimulateDeadlock}
+            disabled={!!unavailable?.simDeadlock}
+            title={unavailable?.simDeadlock}
+            className={unavailable?.simDeadlock ? DISABLED :
+              "bg-[#C9F27D]/10 border border-[#C9F27D]/40 text-[#C9F27D] hover:bg-[#C9F27D] hover:text-[#090C11] hover:border-[#C9F27D] hover:shadow-[0_0_15px_rgba(201,242,125,0.35)] px-3.5 py-2 rounded-md text-[12px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-150 hover:-translate-y-0.5 active:scale-95 whitespace-nowrap cursor-pointer"}
           >
             <XOctagon size={15} strokeWidth={2.5} /> sim deadlock
           </button>
@@ -95,9 +118,12 @@ export function ControlPanel({
           </button>
         </div>
         <div className="flex-1"></div>
-        <button 
-          onClick={onReset} 
-          className="group bg-white/[0.05] border border-white/10 text-zinc-400 hover:text-white hover:border-[#C9F27D]/40 hover:bg-[#C9F27D]/10 hover:shadow-[0_0_15px_rgba(201,242,125,0.2)] px-3.5 py-2 rounded-md text-[12px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-150 hover:-translate-y-0.5 active:scale-95 whitespace-nowrap cursor-pointer"
+        <button
+          onClick={onReset}
+          disabled={!!unavailable?.reset}
+          title={unavailable?.reset}
+          className={unavailable?.reset ? DISABLED :
+            "group bg-white/[0.05] border border-white/10 text-zinc-400 hover:text-white hover:border-[#C9F27D]/40 hover:bg-[#C9F27D]/10 hover:shadow-[0_0_15px_rgba(201,242,125,0.2)] px-3.5 py-2 rounded-md text-[12px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-150 hover:-translate-y-0.5 active:scale-95 whitespace-nowrap cursor-pointer"}
         >
           <RefreshCw size={15} strokeWidth={2.5} className="group-hover:rotate-180 transition-transform duration-500" /> reset
         </button>
@@ -113,8 +139,11 @@ export function ControlPanel({
             min="1"
             max="20"
             value={robotCount}
-            onChange={e => onRobotCountChange(parseInt(e.target.value))} 
-            className="w-full h-1.5 bg-white/[0.08] border border-white/10 rounded-lg appearance-none cursor-pointer accent-[#C9F27D] hover:accent-[#C9F27D] transition-all" 
+            onChange={e => onRobotCountChange(parseInt(e.target.value))}
+            disabled={!!unavailable?.robotCount}
+            title={unavailable?.robotCount}
+            className={`w-full h-1.5 bg-white/[0.08] border border-white/10 rounded-lg appearance-none transition-all ${
+              unavailable?.robotCount ? 'cursor-not-allowed opacity-40' : 'cursor-pointer accent-[#C9F27D] hover:accent-[#C9F27D]'}`}
           />
         </div>
         <div className="flex-1 flex items-center gap-3">
@@ -126,8 +155,11 @@ export function ControlPanel({
             min="0" 
             max="6" 
             value={shelfColCount} 
-            onChange={e => onShelfColCountChange(parseInt(e.target.value))} 
-            className="w-full h-1.5 bg-white/[0.08] border border-white/10 rounded-lg appearance-none cursor-pointer accent-[#C9F27D] hover:accent-[#C9F27D] transition-all" 
+            onChange={e => onShelfColCountChange(parseInt(e.target.value))}
+            disabled={!!unavailable?.shelfColCount}
+            title={unavailable?.shelfColCount}
+            className={`w-full h-1.5 bg-white/[0.08] border border-white/10 rounded-lg appearance-none transition-all ${
+              unavailable?.shelfColCount ? 'cursor-not-allowed opacity-40' : 'cursor-pointer accent-[#C9F27D] hover:accent-[#C9F27D]'}`}
           />
         </div>
       </div>
