@@ -1,0 +1,315 @@
+{
+  "commit": "5fb5a7ce14aa9da2885966f04553ba200d065397",
+  "protocol": {
+    "seeds": "26000..26199 and31000..31199",
+    "runs": 400,
+    "status": "development only; both cohorts already inspected",
+    "fleetSizes": [
+      3,
+      6
+    ],
+    "tasks": 6,
+    "horizon": 800,
+    "command": "PROFILE_OUTPUT=/tmp/completion-profile-new RUN_COMPLETION_PROFILE=1 ./node_modules/.bin/vitest run tests/completion-profile.test.ts",
+    "instrumentation": "Passive send and advance wrappers; exact robot-tick partition. Static BFS increase counts retreat moves, not an assertion that each is avoidable. MotionWait includes confirmation/replan/conflict; not all waits are collisions. Endpoint category captures at-goal protocol/arrival waits.",
+    "epochTicks": 16,
+    "bidWindow": 4
+  },
+  "reliability": {
+    "baseline": 346,
+    "integrated": 396,
+    "baselineTasks": 2316,
+    "integratedTasks": 2396
+  },
+  "paired": {
+    "count": 345,
+    "baseline": {
+      "runs": 345,
+      "totalTicks": 46790,
+      "meanTicks": 135.6231884057971,
+      "categories": {
+        "taskMoves": 47191,
+        "idleMoves": 0,
+        "chargingTransitMoves": 1,
+        "chargingWait": 0,
+        "chargingHold": 0,
+        "leaseWait": 17495,
+        "endpointHandshake": 5133,
+        "motionWait": 2519,
+        "idleWhileUnadmitted": 90058,
+        "idleOther": 40157
+      },
+      "retreats": 3049,
+      "endpointWaitNoAck": 3063,
+      "meanFirstExecutableByTask": {
+        "M-0": 4.553623188405797,
+        "M-1": 21.817391304347826,
+        "M-2": 41.23478260869565,
+        "M-3": 59.09275362318841,
+        "M-4": 74.64927536231885,
+        "M-5": 92.8231884057971
+      },
+      "meanFirstBidByTask": {
+        "M-0": 3,
+        "M-1": 19,
+        "M-2": 35,
+        "M-3": 51,
+        "M-4": 67,
+        "M-5": 83
+      },
+      "messages": {
+        "heartbeat": 202554,
+        "announce": 1215324,
+        "bid": 27609,
+        "propose": 6420,
+        "grant": 299251,
+        "mark": 45359,
+        "ack": 193336,
+        "checkpoint": 671105
+      }
+    },
+    "integrated": {
+      "runs": 345,
+      "totalTicks": 45070,
+      "meanTicks": 130.63768115942028,
+      "categories": {
+        "taskMoves": 46521,
+        "idleMoves": 557,
+        "chargingTransitMoves": 0,
+        "chargingWait": 0,
+        "chargingHold": 0,
+        "leaseWait": 16379,
+        "endpointHandshake": 5117,
+        "motionWait": 353,
+        "idleWhileUnadmitted": 90358,
+        "idleOther": 36540
+      },
+      "retreats": 2640,
+      "endpointWaitNoAck": 3047,
+      "meanFirstExecutableByTask": {
+        "M-0": 4.553623188405797,
+        "M-1": 21.753623188405797,
+        "M-2": 39.9768115942029,
+        "M-3": 58.93913043478261,
+        "M-4": 74.82608695652173,
+        "M-5": 91.25797101449275
+      },
+      "meanFirstBidByTask": {
+        "M-0": 3,
+        "M-1": 19,
+        "M-2": 35,
+        "M-3": 51,
+        "M-4": 67,
+        "M-5": 83
+      },
+      "messages": {
+        "heartbeat": 195825,
+        "announce": 1174950,
+        "bid": 26352,
+        "propose": 6109,
+        "grant": 283423,
+        "mark": 42980,
+        "ack": 182819,
+        "checkpoint": 635266
+      }
+    },
+    "aggregateImprovementPercent": 3.675999145116478,
+    "wins": 136,
+    "ties": 138,
+    "losses": 71
+  },
+  "allRunDiagnostics": {
+    "baseline": {
+      "runs": 400,
+      "totalTicks": 90118,
+      "meanTicks": 225.295,
+      "categories": {
+        "taskMoves": 54716,
+        "idleMoves": 0,
+        "chargingTransitMoves": 1,
+        "chargingWait": 0,
+        "chargingHold": 0,
+        "leaseWait": 31717,
+        "endpointHandshake": 5840,
+        "motionWait": 32134,
+        "idleWhileUnadmitted": 142920,
+        "idleOther": 156794
+      },
+      "retreats": 4030,
+      "endpointWaitNoAck": 3479,
+      "meanFirstExecutableByTask": {
+        "M-0": 4.57,
+        "M-1": 21.80352644836272,
+        "M-2": 41.042821158690174,
+        "M-3": 58.71898734177215,
+        "M-4": 74.54452926208651,
+        "M-5": 92.83969465648855
+      },
+      "meanFirstBidByTask": {
+        "M-0": 3,
+        "M-1": 19,
+        "M-2": 35,
+        "M-3": 51,
+        "M-4": 67,
+        "M-5": 83
+      },
+      "messages": {
+        "heartbeat": 424122,
+        "announce": 2544732,
+        "bid": 51021,
+        "propose": 11080,
+        "grant": 591337,
+        "mark": 74607,
+        "ack": 341942,
+        "checkpoint": 1768431
+      }
+    },
+    "integrated": {
+      "runs": 400,
+      "totalTicks": 55330,
+      "meanTicks": 138.325,
+      "categories": {
+        "taskMoves": 54495,
+        "idleMoves": 848,
+        "chargingTransitMoves": 0,
+        "chargingWait": 0,
+        "chargingHold": 0,
+        "leaseWait": 19849,
+        "endpointHandshake": 5945,
+        "motionWait": 1927,
+        "idleWhileUnadmitted": 108949,
+        "idleOther": 56180
+      },
+      "retreats": 3451,
+      "endpointWaitNoAck": 3545,
+      "meanFirstExecutableByTask": {
+        "M-0": 4.57,
+        "M-1": 21.7425,
+        "M-2": 39.7875,
+        "M-3": 58.43,
+        "M-4": 74.9925,
+        "M-5": 91.47
+      },
+      "meanFirstBidByTask": {
+        "M-0": 3,
+        "M-1": 19,
+        "M-2": 35,
+        "M-3": 51,
+        "M-4": 67,
+        "M-5": 83
+      },
+      "messages": {
+        "heartbeat": 248193,
+        "announce": 1489158,
+        "bid": 32178,
+        "propose": 7258,
+        "grant": 348229,
+        "mark": 52114,
+        "ack": 228245,
+        "checkpoint": 850629
+      }
+    }
+  },
+  "limitations": [
+    "No performance inference from failed capped runs; allRunDiagnostics are censored exposure counts only",
+    "Idle robot ticks overlap elapsed time and cannot be added to predicted makespan savings",
+    "Passive counts identify candidate causes, not intervention-proven speedups",
+    "No new acceptance; MLP and baseline unchanged",
+    "31.24% integrated cadence improvement is vs its32tick predecessor, NOTvsstopwait; fair16tick integrated-vsstopwait is3.676% on345joint completions. New integrated failure26081 rejects shipment."
+  ],
+  "experiment": {
+    "change": "OWNERSHIP_EPOCH_TICKS32->16 only; all other runtime/model/baseline logic identical",
+    "status": "REJECTED and reverted",
+    "testFailures": [
+      "duplicate/conflicting claims cannot yield a second valid owner",
+      "completed custody is terminal and is never reassigned",
+      "gossips completed custody to a healed peer even after the owner dies"
+    ],
+    "testOutcome": {
+      "passed": 18,
+      "failed": 3,
+      "skipped": 1
+    },
+    "explanation": "The shorter lease renews during timings where these unchanged tests expect active ownership or a completed checkpoint. No assertion was loosened."
+  },
+  "crossCadenceComparison": {
+    "baseline": {
+      "jointlyCompletedAcrossCadences": 329,
+      "mean32": 192.01823708206686,
+      "mean16": 135.5258358662614,
+      "aggregateImprovementPercent": 29.420331148890366,
+      "regressedSeeds": [
+        26048,
+        26075,
+        26079,
+        26087,
+        26088,
+        26133,
+        26149,
+        31066,
+        31076,
+        31098,
+        31110,
+        31111,
+        31144,
+        31157,
+        31168,
+        31187,
+        31189
+      ],
+      "recoveredSeeds": [
+        26031,
+        26034,
+        26099,
+        26103,
+        26153,
+        26160,
+        31010,
+        31011,
+        31028,
+        31045,
+        31061,
+        31063,
+        31089,
+        31128,
+        31155,
+        31171,
+        31191
+      ],
+      "safety16": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      }
+    },
+    "integrated": {
+      "jointlyCompletedAcrossCadences": 395,
+      "mean32": 191.24303797468355,
+      "mean16": 131.5012658227848,
+      "aggregateImprovementPercent": 31.238665095775804,
+      "regressedSeeds": [
+        26081
+      ],
+      "recoveredSeeds": [
+        26198
+      ],
+      "safety16": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      }
+    }
+  },
+  "provenance": {
+    "baselineSHA256": "da6c16356705314a4cd758c6e4a3c100fe94883a7ac1d6b75904f821cb91bc86",
+    "modelSHA256": "5aad9ac9dad7ee4facb7b719154147e95d2069612d9cae1e3e59ef7a4fe455d1",
+    "sourceCommit": "5fb5a7ce14aa9da2885966f04553ba200d065397",
+    "reproduction": "python3 scripts/profile-admission-experiment.py /absolute/new/output-directory"
+  }
+}
