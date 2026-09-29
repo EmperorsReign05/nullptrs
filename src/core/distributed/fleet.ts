@@ -446,13 +446,46 @@ export class DistributedFleet {
         };
       }
     }
+    const congested = computeCongestion(base, [self, ...peers]);
     return {
       tick,
-      map: computeCongestion(base, [self, ...peers]),
+      // A* cost of entering a cell is  base + CONGESTION_WEIGHT * congestion, so
+      // adding the learned toll into the congestion field composes exactly the
+      // required edge cost:
+      //     baseEdgeCost + deterministicCurrentCongestion + boundedPredictedCongestionToll
+      // without touching the planner. `blocked` is untouched, so the toll can
+      // only lengthen or shorten a route; it can never make an illegal move
+      // legal, and it never overrides the sensor, PIBT, ownership or energy.
+      map: this.applyGuidance(agent, congested, tick),
       robots: [self],
       tasks: [],
       metrics: { replans: 0, conflictCount: 0, waitMoves: 0, inheritedPriorities: 0, backtracks: 0 },
     };
+  }
+
+  /**
+   * The ONE place the route-guidance layer touches. With no guidance field
+   * installed this returns the map unchanged, so the frozen system is bit-for-bit
+   * unaffected and every historical result still reproduces.
+   */
+  private applyGuidance(agent: Agent, map: WarehouseMap, tick: number): WarehouseMap {
+    const field = agent.getTollField();
+    if (!field) return map;
+    let tolls: Float64Array;
+    try {
+      tolls = field(agent.guidanceObservation(tick));
+    } catch {
+      return map; // a broken model must never be able to change a decision
+    }
+    if (!tolls || tolls.length !== map.cells.length) return map;
+    let changed = false;
+    const cells = map.cells.map((c, i) => {
+      const extra = tolls[i];
+      if (!Number.isFinite(extra) || extra <= 0) return c;
+      changed = true;
+      return { ...c, congestion: c.congestion + extra };
+    });
+    return changed ? { ...map, cells } : map;
   }
 
   private applyMoves(tick?: number) {

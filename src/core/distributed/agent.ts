@@ -30,6 +30,56 @@ import { scan, isLocallySafe, emergencyEscape, SENSOR_RANGE_CELLS, type SensorSc
 const EMPTY_BAYS: ReadonlySet<string> = new Set<string>();
 
 /**
+ * A learned congestion toll, evaluated once per replanning round by the
+ * benchmark's guidance layer and returned as a per-cell additive A* cost.
+ *
+ * It is a PLANNING COST and nothing else. `blocked` is never touched, so a toll
+ * can make a route longer or shorter but can never make an illegal move legal;
+ * and a route that has not been replanned is unaffected, so the agent keeps
+ * following whatever it already certified.
+ */
+export type EdgeTollField = (observation: GuidanceObservation) => Float64Array;
+
+/** Ticks of own history the guidance features are allowed to read. */
+export const GUIDANCE_HISTORY_TICKS = 64;
+/** Decay constant, in ticks, for the edge-pressure and cell-contention memories. */
+export const GUIDANCE_DECAY_TICKS = 24;
+
+/**
+ * Everything a decentralized route-guidance model may read at runtime.
+ *
+ * This is the whole authorised information set, and it is deliberately the same
+ * set the safety and arbitration layers already run on: this agent's own state,
+ * what its own sensor can see, and the peer messages it already receives. There
+ * is no WorldState, no fleet handle, no other robot's task queue, no other
+ * robot's battery, no global congestion field, and no future state. A route
+ * planner that reads a global congestion map is a centralised planner wearing a
+ * decentralised hat, which is exactly what this project must not ship.
+ */
+export type GuidanceObservation = {
+  tick: number;
+  position: Position;
+  route: Position[];
+  goal: Position | null;
+  routeRemaining: number;
+  /** Consecutive ticks this agent has been unable to move, as broadcast to peers. */
+  stallTicks: number;
+  /** Fraction of the last GUIDANCE_HISTORY_TICKS commits on which this agent did not move. */
+  recentWaitShare: number;
+  /** Directed edge "x,y>x,y" -> decayed count of this agent's own recent traversals. */
+  edgeHistory: ReadonlyMap<string, number>;
+  /** Cell "x,y" -> decayed count of recent ticks this cell blocked this agent. */
+  contentionHistory: ReadonlyMap<string, number>;
+  /** Exactly the peer views this agent holds: fresh, range-limited, message-derived. */
+  peers: readonly PeerView[];
+  /** Exactly the contacts this agent's own sensor reports this tick. */
+  sensorContacts: readonly Position[];
+  map: WarehouseMap;
+};
+
+const edgeKey = (from: Position, to: Position) => `${from.x},${from.y}>${to.x},${to.y}`;
+
+/**
  * Minimum ticks between two step-asides by the SAME agent. Bounds how fast
  * a group of agents can shuffle into and out of bays, which is what turns a
  * resolvable head-on into an unbounded livelock.
@@ -83,6 +133,14 @@ export class Agent {
   private rememberedBlockers = new Map<string, { pos: Position; until: number }>();
   /** Per-cell denied-step observations, retained across safety displacements. */
   private blockerStreak = new Map<string, { observations: number; tick: number }>();
+  /** Own recent wait/move record. Read only by the optional route-guidance layer. */
+  private moveRecord: number[] = [];
+  /** Own decayed traversal counts per directed edge. Read only by the guidance layer. */
+  private edgeHistory = new Map<string, { count: number; tick: number }>();
+  /** Own decayed counts of cells that blocked this agent. Read only by the guidance layer. */
+  private contentionHistory = new Map<string, { count: number; tick: number }>();
+  /** Installed by the benchmark's guidance layer. null = OFF, and then nothing below is ever read. */
+  private tollField: EdgeTollField | null = null;
 
   constructor(
     public id: PeerId,
@@ -133,6 +191,74 @@ export class Agent {
 
   getScan(): SensorScan {
     return scan(this.local.position, this.sensorFeed, this.map, this.sensorRange);
+  }
+
+  /**
+   * Install (or, with null, REMOVE) the route-guidance layer.
+   *
+   * With null this agent behaves byte-identically to the frozen system: the
+   * counters below are still maintained, but nothing reads them and no planner
+   * input changes. That is what makes "the feature must be switchable OFF, and
+   * with it OFF the frozen historical results reproduce" a testable claim rather
+   * than an intention.
+   */
+  setTollField(field: EdgeTollField | null): void {
+    this.tollField = field;
+  }
+
+  getTollField(): EdgeTollField | null {
+    return this.tollField;
+  }
+
+  /** Build the authorised local observation handed to the guidance model. */
+  guidanceObservation(tick: number, sensorScan?: SensorScan): GuidanceObservation {
+    const scanNow = sensorScan ?? this.lastScan ?? this.getScan();
+    const route = this.local.path.map((p) => ({ ...p }));
+    const waits = this.moveRecord.reduce((a, b) => a + b, 0);
+    const decayed = (entries: Map<string, { count: number; tick: number }>) => {
+      const out = new Map<string, number>();
+      for (const [k, v] of entries) {
+        const value = v.count * Math.pow(2, -(tick - v.tick) / GUIDANCE_DECAY_TICKS);
+        if (value >= 0.05) out.set(k, value);
+      }
+      return out;
+    };
+    return {
+      tick,
+      position: { ...this.local.position },
+      route,
+      goal: route.length ? route[route.length - 1] : null,
+      routeRemaining: Math.max(0, route.length - 1),
+      stallTicks: this.stallTicks,
+      recentWaitShare: this.moveRecord.length ? waits / this.moveRecord.length : 0,
+      edgeHistory: decayed(this.edgeHistory),
+      contentionHistory: decayed(this.contentionHistory),
+      peers: [...this.peers.values()].map((p) => ({ ...p })),
+      sensorContacts: scanNow.contacts.map((c) => ({ ...c.position })),
+      map: this.map,
+    };
+  }
+
+  /**
+   * Update this agent's own history from the PREVIOUS tick's decision, which is
+   * still in lastDecision at the point observeMotion runs. Called for every arm,
+   * including with the guidance layer OFF, but read by nothing in that case.
+   */
+  private recordGuidanceHistory(currentTick: number, sensorScan: SensorScan) {
+    const decision = this.lastDecision;
+    this.moveRecord.push(decision && !positionsEqual(decision.from, decision.to) ? 0 : 1);
+    if (this.moveRecord.length > GUIDANCE_HISTORY_TICKS) this.moveRecord.shift();
+    if (decision && !positionsEqual(decision.from, decision.to)) {
+      const k = edgeKey(decision.from, decision.to);
+      const prev = this.edgeHistory.get(k);
+      this.edgeHistory.set(k, { count: (prev?.count ?? 0) * 0.5 + 1, tick: currentTick });
+    }
+    const preferred = this.local.path[1];
+    if (preferred && !isLocallySafe(sensorScan, preferred)) {
+      const k = `${preferred.x},${preferred.y}`;
+      const prev = this.contentionHistory.get(k);
+      this.contentionHistory.set(k, { count: (prev?.count ?? 0) * 0.5 + 1, tick: currentTick });
+    }
   }
 
   private isBay(p: Position): boolean {
@@ -385,6 +511,7 @@ export class Agent {
     this.refreshPeers(currentTick);
     const sensorScan = this.getScan();
     this.lastScan = sensorScan;
+    this.recordGuidanceHistory(currentTick, sensorScan);
     const preferred = this.local.path[1];
     if (preferred && !isLocallySafe(sensorScan, preferred)) this.noteBlocker(preferred, sensorScan, currentTick);
     return sensorScan;

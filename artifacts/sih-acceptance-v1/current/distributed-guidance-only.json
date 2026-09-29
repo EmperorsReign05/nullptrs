@@ -1,0 +1,1536 @@
+{
+ "version": "sih-acceptance-v1",
+ "block": "acceptance",
+ "generatedBy": "npx vite-node scripts/sih-benchmark.ts evaluate --block acceptance --arms A,B,C,D,E,F",
+ "provenance": {
+  "commit": "9c7442218d3f8d7a962a8e74f9e65402e6be5f2c",
+  "dirty": true,
+  "sourceHashes": {
+   "src/core/bench/stopwait.ts": "da6c16356705314a4cd758c6e4a3c100fe94883a7ac1d6b75904f821cb91bc86",
+   "src/core/bench/sih/overlap.ts": "c987a111b4d13c89065b14bc6d9182e7db58e50afae82c6d52c48a58eb606b91",
+   "src/core/bench/sih/scenario.ts": "dfefcb0f5d9e3dc1dcf281f284e083217fb901f4d810efe242306b42af6efd0d",
+   "src/core/bench/sih/runner.ts": "1841496a69f45962bec450af54f02015988b06d4878f0e05d8a25bfbd22279b0",
+   "src/core/bench/sih/stats.ts": "289e35131868f4d8c11b8fe30f2756a7a249bd552bd5281cb11c33c66d4999f9",
+   "src/core/distributed/agent.ts": "9f57d4a85d3dacd4bd28b3eb700772c29655c37f148b998bde9503f3aa171efc",
+   "src/core/distributed/fleet.ts": "ede49e5aa9473f1eb2277a74e1ac7fb7546da4d4cf220bc06ccb742b0eb6aaf6",
+   "src/core/distributed/runtime.ts": "ff23002569ea44e97d84f48bed27a2ae6f742f89083e80a62b49d7941a48347c",
+   "src/core/distributed/ownership.ts": "30c43a6da3570f26edc30a4dc66ff2538c54d7706e8d08682e3ad02ae2c68e05",
+   "src/core/pathfinding/astar.ts": "c822dc66bd7234b065e1b6c6398cc11f56e438aec65da90d3070b1bbfa633fbf",
+   "artifacts/bid-energy-v4/model.json": "5aad9ac9dad7ee4facb7b719154147e95d2069612d9cae1e3e59ef7a4fe455d1"
+  }
+ },
+ "suite": {
+  "path": "artifacts/sih-acceptance-v1/scenarios.json",
+  "scenarios": 1980,
+  "composition": {
+   "low": 600,
+   "recoverable": 900,
+   "severe": 480
+  },
+  "compositionByLayout": {
+   "stock": 867,
+   "wide": 1113
+  },
+  "layoutsEvaluated": [
+   "stock",
+   "wide"
+  ],
+  "guidanceModel": "artifacts/sih-acceptance-v1/guidance/model.json"
+ },
+ "arm": {
+  "id": "E",
+  "name": "distributed-guidance-only",
+  "motion": "distributed",
+  "bidding": "deterministic",
+  "guidance": "predictive-congestion-toll",
+  "role": "Ablation C->E: incremental effect of route-level congestion-prediction AI."
+ },
+ "speed": {
+  "sumTaskCompletionTime": {
+   "all": {
+    "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "pairedCompleteCount": 1338,
+    "candidates": 1980,
+    "baselineOnlyComplete": 12,
+    "treatmentOnlyComplete": 606,
+    "neitherComplete": 24,
+    "baselineTotal": 2048614,
+    "treatmentTotal": 2004888,
+    "baselineMean": 1531.101644245142,
+    "treatmentMean": 1498.421524663677,
+    "baselineMedian": 1406,
+    "treatmentMedian": 1379,
+    "aggregateReduction": 0.021344186850231428,
+    "aggregateReduction95CI": [
+     0.01636272666103067,
+     0.026440389969966227
+    ],
+    "meanPairedReduction": 0.015872382607768243,
+    "meanPairedReduction95CI": [
+     0.010584202208247668,
+     0.02086125903260698
+    ],
+    "medianPairedReduction": 0.0018572407816966076,
+    "medianPairedReduction95CI": [
+     0.0014218009478672985,
+     0.002512343996122622
+    ],
+    "wins": 800,
+    "ties": 197,
+    "losses": 341,
+    "bootstrapResamples": 10000
+   },
+   "low": {
+    "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "pairedCompleteCount": 442,
+    "candidates": 600,
+    "baselineOnlyComplete": 2,
+    "treatmentOnlyComplete": 150,
+    "neitherComplete": 6,
+    "baselineTotal": 653564,
+    "treatmentTotal": 641106,
+    "baselineMean": 1478.6515837104073,
+    "treatmentMean": 1450.4660633484164,
+    "baselineMedian": 1298.5,
+    "treatmentMedian": 1270.5,
+    "aggregateReduction": 0.01906163742188982,
+    "aggregateReduction95CI": [
+     0.011217729576800672,
+     0.027548819804439906
+    ],
+    "meanPairedReduction": 0.015621851531876096,
+    "meanPairedReduction95CI": [
+     0.007908576728621124,
+     0.02332978125552059
+    ],
+    "medianPairedReduction": 0.001001754638603153,
+    "medianPairedReduction95CI": [
+     0.0004887596040903876,
+     0.0018779342723004694
+    ],
+    "wins": 246,
+    "ties": 90,
+    "losses": 106,
+    "bootstrapResamples": 10000
+   },
+   "recoverable": {
+    "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "pairedCompleteCount": 594,
+    "candidates": 900,
+    "baselineOnlyComplete": 8,
+    "treatmentOnlyComplete": 286,
+    "neitherComplete": 12,
+    "baselineTotal": 926871,
+    "treatmentTotal": 905942,
+    "baselineMean": 1560.388888888889,
+    "treatmentMean": 1525.1548821548822,
+    "baselineMedian": 1444,
+    "treatmentMedian": 1413,
+    "aggregateReduction": 0.02258027276719199,
+    "aggregateReduction95CI": [
+     0.014774023632804223,
+     0.030805121504649757
+    ],
+    "meanPairedReduction": 0.015435424727270573,
+    "meanPairedReduction95CI": [
+     0.006309547718391279,
+     0.023725760278783637
+    ],
+    "medianPairedReduction": 0.0025188517435959894,
+    "medianPairedReduction95CI": [
+     0.0014211274277593558,
+     0.004246285266706383
+    ],
+    "wins": 367,
+    "ties": 66,
+    "losses": 161,
+    "bootstrapResamples": 10000
+   },
+   "severe": {
+    "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "pairedCompleteCount": 302,
+    "candidates": 480,
+    "baselineOnlyComplete": 2,
+    "treatmentOnlyComplete": 170,
+    "neitherComplete": 6,
+    "baselineTotal": 468179,
+    "treatmentTotal": 457840,
+    "baselineMean": 1550.2615894039734,
+    "treatmentMean": 1516.0264900662253,
+    "baselineMedian": 1409.5,
+    "treatmentMedian": 1375,
+    "aggregateReduction": 0.02208343390028178,
+    "aggregateReduction95CI": [
+     0.012263140318082622,
+     0.03275920370875374
+    ],
+    "meanPairedReduction": 0.017098500874523154,
+    "meanPairedReduction95CI": [
+     0.007234732428225461,
+     0.027069616578280328
+    ],
+    "medianPairedReduction": 0.0021715552202206923,
+    "medianPairedReduction95CI": [
+     0.0014720314033366045,
+     0.004052684903748734
+    ],
+    "wins": 187,
+    "ties": 41,
+    "losses": 74,
+    "bootstrapResamples": 10000
+   },
+   "low-n3": {
+    "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "pairedCompleteCount": 190,
+    "candidates": 200,
+    "baselineOnlyComplete": 0,
+    "treatmentOnlyComplete": 9,
+    "neitherComplete": 1,
+    "baselineTotal": 392295,
+    "treatmentTotal": 386738,
+    "baselineMean": 2064.7105263157896,
+    "treatmentMean": 2035.463157894737,
+    "baselineMedian": 2036.5,
+    "treatmentMedian": 2030,
+    "aggregateReduction": 0.014165360251851333,
+    "aggregateReduction95CI": [
+     0.005410773691753135,
+     0.024264628068354166
+    ],
+    "meanPairedReduction": 0.010989837553566272,
+    "meanPairedReduction95CI": [
+     0.004606389494915637,
+     0.01845127164479788
+    ],
+    "medianPairedReduction": 0,
+    "medianPairedReduction95CI": [
+     0,
+     0.0005037815339322877
+    ],
+    "wins": 91,
+    "ties": 73,
+    "losses": 26,
+    "bootstrapResamples": 10000
+   },
+   "low-n5": {
+    "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "pairedCompleteCount": 147,
+    "candidates": 200,
+    "baselineOnlyComplete": 1,
+    "treatmentOnlyComplete": 51,
+    "neitherComplete": 1,
+    "baselineTotal": 176807,
+    "treatmentTotal": 172825,
+    "baselineMean": 1202.7687074829932,
+    "treatmentMean": 1175.6802721088436,
+    "baselineMedian": 1162,
+    "treatmentMedian": 1153,
+    "aggregateReduction": 0.022521732736826006,
+    "aggregateReduction95CI": [
+     0.005580679303377245,
+     0.04154963254492183
+    ],
+    "meanPairedReduction": 0.015653395472717362,
+    "meanPairedReduction95CI": [
+     0.002351843537761626,
+     0.02998447444080411
+    ],
+    "medianPairedReduction": 0.0033944331296673455,
+    "medianPairedReduction95CI": [
+     0.001549186676994578,
+     0.007518796992481203
+    ],
+    "wins": 92,
+    "ties": 13,
+    "losses": 42,
+    "bootstrapResamples": 10000
+   },
+   "low-n8": {
+    "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "pairedCompleteCount": 105,
+    "candidates": 200,
+    "baselineOnlyComplete": 1,
+    "treatmentOnlyComplete": 90,
+    "neitherComplete": 4,
+    "baselineTotal": 84462,
+    "treatmentTotal": 81543,
+    "baselineMean": 804.4,
+    "treatmentMean": 776.6,
+    "baselineMedian": 781,
+    "treatmentMedian": 743,
+    "aggregateReduction": 0.03455992043759326,
+    "aggregateReduction95CI": [
+     0.008916207089234907,
+     0.05883643332986965
+    ],
+    "meanPairedReduction": 0.02395942959449699,
+    "meanPairedReduction95CI": [
+     0.0007541808937160032,
+     0.04562824325215667
+    ],
+    "medianPairedReduction": 0.009655172413793104,
+    "medianPairedReduction95CI": [
+     0.0010183299389002036,
+     0.024771838331160364
+    ],
+    "wins": 63,
+    "ties": 4,
+    "losses": 38,
+    "bootstrapResamples": 10000
+   },
+   "recoverable-n3": {
+    "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "pairedCompleteCount": 264,
+    "candidates": 300,
+    "baselineOnlyComplete": 0,
+    "treatmentOnlyComplete": 35,
+    "neitherComplete": 1,
+    "baselineTotal": 560244,
+    "treatmentTotal": 548434,
+    "baselineMean": 2122.1363636363635,
+    "treatmentMean": 2077.401515151515,
+    "baselineMedian": 2087.5,
+    "treatmentMedian": 2073,
+    "aggregateReduction": 0.021080100813217095,
+    "aggregateReduction95CI": [
+     0.011686485057916474,
+     0.03168749524882042
+    ],
+    "meanPairedReduction": 0.015978528573702227,
+    "meanPairedReduction95CI": [
+     0.009143845381626442,
+     0.02378313157107341
+    ],
+    "medianPairedReduction": 0.0009638554216867469,
+    "medianPairedReduction95CI": [
+     0.00047315010286845153,
+     0.0013901760889712697
+    ],
+    "wins": 154,
+    "ties": 59,
+    "losses": 51,
+    "bootstrapResamples": 10000
+   },
+   "recoverable-n5": {
+    "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "pairedCompleteCount": 197,
+    "candidates": 300,
+    "baselineOnlyComplete": 5,
+    "treatmentOnlyComplete": 94,
+    "neitherComplete": 4,
+    "baselineTotal": 252234,
+    "treatmentTotal": 246960,
+    "baselineMean": 1280.3756345177665,
+    "treatmentMean": 1253.6040609137056,
+    "baselineMedian": 1253,
+    "treatmentMedian": 1228,
+    "aggregateReduction": 0.020909155783914946,
+    "aggregateReduction95CI": [
+     0.007282309258593855,
+     0.034525684171670235
+    ],
+    "meanPairedReduction": 0.015636081148863366,
+    "meanPairedReduction95CI": [
+     0.003260877535263306,
+     0.027832534133007285
+    ],
+    "medianPairedReduction": 0.006276150627615063,
+    "medianPairedReduction95CI": [
+     0.003341687552213868,
+     0.009486166007905139
+    ],
+    "wins": 126,
+    "ties": 7,
+    "losses": 64,
+    "bootstrapResamples": 10000
+   },
+   "recoverable-n8": {
+    "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "pairedCompleteCount": 133,
+    "candidates": 300,
+    "baselineOnlyComplete": 3,
+    "treatmentOnlyComplete": 157,
+    "neitherComplete": 7,
+    "baselineTotal": 114393,
+    "treatmentTotal": 110548,
+    "baselineMean": 860.0977443609023,
+    "treatmentMean": 831.187969924812,
+    "baselineMedian": 829,
+    "treatmentMedian": 797,
+    "aggregateReduction": 0.033612196550488194,
+    "aggregateReduction95CI": [
+     0.00398276484945681,
+     0.06059296682842519
+    ],
+    "meanPairedReduction": 0.014060171114400348,
+    "meanPairedReduction95CI": [
+     -0.018885104341553383,
+     0.04231373795405058
+    ],
+    "medianPairedReduction": 0.01658374792703151,
+    "medianPairedReduction95CI": [
+     0.008361204013377926,
+     0.03766707168894289
+    ],
+    "wins": 87,
+    "ties": 0,
+    "losses": 46,
+    "bootstrapResamples": 10000
+   },
+   "severe-n3": {
+    "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "pairedCompleteCount": 133,
+    "candidates": 160,
+    "baselineOnlyComplete": 0,
+    "treatmentOnlyComplete": 26,
+    "neitherComplete": 1,
+    "baselineTotal": 280140,
+    "treatmentTotal": 275678,
+    "baselineMean": 2106.315789473684,
+    "treatmentMean": 2072.7669172932333,
+    "baselineMedian": 2053,
+    "treatmentMedian": 2053,
+    "aggregateReduction": 0.01592775041050898,
+    "aggregateReduction95CI": [
+     0.005598530160231263,
+     0.02803220918224303
+    ],
+    "meanPairedReduction": 0.012529304962781772,
+    "meanPairedReduction95CI": [
+     0.004529647618816701,
+     0.02197655391512182
+    ],
+    "medianPairedReduction": 0.0009532888465204957,
+    "medianPairedReduction95CI": [
+     0,
+     0.0015052684395383843
+    ],
+    "wins": 76,
+    "ties": 32,
+    "losses": 25,
+    "bootstrapResamples": 10000
+   },
+   "severe-n5": {
+    "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "pairedCompleteCount": 102,
+    "candidates": 160,
+    "baselineOnlyComplete": 0,
+    "treatmentOnlyComplete": 58,
+    "neitherComplete": 0,
+    "baselineTotal": 127434,
+    "treatmentTotal": 123751,
+    "baselineMean": 1249.3529411764705,
+    "treatmentMean": 1213.2450980392157,
+    "baselineMedian": 1206,
+    "treatmentMedian": 1175.5,
+    "aggregateReduction": 0.02890123514917531,
+    "aggregateReduction95CI": [
+     0.007515965542671532,
+     0.052427389650383405
+    ],
+    "meanPairedReduction": 0.021189497780434396,
+    "meanPairedReduction95CI": [
+     0.005259212927078003,
+     0.03845244622834444
+    ],
+    "medianPairedReduction": 0.005678738547653381,
+    "medianPairedReduction95CI": [
+     0.0021382751247327157,
+     0.010530477759472818
+    ],
+    "wins": 68,
+    "ties": 5,
+    "losses": 29,
+    "bootstrapResamples": 10000
+   },
+   "severe-n8": {
+    "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "pairedCompleteCount": 67,
+    "candidates": 160,
+    "baselineOnlyComplete": 2,
+    "treatmentOnlyComplete": 86,
+    "neitherComplete": 5,
+    "baselineTotal": 60605,
+    "treatmentTotal": 58411,
+    "baselineMean": 904.5522388059702,
+    "treatmentMean": 871.8059701492538,
+    "baselineMedian": 842,
+    "treatmentMedian": 811,
+    "aggregateReduction": 0.03620163352858674,
+    "aggregateReduction95CI": [
+     -0.0004478897502153689,
+     0.07023651723972724
+    ],
+    "meanPairedReduction": 0.019940610902264372,
+    "meanPairedReduction95CI": [
+     -0.013387979542157686,
+     0.0508294719254436
+    ],
+    "medianPairedReduction": 0.014925373134328358,
+    "medianPairedReduction95CI": [
+     0.0017391304347826088,
+     0.026094276094276093
+    ],
+    "wins": 43,
+    "ties": 4,
+    "losses": 20,
+    "bootstrapResamples": 10000
+   },
+   "n3": {
+    "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "pairedCompleteCount": 587,
+    "candidates": 660,
+    "baselineOnlyComplete": 0,
+    "treatmentOnlyComplete": 70,
+    "neitherComplete": 3,
+    "baselineTotal": 1232679,
+    "treatmentTotal": 1210850,
+    "baselineMean": 2099.9642248722316,
+    "treatmentMean": 2062.7768313458264,
+    "baselineMedian": 2064,
+    "treatmentMedian": 2052,
+    "aggregateReduction": 0.0177085843110818,
+    "aggregateReduction95CI": [
+     0.011761188567843694,
+     0.023938898351010263
+    ],
+    "meanPairedReduction": 0.013582279793330425,
+    "meanPairedReduction95CI": [
+     0.00917527600897223,
+     0.018151275372618042
+    ],
+    "medianPairedReduction": 0.0005068423720223011,
+    "medianPairedReduction95CI": [
+     0.0004623208506703652,
+     0.0009823182711198428
+    ],
+    "wins": 321,
+    "ties": 164,
+    "losses": 102,
+    "bootstrapResamples": 10000
+   },
+   "n5": {
+    "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "pairedCompleteCount": 446,
+    "candidates": 660,
+    "baselineOnlyComplete": 6,
+    "treatmentOnlyComplete": 203,
+    "neitherComplete": 5,
+    "baselineTotal": 556475,
+    "treatmentTotal": 543536,
+    "baselineMean": 1247.701793721973,
+    "treatmentMean": 1218.6905829596412,
+    "baselineMedian": 1219.5,
+    "treatmentMedian": 1185.5,
+    "aggregateReduction": 0.023251718406038013,
+    "aggregateReduction95CI": [
+     0.013293827584602735,
+     0.033187455063486526
+    ],
+    "meanPairedReduction": 0.016911851781210404,
+    "meanPairedReduction95CI": [
+     0.008817487142051219,
+     0.024960301614837758
+    ],
+    "medianPairedReduction": 0.0050988179914507725,
+    "medianPairedReduction95CI": [
+     0.003051228148333774,
+     0.007518796992481203
+    ],
+    "wins": 286,
+    "ties": 25,
+    "losses": 135,
+    "bootstrapResamples": 10000
+   },
+   "n8": {
+    "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+    "pairedCompleteCount": 305,
+    "candidates": 660,
+    "baselineOnlyComplete": 6,
+    "treatmentOnlyComplete": 333,
+    "neitherComplete": 16,
+    "baselineTotal": 259460,
+    "treatmentTotal": 250502,
+    "baselineMean": 850.688524590164,
+    "treatmentMean": 821.3180327868853,
+    "baselineMedian": 818,
+    "treatmentMedian": 786,
+    "aggregateReduction": 0.034525553071764414,
+    "aggregateReduction95CI": [
+     0.017170118705553405,
+     0.05110193455720635
+    ],
+    "meanPairedReduction": 0.018759881298652904,
+    "meanPairedReduction95CI": [
+     0.0010387213270468274,
+     0.03522685577103127
+    ],
+    "medianPairedReduction": 0.014906832298136646,
+    "medianPairedReduction95CI": [
+     0.007407407407407408,
+     0.021479713603818614
+    ],
+    "wins": 193,
+    "ties": 8,
+    "losses": 104,
+    "bootstrapResamples": 10000
+   }
+  },
+  "makespan": {
+   "all": {
+    "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "pairedCompleteCount": 1338,
+    "candidates": 1980,
+    "baselineOnlyComplete": 12,
+    "treatmentOnlyComplete": 606,
+    "neitherComplete": 24,
+    "baselineTotal": 387233,
+    "treatmentTotal": 381965,
+    "baselineMean": 289.4118086696562,
+    "treatmentMean": 285.4745889387145,
+    "baselineMedian": 266,
+    "treatmentMedian": 253.5,
+    "aggregateReduction": 0.013604212450901598,
+    "aggregateReduction95CI": [
+     0.008838924485066513,
+     0.01834551276575369
+    ],
+    "meanPairedReduction": 0.009440303608457917,
+    "meanPairedReduction95CI": [
+     0.0035833106570109484,
+     0.01508719494772126
+    ],
+    "medianPairedReduction": 0,
+    "medianPairedReduction95CI": [
+     0,
+     0
+    ],
+    "wins": 507,
+    "ties": 528,
+    "losses": 303,
+    "bootstrapResamples": 10000
+   },
+   "low": {
+    "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "pairedCompleteCount": 442,
+    "candidates": 600,
+    "baselineOnlyComplete": 2,
+    "treatmentOnlyComplete": 150,
+    "neitherComplete": 6,
+    "baselineTotal": 124330,
+    "treatmentTotal": 122920,
+    "baselineMean": 281.289592760181,
+    "treatmentMean": 278.0995475113122,
+    "baselineMedian": 246.5,
+    "treatmentMedian": 242.5,
+    "aggregateReduction": 0.011340786616263143,
+    "aggregateReduction95CI": [
+     0.003920830332001857,
+     0.01885533256143057
+    ],
+    "meanPairedReduction": 0.010687333814548606,
+    "meanPairedReduction95CI": [
+     0.00185814261071519,
+     0.01927448892492573
+    ],
+    "medianPairedReduction": 0,
+    "medianPairedReduction95CI": [
+     0,
+     0
+    ],
+    "wins": 146,
+    "ties": 209,
+    "losses": 87,
+    "bootstrapResamples": 10000
+   },
+   "recoverable": {
+    "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "pairedCompleteCount": 594,
+    "candidates": 900,
+    "baselineOnlyComplete": 8,
+    "treatmentOnlyComplete": 286,
+    "neitherComplete": 12,
+    "baselineTotal": 174581,
+    "treatmentTotal": 171825,
+    "baselineMean": 293.9074074074074,
+    "treatmentMean": 289.2676767676768,
+    "baselineMedian": 280.5,
+    "treatmentMedian": 265.5,
+    "aggregateReduction": 0.015786368505163795,
+    "aggregateReduction95CI": [
+     0.0078123653659460945,
+     0.02377618364418943
+    ],
+    "meanPairedReduction": 0.009291388931333694,
+    "meanPairedReduction95CI": [
+     -0.0009975648611839519,
+     0.01910237709007658
+    ],
+    "medianPairedReduction": 0,
+    "medianPairedReduction95CI": [
+     0,
+     0
+    ],
+    "wins": 238,
+    "ties": 212,
+    "losses": 144,
+    "bootstrapResamples": 10000
+   },
+   "severe": {
+    "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "pairedCompleteCount": 302,
+    "candidates": 480,
+    "baselineOnlyComplete": 2,
+    "treatmentOnlyComplete": 170,
+    "neitherComplete": 6,
+    "baselineTotal": 88322,
+    "treatmentTotal": 87220,
+    "baselineMean": 292.4569536423841,
+    "treatmentMean": 288.8079470198675,
+    "baselineMedian": 265.5,
+    "treatmentMedian": 251,
+    "aggregateReduction": 0.012477072530060473,
+    "aggregateReduction95CI": [
+     0.003611924943528688,
+     0.021440438238067405
+    ],
+    "meanPairedReduction": 0.00790807833401983,
+    "meanPairedReduction95CI": [
+     -0.0029767958319812326,
+     0.018524280796907374
+    ],
+    "medianPairedReduction": 0,
+    "medianPairedReduction95CI": [
+     0,
+     0
+    ],
+    "wins": 123,
+    "ties": 107,
+    "losses": 72,
+    "bootstrapResamples": 10000
+   },
+   "low-n3": {
+    "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "pairedCompleteCount": 190,
+    "candidates": 200,
+    "baselineOnlyComplete": 0,
+    "treatmentOnlyComplete": 9,
+    "neitherComplete": 1,
+    "baselineTotal": 72191,
+    "treatmentTotal": 71855,
+    "baselineMean": 379.9526315789474,
+    "treatmentMean": 378.1842105263158,
+    "baselineMedian": 375,
+    "treatmentMedian": 374.5,
+    "aggregateReduction": 0.004654319790555639,
+    "aggregateReduction95CI": [
+     0.00005567386251337236,
+     0.010084517864003106
+    ],
+    "meanPairedReduction": 0.0035862645364443503,
+    "meanPairedReduction95CI": [
+     -0.00023117275171031355,
+     0.008028205894587687
+    ],
+    "medianPairedReduction": 0,
+    "medianPairedReduction95CI": [
+     0,
+     0
+    ],
+    "wins": 28,
+    "ties": 137,
+    "losses": 25,
+    "bootstrapResamples": 10000
+   },
+   "low-n5": {
+    "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "pairedCompleteCount": 147,
+    "candidates": 200,
+    "baselineOnlyComplete": 1,
+    "treatmentOnlyComplete": 51,
+    "neitherComplete": 1,
+    "baselineTotal": 33858,
+    "treatmentTotal": 33600,
+    "baselineMean": 230.3265306122449,
+    "treatmentMean": 228.57142857142858,
+    "baselineMedian": 219,
+    "treatmentMedian": 220,
+    "aggregateReduction": 0.0076200602516391935,
+    "aggregateReduction95CI": [
+     -0.010601451676053308,
+     0.026282998638036403
+    ],
+    "meanPairedReduction": 0.002635033043826334,
+    "meanPairedReduction95CI": [
+     -0.01307429783679651,
+     0.01794703871940647
+    ],
+    "medianPairedReduction": 0,
+    "medianPairedReduction95CI": [
+     0,
+     0
+    ],
+    "wins": 55,
+    "ties": 57,
+    "losses": 35,
+    "bootstrapResamples": 10000
+   },
+   "low-n8": {
+    "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "pairedCompleteCount": 105,
+    "candidates": 200,
+    "baselineOnlyComplete": 1,
+    "treatmentOnlyComplete": 90,
+    "neitherComplete": 4,
+    "baselineTotal": 18281,
+    "treatmentTotal": 17465,
+    "baselineMean": 174.10476190476192,
+    "treatmentMean": 166.33333333333334,
+    "baselineMedian": 172,
+    "treatmentMedian": 157,
+    "aggregateReduction": 0.044636507849679985,
+    "aggregateReduction95CI": [
+     0.014025885170192098,
+     0.07298955754117775
+    ],
+    "meanPairedReduction": 0.03481010882536751,
+    "meanPairedReduction95CI": [
+     0.006075232716320633,
+     0.06141170040689373
+    ],
+    "medianPairedReduction": 0.014492753623188406,
+    "medianPairedReduction95CI": [
+     0.005208333333333333,
+     0.03463203463203463
+    ],
+    "wins": 63,
+    "ties": 15,
+    "losses": 27,
+    "bootstrapResamples": 10000
+   },
+   "recoverable-n3": {
+    "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "pairedCompleteCount": 264,
+    "candidates": 300,
+    "baselineOnlyComplete": 0,
+    "treatmentOnlyComplete": 35,
+    "neitherComplete": 1,
+    "baselineTotal": 102013,
+    "treatmentTotal": 101137,
+    "baselineMean": 386.4128787878788,
+    "treatmentMean": 383.094696969697,
+    "baselineMedian": 380,
+    "treatmentMedian": 379,
+    "aggregateReduction": 0.008587140854596997,
+    "aggregateReduction95CI": [
+     0.002285286498094008,
+     0.015598626389616399
+    ],
+    "meanPairedReduction": 0.006635556709998801,
+    "meanPairedReduction95CI": [
+     0.0014455464016745084,
+     0.012360328368759272
+    ],
+    "medianPairedReduction": 0,
+    "medianPairedReduction95CI": [
+     0,
+     0
+    ],
+    "wins": 72,
+    "ties": 154,
+    "losses": 38,
+    "bootstrapResamples": 10000
+   },
+   "recoverable-n5": {
+    "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "pairedCompleteCount": 197,
+    "candidates": 300,
+    "baselineOnlyComplete": 5,
+    "treatmentOnlyComplete": 94,
+    "neitherComplete": 4,
+    "baselineTotal": 48063,
+    "treatmentTotal": 47057,
+    "baselineMean": 243.9746192893401,
+    "treatmentMean": 238.86802030456852,
+    "baselineMedian": 233,
+    "treatmentMedian": 232,
+    "aggregateReduction": 0.020930861577512894,
+    "aggregateReduction95CI": [
+     0.003448710939142896,
+     0.03835227272727271
+    ],
+    "meanPairedReduction": 0.012019905458936586,
+    "meanPairedReduction95CI": [
+     -0.0044701536285993715,
+     0.028235078601758005
+    ],
+    "medianPairedReduction": 0,
+    "medianPairedReduction95CI": [
+     0,
+     0.004484304932735426
+    ],
+    "wins": 88,
+    "ties": 45,
+    "losses": 64,
+    "bootstrapResamples": 10000
+   },
+   "recoverable-n8": {
+    "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "pairedCompleteCount": 133,
+    "candidates": 300,
+    "baselineOnlyComplete": 3,
+    "treatmentOnlyComplete": 157,
+    "neitherComplete": 7,
+    "baselineTotal": 24505,
+    "treatmentTotal": 23631,
+    "baselineMean": 184.24812030075188,
+    "treatmentMean": 177.6766917293233,
+    "baselineMedian": 174,
+    "treatmentMedian": 172,
+    "aggregateReduction": 0.03566619057335241,
+    "aggregateReduction95CI": [
+     -0.001636590723114617,
+     0.07117032944713009
+    ],
+    "meanPairedReduction": 0.010521629160616715,
+    "meanPairedReduction95CI": [
+     -0.026219688335528516,
+     0.04508554016497712
+    ],
+    "medianPairedReduction": 0.012738853503184714,
+    "medianPairedReduction95CI": [
+     0.004545454545454545,
+     0.026595744680851064
+    ],
+    "wins": 78,
+    "ties": 13,
+    "losses": 42,
+    "bootstrapResamples": 10000
+   },
+   "severe-n3": {
+    "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "pairedCompleteCount": 133,
+    "candidates": 160,
+    "baselineOnlyComplete": 0,
+    "treatmentOnlyComplete": 26,
+    "neitherComplete": 1,
+    "baselineTotal": 51405,
+    "treatmentTotal": 51032,
+    "baselineMean": 386.50375939849624,
+    "treatmentMean": 383.69924812030075,
+    "baselineMedian": 378,
+    "treatmentMedian": 378,
+    "aggregateReduction": 0.007256103491878219,
+    "aggregateReduction95CI": [
+     0.0003939256662267576,
+     0.015472031327984026
+    ],
+    "meanPairedReduction": 0.005625532411487477,
+    "meanPairedReduction95CI": [
+     -0.00012856834748561913,
+     0.012215771841112655
+    ],
+    "medianPairedReduction": 0,
+    "medianPairedReduction95CI": [
+     0,
+     0
+    ],
+    "wins": 38,
+    "ties": 70,
+    "losses": 25,
+    "bootstrapResamples": 10000
+   },
+   "severe-n5": {
+    "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "pairedCompleteCount": 102,
+    "candidates": 160,
+    "baselineOnlyComplete": 0,
+    "treatmentOnlyComplete": 58,
+    "neitherComplete": 0,
+    "baselineTotal": 24476,
+    "treatmentTotal": 23955,
+    "baselineMean": 239.9607843137255,
+    "treatmentMean": 234.85294117647058,
+    "baselineMedian": 233,
+    "treatmentMedian": 223,
+    "aggregateReduction": 0.021286157868932842,
+    "aggregateReduction95CI": [
+     0.0009357962405402986,
+     0.04182081389737813
+    ],
+    "meanPairedReduction": 0.01522988046210102,
+    "meanPairedReduction95CI": [
+     -0.003072297236453965,
+     0.033416071087847166
+    ],
+    "medianPairedReduction": 0,
+    "medianPairedReduction95CI": [
+     0,
+     0.00900919181056348
+    ],
+    "wins": 50,
+    "ties": 28,
+    "losses": 24,
+    "bootstrapResamples": 10000
+   },
+   "severe-n8": {
+    "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "pairedCompleteCount": 67,
+    "candidates": 160,
+    "baselineOnlyComplete": 2,
+    "treatmentOnlyComplete": 86,
+    "neitherComplete": 5,
+    "baselineTotal": 12441,
+    "treatmentTotal": 12233,
+    "baselineMean": 185.6865671641791,
+    "treatmentMean": 182.5820895522388,
+    "baselineMedian": 179,
+    "treatmentMedian": 173,
+    "aggregateReduction": 0.01671891327063746,
+    "aggregateReduction95CI": [
+     -0.023114754098360724,
+     0.05356749210081568
+    ],
+    "meanPairedReduction": 0.0012924781942067539,
+    "meanPairedReduction95CI": [
+     -0.03812939971822815,
+     0.037842279454843517
+    ],
+    "medianPairedReduction": 0.008,
+    "medianPairedReduction95CI": [
+     0,
+     0.02127659574468085
+    ],
+    "wins": 35,
+    "ties": 9,
+    "losses": 23,
+    "bootstrapResamples": 10000
+   },
+   "n3": {
+    "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "pairedCompleteCount": 587,
+    "candidates": 660,
+    "baselineOnlyComplete": 0,
+    "treatmentOnlyComplete": 70,
+    "neitherComplete": 3,
+    "baselineTotal": 225609,
+    "treatmentTotal": 224024,
+    "baselineMean": 384.34241908006817,
+    "treatmentMean": 381.6422487223169,
+    "baselineMedian": 378,
+    "treatmentMedian": 377,
+    "aggregateReduction": 0.007025428950086177,
+    "aggregateReduction95CI": [
+     0.003302363517083684,
+     0.011072783566169475
+    ],
+    "meanPairedReduction": 0.005419715577669412,
+    "meanPairedReduction95CI": [
+     0.002349184292001748,
+     0.008693079564508545
+    ],
+    "medianPairedReduction": 0,
+    "medianPairedReduction95CI": [
+     0,
+     0
+    ],
+    "wins": 138,
+    "ties": 361,
+    "losses": 88,
+    "bootstrapResamples": 10000
+   },
+   "n5": {
+    "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "pairedCompleteCount": 446,
+    "candidates": 660,
+    "baselineOnlyComplete": 6,
+    "treatmentOnlyComplete": 203,
+    "neitherComplete": 5,
+    "baselineTotal": 106397,
+    "treatmentTotal": 104612,
+    "baselineMean": 238.55829596412556,
+    "treatmentMean": 234.55605381165918,
+    "baselineMedian": 231,
+    "treatmentMedian": 223,
+    "aggregateReduction": 0.016776788819233612,
+    "aggregateReduction95CI": [
+     0.005843688437642047,
+     0.027654939044175597
+    ],
+    "meanPairedReduction": 0.009660805022393013,
+    "meanPairedReduction95CI": [
+     -0.00014491599913891537,
+     0.01930596922962457
+    ],
+    "medianPairedReduction": 0,
+    "medianPairedReduction95CI": [
+     0,
+     0
+    ],
+    "wins": 193,
+    "ties": 130,
+    "losses": 123,
+    "bootstrapResamples": 10000
+   },
+   "n8": {
+    "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+    "pairedCompleteCount": 305,
+    "candidates": 660,
+    "baselineOnlyComplete": 6,
+    "treatmentOnlyComplete": 333,
+    "neitherComplete": 16,
+    "baselineTotal": 55227,
+    "treatmentTotal": 53329,
+    "baselineMean": 181.07213114754097,
+    "treatmentMean": 174.84918032786885,
+    "baselineMedian": 174,
+    "treatmentMedian": 168,
+    "aggregateReduction": 0.034367247904104836,
+    "aggregateReduction95CI": [
+     0.013036909935281726,
+     0.05470620096797307
+    ],
+    "meanPairedReduction": 0.016855849652581856,
+    "meanPairedReduction95CI": [
+     -0.004032874373291207,
+     0.03638212576948095
+    ],
+    "medianPairedReduction": 0.01282051282051282,
+    "medianPairedReduction95CI": [
+     0.005917159763313609,
+     0.019704433497536946
+    ],
+    "wins": 176,
+    "ties": 37,
+    "losses": 92,
+    "bootstrapResamples": 10000
+   }
+  }
+ },
+ "reliability": {
+  "all": {
+   "arm": "distributed-guidance-only",
+   "scenarios": 1980,
+   "completedRuns": 1944,
+   "completionRate": 0.9818181818181818,
+   "tasksCompleted": 23689,
+   "tasksTotal": 23760,
+   "timedOutRuns": 36,
+   "unfinishedTasks": 71,
+   "longestNoProgressTicksMax": 1365,
+   "longestNoProgressTicksMean": 67.95151515151515,
+   "ticksRunTotal": 574025,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   },
+   "safetyViolations": 0,
+   "bidNonzeroCorrections": 0,
+   "definition": "POPULATION: all frozen scenarios in the regime. ANSWERS: 'how often does each scheme finish at all, how many tasks does it retire, and does it stay collision-free?' If stop-and-wait fails where the proposed system completes, that is a RELIABILITY result and is reported as such. It is NOT a speedup of any percentage, and in particular a failure is never scored as an infinite or 500% improvement."
+  },
+  "low": {
+   "arm": "distributed-guidance-only",
+   "scenarios": 600,
+   "completedRuns": 592,
+   "completionRate": 0.9866666666666667,
+   "tasksCompleted": 7183,
+   "tasksTotal": 7200,
+   "timedOutRuns": 8,
+   "unfinishedTasks": 17,
+   "longestNoProgressTicksMax": 1352,
+   "longestNoProgressTicksMean": 59.45333333333333,
+   "ticksRunTotal": 164579,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   },
+   "safetyViolations": 0,
+   "bidNonzeroCorrections": 0,
+   "definition": "POPULATION: all frozen scenarios in the regime. ANSWERS: 'how often does each scheme finish at all, how many tasks does it retire, and does it stay collision-free?' If stop-and-wait fails where the proposed system completes, that is a RELIABILITY result and is reported as such. It is NOT a speedup of any percentage, and in particular a failure is never scored as an infinite or 500% improvement."
+  },
+  "recoverable": {
+   "arm": "distributed-guidance-only",
+   "scenarios": 900,
+   "completedRuns": 880,
+   "completionRate": 0.9777777777777777,
+   "tasksCompleted": 10766,
+   "tasksTotal": 10800,
+   "timedOutRuns": 20,
+   "unfinishedTasks": 34,
+   "longestNoProgressTicksMax": 1365,
+   "longestNoProgressTicksMean": 74.23555555555555,
+   "ticksRunTotal": 268924,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   },
+   "safetyViolations": 0,
+   "bidNonzeroCorrections": 0,
+   "definition": "POPULATION: all frozen scenarios in the regime. ANSWERS: 'how often does each scheme finish at all, how many tasks does it retire, and does it stay collision-free?' If stop-and-wait fails where the proposed system completes, that is a RELIABILITY result and is reported as such. It is NOT a speedup of any percentage, and in particular a failure is never scored as an infinite or 500% improvement."
+  },
+  "severe": {
+   "arm": "distributed-guidance-only",
+   "scenarios": 480,
+   "completedRuns": 472,
+   "completionRate": 0.9833333333333333,
+   "tasksCompleted": 5740,
+   "tasksTotal": 5760,
+   "timedOutRuns": 8,
+   "unfinishedTasks": 20,
+   "longestNoProgressTicksMax": 1363,
+   "longestNoProgressTicksMean": 66.79166666666667,
+   "ticksRunTotal": 140522,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   },
+   "safetyViolations": 0,
+   "bidNonzeroCorrections": 0,
+   "definition": "POPULATION: all frozen scenarios in the regime. ANSWERS: 'how often does each scheme finish at all, how many tasks does it retire, and does it stay collision-free?' If stop-and-wait fails where the proposed system completes, that is a RELIABILITY result and is reported as such. It is NOT a speedup of any percentage, and in particular a failure is never scored as an infinite or 500% improvement."
+  },
+  "low-n3": {
+   "arm": "distributed-guidance-only",
+   "scenarios": 200,
+   "completedRuns": 199,
+   "completionRate": 0.995,
+   "tasksCompleted": 2394,
+   "tasksTotal": 2400,
+   "timedOutRuns": 1,
+   "unfinishedTasks": 6,
+   "longestNoProgressTicksMax": 1118,
+   "longestNoProgressTicksMean": 56.99,
+   "ticksRunTotal": 76787,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   },
+   "safetyViolations": 0,
+   "bidNonzeroCorrections": 0,
+   "definition": "POPULATION: all frozen scenarios in the regime. ANSWERS: 'how often does each scheme finish at all, how many tasks does it retire, and does it stay collision-free?' If stop-and-wait fails where the proposed system completes, that is a RELIABILITY result and is reported as such. It is NOT a speedup of any percentage, and in particular a failure is never scored as an infinite or 500% improvement."
+  },
+  "low-n5": {
+   "arm": "distributed-guidance-only",
+   "scenarios": 200,
+   "completedRuns": 198,
+   "completionRate": 0.99,
+   "tasksCompleted": 2397,
+   "tasksTotal": 2400,
+   "timedOutRuns": 2,
+   "unfinishedTasks": 3,
+   "longestNoProgressTicksMax": 1277,
+   "longestNoProgressTicksMean": 52.92,
+   "ticksRunTotal": 48018,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   },
+   "safetyViolations": 0,
+   "bidNonzeroCorrections": 0,
+   "definition": "POPULATION: all frozen scenarios in the regime. ANSWERS: 'how often does each scheme finish at all, how many tasks does it retire, and does it stay collision-free?' If stop-and-wait fails where the proposed system completes, that is a RELIABILITY result and is reported as such. It is NOT a speedup of any percentage, and in particular a failure is never scored as an infinite or 500% improvement."
+  },
+  "low-n8": {
+   "arm": "distributed-guidance-only",
+   "scenarios": 200,
+   "completedRuns": 195,
+   "completionRate": 0.975,
+   "tasksCompleted": 2392,
+   "tasksTotal": 2400,
+   "timedOutRuns": 5,
+   "unfinishedTasks": 8,
+   "longestNoProgressTicksMax": 1352,
+   "longestNoProgressTicksMean": 68.45,
+   "ticksRunTotal": 39774,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   },
+   "safetyViolations": 0,
+   "bidNonzeroCorrections": 0,
+   "definition": "POPULATION: all frozen scenarios in the regime. ANSWERS: 'how often does each scheme finish at all, how many tasks does it retire, and does it stay collision-free?' If stop-and-wait fails where the proposed system completes, that is a RELIABILITY result and is reported as such. It is NOT a speedup of any percentage, and in particular a failure is never scored as an infinite or 500% improvement."
+  },
+  "recoverable-n3": {
+   "arm": "distributed-guidance-only",
+   "scenarios": 300,
+   "completedRuns": 299,
+   "completionRate": 0.9966666666666667,
+   "tasksCompleted": 3599,
+   "tasksTotal": 3600,
+   "timedOutRuns": 1,
+   "unfinishedTasks": 1,
+   "longestNoProgressTicksMax": 1122,
+   "longestNoProgressTicksMean": 57.81,
+   "ticksRunTotal": 116003,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   },
+   "safetyViolations": 0,
+   "bidNonzeroCorrections": 0,
+   "definition": "POPULATION: all frozen scenarios in the regime. ANSWERS: 'how often does each scheme finish at all, how many tasks does it retire, and does it stay collision-free?' If stop-and-wait fails where the proposed system completes, that is a RELIABILITY result and is reported as such. It is NOT a speedup of any percentage, and in particular a failure is never scored as an infinite or 500% improvement."
+  },
+  "recoverable-n5": {
+   "arm": "distributed-guidance-only",
+   "scenarios": 300,
+   "completedRuns": 291,
+   "completionRate": 0.97,
+   "tasksCompleted": 3584,
+   "tasksTotal": 3600,
+   "timedOutRuns": 9,
+   "unfinishedTasks": 16,
+   "longestNoProgressTicksMax": 1284,
+   "longestNoProgressTicksMean": 81.96666666666667,
+   "ticksRunTotal": 83729,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   },
+   "safetyViolations": 0,
+   "bidNonzeroCorrections": 0,
+   "definition": "POPULATION: all frozen scenarios in the regime. ANSWERS: 'how often does each scheme finish at all, how many tasks does it retire, and does it stay collision-free?' If stop-and-wait fails where the proposed system completes, that is a RELIABILITY result and is reported as such. It is NOT a speedup of any percentage, and in particular a failure is never scored as an infinite or 500% improvement."
+  },
+  "recoverable-n8": {
+   "arm": "distributed-guidance-only",
+   "scenarios": 300,
+   "completedRuns": 290,
+   "completionRate": 0.9666666666666667,
+   "tasksCompleted": 3583,
+   "tasksTotal": 3600,
+   "timedOutRuns": 10,
+   "unfinishedTasks": 17,
+   "longestNoProgressTicksMax": 1365,
+   "longestNoProgressTicksMean": 82.93,
+   "ticksRunTotal": 69192,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   },
+   "safetyViolations": 0,
+   "bidNonzeroCorrections": 0,
+   "definition": "POPULATION: all frozen scenarios in the regime. ANSWERS: 'how often does each scheme finish at all, how many tasks does it retire, and does it stay collision-free?' If stop-and-wait fails where the proposed system completes, that is a RELIABILITY result and is reported as such. It is NOT a speedup of any percentage, and in particular a failure is never scored as an infinite or 500% improvement."
+  },
+  "severe-n3": {
+   "arm": "distributed-guidance-only",
+   "scenarios": 160,
+   "completedRuns": 159,
+   "completionRate": 0.99375,
+   "tasksCompleted": 1916,
+   "tasksTotal": 1920,
+   "timedOutRuns": 1,
+   "unfinishedTasks": 4,
+   "longestNoProgressTicksMax": 1130,
+   "longestNoProgressTicksMean": 61.13125,
+   "ticksRunTotal": 62550,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   },
+   "safetyViolations": 0,
+   "bidNonzeroCorrections": 0,
+   "definition": "POPULATION: all frozen scenarios in the regime. ANSWERS: 'how often does each scheme finish at all, how many tasks does it retire, and does it stay collision-free?' If stop-and-wait fails where the proposed system completes, that is a RELIABILITY result and is reported as such. It is NOT a speedup of any percentage, and in particular a failure is never scored as an infinite or 500% improvement."
+  },
+  "severe-n5": {
+   "arm": "distributed-guidance-only",
+   "scenarios": 160,
+   "completedRuns": 160,
+   "completionRate": 1,
+   "tasksCompleted": 1920,
+   "tasksTotal": 1920,
+   "timedOutRuns": 0,
+   "unfinishedTasks": 0,
+   "longestNoProgressTicksMax": 86,
+   "longestNoProgressTicksMean": 44.6375,
+   "ticksRunTotal": 38681,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   },
+   "safetyViolations": 0,
+   "bidNonzeroCorrections": 0,
+   "definition": "POPULATION: all frozen scenarios in the regime. ANSWERS: 'how often does each scheme finish at all, how many tasks does it retire, and does it stay collision-free?' If stop-and-wait fails where the proposed system completes, that is a RELIABILITY result and is reported as such. It is NOT a speedup of any percentage, and in particular a failure is never scored as an infinite or 500% improvement."
+  },
+  "severe-n8": {
+   "arm": "distributed-guidance-only",
+   "scenarios": 160,
+   "completedRuns": 153,
+   "completionRate": 0.95625,
+   "tasksCompleted": 1904,
+   "tasksTotal": 1920,
+   "timedOutRuns": 7,
+   "unfinishedTasks": 16,
+   "longestNoProgressTicksMax": 1363,
+   "longestNoProgressTicksMean": 94.60625,
+   "ticksRunTotal": 39291,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   },
+   "safetyViolations": 0,
+   "bidNonzeroCorrections": 0,
+   "definition": "POPULATION: all frozen scenarios in the regime. ANSWERS: 'how often does each scheme finish at all, how many tasks does it retire, and does it stay collision-free?' If stop-and-wait fails where the proposed system completes, that is a RELIABILITY result and is reported as such. It is NOT a speedup of any percentage, and in particular a failure is never scored as an infinite or 500% improvement."
+  },
+  "n3": {
+   "arm": "distributed-guidance-only",
+   "scenarios": 660,
+   "completedRuns": 657,
+   "completionRate": 0.9954545454545455,
+   "tasksCompleted": 7909,
+   "tasksTotal": 7920,
+   "timedOutRuns": 3,
+   "unfinishedTasks": 11,
+   "longestNoProgressTicksMax": 1130,
+   "longestNoProgressTicksMean": 58.36666666666667,
+   "ticksRunTotal": 255340,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   },
+   "safetyViolations": 0,
+   "bidNonzeroCorrections": 0,
+   "definition": "POPULATION: all frozen scenarios in the regime. ANSWERS: 'how often does each scheme finish at all, how many tasks does it retire, and does it stay collision-free?' If stop-and-wait fails where the proposed system completes, that is a RELIABILITY result and is reported as such. It is NOT a speedup of any percentage, and in particular a failure is never scored as an infinite or 500% improvement."
+  },
+  "n5": {
+   "arm": "distributed-guidance-only",
+   "scenarios": 660,
+   "completedRuns": 649,
+   "completionRate": 0.9833333333333333,
+   "tasksCompleted": 7901,
+   "tasksTotal": 7920,
+   "timedOutRuns": 11,
+   "unfinishedTasks": 19,
+   "longestNoProgressTicksMax": 1284,
+   "longestNoProgressTicksMean": 64.11515151515151,
+   "ticksRunTotal": 170428,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   },
+   "safetyViolations": 0,
+   "bidNonzeroCorrections": 0,
+   "definition": "POPULATION: all frozen scenarios in the regime. ANSWERS: 'how often does each scheme finish at all, how many tasks does it retire, and does it stay collision-free?' If stop-and-wait fails where the proposed system completes, that is a RELIABILITY result and is reported as such. It is NOT a speedup of any percentage, and in particular a failure is never scored as an infinite or 500% improvement."
+  },
+  "n8": {
+   "arm": "distributed-guidance-only",
+   "scenarios": 660,
+   "completedRuns": 638,
+   "completionRate": 0.9666666666666667,
+   "tasksCompleted": 7879,
+   "tasksTotal": 7920,
+   "timedOutRuns": 22,
+   "unfinishedTasks": 41,
+   "longestNoProgressTicksMax": 1365,
+   "longestNoProgressTicksMean": 81.37272727272727,
+   "ticksRunTotal": 148257,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   },
+   "safetyViolations": 0,
+   "bidNonzeroCorrections": 0,
+   "definition": "POPULATION: all frozen scenarios in the regime. ANSWERS: 'how often does each scheme finish at all, how many tasks does it retire, and does it stay collision-free?' If stop-and-wait fails where the proposed system completes, that is a RELIABILITY result and is reported as such. It is NOT a speedup of any percentage, and in particular a failure is never scored as an infinite or 500% improvement."
+  }
+ },
+ "safetyTotals": {
+  "overlaps": 0,
+  "swaps": 0,
+  "blockedCells": 0,
+  "zeroBatteryWork": 0,
+  "queueOverflow": 0,
+  "payloadViolations": 0
+ }
+}

@@ -1,0 +1,1471 @@
+{
+ "version": "sih-acceptance-v1",
+ "generatedBy": "npx vite-node scripts/sih-benchmark.ts final",
+ "everyNumberHereIsReadFrom": [
+  "artifacts/sih-acceptance-v1/current/summary.json",
+  "artifacts/sih-acceptance-v1/current/stopwait-deterministic.json",
+  "artifacts/sih-acceptance-v1/current/stopwait-bid-ai.json",
+  "artifacts/sih-acceptance-v1/current/distributed-deterministic.json",
+  "artifacts/sih-acceptance-v1/current/distributed-bid-ai.json",
+  "artifacts/sih-acceptance-v1/delay-breakdown.json",
+  "artifacts/sih-acceptance-v1/scenarios.json"
+ ],
+ "answer": {
+  "doesCurrentSystemAlreadyMeetSih20": "NO. The 95% paired bootstrap lower bound of the aggregate sumTaskCompletionTime reduction of arm D against arm A is 1.53%, below the 20% gate. Traffic-formation work is therefore justified, and it is reported as a separate labelled experiment that is never folded into the 1.56% bid-MLP ablation.",
+  "metricDistinction": "1.56% = bid-MLP incremental ablation. 20% = whole-system improvement over stop-and-wait. They are different experiments.",
+  "headlineMetric": "sumTaskCompletionTime (aggregate reduction, 95% paired bootstrap lower bound)",
+  "headlineValuePercent": 1.53
+ },
+ "armTable": [
+  {
+   "arm": "A",
+   "name": "stopwait-deterministic",
+   "motion": "stop-and-wait",
+   "bidding": "deterministic",
+   "guidance": "off",
+   "role": "SIH BASELINE. Traditional stop-and-wait coordination with deterministic task bidding.",
+   "recoverableScenarios": 900,
+   "completionRatePercent": 66.9,
+   "pairedCompleteN": 602,
+   "aggregateReductionSumTaskCompletionTimePercent": 0,
+   "aggregateReduction95CILowPercent": 0,
+   "aggregateReduction95CIHighPercent": 0,
+   "meanPairedReductionPercent": 0,
+   "medianPairedReductionPercent": 0,
+   "makespanAggregateReductionPercent": 0,
+   "makespanAggregateReduction95CILowPercent": 0,
+   "makespanPairedCompleteN": 602,
+   "safetyViolations": 0,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   }
+  },
+  {
+   "arm": "B",
+   "name": "stopwait-bid-ai",
+   "motion": "stop-and-wait",
+   "bidding": "edge-ai-bid-refinement",
+   "guidance": "off",
+   "role": "Ablation A->B: does learned bidding help even when motion coordination is primitive?",
+   "recoverableScenarios": 900,
+   "completionRatePercent": 67.7,
+   "pairedCompleteN": 588,
+   "aggregateReductionSumTaskCompletionTimePercent": 0.11,
+   "aggregateReduction95CILowPercent": -0.17,
+   "aggregateReduction95CIHighPercent": 0.39,
+   "meanPairedReductionPercent": 0.03,
+   "medianPairedReductionPercent": 0,
+   "makespanAggregateReductionPercent": 0.03,
+   "makespanAggregateReduction95CILowPercent": -0.33,
+   "makespanPairedCompleteN": 588,
+   "safetyViolations": 0,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   }
+  },
+  {
+   "arm": "C",
+   "name": "distributed-deterministic",
+   "motion": "distributed",
+   "bidding": "deterministic",
+   "guidance": "off",
+   "role": "Ablation A->C: effect of the distributed traffic/conflict-resolution system alone.",
+   "recoverableScenarios": 900,
+   "completionRatePercent": 97.7,
+   "pairedCompleteN": 593,
+   "aggregateReductionSumTaskCompletionTimePercent": 2.22,
+   "aggregateReduction95CILowPercent": 1.46,
+   "aggregateReduction95CIHighPercent": 3.05,
+   "meanPairedReductionPercent": 1.5,
+   "medianPairedReductionPercent": 0.27,
+   "makespanAggregateReductionPercent": 1.53,
+   "makespanAggregateReduction95CILowPercent": 0.75,
+   "makespanPairedCompleteN": 593,
+   "safetyViolations": 0,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   }
+  },
+  {
+   "arm": "D",
+   "name": "distributed-bid-ai",
+   "motion": "distributed",
+   "bidding": "edge-ai-bid-refinement",
+   "guidance": "off",
+   "role": "CURRENT FULL SYSTEM. Ablation C->D isolates the bid MLP; A->D is the SIH comparison.",
+   "recoverableScenarios": 900,
+   "completionRatePercent": 97.6,
+   "pairedCompleteN": 590,
+   "aggregateReductionSumTaskCompletionTimePercent": 2.32,
+   "aggregateReduction95CILowPercent": 1.53,
+   "aggregateReduction95CIHighPercent": 3.14,
+   "meanPairedReductionPercent": 1.63,
+   "medianPairedReductionPercent": 0.38,
+   "makespanAggregateReductionPercent": 1.83,
+   "makespanAggregateReduction95CILowPercent": 1,
+   "makespanPairedCompleteN": 590,
+   "safetyViolations": 0,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   }
+  },
+  {
+   "arm": "E",
+   "name": "distributed-guidance-only",
+   "motion": "distributed",
+   "bidding": "deterministic",
+   "guidance": "predictive-congestion-toll",
+   "role": "Ablation C->E: incremental effect of route-level congestion-prediction AI.",
+   "recoverableScenarios": 900,
+   "completionRatePercent": 97.8,
+   "pairedCompleteN": 594,
+   "aggregateReductionSumTaskCompletionTimePercent": 2.26,
+   "aggregateReduction95CILowPercent": 1.48,
+   "aggregateReduction95CIHighPercent": 3.08,
+   "meanPairedReductionPercent": 1.54,
+   "medianPairedReductionPercent": 0.25,
+   "makespanAggregateReductionPercent": 1.58,
+   "makespanAggregateReduction95CILowPercent": 0.78,
+   "makespanPairedCompleteN": 594,
+   "safetyViolations": 0,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   }
+  },
+  {
+   "arm": "F",
+   "name": "distributed-full-ai",
+   "motion": "distributed",
+   "bidding": "edge-ai-bid-refinement",
+   "guidance": "predictive-congestion-toll",
+   "role": "Ablation D->F: route-level AI on top of the complete system. A->F is the final SIH comparison.",
+   "recoverableScenarios": 900,
+   "completionRatePercent": 97.6,
+   "pairedCompleteN": 591,
+   "aggregateReductionSumTaskCompletionTimePercent": 2.33,
+   "aggregateReduction95CILowPercent": 1.54,
+   "aggregateReduction95CIHighPercent": 3.17,
+   "meanPairedReductionPercent": 1.64,
+   "medianPairedReductionPercent": 0.34,
+   "makespanAggregateReductionPercent": 1.86,
+   "makespanAggregateReduction95CILowPercent": 1.05,
+   "makespanPairedCompleteN": 591,
+   "safetyViolations": 0,
+   "safetyTotals": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0
+   }
+  }
+ ],
+ "acceptance": {
+  "criterion": {
+   "source": "SIH 2026 (SIH26123) success criterion, as supplied with this task",
+   "quotedClauses": [
+    "zero inter-robot collisions",
+    "minimum 20% reduction in TOTAL TASK COMPLETION TIME",
+    "compared with traditional STOP-AND-WAIT",
+    "specifically while handling OVERLAPPING PATHS"
+   ],
+   "ambiguityResolution": "'Total task completion time' is not defined mathematically by the problem statement, so BOTH reasonable readings are measured and reported separately, never merged: (1) sumTaskCompletionTime = SUM over tasks of (completionTick - createdAt), and (2) makespan = lastTaskCompletionTick - firstTaskCreationTick. The headline number is always named. '20% faster' is never written unqualified.",
+   "primaryAcceptanceMetric": "sumTaskCompletionTime",
+   "thresholdPercent": 20,
+   "headlineRegime": "recoverable"
+  },
+  "criticalMetricDistinction": {
+   "oneLine": "1.56% = bid-MLP incremental ablation. 20% = whole-system improvement over stop-and-wait. They are different experiments.",
+   "oneFiveSixPercent": {
+    "what": "aggregate paired improvement in task completion time from replacing DETERMINISTIC task bidding with the learned bid-refinement MLP, on the SAME distributed coordination stack and the SAME motion/conflict-resolution system",
+    "scale": "2,800 tasks over 200 unseen scenarios; 43 allocation winners changed",
+    "verdict": "measures the incremental contribution of the bid MLP only. NOT a SIH comparison."
+   },
+   "twentyPercent": {
+    "what": "required reduction in total task completion time of the COMPLETE proposed decentralized system relative to a traditional stop-and-wait coordination baseline, on overlapping-path workloads",
+    "scale": "whole system: motion coordination + conflict resolution + task allocation + safety + energy admission",
+    "verdict": "the SIH comparison. Only this number may be compared to the 20% threshold."
+   },
+   "forbiddenInferences": [
+    "Do not write 'our AI needs to reach 20%' unless a benchmark demonstrates the missing component is the AI.",
+    "Do not present 1.56% as a partial result towards 20%.",
+    "Do not subtract 1.56% from, or add it to, the whole-system number."
+   ]
+  },
+  "metricDefinitions": {
+   "sumTaskCompletionTime": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+   "makespan": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+   "formulas": {
+    "pairedReduction": "reduction_i = (T_stopwait_i - T_system_i) / T_stopwait_i, for paired scenario i, with T being the named metric.",
+    "aggregateReduction": "aggregateReduction = 1 - SUM(T_system_i) / SUM(T_stopwait_i) over the paired-complete set, for the named metric. FIXED before results were seen."
+   }
+  },
+  "statisticalProtocol": {
+   "resamples": 10000,
+   "seed": 20260923,
+   "confidenceLevel": 0.95,
+   "pairedSet": "Speed analysis uses MUTUALLY COMPLETE scenarios only: scenarios where BOTH the stop-and-wait arm A and the arm under test completed every task. The paired count is always reported next to the interval.",
+   "gateRule": "The 20% gate is evaluated on the LOWER bound of the 95% paired bootstrap interval of the aggregate reduction in sumTaskCompletionTime over the recoverable-overlap acceptance suite. The point estimate alone never passes the gate."
+  },
+  "workload": {
+   "fleetSizes": [
+    3,
+    5,
+    8
+   ],
+   "tasksPerRun": 12,
+   "releaseIntervalTicks": 6,
+   "horizonTicks": 1500,
+   "map": "stock-warehouse"
+  },
+  "suite": {
+   "path": "artifacts/sih-acceptance-v1/scenarios.json",
+   "scenarios": 1980,
+   "composition": {
+    "low": 600,
+    "recoverable": 900,
+    "severe": 480
+   },
+   "compositionByLayout": {
+    "stock": 867,
+    "wide": 1113
+   },
+   "layoutsEvaluated": [
+    "stock",
+    "wide"
+   ],
+   "guidanceModel": "artifacts/sih-acceptance-v1/guidance/model.json"
+  },
+  "primaryGate": {
+   "statement": "In the frozen RECOVERABLE OVERLAP acceptance suite, arm D (the current complete decentralized system) against arm A (fair traditional stop-and-wait): zero audited robot-to-robot collision violations, and aggregate sumTaskCompletionTime at least 20% below the baseline with the 95% paired bootstrap LOWER BOUND at or above 20%.",
+   "sumTaskCompletionTime": {
+    "pointEstimatePercent": 2.32,
+    "ci95Percent": [
+     1.53,
+     3.14
+    ],
+    "lowerBoundPercent": 1.53,
+    "meetsLowerBoundAtLeast20": false
+   },
+   "makespan": {
+    "pointEstimatePercent": 1.83,
+    "ci95Percent": [
+     1,
+     2.66
+    ],
+    "lowerBoundPercent": 1,
+    "meetsLowerBoundAtLeast20": false
+   },
+   "safety": {
+    "armA": {
+     "overlaps": 0,
+     "swaps": 0,
+     "blockedCells": 0,
+     "zeroBatteryWork": 0,
+     "queueOverflow": 0,
+     "payloadViolations": 0
+    },
+    "armD": {
+     "overlaps": 0,
+     "swaps": 0,
+     "blockedCells": 0,
+     "zeroBatteryWork": 0,
+     "queueOverflow": 0,
+     "payloadViolations": 0
+    },
+    "armDSafetyViolations": 0,
+    "zeroAuditedRobotToRobotCollisionViolations": true
+   }
+  },
+  "strongInternalTarget": {
+   "statement": ">= 20% reduction on BOTH sumTaskCompletionTime and makespan.",
+   "sumTaskCompletionTimeLowerBoundPercent": 1.53,
+   "makespanLowerBoundPercent": 1,
+   "met": false
+  },
+  "ablation": {
+   "A_to_C_distributedMotionEffect": {
+    "statement": "effect of the distributed traffic/conflict-resolution system alone (deterministic bidding in both arms)",
+    "sumTaskCompletionTime": {
+     "aggregateReductionPercent": 2.22,
+     "ci95Percent": [
+      1.46,
+      3.05
+     ],
+     "pairedCompleteN": 593
+    },
+    "makespan": {
+     "aggregateReductionPercent": 1.53,
+     "ci95Percent": [
+      0.75,
+      2.34
+     ],
+     "pairedCompleteN": 593
+    }
+   },
+   "C_to_D_bidMlpEffect": {
+    "statement": "incremental effect of the existing Edge-AI bid refinement on top of the distributed system",
+    "sumTaskCompletionTime": {
+     "aggregateReductionPercent": 0.15,
+     "ci95Percent": [
+      -0.07,
+      0.35
+     ],
+     "pairedCompleteN": 871,
+     "allRegimes": [
+      {
+       "regime": "low",
+       "aggregateReductionPercent": -0.12,
+       "pairedCompleteN": 591
+      },
+      {
+       "regime": "recoverable",
+       "aggregateReductionPercent": 0.15,
+       "pairedCompleteN": 871
+      },
+      {
+       "regime": "severe",
+       "aggregateReductionPercent": 0.09,
+       "pairedCompleteN": 469
+      },
+      {
+       "regime": "all",
+       "aggregateReductionPercent": 0.05,
+       "pairedCompleteN": 1931
+      }
+     ],
+     "caveat": "This is the arm that corresponds to the previously accepted 1.56% bid-MLP ablation. It is NOT the SIH comparison and must not be compared to the 20% threshold."
+    }
+   },
+   "A_to_B_bidMlpWithPrimitiveMotion": {
+    "statement": "whether learned bidding helps even when motion coordination is primitive",
+    "sumTaskCompletionTime": {
+     "aggregateReductionPercent": 0.11,
+     "ci95Percent": [
+      -0.17,
+      0.39
+     ],
+     "pairedCompleteN": 588
+    }
+   },
+   "A_to_D_wholeSystem": {
+    "statement": "the SIH-relevant comparison: complete proposed system versus traditional stop-and-wait",
+    "sumTaskCompletionTime": {
+     "aggregateReductionPercent": 2.32,
+     "ci95Percent": [
+      1.53,
+      3.14
+     ],
+     "meanPairedReductionPercent": 1.63,
+     "medianPairedReductionPercent": 0.38,
+     "pairedCompleteN": 590
+    },
+    "makespan": {
+     "aggregateReductionPercent": 1.83,
+     "ci95Percent": [
+      1,
+      2.66
+     ],
+     "pairedCompleteN": 590
+    }
+   }
+  },
+  "analyses": {
+   "speed": {
+    "population": "mutually complete pairs only; a timed-out run has no completion time and the horizon is never imputed for it",
+    "armACompletion": {
+     "recoverable": {
+      "runs": 900,
+      "completed": 602,
+      "ratePercent": 66.9,
+      "tasks": "10028/10800",
+      "timedOut": 298,
+      "unfinishedTasks": 772,
+      "longestNoProgressTicksMax": 1414
+     }
+    },
+    "armDCompletion": {
+     "recoverable": {
+      "runs": 900,
+      "completed": 878,
+      "ratePercent": 97.6,
+      "tasks": "10768/10800",
+      "timedOut": 22,
+      "unfinishedTasks": 32,
+      "longestNoProgressTicksMax": 1362
+     }
+    },
+    "allRegimes": [
+     {
+      "regime": "low",
+      "armA": {
+       "runs": 600,
+       "completed": 444,
+       "completionRatePercent": 74,
+       "tasks": "6821/7200",
+       "timedOut": 156,
+       "unfinishedTasks": 379,
+       "longestNoProgressTicksMax": 1418,
+       "safetyViolations": 0
+      },
+      "armB": {
+       "runs": 600,
+       "completed": 441,
+       "completionRatePercent": 73.5,
+       "tasks": "6804/7200",
+       "timedOut": 159,
+       "unfinishedTasks": 396,
+       "longestNoProgressTicksMax": 1418,
+       "safetyViolations": 0
+      },
+      "armC": {
+       "runs": 600,
+       "completed": 591,
+       "completionRatePercent": 98.5,
+       "tasks": "7181/7200",
+       "timedOut": 9,
+       "unfinishedTasks": 19,
+       "longestNoProgressTicksMax": 1352,
+       "safetyViolations": 0
+      },
+      "armD": {
+       "runs": 600,
+       "completed": 591,
+       "completionRatePercent": 98.5,
+       "tasks": "7181/7200",
+       "timedOut": 9,
+       "unfinishedTasks": 19,
+       "longestNoProgressTicksMax": 1352,
+       "safetyViolations": 0
+      }
+     },
+     {
+      "regime": "recoverable",
+      "armA": {
+       "runs": 900,
+       "completed": 602,
+       "completionRatePercent": 66.9,
+       "tasks": "10028/10800",
+       "timedOut": 298,
+       "unfinishedTasks": 772,
+       "longestNoProgressTicksMax": 1414,
+       "safetyViolations": 0
+      },
+      "armB": {
+       "runs": 900,
+       "completed": 609,
+       "completionRatePercent": 67.7,
+       "tasks": "10051/10800",
+       "timedOut": 291,
+       "unfinishedTasks": 749,
+       "longestNoProgressTicksMax": 1414,
+       "safetyViolations": 0
+      },
+      "armC": {
+       "runs": 900,
+       "completed": 879,
+       "completionRatePercent": 97.7,
+       "tasks": "10765/10800",
+       "timedOut": 21,
+       "unfinishedTasks": 35,
+       "longestNoProgressTicksMax": 1362,
+       "safetyViolations": 0
+      },
+      "armD": {
+       "runs": 900,
+       "completed": 878,
+       "completionRatePercent": 97.6,
+       "tasks": "10768/10800",
+       "timedOut": 22,
+       "unfinishedTasks": 32,
+       "longestNoProgressTicksMax": 1362,
+       "safetyViolations": 0
+      }
+     },
+     {
+      "regime": "severe",
+      "armA": {
+       "runs": 480,
+       "completed": 304,
+       "completionRatePercent": 63.3,
+       "tasks": "5283/5760",
+       "timedOut": 176,
+       "unfinishedTasks": 477,
+       "longestNoProgressTicksMax": 1419,
+       "safetyViolations": 0
+      },
+      "armB": {
+       "runs": 480,
+       "completed": 310,
+       "completionRatePercent": 64.6,
+       "tasks": "5285/5760",
+       "timedOut": 170,
+       "unfinishedTasks": 475,
+       "longestNoProgressTicksMax": 1409,
+       "safetyViolations": 0
+      },
+      "armC": {
+       "runs": 480,
+       "completed": 471,
+       "completionRatePercent": 98.1,
+       "tasks": "5740/5760",
+       "timedOut": 9,
+       "unfinishedTasks": 20,
+       "longestNoProgressTicksMax": 1363,
+       "safetyViolations": 0
+      },
+      "armD": {
+       "runs": 480,
+       "completed": 470,
+       "completionRatePercent": 97.9,
+       "tasks": "5739/5760",
+       "timedOut": 10,
+       "unfinishedTasks": 21,
+       "longestNoProgressTicksMax": 1358,
+       "safetyViolations": 0
+      }
+     }
+    ]
+   },
+   "reliability": {
+    "separationRule": "Speed statistics and reliability statistics have different denominators and are reported in separate sections. A stop-and-wait timeout is never converted into a completion time and never produces a speedup percentage.",
+    "severeContention": {
+     "statement": "severe-contention scenarios are reported on completion and safety only",
+     "armA": {
+      "runs": 480,
+      "completed": 304,
+      "completionRatePercent": 63.3,
+      "tasks": "5283/5760",
+      "timedOut": 176,
+      "unfinishedTasks": 477,
+      "longestNoProgressTicksMax": 1419,
+      "safetyViolations": 0
+     },
+     "armB": {
+      "runs": 480,
+      "completed": 310,
+      "completionRatePercent": 64.6,
+      "tasks": "5285/5760",
+      "timedOut": 170,
+      "unfinishedTasks": 475,
+      "longestNoProgressTicksMax": 1409,
+      "safetyViolations": 0
+     },
+     "armC": {
+      "runs": 480,
+      "completed": 471,
+      "completionRatePercent": 98.1,
+      "tasks": "5740/5760",
+      "timedOut": 9,
+      "unfinishedTasks": 20,
+      "longestNoProgressTicksMax": 1363,
+      "safetyViolations": 0
+     },
+     "armD": {
+      "runs": 480,
+      "completed": 470,
+      "completionRatePercent": 97.9,
+      "tasks": "5739/5760",
+      "timedOut": 10,
+      "unfinishedTasks": 21,
+      "longestNoProgressTicksMax": 1358,
+      "safetyViolations": 0
+     }
+    }
+   }
+  },
+  "guidanceExperiment": {
+   "implemented": true,
+   "what": "An experimental local predictive congestion guidance layer: a per-cell bounded additive A* cost predicted from each robot's own authorised local observation (own position/route/goal/wait history, own sensor contacts, received peer intents, own recent edge and cell history). A* still chooses the route; the agent still resolves immediate conflict and guarantees safety; ownership, custody, charging and energy admission are untouched.",
+   "centralTrainingDecentralExecution": "Labels come from whole-run rollouts of arm C and may use centralised knowledge. Runtime inference reads only Agent.guidanceObservation(), which cannot see simulator state, another robot's task queue, another robot's battery, global task state, dashboard state, a centrally computed congestion field, or any future tick.",
+   "arms": {
+    "C_to_E": "distributed motion, deterministic bidding, guidance ON",
+    "D_to_F": "full system plus guidance"
+   },
+   "C_to_E": {
+    "low": {
+     "pairedCompleteN": 591,
+     "aggregateReductionPercent": -0.02,
+     "ci95Percent": [
+      -0.08,
+      0.04
+     ],
+     "meanPairedReductionPercent": -0.02,
+     "medianPairedReductionPercent": 0
+    },
+    "recoverable": {
+     "pairedCompleteN": 878,
+     "aggregateReductionPercent": 0.08,
+     "ci95Percent": [
+      0,
+      0.16
+     ],
+     "meanPairedReductionPercent": 0.08,
+     "medianPairedReductionPercent": 0
+    },
+    "severe": {
+     "pairedCompleteN": 471,
+     "aggregateReductionPercent": -0.16,
+     "ci95Percent": [
+      -0.39,
+      -0.02
+     ],
+     "meanPairedReductionPercent": -0.21,
+     "medianPairedReductionPercent": 0
+    },
+    "all": {
+     "pairedCompleteN": 1940,
+     "aggregateReductionPercent": -0.01,
+     "ci95Percent": [
+      -0.08,
+      0.05
+     ],
+     "meanPairedReductionPercent": -0.02,
+     "medianPairedReductionPercent": 0
+    }
+   },
+   "D_to_F": {
+    "low": {
+     "pairedCompleteN": 591,
+     "aggregateReductionPercent": -0.02,
+     "ci95Percent": [
+      -0.09,
+      0.04
+     ],
+     "meanPairedReductionPercent": -0.02,
+     "medianPairedReductionPercent": 0
+    },
+    "recoverable": {
+     "pairedCompleteN": 876,
+     "aggregateReductionPercent": 0.06,
+     "ci95Percent": [
+      -0.01,
+      0.14
+     ],
+     "meanPairedReductionPercent": 0.05,
+     "medianPairedReductionPercent": 0
+    },
+    "severe": {
+     "pairedCompleteN": 469,
+     "aggregateReductionPercent": -0.17,
+     "ci95Percent": [
+      -0.4,
+      -0.04
+     ],
+     "meanPairedReductionPercent": -0.21,
+     "medianPairedReductionPercent": 0
+    },
+    "all": {
+     "pairedCompleteN": 1936,
+     "aggregateReductionPercent": -0.02,
+     "ci95Percent": [
+      -0.09,
+      0.03
+     ],
+     "meanPairedReductionPercent": -0.03,
+     "medianPairedReductionPercent": 0
+    }
+   },
+   "A_to_F_finalSihComparison": {
+    "sumTaskCompletionTime": {
+     "pairedCompleteN": 591,
+     "aggregateReductionPercent": 2.33,
+     "ci95Percent": [
+      1.54,
+      3.17
+     ]
+    },
+    "makespan": {
+     "pairedCompleteN": 591,
+     "aggregateReductionPercent": 1.86,
+     "ci95Percent": [
+      1.05,
+      2.7
+     ]
+    }
+   },
+   "verdict": "The learned congestion toll changes essentially nothing end to end. Its ranking quality is real and measured (see guidance/test.json: the worst-predicted decile of cells carries several times the base-rate realised wait, and it beats a hand-set deterministic heuristic), but the delay breakdown shows why that does not convert: on the frozen recoverable suite the dominant component of total task completion time is the wait for a task to be certified and assigned, not the wait for a route, and the second-largest is raw travel, which a bounded per-cell toll cannot shorten because the cells it penalises are exactly the cells the destination lies behind. This is reported as a measured null result, not as a success."
+  },
+  "delayBreakdown": {
+   "source": "artifacts/sih-acceptance-v1/delay-breakdown.json",
+   "headline": {
+    "armA:recoverable": {
+     "dominantComponent": "ownershipAndCertificationWaitShareOfTaskTime",
+     "rankedShares": [
+      {
+       "component": "ownershipAndCertificationWaitShareOfTaskTime",
+       "share": 0.7291885306344914
+      },
+      {
+       "component": "congestionWaitShareOfProductiveTicks",
+       "share": 0.7206762209545012
+      },
+      {
+       "component": "approachTravelAndCongestionShareOfTaskTime",
+       "share": 0.14798602131002125
+      },
+      {
+       "component": "loadedTravelAndCongestionShareOfTaskTime",
+       "share": 0.12282544805548727
+      },
+      {
+       "component": "nonAdvancingShareOfTravel",
+       "share": 0.08199853995791644
+      },
+      {
+       "component": "conflictYieldShareOfProductiveTicks",
+       "share": 0
+      },
+      {
+       "component": "deadlockRecoveryShareOfProductiveTicks",
+       "share": 0
+      }
+     ],
+     "allShares": {
+      "ownershipAndCertificationWaitShareOfTaskTime": 0.7291885306344914,
+      "approachTravelAndCongestionShareOfTaskTime": 0.14798602131002125,
+      "loadedTravelAndCongestionShareOfTaskTime": 0.12282544805548727,
+      "congestionWaitShareOfProductiveTicks": 0.7206762209545012,
+      "nonAdvancingShareOfTravel": 0.08199853995791644,
+      "conflictYieldShareOfProductiveTicks": 0,
+      "deadlockRecoveryShareOfProductiveTicks": 0
+     }
+    },
+    "armB:recoverable": {
+     "dominantComponent": "ownershipAndCertificationWaitShareOfTaskTime",
+     "rankedShares": [
+      {
+       "component": "ownershipAndCertificationWaitShareOfTaskTime",
+       "share": 0.7279420776158257
+      },
+      {
+       "component": "congestionWaitShareOfProductiveTicks",
+       "share": 0.7191300808786144
+      },
+      {
+       "component": "approachTravelAndCongestionShareOfTaskTime",
+       "share": 0.14803467059972023
+      },
+      {
+       "component": "loadedTravelAndCongestionShareOfTaskTime",
+       "share": 0.12402325178445402
+      },
+      {
+       "component": "nonAdvancingShareOfTravel",
+       "share": 0.08120600767944137
+      },
+      {
+       "component": "conflictYieldShareOfProductiveTicks",
+       "share": 0
+      },
+      {
+       "component": "deadlockRecoveryShareOfProductiveTicks",
+       "share": 0
+      }
+     ],
+     "allShares": {
+      "ownershipAndCertificationWaitShareOfTaskTime": 0.7279420776158257,
+      "approachTravelAndCongestionShareOfTaskTime": 0.14803467059972023,
+      "loadedTravelAndCongestionShareOfTaskTime": 0.12402325178445402,
+      "congestionWaitShareOfProductiveTicks": 0.7191300808786144,
+      "nonAdvancingShareOfTravel": 0.08120600767944137,
+      "conflictYieldShareOfProductiveTicks": 0,
+      "deadlockRecoveryShareOfProductiveTicks": 0
+     }
+    },
+    "armC:recoverable": {
+     "dominantComponent": "ownershipAndCertificationWaitShareOfTaskTime",
+     "rankedShares": [
+      {
+       "component": "ownershipAndCertificationWaitShareOfTaskTime",
+       "share": 0.7008139344414418
+      },
+      {
+       "component": "congestionWaitShareOfProductiveTicks",
+       "share": 0.2659798649042696
+      },
+      {
+       "component": "approachTravelAndCongestionShareOfTaskTime",
+       "share": 0.16622999155160742
+      },
+      {
+       "component": "loadedTravelAndCongestionShareOfTaskTime",
+       "share": 0.13295607400695075
+      },
+      {
+       "component": "conflictYieldShareOfProductiveTicks",
+       "share": 0.0682513009051474
+      },
+      {
+       "component": "nonAdvancingShareOfTravel",
+       "share": 0.03680572051078329
+      },
+      {
+       "component": "deadlockRecoveryShareOfProductiveTicks",
+       "share": 0.017237181086597747
+      }
+     ],
+     "allShares": {
+      "ownershipAndCertificationWaitShareOfTaskTime": 0.7008139344414418,
+      "approachTravelAndCongestionShareOfTaskTime": 0.16622999155160742,
+      "loadedTravelAndCongestionShareOfTaskTime": 0.13295607400695075,
+      "congestionWaitShareOfProductiveTicks": 0.2659798649042696,
+      "nonAdvancingShareOfTravel": 0.03680572051078329,
+      "conflictYieldShareOfProductiveTicks": 0.0682513009051474,
+      "deadlockRecoveryShareOfProductiveTicks": 0.017237181086597747
+     }
+    },
+    "armD:recoverable": {
+     "dominantComponent": "ownershipAndCertificationWaitShareOfTaskTime",
+     "rankedShares": [
+      {
+       "component": "ownershipAndCertificationWaitShareOfTaskTime",
+       "share": 0.7018151502335779
+      },
+      {
+       "component": "congestionWaitShareOfProductiveTicks",
+       "share": 0.2684702374894486
+      },
+      {
+       "component": "approachTravelAndCongestionShareOfTaskTime",
+       "share": 0.16487128507516136
+      },
+      {
+       "component": "loadedTravelAndCongestionShareOfTaskTime",
+       "share": 0.1333135646912608
+      },
+      {
+       "component": "conflictYieldShareOfProductiveTicks",
+       "share": 0.06926825471895785
+      },
+      {
+       "component": "nonAdvancingShareOfTravel",
+       "share": 0.037047645547244545
+      },
+      {
+       "component": "deadlockRecoveryShareOfProductiveTicks",
+       "share": 0.016957117798837396
+      }
+     ],
+     "allShares": {
+      "ownershipAndCertificationWaitShareOfTaskTime": 0.7018151502335779,
+      "approachTravelAndCongestionShareOfTaskTime": 0.16487128507516136,
+      "loadedTravelAndCongestionShareOfTaskTime": 0.1333135646912608,
+      "congestionWaitShareOfProductiveTicks": 0.2684702374894486,
+      "nonAdvancingShareOfTravel": 0.037047645547244545,
+      "conflictYieldShareOfProductiveTicks": 0.06926825471895785,
+      "deadlockRecoveryShareOfProductiveTicks": 0.016957117798837396
+     }
+    },
+    "armE:recoverable": {
+     "dominantComponent": "ownershipAndCertificationWaitShareOfTaskTime",
+     "rankedShares": [
+      {
+       "component": "ownershipAndCertificationWaitShareOfTaskTime",
+       "share": 0.7011835392100232
+      },
+      {
+       "component": "congestionWaitShareOfProductiveTicks",
+       "share": 0.2687796064754474
+      },
+      {
+       "component": "approachTravelAndCongestionShareOfTaskTime",
+       "share": 0.16579941463508951
+      },
+      {
+       "component": "loadedTravelAndCongestionShareOfTaskTime",
+       "share": 0.13301704615488727
+      },
+      {
+       "component": "conflictYieldShareOfProductiveTicks",
+       "share": 0.0682600605837251
+      },
+      {
+       "component": "nonAdvancingShareOfTravel",
+       "share": 0.036451994902621215
+      },
+      {
+       "component": "deadlockRecoveryShareOfProductiveTicks",
+       "share": 0.017063517032056642
+      }
+     ],
+     "allShares": {
+      "ownershipAndCertificationWaitShareOfTaskTime": 0.7011835392100232,
+      "approachTravelAndCongestionShareOfTaskTime": 0.16579941463508951,
+      "loadedTravelAndCongestionShareOfTaskTime": 0.13301704615488727,
+      "congestionWaitShareOfProductiveTicks": 0.2687796064754474,
+      "nonAdvancingShareOfTravel": 0.036451994902621215,
+      "conflictYieldShareOfProductiveTicks": 0.0682600605837251,
+      "deadlockRecoveryShareOfProductiveTicks": 0.017063517032056642
+     }
+    },
+    "armF:recoverable": {
+     "dominantComponent": "ownershipAndCertificationWaitShareOfTaskTime",
+     "rankedShares": [
+      {
+       "component": "ownershipAndCertificationWaitShareOfTaskTime",
+       "share": 0.7022370741518664
+      },
+      {
+       "component": "congestionWaitShareOfProductiveTicks",
+       "share": 0.27394185517604286
+      },
+      {
+       "component": "approachTravelAndCongestionShareOfTaskTime",
+       "share": 0.1644477840593487
+      },
+      {
+       "component": "loadedTravelAndCongestionShareOfTaskTime",
+       "share": 0.13331514178878484
+      },
+      {
+       "component": "conflictYieldShareOfProductiveTicks",
+       "share": 0.06881174431498928
+      },
+      {
+       "component": "nonAdvancingShareOfTravel",
+       "share": 0.03685990615096101
+      },
+      {
+       "component": "deadlockRecoveryShareOfProductiveTicks",
+       "share": 0.01674956223410739
+      }
+     ],
+     "allShares": {
+      "ownershipAndCertificationWaitShareOfTaskTime": 0.7022370741518664,
+      "approachTravelAndCongestionShareOfTaskTime": 0.1644477840593487,
+      "loadedTravelAndCongestionShareOfTaskTime": 0.13331514178878484,
+      "congestionWaitShareOfProductiveTicks": 0.27394185517604286,
+      "nonAdvancingShareOfTravel": 0.03685990615096101,
+      "conflictYieldShareOfProductiveTicks": 0.06881174431498928,
+      "deadlockRecoveryShareOfProductiveTicks": 0.01674956223410739
+     }
+    }
+   },
+   "dominantComponent": [
+    {
+     "slice": "armA:recoverable",
+     "dominant": "ownershipAndCertificationWaitShareOfTaskTime",
+     "ranked": [
+      {
+       "component": "ownershipAndCertificationWaitShareOfTaskTime",
+       "share": 0.7291885306344914
+      },
+      {
+       "component": "congestionWaitShareOfProductiveTicks",
+       "share": 0.7206762209545012
+      },
+      {
+       "component": "approachTravelAndCongestionShareOfTaskTime",
+       "share": 0.14798602131002125
+      },
+      {
+       "component": "loadedTravelAndCongestionShareOfTaskTime",
+       "share": 0.12282544805548727
+      },
+      {
+       "component": "nonAdvancingShareOfTravel",
+       "share": 0.08199853995791644
+      },
+      {
+       "component": "conflictYieldShareOfProductiveTicks",
+       "share": 0
+      },
+      {
+       "component": "deadlockRecoveryShareOfProductiveTicks",
+       "share": 0
+      }
+     ]
+    },
+    {
+     "slice": "armB:recoverable",
+     "dominant": "ownershipAndCertificationWaitShareOfTaskTime",
+     "ranked": [
+      {
+       "component": "ownershipAndCertificationWaitShareOfTaskTime",
+       "share": 0.7279420776158257
+      },
+      {
+       "component": "congestionWaitShareOfProductiveTicks",
+       "share": 0.7191300808786144
+      },
+      {
+       "component": "approachTravelAndCongestionShareOfTaskTime",
+       "share": 0.14803467059972023
+      },
+      {
+       "component": "loadedTravelAndCongestionShareOfTaskTime",
+       "share": 0.12402325178445402
+      },
+      {
+       "component": "nonAdvancingShareOfTravel",
+       "share": 0.08120600767944137
+      },
+      {
+       "component": "conflictYieldShareOfProductiveTicks",
+       "share": 0
+      },
+      {
+       "component": "deadlockRecoveryShareOfProductiveTicks",
+       "share": 0
+      }
+     ]
+    },
+    {
+     "slice": "armC:recoverable",
+     "dominant": "ownershipAndCertificationWaitShareOfTaskTime",
+     "ranked": [
+      {
+       "component": "ownershipAndCertificationWaitShareOfTaskTime",
+       "share": 0.7008139344414418
+      },
+      {
+       "component": "congestionWaitShareOfProductiveTicks",
+       "share": 0.2659798649042696
+      },
+      {
+       "component": "approachTravelAndCongestionShareOfTaskTime",
+       "share": 0.16622999155160742
+      },
+      {
+       "component": "loadedTravelAndCongestionShareOfTaskTime",
+       "share": 0.13295607400695075
+      },
+      {
+       "component": "conflictYieldShareOfProductiveTicks",
+       "share": 0.0682513009051474
+      },
+      {
+       "component": "nonAdvancingShareOfTravel",
+       "share": 0.03680572051078329
+      },
+      {
+       "component": "deadlockRecoveryShareOfProductiveTicks",
+       "share": 0.017237181086597747
+      }
+     ]
+    },
+    {
+     "slice": "armD:recoverable",
+     "dominant": "ownershipAndCertificationWaitShareOfTaskTime",
+     "ranked": [
+      {
+       "component": "ownershipAndCertificationWaitShareOfTaskTime",
+       "share": 0.7018151502335779
+      },
+      {
+       "component": "congestionWaitShareOfProductiveTicks",
+       "share": 0.2684702374894486
+      },
+      {
+       "component": "approachTravelAndCongestionShareOfTaskTime",
+       "share": 0.16487128507516136
+      },
+      {
+       "component": "loadedTravelAndCongestionShareOfTaskTime",
+       "share": 0.1333135646912608
+      },
+      {
+       "component": "conflictYieldShareOfProductiveTicks",
+       "share": 0.06926825471895785
+      },
+      {
+       "component": "nonAdvancingShareOfTravel",
+       "share": 0.037047645547244545
+      },
+      {
+       "component": "deadlockRecoveryShareOfProductiveTicks",
+       "share": 0.016957117798837396
+      }
+     ]
+    },
+    {
+     "slice": "armE:recoverable",
+     "dominant": "ownershipAndCertificationWaitShareOfTaskTime",
+     "ranked": [
+      {
+       "component": "ownershipAndCertificationWaitShareOfTaskTime",
+       "share": 0.7011835392100232
+      },
+      {
+       "component": "congestionWaitShareOfProductiveTicks",
+       "share": 0.2687796064754474
+      },
+      {
+       "component": "approachTravelAndCongestionShareOfTaskTime",
+       "share": 0.16579941463508951
+      },
+      {
+       "component": "loadedTravelAndCongestionShareOfTaskTime",
+       "share": 0.13301704615488727
+      },
+      {
+       "component": "conflictYieldShareOfProductiveTicks",
+       "share": 0.0682600605837251
+      },
+      {
+       "component": "nonAdvancingShareOfTravel",
+       "share": 0.036451994902621215
+      },
+      {
+       "component": "deadlockRecoveryShareOfProductiveTicks",
+       "share": 0.017063517032056642
+      }
+     ]
+    },
+    {
+     "slice": "armF:recoverable",
+     "dominant": "ownershipAndCertificationWaitShareOfTaskTime",
+     "ranked": [
+      {
+       "component": "ownershipAndCertificationWaitShareOfTaskTime",
+       "share": 0.7022370741518664
+      },
+      {
+       "component": "congestionWaitShareOfProductiveTicks",
+       "share": 0.27394185517604286
+      },
+      {
+       "component": "approachTravelAndCongestionShareOfTaskTime",
+       "share": 0.1644477840593487
+      },
+      {
+       "component": "loadedTravelAndCongestionShareOfTaskTime",
+       "share": 0.13331514178878484
+      },
+      {
+       "component": "conflictYieldShareOfProductiveTicks",
+       "share": 0.06881174431498928
+      },
+      {
+       "component": "nonAdvancingShareOfTravel",
+       "share": 0.03685990615096101
+      },
+      {
+       "component": "deadlockRecoveryShareOfProductiveTicks",
+       "share": 0.01674956223410739
+      }
+     ]
+    }
+   ]
+  },
+  "provenance": {
+   "commit": "9c7442218d3f8d7a962a8e74f9e65402e6be5f2c",
+   "dirty": true,
+   "sourceHashes": {
+    "src/core/bench/stopwait.ts": "da6c16356705314a4cd758c6e4a3c100fe94883a7ac1d6b75904f821cb91bc86",
+    "src/core/bench/sih/overlap.ts": "c987a111b4d13c89065b14bc6d9182e7db58e50afae82c6d52c48a58eb606b91",
+    "src/core/bench/sih/scenario.ts": "dfefcb0f5d9e3dc1dcf281f284e083217fb901f4d810efe242306b42af6efd0d",
+    "src/core/bench/sih/runner.ts": "1841496a69f45962bec450af54f02015988b06d4878f0e05d8a25bfbd22279b0",
+    "src/core/bench/sih/stats.ts": "289e35131868f4d8c11b8fe30f2756a7a249bd552bd5281cb11c33c66d4999f9",
+    "src/core/distributed/agent.ts": "9f57d4a85d3dacd4bd28b3eb700772c29655c37f148b998bde9503f3aa171efc",
+    "src/core/distributed/fleet.ts": "ede49e5aa9473f1eb2277a74e1ac7fb7546da4d4cf220bc06ccb742b0eb6aaf6",
+    "src/core/distributed/runtime.ts": "ff23002569ea44e97d84f48bed27a2ae6f742f89083e80a62b49d7941a48347c",
+    "src/core/distributed/ownership.ts": "30c43a6da3570f26edc30a4dc66ff2538c54d7706e8d08682e3ad02ae2c68e05",
+    "src/core/pathfinding/astar.ts": "c822dc66bd7234b065e1b6c6398cc11f56e438aec65da90d3070b1bbfa633fbf",
+    "artifacts/bid-energy-v4/model.json": "5aad9ac9dad7ee4facb7b719154147e95d2069612d9cae1e3e59ef7a4fe455d1"
+   }
+  },
+  "suiteProvenance": {
+   "frozenPath": "artifacts/sih-acceptance-v1/scenarios.json",
+   "composition": {
+    "low": 600,
+    "recoverable": 900,
+    "severe": 480
+   },
+   "compositionByFleetSize": {
+    "3": {
+     "low": 200,
+     "recoverable": 300,
+     "severe": 160
+    },
+    "5": {
+     "low": 200,
+     "recoverable": 300,
+     "severe": 160
+    },
+    "8": {
+     "low": 200,
+     "recoverable": 300,
+     "severe": 160
+    }
+   },
+   "compositionByLayout": {
+    "stock": {
+     "low": 204,
+     "recoverable": 423,
+     "severe": 240
+    },
+    "wide": {
+     "low": 396,
+     "recoverable": 477,
+     "severe": 240
+    }
+   },
+   "compositionByLayoutAndFamily": {
+    "stock/columnTransit": {
+     "low": 0,
+     "recoverable": 9,
+     "severe": 60
+    },
+    "stock/mirroredCross": {
+     "low": 0,
+     "recoverable": 138,
+     "severe": 60
+    },
+    "stock/sameAisle": {
+     "low": 102,
+     "recoverable": 138,
+     "severe": 60
+    },
+    "stock/uniform": {
+     "low": 102,
+     "recoverable": 138,
+     "severe": 60
+    },
+    "wide/columnTransit": {
+     "low": 99,
+     "recoverable": 138,
+     "severe": 60
+    },
+    "wide/mirroredCross": {
+     "low": 99,
+     "recoverable": 138,
+     "severe": 60
+    },
+    "wide/sameAisle": {
+     "low": 99,
+     "recoverable": 108,
+     "severe": 60
+    },
+    "wide/uniform": {
+     "low": 99,
+     "recoverable": 93,
+     "severe": 60
+    }
+   },
+   "provenance": {
+    "commit": "9c7442218d3f8d7a962a8e74f9e65402e6be5f2c",
+    "dirty": true,
+    "sourceHashes": {
+     "src/core/bench/stopwait.ts": "da6c16356705314a4cd758c6e4a3c100fe94883a7ac1d6b75904f821cb91bc86",
+     "src/core/bench/sih/overlap.ts": "c987a111b4d13c89065b14bc6d9182e7db58e50afae82c6d52c48a58eb606b91",
+     "src/core/bench/sih/scenario.ts": "dfefcb0f5d9e3dc1dcf281f284e083217fb901f4d810efe242306b42af6efd0d",
+     "src/core/bench/sih/runner.ts": "1841496a69f45962bec450af54f02015988b06d4878f0e05d8a25bfbd22279b0",
+     "src/core/bench/sih/stats.ts": "289e35131868f4d8c11b8fe30f2756a7a249bd552bd5281cb11c33c66d4999f9",
+     "src/core/distributed/agent.ts": "9f57d4a85d3dacd4bd28b3eb700772c29655c37f148b998bde9503f3aa171efc",
+     "src/core/distributed/fleet.ts": "ede49e5aa9473f1eb2277a74e1ac7fb7546da4d4cf220bc06ccb742b0eb6aaf6",
+     "src/core/distributed/runtime.ts": "ff23002569ea44e97d84f48bed27a2ae6f742f89083e80a62b49d7941a48347c",
+     "src/core/distributed/ownership.ts": "30c43a6da3570f26edc30a4dc66ff2538c54d7706e8d08682e3ad02ae2c68e05",
+     "src/core/pathfinding/astar.ts": "c822dc66bd7234b065e1b6c6398cc11f56e438aec65da90d3070b1bbfa633fbf",
+     "artifacts/bid-energy-v4/model.json": "5aad9ac9dad7ee4facb7b719154147e95d2069612d9cae1e3e59ef7a4fe455d1"
+    }
+   },
+   "overlapMetricDistribution": {
+    "low": {
+     "count": 600,
+     "overlapIndex": {
+      "min": 0.010939,
+      "p25": 0.034824,
+      "median": 0.044313,
+      "p75": 0.050193,
+      "max": 0.054934,
+      "mean": 0.041705
+     },
+     "headOnPairShare": {
+      "min": 0,
+      "p25": 0.015152,
+      "median": 0.045455,
+      "p75": 0.075758,
+      "max": 0.166667,
+      "mean": 0.048485
+     },
+     "contestedCellsPerRoute": {
+      "min": 0.583333,
+      "p25": 1.666667,
+      "median": 2.333333,
+      "p75": 3,
+      "max": 5.583333,
+      "mean": 2.349167
+     },
+     "approachOverlapIndex": {
+      "min": 0.05344,
+      "p25": 0.07979,
+      "median": 0.091132,
+      "p75": 0.105489,
+      "max": 0.202299,
+      "mean": 0.095307
+     },
+     "escapeFraction": {
+      "min": 0.166667,
+      "p25": 0.416667,
+      "median": 0.5,
+      "p75": 0.583333,
+      "max": 0.916667,
+      "mean": 0.479583
+     },
+     "maxZeroSlackRun": {
+      "min": 0,
+      "p25": 2,
+      "median": 2,
+      "p75": 2,
+      "max": 6,
+      "mean": 1.84
+     },
+     "meanDeliveryLength": {
+      "min": 2.916667,
+      "p25": 5.833333,
+      "median": 8.333333,
+      "p75": 11.25,
+      "max": 16.416667,
+      "mean": 8.559583
+     }
+    },
+    "recoverable": {
+     "count": 900,
+     "overlapIndex": {
+      "min": 0.070341,
+      "p25": 0.077289,
+      "median": 0.087792,
+      "p75": 0.104773,
+      "max": 0.138025,
+      "mean": 0.092125
+     },
+     "headOnPairShare": {
+      "min": 0,
+      "p25": 0.015152,
+      "median": 0.075758,
+      "p75": 0.136364,
+      "max": 0.272727,
+      "mean": 0.082828
+     },
+     "contestedCellsPerRoute": {
+      "min": 0.75,
+      "p25": 2.083333,
+      "median": 2.833333,
+      "p75": 3.5,
+      "max": 5.666667,
+      "mean": 2.812778
+     },
+     "approachOverlapIndex": {
+      "min": 0.055511,
+      "p25": 0.087417,
+      "median": 0.104083,
+      "p75": 0.12687,
+      "max": 0.265506,
+      "mean": 0.110326
+     },
+     "escapeFraction": {
+      "min": 0.25,
+      "p25": 0.25,
+      "median": 0.333333,
+      "p75": 0.5,
+      "max": 0.833333,
+      "mean": 0.383056
+     },
+     "maxZeroSlackRun": {
+      "min": 0,
+      "p25": 2,
+      "median": 2,
+      "p75": 3,
+      "max": 4,
+      "mean": 1.936667
+     },
+     "meanDeliveryLength": {
+      "min": 2.416667,
+      "p25": 7.333333,
+      "median": 11,
+      "p75": 13.166667,
+      "max": 18.833333,
+      "mean": 10.323889
+     }
+    },
+    "severe": {
+     "count": 480,
+     "overlapIndex": {
+      "min": 0.055012,
+      "p25": 0.06033,
+      "median": 0.066939,
+      "p75": 0.107611,
+      "max": 0.27985,
+      "mean": 0.090558
+     },
+     "headOnPairShare": {
+      "min": 0,
+      "p25": 0.030303,
+      "median": 0.075758,
+      "p75": 0.121212,
+      "max": 0.257576,
+      "mean": 0.078504
+     },
+     "contestedCellsPerRoute": {
+      "min": 0.833333,
+      "p25": 2.083333,
+      "median": 2.75,
+      "p75": 3.583333,
+      "max": 5.5,
+      "mean": 2.829687
+     },
+     "approachOverlapIndex": {
+      "min": 0.050147,
+      "p25": 0.084119,
+      "median": 0.099973,
+      "p75": 0.118978,
+      "max": 0.260921,
+      "mean": 0.104241
+     },
+     "escapeFraction": {
+      "min": 0,
+      "p25": 0.166667,
+      "median": 0.333333,
+      "p75": 0.5,
+      "max": 0.666667,
+      "mean": 0.336458
+     },
+     "maxZeroSlackRun": {
+      "min": 0,
+      "p25": 2,
+      "median": 2,
+      "p75": 3,
+      "max": 6,
+      "mean": 2.21875
+     },
+     "meanDeliveryLength": {
+      "min": 3.583333,
+      "p25": 6.666667,
+      "median": 9.75,
+      "p75": 13.333333,
+      "max": 17.666667,
+      "mean": 9.958854
+     }
+    }
+   }
+  }
+ }
+}

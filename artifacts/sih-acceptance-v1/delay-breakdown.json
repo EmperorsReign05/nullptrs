@@ -1,0 +1,2198 @@
+{
+ "version": "sih-acceptance-v1",
+ "generatedBy": "npx vite-node scripts/sih-benchmark.ts delay",
+ "source": "artifacts/sih-acceptance-v1/per-scenario.json",
+ "method": {
+  "taskTime": "releaseToAssignment = firstAssignmentTick - createdAt (ownership, certification and allocation wait); assignmentToPickup = pickupTick - firstAssignmentTick (approach travel plus its congestion waits); pickupToCompletion = completionTick - pickupTick (loaded travel plus its congestion waits). The three sum exactly to flowTime per completed task, which the sumOfComponentsMatchesFlowTime flag verifies per slice.",
+  "productiveTicks": "one robot-tick per live robot per tick while it holds an assigned task. travel = its cell changed; wait = it did not. Idle robots and robots on a dock are excluded from this denominator and reported separately, because a robot with no work is fleet slack and counting it as delay would flatter any system that keeps more robots busy.",
+  "conflictAttribution": "progress=free; conflictYield=occupied|sensor-yield|lost-claim|swap-blocked|docked-peer; deadlockRecovery=step-aside; hold=no-move|sensor-stop. 'lost-claim' is also the reason the commit protocol stamps on any hold it forces, so it is a lower bound on arbitration losses.",
+  "chargingHold": "ticks in which a robot's status was charging (travel + wait), i.e. en route to or parked on a dock.",
+  "travelLowerBound": "per scenario, sum over tasks of (shortest approach from the best-placed robot start + shortest delivery leg), all on the static congestion-free map. It ignores multi-task sequencing, so it under-estimates; travelOverLowerBound is therefore an UPPER bound on excess travel.",
+  "nonPerturbation": "the runner only reads world state, agent decisions and task status. It installs no callback, no override and no planner hook outside the explicitly labelled route-guidance arms, so it cannot change what it measures."
+ },
+ "suiteSize": 1980,
+ "headline": {
+  "armA:recoverable": {
+   "dominantComponent": "ownershipAndCertificationWaitShareOfTaskTime",
+   "rankedShares": [
+    {
+     "component": "ownershipAndCertificationWaitShareOfTaskTime",
+     "share": 0.7291885306344914
+    },
+    {
+     "component": "congestionWaitShareOfProductiveTicks",
+     "share": 0.7206762209545012
+    },
+    {
+     "component": "approachTravelAndCongestionShareOfTaskTime",
+     "share": 0.14798602131002125
+    },
+    {
+     "component": "loadedTravelAndCongestionShareOfTaskTime",
+     "share": 0.12282544805548727
+    },
+    {
+     "component": "nonAdvancingShareOfTravel",
+     "share": 0.08199853995791644
+    },
+    {
+     "component": "conflictYieldShareOfProductiveTicks",
+     "share": 0
+    },
+    {
+     "component": "deadlockRecoveryShareOfProductiveTicks",
+     "share": 0
+    }
+   ],
+   "allShares": {
+    "ownershipAndCertificationWaitShareOfTaskTime": 0.7291885306344914,
+    "approachTravelAndCongestionShareOfTaskTime": 0.14798602131002125,
+    "loadedTravelAndCongestionShareOfTaskTime": 0.12282544805548727,
+    "congestionWaitShareOfProductiveTicks": 0.7206762209545012,
+    "nonAdvancingShareOfTravel": 0.08199853995791644,
+    "conflictYieldShareOfProductiveTicks": 0,
+    "deadlockRecoveryShareOfProductiveTicks": 0
+   }
+  },
+  "armB:recoverable": {
+   "dominantComponent": "ownershipAndCertificationWaitShareOfTaskTime",
+   "rankedShares": [
+    {
+     "component": "ownershipAndCertificationWaitShareOfTaskTime",
+     "share": 0.7279420776158257
+    },
+    {
+     "component": "congestionWaitShareOfProductiveTicks",
+     "share": 0.7191300808786144
+    },
+    {
+     "component": "approachTravelAndCongestionShareOfTaskTime",
+     "share": 0.14803467059972023
+    },
+    {
+     "component": "loadedTravelAndCongestionShareOfTaskTime",
+     "share": 0.12402325178445402
+    },
+    {
+     "component": "nonAdvancingShareOfTravel",
+     "share": 0.08120600767944137
+    },
+    {
+     "component": "conflictYieldShareOfProductiveTicks",
+     "share": 0
+    },
+    {
+     "component": "deadlockRecoveryShareOfProductiveTicks",
+     "share": 0
+    }
+   ],
+   "allShares": {
+    "ownershipAndCertificationWaitShareOfTaskTime": 0.7279420776158257,
+    "approachTravelAndCongestionShareOfTaskTime": 0.14803467059972023,
+    "loadedTravelAndCongestionShareOfTaskTime": 0.12402325178445402,
+    "congestionWaitShareOfProductiveTicks": 0.7191300808786144,
+    "nonAdvancingShareOfTravel": 0.08120600767944137,
+    "conflictYieldShareOfProductiveTicks": 0,
+    "deadlockRecoveryShareOfProductiveTicks": 0
+   }
+  },
+  "armC:recoverable": {
+   "dominantComponent": "ownershipAndCertificationWaitShareOfTaskTime",
+   "rankedShares": [
+    {
+     "component": "ownershipAndCertificationWaitShareOfTaskTime",
+     "share": 0.7008139344414418
+    },
+    {
+     "component": "congestionWaitShareOfProductiveTicks",
+     "share": 0.2659798649042696
+    },
+    {
+     "component": "approachTravelAndCongestionShareOfTaskTime",
+     "share": 0.16622999155160742
+    },
+    {
+     "component": "loadedTravelAndCongestionShareOfTaskTime",
+     "share": 0.13295607400695075
+    },
+    {
+     "component": "conflictYieldShareOfProductiveTicks",
+     "share": 0.0682513009051474
+    },
+    {
+     "component": "nonAdvancingShareOfTravel",
+     "share": 0.03680572051078329
+    },
+    {
+     "component": "deadlockRecoveryShareOfProductiveTicks",
+     "share": 0.017237181086597747
+    }
+   ],
+   "allShares": {
+    "ownershipAndCertificationWaitShareOfTaskTime": 0.7008139344414418,
+    "approachTravelAndCongestionShareOfTaskTime": 0.16622999155160742,
+    "loadedTravelAndCongestionShareOfTaskTime": 0.13295607400695075,
+    "congestionWaitShareOfProductiveTicks": 0.2659798649042696,
+    "nonAdvancingShareOfTravel": 0.03680572051078329,
+    "conflictYieldShareOfProductiveTicks": 0.0682513009051474,
+    "deadlockRecoveryShareOfProductiveTicks": 0.017237181086597747
+   }
+  },
+  "armD:recoverable": {
+   "dominantComponent": "ownershipAndCertificationWaitShareOfTaskTime",
+   "rankedShares": [
+    {
+     "component": "ownershipAndCertificationWaitShareOfTaskTime",
+     "share": 0.7018151502335779
+    },
+    {
+     "component": "congestionWaitShareOfProductiveTicks",
+     "share": 0.2684702374894486
+    },
+    {
+     "component": "approachTravelAndCongestionShareOfTaskTime",
+     "share": 0.16487128507516136
+    },
+    {
+     "component": "loadedTravelAndCongestionShareOfTaskTime",
+     "share": 0.1333135646912608
+    },
+    {
+     "component": "conflictYieldShareOfProductiveTicks",
+     "share": 0.06926825471895785
+    },
+    {
+     "component": "nonAdvancingShareOfTravel",
+     "share": 0.037047645547244545
+    },
+    {
+     "component": "deadlockRecoveryShareOfProductiveTicks",
+     "share": 0.016957117798837396
+    }
+   ],
+   "allShares": {
+    "ownershipAndCertificationWaitShareOfTaskTime": 0.7018151502335779,
+    "approachTravelAndCongestionShareOfTaskTime": 0.16487128507516136,
+    "loadedTravelAndCongestionShareOfTaskTime": 0.1333135646912608,
+    "congestionWaitShareOfProductiveTicks": 0.2684702374894486,
+    "nonAdvancingShareOfTravel": 0.037047645547244545,
+    "conflictYieldShareOfProductiveTicks": 0.06926825471895785,
+    "deadlockRecoveryShareOfProductiveTicks": 0.016957117798837396
+   }
+  },
+  "armE:recoverable": {
+   "dominantComponent": "ownershipAndCertificationWaitShareOfTaskTime",
+   "rankedShares": [
+    {
+     "component": "ownershipAndCertificationWaitShareOfTaskTime",
+     "share": 0.7011835392100232
+    },
+    {
+     "component": "congestionWaitShareOfProductiveTicks",
+     "share": 0.2687796064754474
+    },
+    {
+     "component": "approachTravelAndCongestionShareOfTaskTime",
+     "share": 0.16579941463508951
+    },
+    {
+     "component": "loadedTravelAndCongestionShareOfTaskTime",
+     "share": 0.13301704615488727
+    },
+    {
+     "component": "conflictYieldShareOfProductiveTicks",
+     "share": 0.0682600605837251
+    },
+    {
+     "component": "nonAdvancingShareOfTravel",
+     "share": 0.036451994902621215
+    },
+    {
+     "component": "deadlockRecoveryShareOfProductiveTicks",
+     "share": 0.017063517032056642
+    }
+   ],
+   "allShares": {
+    "ownershipAndCertificationWaitShareOfTaskTime": 0.7011835392100232,
+    "approachTravelAndCongestionShareOfTaskTime": 0.16579941463508951,
+    "loadedTravelAndCongestionShareOfTaskTime": 0.13301704615488727,
+    "congestionWaitShareOfProductiveTicks": 0.2687796064754474,
+    "nonAdvancingShareOfTravel": 0.036451994902621215,
+    "conflictYieldShareOfProductiveTicks": 0.0682600605837251,
+    "deadlockRecoveryShareOfProductiveTicks": 0.017063517032056642
+   }
+  },
+  "armF:recoverable": {
+   "dominantComponent": "ownershipAndCertificationWaitShareOfTaskTime",
+   "rankedShares": [
+    {
+     "component": "ownershipAndCertificationWaitShareOfTaskTime",
+     "share": 0.7022370741518664
+    },
+    {
+     "component": "congestionWaitShareOfProductiveTicks",
+     "share": 0.27394185517604286
+    },
+    {
+     "component": "approachTravelAndCongestionShareOfTaskTime",
+     "share": 0.1644477840593487
+    },
+    {
+     "component": "loadedTravelAndCongestionShareOfTaskTime",
+     "share": 0.13331514178878484
+    },
+    {
+     "component": "conflictYieldShareOfProductiveTicks",
+     "share": 0.06881174431498928
+    },
+    {
+     "component": "nonAdvancingShareOfTravel",
+     "share": 0.03685990615096101
+    },
+    {
+     "component": "deadlockRecoveryShareOfProductiveTicks",
+     "share": 0.01674956223410739
+    }
+   ],
+   "allShares": {
+    "ownershipAndCertificationWaitShareOfTaskTime": 0.7022370741518664,
+    "approachTravelAndCongestionShareOfTaskTime": 0.1644477840593487,
+    "loadedTravelAndCongestionShareOfTaskTime": 0.13331514178878484,
+    "congestionWaitShareOfProductiveTicks": 0.27394185517604286,
+    "nonAdvancingShareOfTravel": 0.03685990615096101,
+    "conflictYieldShareOfProductiveTicks": 0.06881174431498928,
+    "deadlockRecoveryShareOfProductiveTicks": 0.01674956223410739
+   }
+  }
+ },
+ "byArm": {
+  "A:all": {
+   "scope": "all",
+   "scenarios": 1980,
+   "completedScenarios": 1350,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 1350,
+    "sumTaskCompletionTime": 2061409,
+    "components": {
+     "releaseToAssignment": 1522313,
+     "assignmentToPickup": 298025,
+     "pickupToCompletion": 241071
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7384817860017104,
+     "approachTravelAndCongestion": 0.1445734446681857,
+     "loadedTravelAndCongestion": 0.11694476933010382
+    },
+    "sumOfComponents": 2061409,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 1766876,
+    "travel": 485601,
+    "wait": 1281275,
+    "congestionWaitShare": 0.725164074898295
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 7743088,
+    "chargingHold": 1331,
+    "chargingShare": 0.00017189524386136383,
+    "idle": 5974881,
+    "idleShare": 0.7716405909373625,
+    "fleetUtilisation": 0.22818751381877617
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 485601,
+    "advancing": 448989,
+    "lateral": 0,
+    "retreating": 36639,
+    "advancingShare": 0.924604768112092,
+    "lateralShare": 0,
+    "retreatingShare": 0.07545083309136513,
+    "travelLowerBound": 354500,
+    "travelOverLowerBound": 1.3698194640338506
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 7257460,
+     "free": 485628
+    },
+    "groups": {
+     "progress": 485628,
+     "conflictYield": 0,
+     "deadlockRecovery": 0,
+     "hold": 7257460
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.27485120630989385,
+     "conflictYield": 0,
+     "deadlockRecovery": 0,
+     "hold": 4.107509525286438
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 64117,
+    "energyHoldShareOfProductiveTicks": 0.03628834168328734,
+    "reroutes": 20860,
+    "replans": 20860,
+    "reroutesPerScenario": 10.535353535353535,
+    "reroutesPerMovingTick": 0.042957077930234906
+   }
+  },
+  "A:low": {
+   "scope": "low",
+   "scenarios": 600,
+   "completedScenarios": 444,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 444,
+    "sumTaskCompletionTime": 655504,
+    "components": {
+     "releaseToAssignment": 495940,
+     "assignmentToPickup": 89353,
+     "pickupToCompletion": 70211
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7565781444506823,
+     "approachTravelAndCongestion": 0.13631190656349923,
+     "loadedTravelAndCongestion": 0.10710994898581855
+    },
+    "sumOfComponents": 655504,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 434236,
+    "travel": 130496,
+    "wait": 303740,
+    "congestionWaitShare": 0.6994813880009948
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 2097791,
+    "chargingHold": 19,
+    "chargingShare": 0.000009057146302944382,
+    "idle": 1663536,
+    "idleShare": 0.7929941543270993,
+    "fleetUtilisation": 0.20699678852659775
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 130496,
+    "advancing": 123157,
+    "lateral": 0,
+    "retreating": 7342,
+    "advancingShare": 0.9437607282981854,
+    "lateralShare": 0,
+    "retreatingShare": 0.05626226091221187,
+    "travelLowerBound": 99025,
+    "travelOverLowerBound": 1.317808634183287
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 1967292,
+     "free": 130499
+    },
+    "groups": {
+     "progress": 130499,
+     "conflictYield": 0,
+     "deadlockRecovery": 0,
+     "hold": 1967292
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.3005255206846047,
+     "conflictYield": 0,
+     "deadlockRecovery": 0,
+     "hold": 4.530467303493952
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 9547,
+    "energyHoldShareOfProductiveTicks": 0.02198574047292256,
+    "reroutes": 6130,
+    "replans": 6130,
+    "reroutesPerScenario": 10.216666666666667,
+    "reroutesPerMovingTick": 0.04697461991172143
+   }
+  },
+  "A:recoverable": {
+   "scope": "recoverable",
+   "scenarios": 900,
+   "completedScenarios": 602,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 602,
+    "sumTaskCompletionTime": 935710,
+    "components": {
+     "releaseToAssignment": 682309,
+     "assignmentToPickup": 138472,
+     "pickupToCompletion": 114929
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7291885306344914,
+     "approachTravelAndCongestion": 0.14798602131002125,
+     "loadedTravelAndCongestion": 0.12282544805548727
+    },
+    "sumOfComponents": 935710,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 833692,
+    "travel": 232870,
+    "wait": 600822,
+    "congestionWaitShare": 0.7206762209545012
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 3617442,
+    "chargingHold": 1158,
+    "chargingShare": 0.0003201157060707539,
+    "idle": 2782592,
+    "idleShare": 0.769215373736469,
+    "fleetUtilisation": 0.23046451055746023
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 232870,
+    "advancing": 213783,
+    "lateral": 0,
+    "retreating": 19095,
+    "advancingShare": 0.9180358139734616,
+    "lateralShare": 0,
+    "retreatingShare": 0.08199853995791644,
+    "travelLowerBound": 167987,
+    "travelOverLowerBound": 1.386238220814706
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 3384564,
+     "free": 232878
+    },
+    "groups": {
+     "progress": 232878,
+     "conflictYield": 0,
+     "deadlockRecovery": 0,
+     "hold": 3384564
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.2793333749154364,
+     "conflictYield": 0,
+     "deadlockRecovery": 0,
+     "hold": 4.0597294924264595
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 34422,
+    "energyHoldShareOfProductiveTicks": 0.04128862937391747,
+    "reroutes": 9608,
+    "replans": 9608,
+    "reroutesPerScenario": 10.675555555555556,
+    "reroutesPerMovingTick": 0.04125907158500451
+   }
+  },
+  "A:severe": {
+   "scope": "severe",
+   "scenarios": 480,
+   "completedScenarios": 304,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 304,
+    "sumTaskCompletionTime": 470195,
+    "components": {
+     "releaseToAssignment": 344064,
+     "assignmentToPickup": 70200,
+     "pickupToCompletion": 55931
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7317474664766745,
+     "approachTravelAndCongestion": 0.14929975861078915,
+     "loadedTravelAndCongestion": 0.1189527749125363
+    },
+    "sumOfComponents": 470195,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 498948,
+    "travel": 122235,
+    "wait": 376713,
+    "congestionWaitShare": 0.7550145506144929
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 2027855,
+    "chargingHold": 154,
+    "chargingShare": 0.00007594231342970775,
+    "idle": 1528753,
+    "idleShare": 0.7538768797571819,
+    "fleetUtilisation": 0.24604717792938843
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 122235,
+    "advancing": 112049,
+    "lateral": 0,
+    "retreating": 10202,
+    "advancingShare": 0.9166687119073915,
+    "lateralShare": 0,
+    "retreatingShare": 0.08346218349899784,
+    "travelLowerBound": 87488,
+    "travelOverLowerBound": 1.3971630395025603
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 1905604,
+     "free": 122251
+    },
+    "groups": {
+     "progress": 122251,
+     "conflictYield": 0,
+     "deadlockRecovery": 0,
+     "hold": 1905604
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.24501751685546388,
+     "conflictYield": 0,
+     "deadlockRecovery": 0,
+     "hold": 3.8192436887210692
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 20148,
+    "energyHoldShareOfProductiveTicks": 0.04038096154308665,
+    "reroutes": 5122,
+    "replans": 5122,
+    "reroutesPerScenario": 10.670833333333333,
+    "reroutesPerMovingTick": 0.041902891970384916
+   }
+  },
+  "B:all": {
+   "scope": "all",
+   "scenarios": 1980,
+   "completedScenarios": 1360,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 1360,
+    "sumTaskCompletionTime": 2079974,
+    "components": {
+     "releaseToAssignment": 1537205,
+     "assignmentToPickup": 298428,
+     "pickupToCompletion": 244341
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7390501035109093,
+     "approachTravelAndCongestion": 0.14347679345991826,
+     "loadedTravelAndCongestion": 0.11747310302917248
+    },
+    "sumOfComponents": 2079974,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 1761920,
+    "travel": 484570,
+    "wait": 1277350,
+    "congestionWaitShare": 0.7249761623683255
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 7697265,
+    "chargingHold": 1329,
+    "chargingShare": 0.00017265873008139905,
+    "idle": 5934016,
+    "idleShare": 0.7709252572179859,
+    "fleetUtilisation": 0.22890208405193274
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 484570,
+    "advancing": 448275,
+    "lateral": 0,
+    "retreating": 36320,
+    "advancingShare": 0.9250985409744722,
+    "lateralShare": 0,
+    "retreatingShare": 0.07495305115875932,
+    "travelLowerBound": 354500,
+    "travelOverLowerBound": 1.366911142454161
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 7212670,
+     "free": 484595
+    },
+    "groups": {
+     "progress": 484595,
+     "conflictYield": 0,
+     "deadlockRecovery": 0,
+     "hold": 7212670
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.2750380266981475,
+     "conflictYield": 0,
+     "deadlockRecovery": 0,
+     "hold": 4.093642163094806
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 62598,
+    "energyHoldShareOfProductiveTicks": 0.03552828732292045,
+    "reroutes": 20904,
+    "replans": 20904,
+    "reroutesPerScenario": 10.557575757575757,
+    "reroutesPerMovingTick": 0.04313927812287183
+   }
+  },
+  "B:low": {
+   "scope": "low",
+   "scenarios": 600,
+   "completedScenarios": 441,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 441,
+    "sumTaskCompletionTime": 649878,
+    "components": {
+     "releaseToAssignment": 491544,
+     "assignmentToPickup": 88785,
+     "pickupToCompletion": 69549
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7563635020726968,
+     "approachTravelAndCongestion": 0.1366179498305836,
+     "loadedTravelAndCongestion": 0.10701854809671969
+    },
+    "sumOfComponents": 649878,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 437598,
+    "travel": 130172,
+    "wait": 307426,
+    "congestionWaitShare": 0.7025306331381771
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 2109563,
+    "chargingHold": 19,
+    "chargingShare": 0.00000900660468542537,
+    "idle": 1671946,
+    "idleShare": 0.7925556145988529,
+    "fleetUtilisation": 0.20743537879646165
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 130172,
+    "advancing": 122897,
+    "lateral": 0,
+    "retreating": 7278,
+    "advancingShare": 0.9441124051255262,
+    "lateralShare": 0,
+    "retreatingShare": 0.05591064130534985,
+    "travelLowerBound": 99025,
+    "travelOverLowerBound": 1.314536733148195
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 1979388,
+     "free": 130175
+    },
+    "groups": {
+     "progress": 130175,
+     "conflictYield": 0,
+     "deadlockRecovery": 0,
+     "hold": 1979388
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.29747622246902405,
+     "conflictYield": 0,
+     "deadlockRecovery": 0,
+     "hold": 4.523302208876641
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 9128,
+    "energyHoldShareOfProductiveTicks": 0.020859327510637616,
+    "reroutes": 6145,
+    "replans": 6145,
+    "reroutesPerScenario": 10.241666666666667,
+    "reroutesPerMovingTick": 0.04720677257782011
+   }
+  },
+  "B:recoverable": {
+   "scope": "recoverable",
+   "scenarios": 900,
+   "completedScenarios": 609,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 609,
+    "sumTaskCompletionTime": 946508,
+    "components": {
+     "releaseToAssignment": 689003,
+     "assignmentToPickup": 140116,
+     "pickupToCompletion": 117389
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7279420776158257,
+     "approachTravelAndCongestion": 0.14803467059972023,
+     "loadedTravelAndCongestion": 0.12402325178445402
+    },
+    "sumOfComponents": 946508,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 828031,
+    "travel": 232569,
+    "wait": 595462,
+    "congestionWaitShare": 0.7191300808786144
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 3569098,
+    "chargingHold": 1176,
+    "chargingShare": 0.00032949501526716277,
+    "idle": 2739891,
+    "idleShare": 0.7676704310164641,
+    "fleetUtilisation": 0.23200007396826874
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 232569,
+    "advancing": 213693,
+    "lateral": 0,
+    "retreating": 18886,
+    "advancingShare": 0.9188369903125524,
+    "lateralShare": 0,
+    "retreatingShare": 0.08120600767944137,
+    "travelLowerBound": 167987,
+    "travelOverLowerBound": 1.3844464154964373
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 3336519,
+     "free": 232579
+    },
+    "groups": {
+     "progress": 232579,
+     "conflictYield": 0,
+     "deadlockRecovery": 0,
+     "hold": 3336519
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.2808819959639192,
+     "conflictYield": 0,
+     "deadlockRecovery": 0,
+     "hold": 4.029461457360896
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 33987,
+    "energyHoldShareOfProductiveTicks": 0.04104556471919529,
+    "reroutes": 9672,
+    "replans": 9672,
+    "reroutesPerScenario": 10.746666666666666,
+    "reroutesPerMovingTick": 0.04158765785637811
+   }
+  },
+  "B:severe": {
+   "scope": "severe",
+   "scenarios": 480,
+   "completedScenarios": 310,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 310,
+    "sumTaskCompletionTime": 483588,
+    "components": {
+     "releaseToAssignment": 356658,
+     "assignmentToPickup": 69527,
+     "pickupToCompletion": 57403
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7375245043301323,
+     "approachTravelAndCongestion": 0.14377321190765693,
+     "loadedTravelAndCongestion": 0.11870228376221081
+    },
+    "sumOfComponents": 483588,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 496291,
+    "travel": 121829,
+    "wait": 374462,
+    "congestionWaitShare": 0.7545210370528581
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 2018604,
+    "chargingHold": 134,
+    "chargingShare": 0.00006638250989297554,
+    "idle": 1522179,
+    "idleShare": 0.7540750934804449,
+    "fleetUtilisation": 0.24585852400966213
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 121829,
+    "advancing": 111685,
+    "lateral": 0,
+    "retreating": 10156,
+    "advancingShare": 0.9167357525712269,
+    "lateralShare": 0,
+    "retreatingShare": 0.0833627461441857,
+    "travelLowerBound": 87488,
+    "travelOverLowerBound": 1.3925224030724213
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 1896763,
+     "free": 121841
+    },
+    "groups": {
+     "progress": 121841,
+     "conflictYield": 0,
+     "deadlockRecovery": 0,
+     "hold": 1896763
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.245503142309653,
+     "conflictYield": 0,
+     "deadlockRecovery": 0,
+     "hold": 3.8218766812212994
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 19483,
+    "energyHoldShareOfProductiveTicks": 0.03925720998365878,
+    "reroutes": 5087,
+    "replans": 5087,
+    "reroutesPerScenario": 10.597916666666666,
+    "reroutesPerMovingTick": 0.04175524710865229
+   }
+  },
+  "C:all": {
+   "scope": "all",
+   "scenarios": 1980,
+   "completedScenarios": 1941,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 1941,
+    "sumTaskCompletionTime": 2687707,
+    "components": {
+     "releaseToAssignment": 1917901,
+     "assignmentToPickup": 432226,
+     "pickupToCompletion": 337580
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.713582618938746,
+     "approachTravelAndCongestion": 0.16081589250613998,
+     "loadedTravelAndCongestion": 0.12560148855511408
+    },
+    "sumOfComponents": 2687707,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 689697,
+    "travel": 507609,
+    "wait": 182088,
+    "congestionWaitShare": 0.2640115876972062
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 2825276,
+    "chargingHold": 2843,
+    "chargingShare": 0.0010062733693982464,
+    "idle": 2132736,
+    "idleShare": 0.7548770456408507,
+    "fleetUtilisation": 0.2441166809897511
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 507609,
+    "advancing": 501985,
+    "lateral": 0,
+    "retreating": 17598,
+    "advancingShare": 0.9889206062146259,
+    "lateralShare": 0,
+    "retreatingShare": 0.03466841604463278,
+    "travelLowerBound": 354500,
+    "travelOverLowerBound": 1.431901269393512
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 2253803,
+     "free": 515395,
+     "sensor-yield": 37554,
+     "step-aside": 11849,
+     "lost-claim": 4910,
+     "occupied": 382,
+     "sensor-stop": 1383
+    },
+    "groups": {
+     "progress": 515395,
+     "conflictYield": 42846,
+     "deadlockRecovery": 11849,
+     "hold": 2255186
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.7472774276240146,
+     "conflictYield": 0.06212293224415939,
+     "deadlockRecovery": 0.01718000803251283,
+     "hold": 3.2698213853329796
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 49247,
+    "energyHoldShareOfProductiveTicks": 0.07140381935835592,
+    "reroutes": 34288,
+    "replans": 34288,
+    "reroutesPerScenario": 17.317171717171718,
+    "reroutesPerMovingTick": 0.06754805371851169
+   }
+  },
+  "C:low": {
+   "scope": "low",
+   "scenarios": 600,
+   "completedScenarios": 591,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 591,
+    "sumTaskCompletionTime": 784631,
+    "components": {
+     "releaseToAssignment": 583062,
+     "assignmentToPickup": 115013,
+     "pickupToCompletion": 86556
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7431034460784751,
+     "approachTravelAndCongestion": 0.14658227880366695,
+     "loadedTravelAndCongestion": 0.11031427511785795
+    },
+    "sumOfComponents": 784631,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 182321,
+    "travel": 135557,
+    "wait": 46764,
+    "congestionWaitShare": 0.2564926695224357
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 798755,
+    "chargingHold": 135,
+    "chargingShare": 0.0001690130265225257,
+    "idle": 616299,
+    "idleShare": 0.7715745128356004,
+    "fleetUtilisation": 0.22825647413787706
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 135557,
+    "advancing": 134641,
+    "lateral": 0,
+    "retreating": 3788,
+    "advancingShare": 0.9932426949548898,
+    "lateralShare": 0,
+    "retreatingShare": 0.027943964531525485,
+    "travelLowerBound": 99025,
+    "travelOverLowerBound": 1.3689169401666246
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 647094,
+     "free": 138190,
+     "sensor-yield": 7905,
+     "step-aside": 2839,
+     "lost-claim": 1248,
+     "sensor-stop": 1371,
+     "occupied": 108
+    },
+    "groups": {
+     "progress": 138190,
+     "conflictYield": 9261,
+     "deadlockRecovery": 2839,
+     "hold": 648465
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.7579488923382386,
+     "conflictYield": 0.05079502635461631,
+     "deadlockRecovery": 0.015571437190449811,
+     "hold": 3.55672138700424
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 10324,
+    "energyHoldShareOfProductiveTicks": 0.05662540244952584,
+    "reroutes": 9268,
+    "replans": 9268,
+    "reroutesPerScenario": 15.446666666666667,
+    "reroutesPerMovingTick": 0.0683697632730143
+   }
+  },
+  "C:recoverable": {
+   "scope": "recoverable",
+   "scenarios": 900,
+   "completedScenarios": 879,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 879,
+    "sumTaskCompletionTime": 1239289,
+    "components": {
+     "releaseToAssignment": 868511,
+     "assignmentToPickup": 206007,
+     "pickupToCompletion": 164771
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7008139344414418,
+     "approachTravelAndCongestion": 0.16622999155160742,
+     "loadedTravelAndCongestion": 0.13295607400695075
+    },
+    "sumOfComponents": 1239289,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 332653,
+    "travel": 244174,
+    "wait": 88479,
+    "congestionWaitShare": 0.2659798649042696
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 1323482,
+    "chargingHold": 2606,
+    "chargingShare": 0.001969048313464029,
+    "idle": 988223,
+    "idleShare": 0.746684125662457,
+    "fleetUtilisation": 0.25134682602407893
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 244174,
+    "advancing": 240990,
+    "lateral": 0,
+    "retreating": 8987,
+    "advancingShare": 0.9869601186039464,
+    "lateralShare": 0,
+    "retreatingShare": 0.03680572051078329,
+    "travelLowerBound": 167987,
+    "travelOverLowerBound": 1.4535291421359986
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 1047993,
+     "free": 247043,
+     "sensor-yield": 20127,
+     "step-aside": 5734,
+     "lost-claim": 2385,
+     "occupied": 192,
+     "sensor-stop": 8
+    },
+    "groups": {
+     "progress": 247043,
+     "conflictYield": 22704,
+     "deadlockRecovery": 5734,
+     "hold": 1048001
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.7426447379100745,
+     "conflictYield": 0.0682513009051474,
+     "deadlockRecovery": 0.017237181086597747,
+     "hold": 3.1504330338220305
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 25582,
+    "energyHoldShareOfProductiveTicks": 0.0769029589391949,
+    "reroutes": 16049,
+    "replans": 16049,
+    "reroutesPerScenario": 17.83222222222222,
+    "reroutesPerMovingTick": 0.06572771875793491
+   }
+  },
+  "C:severe": {
+   "scope": "severe",
+   "scenarios": 480,
+   "completedScenarios": 471,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 471,
+    "sumTaskCompletionTime": 663787,
+    "components": {
+     "releaseToAssignment": 466328,
+     "assignmentToPickup": 111206,
+     "pickupToCompletion": 86253
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7025265634909994,
+     "approachTravelAndCongestion": 0.16753265731326464,
+     "loadedTravelAndCongestion": 0.129940779195736
+    },
+    "sumOfComponents": 663787,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 174723,
+    "travel": 127878,
+    "wait": 46845,
+    "congestionWaitShare": 0.26811009426349136
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 703039,
+    "chargingHold": 102,
+    "chargingShare": 0.0001450844121023158,
+    "idle": 528214,
+    "idleShare": 0.7513295848452219,
+    "fleetUtilisation": 0.24852533074267572
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 127878,
+    "advancing": 126354,
+    "lateral": 0,
+    "retreating": 4823,
+    "advancingShare": 0.9880823910289495,
+    "lateralShare": 0,
+    "retreatingShare": 0.03771563521481412,
+    "travelLowerBound": 87488,
+    "travelOverLowerBound": 1.461663313825896
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 558716,
+     "free": 130162,
+     "sensor-yield": 9522,
+     "step-aside": 3276,
+     "lost-claim": 1277,
+     "occupied": 82,
+     "sensor-stop": 4
+    },
+    "groups": {
+     "progress": 130162,
+     "conflictYield": 10881,
+     "deadlockRecovery": 3276,
+     "hold": 558720
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.7449620256062454,
+     "conflictYield": 0.06227571641970433,
+     "deadlockRecovery": 0.018749678061846464,
+     "hold": 3.1977472914270018
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 13341,
+    "energyHoldShareOfProductiveTicks": 0.07635514500094435,
+    "reroutes": 8971,
+    "replans": 8971,
+    "reroutesPerScenario": 18.689583333333335,
+    "reroutesPerMovingTick": 0.07015280188930074
+   }
+  },
+  "D:all": {
+   "scope": "all",
+   "scenarios": 1980,
+   "completedScenarios": 1939,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 1939,
+    "sumTaskCompletionTime": 2680477,
+    "components": {
+     "releaseToAssignment": 1913339,
+     "assignmentToPickup": 429251,
+     "pickupToCompletion": 337887
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7138054159763355,
+     "approachTravelAndCongestion": 0.1601397810912013,
+     "loadedTravelAndCongestion": 0.12605480293246313
+    },
+    "sumOfComponents": 2680477,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 691790,
+    "travel": 508436,
+    "wait": 183354,
+    "congestionWaitShare": 0.2650428598274043
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 2824575,
+    "chargingHold": 2900,
+    "chargingShare": 0.0010267031323296426,
+    "idle": 2129885,
+    "idleShare": 0.7540550348282485,
+    "fleetUtilisation": 0.24491826203942185
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 508436,
+    "advancing": 502727,
+    "lateral": 0,
+    "retreating": 17744,
+    "advancingShare": 0.988771448127198,
+    "lateralShare": 0,
+    "retreatingShare": 0.03489918101786656,
+    "travelLowerBound": 354500,
+    "travelOverLowerBound": 1.4342341325811
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 2252042,
+     "free": 515055,
+     "sensor-yield": 38790,
+     "step-aside": 11905,
+     "lost-claim": 5030,
+     "occupied": 371,
+     "sensor-stop": 1382
+    },
+    "groups": {
+     "progress": 515055,
+     "conflictYield": 44191,
+     "deadlockRecovery": 11905,
+     "hold": 2253424
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.7445250726376501,
+     "conflictYield": 0.0638792118995649,
+     "deadlockRecovery": 0.017208979603636942,
+     "hold": 3.257381575333555
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 51133,
+    "energyHoldShareOfProductiveTicks": 0.07391404906113126,
+    "reroutes": 34356,
+    "replans": 34356,
+    "reroutesPerScenario": 17.35151515151515,
+    "reroutesPerMovingTick": 0.06757192645682053
+   }
+  },
+  "D:low": {
+   "scope": "low",
+   "scenarios": 600,
+   "completedScenarios": 591,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 591,
+    "sumTaskCompletionTime": 785574,
+    "components": {
+     "releaseToAssignment": 583050,
+     "assignmentToPickup": 115601,
+     "pickupToCompletion": 86923
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7421961521129773,
+     "approachTravelAndCongestion": 0.1471548192786421,
+     "loadedTravelAndCongestion": 0.11064902860838062
+    },
+    "sumOfComponents": 785574,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 182753,
+    "travel": 135904,
+    "wait": 46849,
+    "congestionWaitShare": 0.2563514689225348
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 799390,
+    "chargingHold": 135,
+    "chargingShare": 0.0001688787700621724,
+    "idle": 616502,
+    "idleShare": 0.7712155518582919,
+    "fleetUtilisation": 0.22861556937164587
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 135904,
+    "advancing": 135022,
+    "lateral": 0,
+    "retreating": 3782,
+    "advancingShare": 0.9935101247939722,
+    "lateralShare": 0,
+    "retreatingShare": 0.027828467153284672,
+    "travelLowerBound": 99025,
+    "travelOverLowerBound": 1.3724211057813684
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 647257,
+     "free": 138322,
+     "sensor-yield": 8204,
+     "step-aside": 2867,
+     "lost-claim": 1258,
+     "sensor-stop": 1371,
+     "occupied": 111
+    },
+    "groups": {
+     "progress": 138322,
+     "conflictYield": 9573,
+     "deadlockRecovery": 2867,
+     "hold": 648628
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.7568795040300296,
+     "conflictYield": 0.05238217703676547,
+     "deadlockRecovery": 0.015687840965674982,
+     "hold": 3.549205758592198
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 10328,
+    "energyHoldShareOfProductiveTicks": 0.05651343616794252,
+    "reroutes": 9259,
+    "replans": 9259,
+    "reroutesPerScenario": 15.431666666666667,
+    "reroutesPerMovingTick": 0.06812897339298328
+   }
+  },
+  "D:recoverable": {
+   "scope": "recoverable",
+   "scenarios": 900,
+   "completedScenarios": 878,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 878,
+    "sumTaskCompletionTime": 1234278,
+    "components": {
+     "releaseToAssignment": 866235,
+     "assignmentToPickup": 203497,
+     "pickupToCompletion": 164546
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7018151502335779,
+     "approachTravelAndCongestion": 0.16487128507516136,
+     "loadedTravelAndCongestion": 0.1333135646912608
+    },
+    "sumOfComponents": 1234278,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 334078,
+    "travel": 244388,
+    "wait": 89690,
+    "congestionWaitShare": 0.2684702374894486
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 1322932,
+    "chargingHold": 2663,
+    "chargingShare": 0.002012953046717443,
+    "idle": 986191,
+    "idleShare": 0.7454585723226893,
+    "fleetUtilisation": 0.25252847463059325
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 244388,
+    "advancing": 241076,
+    "lateral": 0,
+    "retreating": 9054,
+    "advancingShare": 0.9864477797600537,
+    "lateralShare": 0,
+    "retreatingShare": 0.037047645547244545,
+    "travelLowerBound": 167987,
+    "travelOverLowerBound": 1.45480305023603
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 1047242,
+     "free": 246877,
+     "sensor-yield": 20531,
+     "step-aside": 5665,
+     "lost-claim": 2427,
+     "occupied": 183,
+     "sensor-stop": 7
+    },
+    "groups": {
+     "progress": 246877,
+     "conflictYield": 23141,
+     "deadlockRecovery": 5665,
+     "hold": 1047249
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.7389801184154599,
+     "conflictYield": 0.06926825471895785,
+     "deadlockRecovery": 0.016957117798837396,
+     "hold": 3.1347439819443363
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 27484,
+    "energyHoldShareOfProductiveTicks": 0.08226821281257671,
+    "reroutes": 16015,
+    "replans": 16015,
+    "reroutesPerScenario": 17.794444444444444,
+    "reroutesPerMovingTick": 0.06553104080396746
+   }
+  },
+  "D:severe": {
+   "scope": "severe",
+   "scenarios": 480,
+   "completedScenarios": 470,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 470,
+    "sumTaskCompletionTime": 660625,
+    "components": {
+     "releaseToAssignment": 464054,
+     "assignmentToPickup": 110153,
+     "pickupToCompletion": 86418
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7024469252601703,
+     "approachTravelAndCongestion": 0.16674058656575214,
+     "loadedTravelAndCongestion": 0.1308124881740776
+    },
+    "sumOfComponents": 660625,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 174959,
+    "travel": 128144,
+    "wait": 46815,
+    "congestionWaitShare": 0.2675769751770415
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 702253,
+    "chargingHold": 102,
+    "chargingShare": 0.00014524679851848264,
+    "idle": 527192,
+    "idleShare": 0.7507151980838814,
+    "fleetUtilisation": 0.24913955511760005
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 128144,
+    "advancing": 126629,
+    "lateral": 0,
+    "retreating": 4908,
+    "advancingShare": 0.9881773629666625,
+    "lateralShare": 0,
+    "retreatingShare": 0.03830066175552503,
+    "travelLowerBound": 87488,
+    "travelOverLowerBound": 1.4647037307973665
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 557543,
+     "free": 129856,
+     "sensor-yield": 10055,
+     "step-aside": 3373,
+     "lost-claim": 1345,
+     "occupied": 77,
+     "sensor-stop": 4
+    },
+    "groups": {
+     "progress": 129856,
+     "conflictYield": 11477,
+     "deadlockRecovery": 3373,
+     "hold": 557547
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.742208174486594,
+     "conflictYield": 0.06559822587006099,
+     "deadlockRecovery": 0.019278802462291165,
+     "hold": 3.186729462331175
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 13321,
+    "energyHoldShareOfProductiveTicks": 0.07613783800776182,
+    "reroutes": 9082,
+    "replans": 9082,
+    "reroutesPerScenario": 18.920833333333334,
+    "reroutesPerMovingTick": 0.0708733924335123
+   }
+  },
+  "E:all": {
+   "scope": "all",
+   "scenarios": 1980,
+   "completedScenarios": 1944,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 1944,
+    "sumTaskCompletionTime": 2693043,
+    "components": {
+     "releaseToAssignment": 1920437,
+     "assignmentToPickup": 433830,
+     "pickupToCompletion": 338776
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7131104107880936,
+     "approachTravelAndCongestion": 0.16109286038136042,
+     "loadedTravelAndCongestion": 0.12579672883054596
+    },
+    "sumOfComponents": 2693043,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 688665,
+    "travel": 507791,
+    "wait": 180874,
+    "congestionWaitShare": 0.26264439168536224
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 2804216,
+    "chargingHold": 2902,
+    "chargingShare": 0.001034870352355168,
+    "idle": 2112649,
+    "idleShare": 0.7533831202731887,
+    "fleetUtilisation": 0.24558200937445618
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 507791,
+    "advancing": 502179,
+    "lateral": 0,
+    "retreating": 17572,
+    "advancingShare": 0.988948209007249,
+    "lateralShare": 0,
+    "retreatingShare": 0.03460478819041692,
+    "travelLowerBound": 354500,
+    "travelOverLowerBound": 1.4324146685472496
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 2232499,
+     "free": 515483,
+     "sensor-yield": 37720,
+     "step-aside": 11828,
+     "lost-claim": 4927,
+     "occupied": 376,
+     "sensor-stop": 1383
+    },
+    "groups": {
+     "progress": 515483,
+     "conflictYield": 43023,
+     "deadlockRecovery": 11828,
+     "hold": 2233882
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.7485250448331191,
+     "conflictYield": 0.062473045675328354,
+     "deadlockRecovery": 0.017175259378652902,
+     "hold": 3.243786165987817
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 48198,
+    "energyHoldShareOfProductiveTicks": 0.06998758467469669,
+    "reroutes": 34261,
+    "replans": 34261,
+    "reroutesPerScenario": 17.303535353535352,
+    "reroutesPerMovingTick": 0.06747067198906637
+   }
+  },
+  "E:low": {
+   "scope": "low",
+   "scenarios": 600,
+   "completedScenarios": 592,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 592,
+    "sumTaskCompletionTime": 785781,
+    "components": {
+     "releaseToAssignment": 583406,
+     "assignmentToPickup": 115548,
+     "pickupToCompletion": 86827
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7424536862051895,
+     "approachTravelAndCongestion": 0.14704860514570853,
+     "loadedTravelAndCongestion": 0.11049770864910198
+    },
+    "sumOfComponents": 785781,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 181014,
+    "travel": 135505,
+    "wait": 45509,
+    "congestionWaitShare": 0.251411493033688
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 788643,
+    "chargingHold": 115,
+    "chargingShare": 0.00014582009857438665,
+    "idle": 607514,
+    "idleShare": 0.7703282727419124,
+    "fleetUtilisation": 0.22952590715951324
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 135505,
+    "advancing": 134563,
+    "lateral": 0,
+    "retreating": 3791,
+    "advancingShare": 0.9930482270026936,
+    "lateralShare": 0,
+    "retreatingShare": 0.027976827423342312,
+    "travelLowerBound": 99025,
+    "travelOverLowerBound": 1.3683918202474123
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 637136,
+     "free": 138230,
+     "sensor-yield": 7747,
+     "step-aside": 2819,
+     "lost-claim": 1233,
+     "sensor-stop": 1371,
+     "occupied": 107
+    },
+    "groups": {
+     "progress": 138230,
+     "conflictYield": 9087,
+     "deadlockRecovery": 2819,
+     "hold": 638507
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.7636425911807927,
+     "conflictYield": 0.05020053697504061,
+     "deadlockRecovery": 0.015573381064448054,
+     "hold": 3.527390146618494
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 9279,
+    "energyHoldShareOfProductiveTicks": 0.0512612284132719,
+    "reroutes": 9253,
+    "replans": 9253,
+    "reroutesPerScenario": 15.421666666666667,
+    "reroutesPerMovingTick": 0.06828530312534593
+   }
+  },
+  "E:recoverable": {
+   "scope": "recoverable",
+   "scenarios": 900,
+   "completedScenarios": 880,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 880,
+    "sumTaskCompletionTime": 1241277,
+    "components": {
+     "releaseToAssignment": 870363,
+     "assignmentToPickup": 205803,
+     "pickupToCompletion": 165111
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7011835392100232,
+     "approachTravelAndCongestion": 0.16579941463508951,
+     "loadedTravelAndCongestion": 0.13301704615488727
+    },
+    "sumOfComponents": 1241277,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 333753,
+    "travel": 244047,
+    "wait": 89706,
+    "congestionWaitShare": 0.2687796064754474
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 1320190,
+    "chargingHold": 2646,
+    "chargingShare": 0.0020042569630128997,
+    "idle": 983791,
+    "idleShare": 0.7451889500753679,
+    "fleetUtilisation": 0.2528067929616192
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 244047,
+    "advancing": 240922,
+    "lateral": 0,
+    "retreating": 8896,
+    "advancingShare": 0.9871950894704709,
+    "lateralShare": 0,
+    "retreatingShare": 0.036451994902621215,
+    "travelLowerBound": 167987,
+    "travelOverLowerBound": 1.4527731312542043
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 1044868,
+     "free": 246837,
+     "sensor-yield": 20201,
+     "step-aside": 5695,
+     "lost-claim": 2392,
+     "occupied": 189,
+     "sensor-stop": 8
+    },
+    "groups": {
+     "progress": 246837,
+     "conflictYield": 22782,
+     "deadlockRecovery": 5695,
+     "hold": 1044876
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.7395798689449983,
+     "conflictYield": 0.0682600605837251,
+     "deadlockRecovery": 0.017063517032056642,
+     "hold": 3.130686465739634
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 26637,
+    "energyHoldShareOfProductiveTicks": 0.07981051855713657,
+    "reroutes": 16004,
+    "replans": 16004,
+    "reroutesPerScenario": 17.782222222222224,
+    "reroutesPerMovingTick": 0.06557753219666704
+   }
+  },
+  "E:severe": {
+   "scope": "severe",
+   "scenarios": 480,
+   "completedScenarios": 472,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 472,
+    "sumTaskCompletionTime": 665985,
+    "components": {
+     "releaseToAssignment": 466668,
+     "assignmentToPickup": 112479,
+     "pickupToCompletion": 86838
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7007184846505552,
+     "approachTravelAndCongestion": 0.16889119124304602,
+     "loadedTravelAndCongestion": 0.13039032410639878
+    },
+    "sumOfComponents": 665985,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 173898,
+    "travel": 128239,
+    "wait": 45659,
+    "congestionWaitShare": 0.26256196160967926
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 695383,
+    "chargingHold": 141,
+    "chargingShare": 0.00020276595775277795,
+    "idle": 521344,
+    "idleShare": 0.7497220955933637,
+    "fleetUtilisation": 0.25007513844888357
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 128239,
+    "advancing": 126694,
+    "lateral": 0,
+    "retreating": 4885,
+    "advancingShare": 0.9879521830332426,
+    "lateralShare": 0,
+    "retreatingShare": 0.038092935846349395,
+    "travelLowerBound": 87488,
+    "travelOverLowerBound": 1.4657895940014631
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 550495,
+     "free": 130416,
+     "sensor-yield": 9772,
+     "step-aside": 3314,
+     "lost-claim": 1302,
+     "occupied": 80,
+     "sensor-stop": 4
+    },
+    "groups": {
+     "progress": 130416,
+     "conflictYield": 11154,
+     "deadlockRecovery": 3314,
+     "hold": 550499
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.7499568712693648,
+     "conflictYield": 0.06414104820066936,
+     "deadlockRecovery": 0.01905714844334035,
+     "hold": 3.165643078126258
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 12282,
+    "energyHoldShareOfProductiveTicks": 0.07062760928820343,
+    "reroutes": 9004,
+    "replans": 9004,
+    "reroutesPerScenario": 18.758333333333333,
+    "reroutesPerMovingTick": 0.07021264981791811
+   }
+  },
+  "F:all": {
+   "scope": "all",
+   "scenarios": 1980,
+   "completedScenarios": 1939,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 1939,
+    "sumTaskCompletionTime": 2681521,
+    "components": {
+     "releaseToAssignment": 1913890,
+     "assignmentToPickup": 429456,
+     "pickupToCompletion": 338175
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7137329895980676,
+     "approachTravelAndCongestion": 0.1601538828150143,
+     "loadedTravelAndCongestion": 0.12611312758691803
+    },
+    "sumOfComponents": 2681521,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 694450,
+    "travel": 508558,
+    "wait": 185892,
+    "congestionWaitShare": 0.26768233854129164
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 2824500,
+    "chargingHold": 2956,
+    "chargingShare": 0.0010465569127279164,
+    "idle": 2127094,
+    "idleShare": 0.7530869180385908,
+    "fleetUtilisation": 0.24586652504868117
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 508558,
+    "advancing": 502834,
+    "lateral": 0,
+    "retreating": 17764,
+    "advancingShare": 0.9887446466283099,
+    "lateralShare": 0,
+    "retreatingShare": 0.03493013579572045,
+    "travelLowerBound": 354500,
+    "travelOverLowerBound": 1.4345782792665727
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 2251764,
+     "free": 515132,
+     "sensor-yield": 38885,
+     "step-aside": 11904,
+     "lost-claim": 5055,
+     "occupied": 377,
+     "sensor-stop": 1383
+    },
+    "groups": {
+     "progress": 515132,
+     "conflictYield": 44317,
+     "deadlockRecovery": 11904,
+     "hold": 2253147
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.7417841457268342,
+     "conflictYield": 0.06381596947224422,
+     "deadlockRecovery": 0.017141622867017065,
+     "hold": 3.2445057239542083
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 53299,
+    "energyHoldShareOfProductiveTicks": 0.076749946000432,
+    "reroutes": 34343,
+    "replans": 34343,
+    "reroutesPerScenario": 17.344949494949496,
+    "reroutesPerMovingTick": 0.06753015388608576
+   }
+  },
+  "F:low": {
+   "scope": "low",
+   "scenarios": 600,
+   "completedScenarios": 592,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 592,
+    "sumTaskCompletionTime": 786731,
+    "components": {
+     "releaseToAssignment": 583393,
+     "assignmentToPickup": 116148,
+     "pickupToCompletion": 87190
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7415406282452325,
+     "approachTravelAndCongestion": 0.1476336892788005,
+     "loadedTravelAndCongestion": 0.11082568247596701
+    },
+    "sumOfComponents": 786731,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 181416,
+    "travel": 135837,
+    "wait": 45579,
+    "congestionWaitShare": 0.2512402434184416
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 789013,
+    "chargingHold": 115,
+    "chargingShare": 0.00014575171765230738,
+    "idle": 607482,
+    "idleShare": 0.7699264777639913,
+    "fleetUtilisation": 0.22992777051835647
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 135837,
+    "advancing": 134933,
+    "lateral": 0,
+    "retreating": 3781,
+    "advancingShare": 0.9933449649211923,
+    "lateralShare": 0,
+    "retreatingShare": 0.027834831452402512,
+    "travelLowerBound": 99025,
+    "travelOverLowerBound": 1.3717445089623832
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 637056,
+     "free": 138349,
+     "sensor-yield": 8038,
+     "step-aside": 2847,
+     "lost-claim": 1243,
+     "sensor-stop": 1371,
+     "occupied": 109
+    },
+    "groups": {
+     "progress": 138349,
+     "conflictYield": 9390,
+     "deadlockRecovery": 2847,
+     "hold": 638427
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.7626063853243374,
+     "conflictYield": 0.05175949199629581,
+     "deadlockRecovery": 0.01569321338801429,
+     "hold": 3.5191328218018256
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 9282,
+    "energyHoldShareOfProductiveTicks": 0.051164175155443845,
+    "reroutes": 9238,
+    "replans": 9238,
+    "reroutesPerScenario": 15.396666666666667,
+    "reroutesPerMovingTick": 0.068007980152683
+   }
+  },
+  "F:recoverable": {
+   "scope": "recoverable",
+   "scenarios": 900,
+   "completedScenarios": 878,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 878,
+    "sumTaskCompletionTime": 1235006,
+    "components": {
+     "releaseToAssignment": 867267,
+     "assignmentToPickup": 203094,
+     "pickupToCompletion": 164645
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7022370741518664,
+     "approachTravelAndCongestion": 0.1644477840593487,
+     "loadedTravelAndCongestion": 0.13331514178878484
+    },
+    "sumOfComponents": 1235006,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 336367,
+    "travel": 244222,
+    "wait": 92145,
+    "congestionWaitShare": 0.27394185517604286
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 1325175,
+    "chargingHold": 2703,
+    "chargingShare": 0.002039730601618654,
+    "idle": 986105,
+    "idleShare": 0.7441319071066086,
+    "fleetUtilisation": 0.2538283622917728
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 244222,
+    "advancing": 240937,
+    "lateral": 0,
+    "retreating": 9002,
+    "advancingShare": 0.9865491233386018,
+    "lateralShare": 0,
+    "retreatingShare": 0.03685990615096101,
+    "travelLowerBound": 167987,
+    "travelOverLowerBound": 1.4538148785322673
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 1049655,
+     "free": 246733,
+     "sensor-yield": 20531,
+     "step-aside": 5634,
+     "lost-claim": 2426,
+     "occupied": 189,
+     "sensor-stop": 7
+    },
+    "groups": {
+     "progress": 246733,
+     "conflictYield": 23146,
+     "deadlockRecovery": 5634,
+     "hold": 1049662
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.7335232053084875,
+     "conflictYield": 0.06881174431498928,
+     "deadlockRecovery": 0.01674956223410739,
+     "hold": 3.120585550901248
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 29581,
+    "energyHoldShareOfProductiveTicks": 0.08794263408717264,
+    "reroutes": 15974,
+    "replans": 15974,
+    "reroutesPerScenario": 17.74888888888889,
+    "reroutesPerMovingTick": 0.06540770282775507
+   }
+  },
+  "F:severe": {
+   "scope": "severe",
+   "scenarios": 480,
+   "completedScenarios": 469,
+   "denominator1_taskTime": {
+    "unit": "ticks; percentage of sumTaskCompletionTime over the scenarios this arm COMPLETED. A timed-out run contributes nothing here.",
+    "completedScenarios": 469,
+    "sumTaskCompletionTime": 659784,
+    "components": {
+     "releaseToAssignment": 463230,
+     "assignmentToPickup": 110214,
+     "pickupToCompletion": 86340
+    },
+    "shares": {
+     "ownershipAndCertificationWait": 0.7020934123895093,
+     "approachTravelAndCongestion": 0.16704557855298097,
+     "loadedTravelAndCongestion": 0.13086100905750972
+    },
+    "sumOfComponents": 659784,
+    "sumOfComponentsMatchesFlowTime": true
+   },
+   "denominator2_productiveTicks": {
+    "unit": "robot-ticks while holding an assigned task (approach + loaded). Idle and charging are excluded: a robot with no task is fleet slack, not delay.",
+    "ticks": 176667,
+    "travel": 128499,
+    "wait": 48168,
+    "congestionWaitShare": 0.27264854217256196
+   },
+   "denominator3_allRobotTicks": {
+    "unit": "every live robot-tick, including idle and charging",
+    "ticks": 710312,
+    "chargingHold": 138,
+    "chargingShare": 0.00019428082307493044,
+    "idle": 533507,
+    "idleShare": 0.7510882541756299,
+    "fleetUtilisation": 0.2487174650012952
+   },
+   "routeEfficiency": {
+    "unit": "movement ticks classified by whether they reduced the Manhattan distance to the robot's OWN route goal. Manhattan is a lower bound on graph distance in a rack layout, so advancingShare is a lower bound on true route efficiency.",
+    "travelTicks": 128499,
+    "advancing": 126964,
+    "lateral": 0,
+    "retreating": 4981,
+    "advancingShare": 0.9880543817461614,
+    "lateralShare": 0,
+    "retreatingShare": 0.03876294757157643,
+    "travelLowerBound": 87488,
+    "travelOverLowerBound": 1.4687614301389904
+   },
+   "conflictAttribution": {
+    "unit": "robot-ticks by AgentDecision.reason; groups sum to all robot-ticks in scope, shares are of PRODUCTIVE ticks",
+    "reasons": {
+     "no-move": 565053,
+     "free": 130050,
+     "sensor-yield": 10316,
+     "step-aside": 3423,
+     "lost-claim": 1386,
+     "occupied": 79,
+     "sensor-stop": 5
+    },
+    "groups": {
+     "progress": 130050,
+     "conflictYield": 11781,
+     "deadlockRecovery": 3423,
+     "hold": 565058
+    },
+    "sharesOfProductiveTicks": {
+     "progress": 0.7361306865458744,
+     "conflictYield": 0.06668477984003804,
+     "deadlockRecovery": 0.019375435140688412,
+     "hold": 3.1984354746500476
+    }
+   },
+   "planningAndEnergy": {
+    "energyHoldTicks": 14436,
+    "energyHoldShareOfProductiveTicks": 0.08171305337159741,
+    "reroutes": 9131,
+    "replans": 9131,
+    "reroutesPerScenario": 19.022916666666667,
+    "reroutesPerMovingTick": 0.07105891874644939
+   }
+  }
+ }
+}
