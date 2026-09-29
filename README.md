@@ -263,3 +263,18 @@ Code frozen at `e7dd0cd`. These results remain unchanged as historical evidence.
 - Real Nav2/Collision Monitor/EKF validation passes separately: route execution, obstacle stop/resume, and route cancellation with zero measured collision ticks. It remains a single continuous simulated robot integration.
 
 See `artifacts/fleet-integration/validation.json` and `artifacts/integrated-stopwait-v4/report.json`. Historical measurements are preserved; model weights and the stop-and-wait baseline are unchanged.
+
+
+## Latest integrated validation (v5)
+
+Runtime frozen at `c4c5b3a`. The local terminal-aisle clearance fix recovers both inspected v4 failures; all 200 old seeds complete in development. This does not imply universal completion.
+
+- **Fresh seeds 42000–42199:** integrated **198/200 runs, 1197/1200 tasks**; unchanged stop-and-wait **174/200 runs, 1155/1200 tasks**. No baseline-successful run is lost. All six audited safety counters are zero for both. Two new incomplete cases remain, with no acceptance-driven tuning.
+- **174 jointly completed pairs:** baseline mean **192.730 ticks**, integrated **191.609**; mean saving **1.121 ticks**, median paired saving **0**, wins/ties/losses **49/105/20**. Aggregate improvement **0.581%**, 95% interval **−0.249% to 1.462%**. No statistically established speedup; **20% target unmet**. Failed capped runs are excluded.
+- Builds pass; full suite **361 passed, 20 skipped, zero failures**. Frozen MLP and stop-and-wait source hashes are unchanged.
+- Main-worktree real Nav2 crossing: **3 tasks, 12 real path actions, 119 logical ticks, 33.264 wall seconds**, zero measured continuous/grid collisions. A transient obstacle stops motion with zero settled drift. Separate actual cancellation and controller-SIGKILL tests preserve partial pose and prevent false arrival/task completion.
+- Development profiling across 400 seeds identifies serialized admission as the main delay. A 16-tick lease experiment is **rejected**: it introduces a failed run and fails three existing ownership tests. Production retains the 32-tick protocol. Faster admission requires quorum-certified capacity reservations, not simply reducing a timer.
+
+The fresh warehouse comparison remains a one-process grid simulation with identical learned scoring in both arms. It is neither an AI ablation nor a 200-seed Nav2 evaluation. The historical **1.56% AI-only improvement** compares learned bidding with deterministic bidding, not stop-and-wait.
+
+Evidence: `artifacts/parallel-v5/validation.json`, `artifacts/integrated-stopwait-v5/report.json`, `artifacts/nav2-fleet-v1/report.json`, and `artifacts/completion-profile/`. Raw traces and logs are preserved separately with checksums in `artifacts/parallel-v5/evidence.json`.

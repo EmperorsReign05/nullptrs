@@ -1,0 +1,173 @@
+{
+  "frozenCommit": "c4c5b3a38d7afa7be209bbb7b88cf9a314d20435",
+  "archive": "parallel-v5-evidence.tar.gz",
+  "sha256": "8a210e188550ca76b752cc1f7940cd88d46d99919460e9bfc8b97d817a3a01b7",
+  "files": [
+    {
+      "path": "artifacts/integrated-stopwait-v5/protocol.json",
+      "bytes": 1462,
+      "sha256": "46ba5b30e382e864e60d1b9e87a727b7de114966ae69707b86c52da19ac1931c"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v5/rows.json",
+      "bytes": 227187,
+      "sha256": "16a6efc795f7a503fbb462a412d4dbb8d1ffcb47cc103d4fd24f09ebfb5af585"
+    },
+    {
+      "path": "artifacts/integrated-stopwait-v5/report.json",
+      "bytes": 6346,
+      "sha256": "287754c268759aef7917892d7300bc358f50d2e681b46f5b117022dea81bd9a6"
+    },
+    {
+      "path": "artifacts/reliability-v5-development/causal-original.json",
+      "bytes": 1878,
+      "sha256": "6fce020d2275aae9110fa96ab51bfb9c01659fed6db22fc47048a36806973ad1"
+    },
+    {
+      "path": "artifacts/reliability-v5-development/causal-trace.json",
+      "bytes": 28677,
+      "sha256": "3f3e41a02b9164e9d57a7ebc72664fb4bcd0aa9ae9b3ea326094dfe0fea599be"
+    },
+    {
+      "path": "artifacts/reliability-v5-development/diagnosis.json",
+      "bytes": 3258,
+      "sha256": "289e7319653c96f19d2e33918653aafdfa488f4eee97fe73c3da52681f5ff386"
+    },
+    {
+      "path": "artifacts/reliability-v5-development/protocol.json",
+      "bytes": 1632,
+      "sha256": "2e7bc0381cb55e389761b41888bff36db038dc4b7561fda08bee53d58ac484b7"
+    },
+    {
+      "path": "artifacts/reliability-v5-development/report.json",
+      "bytes": 6687,
+      "sha256": "e89769d47dc7a68f7204e1ce64c171de2c4e5849d1b31658d0f273263c6c19d2"
+    },
+    {
+      "path": "artifacts/reliability-v5-development/rows.json",
+      "bytes": 227723,
+      "sha256": "a36a5c93eda71da1b64e935c54b09487bc8eda43752955ca18361e5a505439fa"
+    },
+    {
+      "path": "artifacts/parallel-v5/validation.json",
+      "bytes": 11527,
+      "sha256": "67f2d32f39a3bad995d0360f39a7e69d06894ba446c5cc5f87bdd9dd246afbb8"
+    },
+    {
+      "path": "artifacts/parallel-v5/completion-profile-evidence.tar.gz",
+      "bytes": 153330,
+      "sha256": "25a1a056fe99b9633a642612f043528a5446b47cc3ffbf4ad9606f2c2210f5dd"
+    },
+    {
+      "path": "artifacts/nav2-fleet-v1/report.json",
+      "bytes": 10355,
+      "sha256": "8dd777b0e747b29705041a9cc1d4a378dd8c9e813977049de61c2fed839a2207"
+    },
+    {
+      "path": "nav2-logs/nav2-fleet-final/result.json",
+      "bytes": 4297,
+      "sha256": "4ce16afd57d5e94ffd2b0ebf526a420e8b962e158b45220eaf0b8c965d2bd763"
+    },
+    {
+      "path": "nav2-logs/nav2-fleet-final/smoke.log",
+      "bytes": 2727,
+      "sha256": "8c9c7040b9a7321efca4dec65eac4c2db563d78a4786f8ff411b27f6be75cf66"
+    },
+    {
+      "path": "nav2-logs/nav2-fleet-final/build.log",
+      "bytes": 109,
+      "sha256": "244f244caa7622e62f4001d98ce1c6fc90a85f2e3799dd24473bcb9c0160c9a1"
+    },
+    {
+      "path": "nav2-logs/nav2-fleet-final/launch.log",
+      "bytes": 24401,
+      "sha256": "075b1e704f4a7cabf076c9d6997a32563ad25ac5da8c7c83076a06490f1fb117"
+    },
+    {
+      "path": "nav2-logs/nav2-fleet-fault/result.json",
+      "bytes": 1300,
+      "sha256": "bd0f8f36f6467debde6fee6b4d77efb2a5c4e33b50cb10857d87bee1a60125a5"
+    },
+    {
+      "path": "nav2-logs/nav2-fleet-fault/smoke.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "nav2-logs/nav2-fleet-fault/build.log",
+      "bytes": 109,
+      "sha256": "0a9c03164d45ffba3d3e002f1156d251058ed8dce1a0febf2daf66a2d5d4cb4f"
+    },
+    {
+      "path": "nav2-logs/nav2-fleet-fault/launch.log",
+      "bytes": 25672,
+      "sha256": "d8d5c6278a979e02a5cb4ad0eed539127cef9afbedb098c96faf5532e60a53c5"
+    },
+    {
+      "path": "nav2-logs/nav2-fleet-crash/result.json",
+      "bytes": 875,
+      "sha256": "d4232cdafc5be1a1d631f463cd7ca785d1a750fcf3f691f574b75566e36fa827"
+    },
+    {
+      "path": "nav2-logs/nav2-fleet-crash/smoke.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "nav2-logs/nav2-fleet-crash/build.log",
+      "bytes": 109,
+      "sha256": "244f244caa7622e62f4001d98ce1c6fc90a85f2e3799dd24473bcb9c0160c9a1"
+    },
+    {
+      "path": "nav2-logs/nav2-fleet-crash/launch.log",
+      "bytes": 23915,
+      "sha256": "8279ebeca909aae579009fc82bd0c42750240aa18c55a25d76887a265befdec8"
+    },
+    {
+      "path": "nav2-logs/nav2-fleet-main-v5/result.json",
+      "bytes": 4296,
+      "sha256": "279c40327b3c6f67a31f4dfe45bf17570e8f5f1d52dfcaab66a4fef6deeadbac"
+    },
+    {
+      "path": "nav2-logs/nav2-fleet-main-v5/smoke.log",
+      "bytes": 2726,
+      "sha256": "1123216937b8645f5cdf10ac70e30375fb6c0aa6a1fab5c43da3d2d1147fe0e7"
+    },
+    {
+      "path": "nav2-logs/nav2-fleet-main-v5/build.log",
+      "bytes": 109,
+      "sha256": "d6ce31c3fde498415845d2817b71632336ddc02991a7d41b29ad16833e618a54"
+    },
+    {
+      "path": "nav2-logs/nav2-fleet-main-v5/launch.log",
+      "bytes": 24398,
+      "sha256": "ba9b45b327fa17de46862e04518ff2f0348b7b10cc1149c4cdde15ac9a965df7"
+    },
+    {
+      "path": "logs/tr-v5-acceptance.log",
+      "bytes": 7063,
+      "sha256": "9ab997c64adf70d74b4558fdb315ff67688ca0988730ea0b819bb27b2c27297f"
+    },
+    {
+      "path": "logs/tr-v5-nav2-main.log",
+      "bytes": 4357,
+      "sha256": "2b50f907c7668a55e263c0ccde408e58aeab43ecb01db680a61ce63bcba28bdb"
+    },
+    {
+      "path": "logs/tr-v5-full-suite.log",
+      "bytes": 103154,
+      "sha256": "2935e792b88bbfac794017d1dff3ce1e5b26ce7b12275ec3a85bf2e5f34eb86d"
+    },
+    {
+      "path": "logs/tr-v5-fleet-build.log",
+      "bytes": 61,
+      "sha256": "d4e66df29bc4e2cd3c589adeb3b3f1af1d48a028d9221a8364430fc2f0980c48"
+    },
+    {
+      "path": "logs/tr-v5-build.log",
+      "bytes": 774,
+      "sha256": "67a0a98f79e5dd1a49d198f8120b0cb5c1a5404932809f7b4189f73e44f26241"
+    }
+  ],
+  "downloadUrl": "https://github.com/EmperorsReign05/nullptrs/releases/download/audit-evidence-2026-09-29/parallel-v5-evidence.tar.gz"
+}
