@@ -57,5 +57,22 @@
   "notes": [
     "Two cycle assertions are known failures; UDP has previously failed under full-suite load. No failures have been weakened or hidden.",
     "Archive contains original measurements; newly named summary files omit per-seed rows and reference their original reports."
-  ]
+  ],
+  "sourceRepositoryRebase": {
+    "repository": "EmperorsReign05/nullptrs",
+    "base": "cfbefba0273a1ce0d9e27ffea48484b6fff48c42",
+    "coreAndTestsUnchanged": true,
+    "preservedSourceChanges": [
+      "FleetStatus scrolling from merged PR17",
+      "Two-pane task/event layout in relocated simulator"
+    ],
+    "note": "Original layer validation above predates source-main rebase; core and tests are unchanged. New source-base build/targeted checks recorded separately.",
+    "validation": {
+      "productionBuilds": "all four layers passed",
+      "typechecks": "all four layers passed",
+      "fleetBuild": "passed",
+      "targeted": "see /tmp/source-04-targeted.txt; counts recorded in PR description",
+      "archiveDownloadChecksum": "verified from source repository release"
+    }
+  }
 }

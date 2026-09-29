@@ -203,7 +203,7 @@ Each robot runs in its own Node process. The dashboard is a monitor/control inpu
 
 ## Benchmark evidence
 
-Large historical measurement files are distributed as a [downloadable evidence archive](https://github.com/aetosdios27/TeamRocket/releases/tag/audit-evidence-2026-09-29), rather than embedded in code-review diffs. Models, protocols and compact results remain in Git. The archive and all original files are SHA-256 checked against `artifacts/evidence-manifest.json`. Restore missing historical inputs before opt-in diagnosis/reproduction commands:
+Large historical measurement files are distributed as a [downloadable evidence archive](https://github.com/EmperorsReign05/nullptrs/releases/tag/audit-evidence-2026-09-29), rather than embedded in code-review diffs. Models, protocols and compact results remain in Git. The archive and all original files are SHA-256 checked against `artifacts/evidence-manifest.json`. Restore missing historical inputs before opt-in diagnosis/reproduction commands:
 
 ```sh
 python3 scripts/fetch-benchmark-evidence.py

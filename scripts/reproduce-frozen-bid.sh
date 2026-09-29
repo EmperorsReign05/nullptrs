@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 repo_dir=$(git rev-parse --show-toplevel)
+# The frozen experiment predates the review stack and is archived in the fork.
+if ! git -C "$repo_dir" cat-file -e '9c7335b^{commit}' 2>/dev/null; then
+  git -C "$repo_dir" fetch https://github.com/aetosdios27/TeamRocket.git refs/tags/audit-evidence-2026-09-29
+fi
 replay_dir=$(mktemp -d /tmp/sih-frozen-bid.XXXXXX)
 rmdir "$replay_dir"
 cleanup() { git -C "$repo_dir" worktree remove --force "$replay_dir" >/dev/null; }
