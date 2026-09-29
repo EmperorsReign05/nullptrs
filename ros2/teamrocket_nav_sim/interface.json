@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "purpose": "Execute coordinator-authorized continuous paths through actual ROS2 Jazzy Nav2 FollowPath; never assign tasks or generate a fleet route",
+  "input": {
+    "authorized_path": {"type": "nav_msgs/msg/Path", "frame": "map", "units": "metres", "semantics": "Replacement cancels old FollowPath action before starting a new one. Empty path revokes motion. Trusted coordinator interface; topic alone is not an ownership certificate."},
+    "sim/obstacle": {"type": "std_msgs/msg/Bool", "semantics": "true inserts a stationary 8cm radius obstacle 36cm ahead of current robot, false removes it"}
+  },
+  "output": {
+    "execution_status": "std_msgs/msg/String JSON; authorized/executing/finished/revoked; Nav2 action status and error_code",
+    "odometry/filtered": "nav_msgs/msg/Odometry from actual robot_localization EKF",
+    "scan": "sensor_msgs/msg/LaserScan from ideal ray casting, 361 beams",
+    "imu": "sensor_msgs/msg/Imu ideal angular rate and body acceleration",
+    "wheel/odometry": "nav_msgs/msg/Odometry ideal simulated wheel odometry",
+    "sim/ground_truth": "geometry_msgs/msg/PoseStamped for validation only",
+    "sim/collisions": "std_msgs/msg/Int32 cumulative robot/inserted-obstacle overlap ticks"
+  },
+  "actuation": "Nav2 controller_server -> cmd_vel_nav -> actual nav2_collision_monitor -> cmd_vel -> kinematic base; stale final command stops after 0.3s",
+  "localization": "Actual robot_localization EKF fuses ideal wheel velocity and IMU angular velocity/acceleration. Static map->odom transform anchors known simulation origin. No AMCL/SLAM or physical localization claim.",
+  "limits": ["Single robot continuous simulation integration test; not yet wired to three-robot grid coordination", "No physical sensors, hardware, Gazebo, traction/slip/dynamics or timing certification", "No global planner_server; dynamic obstacles stop execution and require coordinator-supplied reroute", "Authorized path subscriber trusts caller; coordinator must enforce ownership and route lease", "Shared ROS topic names require namespacing and separate TF prefixes before multi-robot deployment", "Collision monitor is software protection, not certified emergency-stop hardware"],
+  "references": ["https://docs.nav2.org/jazzy/tutorials/general_tutorials/using_collision_monitor/using_collision_monitor/", "https://docs.nav2.org/jazzy/configuration_and_development/configuration_guide/core_servers/collision_monitor/configuring_collision_monitor_node/", "https://api.nav2.org/nav2-jazzy/html/md_nav2_collision_monitor_README.html"]
+}
