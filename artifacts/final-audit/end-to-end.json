@@ -2321,7 +2321,8 @@
       "disabledFallbacks": 2,
       "failedModelFallbacks": 0,
       "moves": 43,
-      "reroutes": 4
+      "reroutes": 4,
+      "energyHolds": 0
     },
     "deployment": "Node-hosted distributed-peer simulation; synchronous local commit; simulated sensors; no ROS2/hardware",
     "ownership": [
