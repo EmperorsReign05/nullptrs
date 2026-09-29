@@ -28,7 +28,7 @@ export default function Page() {
   const candidate = world.map.cells.find(c => !c.blocked && !world.robots.some(r => r.position.x === c.position.x && r.position.y === c.position.y) && world.robots.some(r => r.path.slice(1).some(p => p.x === c.position.x && p.y === c.position.y)));
   const button = 'rounded border border-zinc-600 px-3 py-2 hover:bg-zinc-800 disabled:opacity-40';
   return <main className="min-h-screen bg-zinc-950 text-zinc-100 p-6 space-y-4">
-    <header><h1 className="text-2xl">Fleet runtime</h1><p className="text-zinc-400">Node-hosted simulation · peer task ownership · local motion decisions · tick {world.tick}</p>
+    <header><h1 className="text-2xl">Fleet runtime</h1><p className="text-zinc-400">{state.deployment} · tick {world.tick}</p>
       <a href="/simulator" className="underline">Open the separate central PIBT simulator</a></header>
     {error && <p role="alert" className="text-red-400">{error}</p>}
     <div className="flex flex-wrap gap-2">
@@ -47,6 +47,6 @@ export default function Page() {
     <ActiveTasks tasks={world.tasks} robots={world.robots} />
     <p>Manual load recovery required: {state.ownership.flatMap(p => p.tasks.filter(t => t.recoveryRequired).map(t => t.taskId)).filter((id, i, all) => all.indexOf(id) === i).join(', ') || 'none'}</p>
     <EventLog logs={state.events.map(e => ({ time: `tick ${e.tick}`, text: e.text, type: 'info' as const }))} />
-    <p className="text-sm text-zinc-500">Simulated sensors and shared tick rounds. Closing this page does not stop the Node runtime. No physical robot, ROS2 or hardware timing claim.</p>
+    <p className="text-sm text-zinc-500">Simulated sensors and shared tick rounds. Closing this page does not stop the robot controllers. Physical robots and edge hardware remain unvalidated.</p>
   </main>;
 }
