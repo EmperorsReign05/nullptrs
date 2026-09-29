@@ -11,7 +11,10 @@
     "fleet:build": "tsc -p tsconfig.fleet.json",
     "fleet": "npm run fleet:build && node .fleet-dist/src/server/fleet-http.js",
     "edge:measure": "npm run fleet:build && node scripts/measure-edge-choke.mjs",
-    "edge:demo": "npm run fleet:build && node scripts/edge-demo.mjs"
+    "edge:demo": "npm run fleet:build && node scripts/edge-demo.mjs",
+    "ros2:test": "bash scripts/ros2-test.sh",
+    "ros2:smoke": "npm run fleet:build && node scripts/ros2-edge-smoke.mjs",
+    "nav2:test": "bash scripts/nav2-acceptance.sh"
   },
   "dependencies": {
     "lucide-react": "^1.42.0",
