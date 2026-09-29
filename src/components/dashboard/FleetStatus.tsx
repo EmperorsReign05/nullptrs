@@ -23,9 +23,9 @@ export function FleetStatus({ robots, selectedRobotId, onSelectRobot }: FleetSta
         </span>
       </div>
       <div className="p-2 flex flex-col gap-1 overflow-y-auto max-h-[580px]">
-        {robots.map((r, idx) => {
+        {robots.map((r) => {
           const isSelected = selectedRobotId === r.id;
-          const identityColor = getRobotColor(r.id, idx);
+          const identityColor = getRobotColor(r.id);
           const batteryColor = r.battery > 70 ? '#C9F27D' : r.battery > 30 ? '#FBBF24' : '#F87171';
           const batteryTextColor = r.battery > 70 ? 'text-[#C9F27D]' : r.battery > 30 ? 'text-[#FBBF24]' : 'text-[#F87171]';
 

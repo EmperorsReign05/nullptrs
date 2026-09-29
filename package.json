@@ -14,7 +14,9 @@
     "edge:demo": "npm run fleet:build && node scripts/edge-demo.mjs",
     "ros2:test": "bash scripts/ros2-test.sh",
     "ros2:smoke": "npm run fleet:build && node scripts/ros2-edge-smoke.mjs",
-    "nav2:test": "bash scripts/nav2-acceptance.sh"
+    "nav2:test": "bash scripts/nav2-acceptance.sh",
+    "fleet:n": "npm run fleet:build && node scripts/fleet-n.mjs",
+    "fleet:n:nav2": "npm run fleet:build && node scripts/fleet-n.mjs --nav2"
   },
   "dependencies": {
     "lucide-react": "^1.42.0",

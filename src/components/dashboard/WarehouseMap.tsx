@@ -294,10 +294,10 @@ export function WarehouseMap({
               viewBox={`0 0 ${mapWidth} ${mapHeight}`}
               preserveAspectRatio="none"
             >
-              {robots.map((robot, index) => {
+              {robots.map((robot) => {
                 if (!robot.path || robot.path.length < 2) return null;
                 const isSelected = selectedRobotId === robot.id;
-                const color = getRobotColor(robot.id, index);
+                const color = getRobotColor(robot.id);
                 const pointsStr = robot.path.map(p => `${p.x + 0.5},${p.y + 0.5}`).join(' ');
 
                 return (
@@ -329,9 +329,9 @@ export function WarehouseMap({
               })}
             </svg>
 
-            {robots.map((robot, index) => {
+            {robots.map((robot) => {
               const isSelected = selectedRobotId === robot.id;
-              const color = getRobotColor(robot.id, index);
+              const color = getRobotColor(robot.id);
               const heading = getRobotHeading(robot);
               return (
                 <div 
@@ -406,7 +406,7 @@ export function WarehouseMap({
                <div className="flex items-center gap-2">
                  <div 
                    className="w-3 h-3 rounded-full" 
-                   style={{ backgroundColor: getRobotColor(selectedRobot.id, robots.findIndex(r => r.id === selectedRobot.id)) }} 
+                   style={{ backgroundColor: getRobotColor(selectedRobot.id) }} 
                  />
                  <span className="font-mono font-bold text-xs text-[#E6E9EF]">{selectedRobot.id}</span>
                </div>
@@ -482,12 +482,15 @@ export function WarehouseMap({
           <span>blocked aisle</span>
         </div>
         <div className="flex items-center gap-2">
+          {/* One swatch per rendered robot, so the legend matches the actual
+              configured fleet rather than a fixed number of dots. */}
           <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-[#38BDF8]"></div>
-            <div className="w-2 h-2 rounded-full bg-[#FB923C]"></div>
-            <div className="w-2 h-2 rounded-full bg-[#C084FC]"></div>
+            {robots.slice(0, 8).map((r) => (
+              <div key={r.id} className="w-2 h-2 rounded-full" style={{ backgroundColor: getRobotColor(r.id) }}></div>
+            ))}
+            {robots.length > 8 && <span className="text-[11px] text-slate-300">+{robots.length - 8}</span>}
           </div>
-          <span>amr fleet</span>
+          <span>amr fleet ({robots.length})</span>
         </div>
       </div>
     </div>

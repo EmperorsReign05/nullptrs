@@ -24,23 +24,32 @@ export async function startAgents(endpoints) {
   return {children,close:async()=>{children.forEach(c=>c.kill());await Promise.all(children.map(c=>c.exitCode!==null||c.signalCode!==null?Promise.resolve():new Promise(r=>c.once("exit",r))));await rm(dir,{recursive:true,force:true});}};
 }
 export class EdgeSimulation {
-  constructor(endpoints,{settleMs=8}={}){this.endpoints=endpoints;this.settleMs=settleMs;}
+  constructor(endpoints,{settleMs=8}={}){this.endpoints=endpoints;this.settleMs=settleMs;
+    // Nav2 is enabled per robot by the presence of an executor port in the roster.
+    this.nav2=endpoints.some(e=>typeof e.executorPort==="number");}
   async request(i,route,body) {
     const e=this.endpoints[i],response=await fetch(`http://${e.host}:${e.controlPort}${route}`,{
       method:body===undefined?"GET":"POST",headers:{"Content-Type":"application/json",...(process.env.EDGE_TOKEN?{Authorization:`Bearer ${process.env.EDGE_TOKEN}`}:{})},
-      body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(route==="/initialize"?25000:route==="/commit"&&process.env.NAV2_EXECUTOR_BASE_PORT?45000:5000)});
+      body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(route==="/initialize"?25000:route==="/commit"&&this.nav2?45000:5000)});
     const result=await response.json();if(!response.ok)throw new Error(JSON.stringify(result));return result;
   }
   async initialize(seed,policy,session,configure=()=>{}) {
-    this.scenario=edgeChokeScenario(seed,policy);configure(this.scenario);this.session=session;this.seed=seed;this.policy=policy;this.tick=0;
+    // The roster is the endpoint list: the scenario and the agents must agree on
+    // exactly these robots, so the fleet size is never a literal here.
+    const fleetSize=this.endpoints.length;
+    this.scenario=edgeChokeScenario(seed,policy,fleetSize);configure(this.scenario);
+    this.session=session;this.seed=seed;this.policy=policy;this.tick=0;
+    this.motionStartTick=this.scenario.configs[0].motionStartTick;
     this.failed=new Set();this.running=true;this.aiEnabled=true;this.events=[];this.lastMoves=0;this.noMotionTicks=0;this.longestNoMotionTicks=0;
     this.safety={overlaps:0,swaps:0,blockedCells:0,zeroBatteryWork:0,queueOverflow:0,payloadViolations:0,nonAdjacentMoves:0};
     this.crossed=new Set();this.trace=[];this.pendingBlocks=[];this.releaseState=null;
-    this.states=await Promise.all(this.scenario.configs.map((config,i)=>this.request(i,"/initialize",{config,session})));
+    if(this.scenario.configs.length!==fleetSize)throw new Error(`Scenario produced ${this.scenario.configs.length} configs for ${fleetSize} endpoints`);
+    const byId=new Map(this.scenario.configs.map(config=>[config.self.id,config]));
+    this.states=await Promise.all(this.endpoints.map((e,i)=>this.request(i,"/initialize",{config:byId.get(e.id),session})));
     if(this.states.some(s=>s.transport?.kind==="ros2")) {
       const deadline=Date.now()+20000;
-      while(!this.states.every(s=>s.transport?.subscriptions?.motion>=this.endpoints.length&&s.transport?.subscriptions?.ownership>=this.endpoints.length)) {
-        if(Date.now()>deadline)throw new Error("ROS2 discovery did not reach the configured roster");
+      while(!this.states.every(s=>s.transport?.subscriptions?.motion>=fleetSize&&s.transport?.subscriptions?.ownership>=fleetSize)) {
+        if(Date.now()>deadline)throw new Error("ROS2 discovery did not reach the configured roster of "+fleetSize);
         await sleep(100);
         this.states=await Promise.all(this.endpoints.map((_e,i)=>this.request(i,"/state")));
       }
@@ -65,7 +74,9 @@ export class EdgeSimulation {
         disabledFallbacks:this.states.reduce((n,s)=>n+s.state.metrics.fallbacks,0),failedModelFallbacks:0},
       execution:this.states.map(s=>({robotId:s.id,...s.execution})),
       ownership:this.states.map(s=>({id:s.id,metrics:s.state.ownershipMetrics,tasks:s.state.claims})),
-      deployment:this.states.some(s=>s.execution?.kind==="nav2")?"Three independent controllers with actual Nav2 execution and DDS; lockstep continuous simulation with ideal sensors, no edge hardware":"Three OS-process robot controllers; direct peer ownership and intents; simulated clock and sensors; no physical edge hardware"};
+      deployment:this.states.some(s=>s.execution?.kind==="nav2")
+        ?`${this.endpoints.length} independent controllers with actual Nav2 execution and DDS; lockstep continuous simulation with ideal sensors, no edge hardware`
+        :`${this.endpoints.length} OS-process robot controllers; direct peer ownership and intents; simulated clock and sensors; no physical edge hardware`};
   }
   async command(command){
     const live=this.endpoints.map((_,i)=>i).filter(i=>!this.failed.has(i));
@@ -120,24 +131,29 @@ export class EdgeSimulation {
       if(this.scenario.tasks.some(t=>t.id===r.currentTaskId&&t.weight>r.model.payloadCapacity))this.safety.payloadViolations++;
       if(this.scenario.map.cells.some(c=>c.blocked&&c.position.x===after[i].x&&c.position.y===after[i].y))this.safety.blockedCells++;
       for(let j=i+1;j<after.length;j++)if(distance&&after[i].x===before[j].x&&after[i].y===before[j].y&&after[j].x===before[i].x&&after[j].y===before[i].y)this.safety.swaps++;
-      if(this.scenario.robots[i].position.x<9&&after[i].x>9||this.scenario.robots[i].position.x>9&&after[i].x<9)this.crossed.add(r.id);
+      const bridgeX=this.scenario.bridge.x;if(this.scenario.robots[i].position.x<bridgeX&&after[i].x>bridgeX||this.scenario.robots[i].position.x>bridgeX&&after[i].x<bridgeX)this.crossed.add(r.id);
     }
     this.lastMoves=moves;this.noMotionTicks=moves?0:this.noMotionTicks+1;
-    if(this.tick>=112)this.longestNoMotionTicks=Math.max(this.longestNoMotionTicks,this.noMotionTicks);
+    if(this.tick>=this.motionStartTick)this.longestNoMotionTicks=Math.max(this.longestNoMotionTicks,this.noMotionTicks);
     this.trace.push({tick:this.tick,robots:this.states.map(s=>({id:s.id,position:s.state.robot.position,battery:s.state.robot.battery,task:s.state.robot.currentTaskId,decision:s.state.decision}))});
     if(this.trace.length>64)this.trace.shift();
-    if(this.tick===111)this.releaseState=this.states.map(s=>({id:s.id,task:s.state.robot.currentTaskId,claims:s.state.claims}));
+    if(this.tick===this.motionStartTick-1)this.releaseState=this.states.map(s=>({id:s.id,task:s.state.robot.currentTaskId,claims:s.state.claims}));
     this.tick++;
     // Detect errors; NEVER repair moves or choose a winner in the simulator.
     if(this.safety.overlaps||this.safety.swaps||this.safety.blockedCells||this.safety.nonAdjacentMoves)throw new Error("Physical safety audit failed: "+JSON.stringify(this.safety));
   }
   result(){
     const snapshot=this.snapshot(),completedTasks=snapshot.world.tasks.filter(t=>t.status==="completed").length;
-    return {seed:this.seed,policy:this.policy,completed:completedTasks===this.scenario.tasks.length,completedTasks,ticks:this.tick,
-      motionTicks:Math.max(0,this.tick-112),safety:this.safety,allThreeCrossed:this.crossed.size===3,
+    const totalTasks=this.scenario.tasks.length,allCrossed=this.crossed.size===this.endpoints.length;
+    const finished=completedTasks===totalTasks;
+    return {seed:this.seed,policy:this.policy,completed:finished,completedTasks,totalTasks,robots:this.endpoints.length,
+      ticks:this.tick,motionTicks:Math.max(0,this.tick-this.motionStartTick),safety:this.safety,allCrossed,
+      // Retained for existing evidence readers; both are now roster-derived.
+      allThreeCrossed:this.endpoints.length===3?allCrossed:undefined,
       allThreeAssignedAtRelease:this.releaseState?.every(s=>!!s.task)??false,releaseState:this.releaseState,
-      longestNoMotionTicks:this.longestNoMotionTicks,unfinishedAtCap:completedTasks<3,
-      deadlockConclusion:completedTasks<3?"unfinished within horizon; permanent deadlock not established":"completed",
+      allAssignedAtRelease:this.releaseState?.every(s=>!!s.task)??false,
+      longestNoMotionTicks:this.longestNoMotionTicks,unfinishedAtCap:!finished,
+      deadlockConclusion:finished?"completed":"unfinished within horizon; permanent deadlock not established",
       states:this.states,trace:this.trace,snapshot};
   }
 }

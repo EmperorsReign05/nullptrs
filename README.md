@@ -6,7 +6,7 @@ Three software modes are available:
 - **`npm run edge:demo` — three-process fleet demo:** each robot process runs its own complete ownership, frozen MLP bidding and planning stack, communicating directly over UDP. The same dashboard connects through the simulation host on port 4011. Shared simulation timing and sensors are explicit.
 - **`/simulator` — original central simulator:** A*, PIBT, deterministic auctioning, task queues and charging run in the browser.
 
-The legacy `worker.ts` UDP demo remains preassigned-task-only. The new `edge-agent.ts` deployment includes live auctions and ownership. ROS2/Fast DDS can carry real peer messages via one sidecar per controller. Three independent controllers can also execute through actual Nav2, with measured arrival gating grid/task progress, simulated sensors, EKF and Collision Monitor. This continuous simulation has a fixed three-robot fixture and shared clock; physical hardware remains unvalidated.
+The legacy `worker.ts` UDP demo remains preassigned-task-only. The new `edge-agent.ts` deployment includes live auctions and ownership. ROS2/Fast DDS can carry real peer messages via one sidecar per controller. `N` independent controllers can also execute through actual Nav2, with measured arrival gating grid/task progress, simulated sensors, EKF and Collision Monitor. Fleet size, ROS namespaces, grid origins, transport peers and executor endpoints all come from one `config/fleet.json`; the Nav2 path is verified at N=3 and N=5. This continuous simulation shares a logical clock; physical hardware remains unvalidated.
 
 Machine-readable benchmark results are preserved under `artifacts/`. The existing [hosted demo link](https://amr-edge-ai.vercel.app/) has not been updated by this audit; the new fleet runtime requires a long-lived Node process.
 
@@ -213,6 +213,50 @@ The command requires Python 3.9+ and leaves existing files untouched. Use `--des
 
 Historical v3 integrated warehouse acceptance: 173/200 completed runs versus stop-and-wait's 176/200; 166 jointly completed pairs give 0.575% aggregate improvement with a 95% interval of −0.064% to 1.457%. This does not establish better overall reliability or a speedup. Three-process choke acceptance completed 40/40 versus 0/40, so it establishes recovery in that workload, not a valid percentage-speedup estimate. Hardware validation and the ≥20% integrated target remain outstanding.
 
+## N-robot fleet configuration
+
+`config/fleet.json` is the single source of truth for fleet membership. Nothing
+else declares it — not the ROS launch, not the DDS roster, not the host harness.
+
+```json
+{
+  "cellMetres": 0.6,
+  "rosDomainId": 96,
+  "robots": [
+    { "id": "AMR-01", "namespace": "AMR_01", "origin": { "x": 1, "y": 1 }, "executorPort": 19700 }
+  ]
+}
+```
+
+Ids must be unique, namespaces unique and legal ROS names, origins distinct and
+in-bounds, and executor ports collision-free; an invalid fleet is rejected with a
+message naming the offending field rather than failing later. `FLEET_CONFIG`
+points any command at a different roster, which is how each acceptance run gets
+its own fleet.
+
+Launch an arbitrary-N fleet — this is the exact command for any size:
+
+```sh
+# Software fleet over real Fast DDS peers; N controllers, N tasks, one killed mid-run.
+npm run fleet:n -- --robots 5
+npm run fleet:n -- --robots 8
+npm run fleet:n -- --robots 1
+npm run fleet:n -- --robots 3          # the historical three-robot fleet
+npm run fleet:n -- --robots 5 --transport udp
+npm run fleet:n -- --robots 5 --kill none    # measure fleet size without fault injection
+
+# Same fleet driven through real Nav2, EKF and Collision Monitor.
+npm run fleet:n:nav2 -- --robots 3
+FLEET_N=5 npm run nav2:test -- artifacts/n-robot/nav2-n5
+```
+
+Results are written as machine-readable `result.json` under
+`artifacts/n-robot/`, and every run records the `fleet.json` it used.
+
+Changing fleet size is a config edit, never a code edit. Ownership quorum is
+`floor(N/2) + 1` and is derived from membership, so it is correct for even and
+odd N; the ownership suite covers N=1, 2, 3, 4, 5 and 8.
+
 ## ROS2 / Fast DDS and continuous navigation
 
 The following commands require rootless Podman (or the container engine configured by the scripts). No system ROS installation is required.
@@ -220,7 +264,7 @@ The following commands require rootless Podman (or the container engine configur
 ```sh
 # Build the bridge image and test real Fast DDS peer exchange.
 npm run ros2:test
-# Run the actual three-controller grid fleet over ROS2/Fast DDS.
+# Run the actual N-controller grid fleet over ROS2/Fast DDS (FLEET_N=3 by default).
 npm run ros2:smoke
 # Interactive fleet over DDS (dashboard still connects to port 4011).
 EDGE_TRANSPORT=ros2 npm run edge:demo
@@ -237,8 +281,9 @@ The Nav2 fleet adapter follows each robot controller’s locally authorized cell
 After building the ROS and Nav2 images with the commands above:
 
 ```sh
-# Three-robot crossing, transient obstacle, real Nav2 arrival checks.
-bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-fleet-crossing
+# N-robot crossing, transient obstacle, real Nav2 arrival checks.
+FLEET_N=3 bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-fleet-crossing
+FLEET_N=5 bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-fleet-crossing-n5
 # Separate runs validate cancellation and actual controller SIGKILL.
 NAV2_FLEET_MODE=fault bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-fleet-cancel
 NAV2_FLEET_MODE=crash bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-fleet-crash
@@ -246,7 +291,7 @@ NAV2_FLEET_MODE=crash bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-fleet-cras
 NAV2_FLEET_DEMO=1 bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-fleet-demo
 ```
 
-This is a fixed three-robot simulation fixture, not general hardware deployment. Ownership uses logical time, which pauses during physical cell execution. Dynamic grid-block and simulated-failure dashboard commands are explicitly rejected in Nav2 mode; they remain supported in the grid demo. The Nav2 fault tests use real cancellation/process termination. Do not claim automatic mid-cell recovery or an asynchronous physical-robot lease protocol.
+This is a simulated N-robot fixture, not general hardware deployment. Ownership uses logical time, which pauses during physical cell execution. Dynamic grid-block and simulated-failure dashboard commands are explicitly rejected in Nav2 mode; they remain supported in the grid demo. The Nav2 fault tests use real cancellation/process termination. Do not claim automatic mid-cell recovery or an asynchronous physical-robot lease protocol.
 
 Distributed charging retains task ownership, reaches a charger, recharges and resumes pre-pickup work. Each active job is recertified; queued jobs can span multiple charging visits. Cargo already picked up is never silently reassigned or diverted: an uncertifiable delivery holds for manual recovery. Local safety controls shared charger occupancy; charger fairness is not guaranteed.
 

@@ -41,10 +41,15 @@ async function main() {
   const commRange = Number(arg("range", String(DEFAULT_COMM_RANGE)));
 
   const peers: Record<string, number> = {};
-  const ids = arg("ids", "AMR-01,AMR-02,AMR-03").split(",");
-  ids.forEach((pid, i) => {
-    if (pid !== id) peers[pid] = peerList[i] ?? peerList[0];
-  });
+  // Roster is explicit. A default three-name CSV silently mis-wired any extra
+  // worker onto the first peer port, so an incomplete --peers list is an error.
+  const ids = arg("ids");
+  if (!ids) throw new Error("--ids=<csv> is required; there is no default roster");
+  const ids_ = ids.split(",").map(s => s.trim()).filter(Boolean);
+  if (!ids_.includes(id)) throw new Error(`--ids must contain this agent's own id (${id})`);
+  if (new Set(ids_).size !== ids_.length) throw new Error("--ids must be unique");
+  if (peerList.length < ids_.length) throw new Error(`--peers lists ${peerList.length} ports for ${ids_.length} ids`);
+  ids_.forEach((pid, i) => { if (pid !== id) peers[pid] = peerList[i]; });
 
   const position = parsePos(arg("pos", "0,0"));
   const pickup = parsePos(arg("pickup", arg("pos", "0,0")));

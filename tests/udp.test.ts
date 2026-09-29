@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import path from "path";
 import { createRequire } from "node:module";
 import { createInterface } from "node:readline";
+import { robotId } from "../src/core/fleet/config";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const worker = path.join(here, "../.fleet-dist/src/core/distributed/worker.js");
@@ -40,16 +41,26 @@ function launch(ids: string[], ports: number[], specs: { pos: string; pickup: st
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-describe("UDP: three real OS processes, peer-to-peer, no coordinator", () => {
-  it("U1: agents on separate processes and sockets exchange state and finish their tasks", async () => {
-    const ids = ["AMR-01", "AMR-02", "AMR-03"];
-    const ports = [5211, 5212, 5213];
-    // single-file spine at x=6 with an alcove at (5,8): the choke point
-    const specs = [
-      { pos: "6,2", pickup: "6,2", dropoff: "6,11", bays: "5,3;7,3;5,5;7,5;5,7;7,7;5,9;7,9;5,11;7,11" },
-      { pos: "6,10", pickup: "6,10", dropoff: "6,1", bays: "5,3;7,3;5,5;7,5;5,7;7,7;5,9;7,9;5,11;7,11" },
-      { pos: "6,6", pickup: "6,6", dropoff: "5,8", bays: "5,3;7,3;5,5;7,5;5,7;7,7;5,9;7,9;5,11;7,11" },
-    ];
+/** One generator for ids, ports and geometry, so a fleet size can change
+ * without editing three parallel literals in lockstep. Ids and executor-facing
+ * naming come from the canonical fleet contract. */
+function rig(n: number, portBase: number) {
+  const bays = "5,3;7,3;5,5;7,5;5,7;7,7;5,9;7,9;5,11;7,11";
+  const ids = Array.from({ length: n }, (_, i) => robotId(i));
+  const ports = Array.from({ length: n }, (_, i) => portBase + i);
+  // single-file spine at x=6 with alcoves: the choke point. Odd rows go down,
+  // even rows go up, so opposing journeys must pass each other.
+  const specs = ids.map((_id, i) => {
+    const y = i % 2 ? 10 : 2, target = i % 2 ? 1 : 11;
+    return { pos: `6,${y}`, pickup: `6,${y}`, dropoff: i === 0 ? "5,8" : `6,${target}`, bays };
+  });
+  return { ids, ports, specs };
+}
+
+describe("UDP: N real OS processes, peer-to-peer, no coordinator", () => {
+  for (const n of [1, 3, 5])
+  it(`U1: ${n} agents on separate processes and sockets exchange state and finish their tasks`, async () => {
+    const { ids, ports, specs } = rig(n, 5211 + n * 10);
     execFileSync(process.execPath, [require.resolve("typescript/bin/tsc"), "-p", path.join(here, "../tsconfig.fleet.json")], { timeout: 15000 });
     const { procs, frames, ready, errors } = launch(ids, ports, specs);
     let startupTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -87,14 +98,15 @@ describe("UDP: three real OS processes, peer-to-peer, no coordinator", () => {
     console.log(`U1 decision cost over ${decide.length} decisions: median ${decide[Math.floor(decide.length / 2)]}us  p95 ${decide[Math.floor(decide.length * 0.95)]}us  max ${decide[decide.length - 1]}us`);
     console.log(`U1 agent RSS: ${Math.min(...rss)}-${Math.max(...rss)} MB (includes the tsx/Node runtime, not just the agent)`);
     const allDone = frames.every((f) => f.some((x) => x.done && x.taskStatus === "completed"));
-    console.log(`U1 all three agents completed their task over UDP: ${allDone}`);
+    console.log(`U1 all ${ids.length} agents completed their task over UDP: ${allDone}`);
     // Every agent must have run a real number of ticks and completed. Frame
     // counts differ by design: task lengths differ, so a 3-cell task
     // legitimately finishes in a handful of frames.
     const ran = frames.map((f) => f.length);
     console.log(`U1 frames per agent: ${ran.join(", ")}  (task lengths differ by design)`);
     expect(Math.min(...ran)).toBeGreaterThan(2);
-    expect(Math.max(...sawPeers)).toBeGreaterThan(0);
+    // Every agent must see exactly the other n-1 peers, and for n=1 nobody.
+    expect(Math.max(...sawPeers)).toBe(ids.length - 1);
     expect(allDone).toBe(true);
   }, 60000);
 });

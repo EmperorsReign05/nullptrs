@@ -1,4 +1,4 @@
-"""Actual Next proxy + independent three-process edge simulation smoke check."""
+"""Actual Next proxy + independent N-process edge simulation smoke check."""
 import json
 import os
 from pathlib import Path
@@ -52,10 +52,13 @@ try:
     dashboard = launch(['node_modules/.bin/next', 'dev', '--hostname', '127.0.0.1', '--port', '3031'], 'dashboard-next.txt', env)
     proxy = 'http://127.0.0.1:3031/api/fleet'
     state = wait_state(proxy)
-    assert len(state['world']['robots']) == 3
-    assert 'Three OS-process' in state['deployment']
-    pids = [request(f'http://127.0.0.1:{18401+i}/state')['pid'] for i in range(3)]
-    assert len(set(pids)) == 3
+    # Fleet size and the deployment description both come from the fleet config.
+    fleet = json.load(open(os.environ.get('FLEET_CONFIG', 'config/fleet.json')))
+    size = len(fleet['robots'])
+    assert len(state['world']['robots']) == size
+    assert state['deployment'].startswith(f'{size} ')
+    pids = [request(f'http://127.0.0.1:{18401+i}/state')['pid'] for i in range(size)]
+    assert len(set(pids)) == size
     paused = request(proxy, {'kind': 'pause'})
     time.sleep(.3)
     assert request(proxy)['world']['tick'] == paused['world']['tick']

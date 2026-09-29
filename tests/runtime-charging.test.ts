@@ -3,11 +3,12 @@ import { FleetRuntime } from "../src/core/distributed/runtime";
 import { createInitialWorld } from "../src/core/simulation/state";
 import { RECHARGE_TARGET_PERCENT } from "../src/core/simulation/robotModels";
 
-function world() {
-  const w = createInitialWorld(); w.robots = w.robots.slice(0,3); w.tasks = [];
+function world(fleetSize = 3) {
+  const w = createInitialWorld(); w.robots = w.robots.slice(0, fleetSize); w.tasks = [];
   w.map.cells.forEach(c => c.blocked = false);
-  const starts = [{x:2,y:4},{x:18,y:10},{x:18,y:12}];
-  w.robots.forEach((r,i) => { r.position={...starts[i]};r.home={...starts[i]};r.battery=100; });
+  // Row 0 and the far column, generated so any fleet size gets distinct starts.
+  const starts = Array.from({ length: fleetSize }, (_, i) => (i % 2 ? { x: 18, y: 10 + i } : { x: 2, y: 4 + i }));
+  w.robots.forEach((r,i) => { const s=starts[i]; if(!s) throw new Error(`no start for robot ${i}`); r.position={...s};r.home={...s};r.battery=100; });
   return w;
 }
 it("a low-battery idle peer reaches charging and resumes without zero-battery work", () => {

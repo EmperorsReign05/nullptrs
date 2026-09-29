@@ -2,10 +2,12 @@ import http from "node:http";
 import {configureNav2Fleet} from "./nav2-fleet-scenario.mjs";
 import { readFile } from "node:fs/promises";
 import { EdgeSimulation, startAgents, sleep } from "./edge-sim.mjs";
+import { buildEndpoints, loadFleetConfig } from "./fleet-config.mjs";
 const remote=process.argv.find(a=>a.startsWith("--endpoints="))?.split("=")[1];
-const endpoints=remote?JSON.parse(await readFile(remote,"utf8")):[0,1,2].map(i=>({id:`AMR-0${i+1}`,host:"127.0.0.1",controlPort:18401+i,ownershipPort:18501+i,motionPort:18601+i}));
+const fleet=loadFleetConfig();
+const endpoints=remote?JSON.parse(await readFile(remote,"utf8")):buildEndpoints(fleet,Number(process.env.EDGE_DEMO_PORT_BASE??18401));
 const local=remote?null:await startAgents(endpoints),sim=new EdgeSimulation(endpoints);
-await sim.initialize(23000,"negotiated",`demo-${Date.now()}`,process.env.NAV2_EXECUTOR_BASE_PORT?configureNav2Fleet:()=>{});
+await sim.initialize(23000,"negotiated",`demo-${Date.now()}`,endpoints.some(e=>e.executorPort)?s=>configureNav2Fleet(s,true,fleet):()=>{});
 const pending=[];let stopping=false;
 const server=http.createServer(async(req,res)=>{
   res.setHeader("Content-Type","application/json");res.setHeader("Cache-Control","no-store");

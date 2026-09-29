@@ -1,7 +1,12 @@
 import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
 import { EdgeSimulation, startAgents } from "./edge-sim.mjs";
-const endpoints=[0,1,2].map(i=>({id:`AMR-0${i+1}`,host:"127.0.0.1",controlPort:19401+i,ownershipPort:19501+i,motionPort:19601+i}));
+import { buildEndpoints, loadFleetConfig } from "./fleet-config.mjs";
+const fleet=loadFleetConfig();
+const endpoints=buildEndpoints(fleet,Number(process.env.SMOKE_EDGE_PORT_BASE??19401),"127.0.0.1",{executors:false});
+// Constructed development fault timeline pinned to the three-robot edge
+// deployment. For arbitrary N use `npm run fleet:n -- --robots N`.
+if(fleet.robots.length!==3)throw new Error(`smoke-edge is a fixed three-robot fault fixture; run npm run fleet:n -- --robots ${fleet.robots.length} instead`);
 const agents=await startAgents(endpoints),sim=new EdgeSimulation(endpoints);
 let killed=null,reassigned=false,blocked=null,rerouted=false,partitionStopped=false;
 try{
@@ -10,7 +15,7 @@ try{
     // pickup cell. Fault fixture differs from (and is excluded from) benchmark.
     scenario.tasks.forEach(t=>{t.pickup={x:t.pickup.x+3,y:t.pickup.y};});
   });
-  const pids=sim.states.map(s=>s.pid);assert.equal(new Set(pids).size,3);
+  const pids=sim.states.map(s=>s.pid);assert.equal(new Set(pids).size,sim.states.length);
   for(let tick=0;tick<512;tick++){
     if(tick===130){
       const live=endpoints.filter((_,i)=>!sim.failed.has(i));

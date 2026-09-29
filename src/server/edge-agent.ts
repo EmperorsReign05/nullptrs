@@ -11,7 +11,7 @@ import type { OwnershipMessage } from "../core/distributed/ownership";
 import { RosBridge } from "../core/distributed/ros-transport";
 import type { Message } from "../core/distributed/protocol";
 
-export type EdgeEndpoint = { id: string; host: string; controlPort: number; ownershipPort: number; motionPort: number };
+export type EdgeEndpoint = { id: string; host: string; controlPort: number; ownershipPort: number; motionPort: number; executorPort?: number };
 type Wire<T> = Transport<T> & { stats: { sent: number; received: number; dropped: number }; setReachable(id: string, reachable: boolean): void };
 type Envelope<T> = { from: string; session: string; payload: T };
 class SessionTransport<T> implements Transport<T> {
@@ -26,6 +26,14 @@ async function main() {
   if(!file||!id) throw new Error("usage: edge-agent CONFIG.json ROBOT_ID");
   const endpoints=JSON.parse(readFileSync(file,"utf8")) as EdgeEndpoint[];
   const self=endpoints.find(p=>p.id===id); if(!self)throw new Error("Unknown self");
+  // A robot id must map to exactly one physical executor, and no two robots may
+  // share one. The endpoint roster carries it so no positional arithmetic decides
+  // which Nav2 stack serves this process.
+  const executors=endpoints.map(p=>p.executorPort).filter((p):p is number=>typeof p==="number");
+  if(new Set(executors).size!==executors.length)throw new Error("Executor port collision in endpoint roster");
+  const executorPort=self.executorPort
+    ??(process.env.NAV2_EXECUTOR_BASE_PORT?Number(process.env.NAV2_EXECUTOR_BASE_PORT)+endpoints.indexOf(self):undefined);
+  if(executorPort!==undefined&&(!Number.isInteger(executorPort)||executorPort<1||executorPort>65535))throw new Error("Invalid executor port");
   const bind=process.env.EDGE_BIND??"127.0.0.1",token=process.env.EDGE_TOKEN;
   if(bind!=="127.0.0.1"&&!token)throw new Error("EDGE_TOKEN is required for non-loopback control");
   const transportKind = process.env.EDGE_TRANSPORT ?? "udp";
@@ -73,8 +81,8 @@ async function main() {
           allocation!.drain();motion!.drain();
           for(const p of endpoints){allocation!.setReachable(p.id,true);motion!.setReachable(p.id,true);}
           controller=new EdgePeer(config,new SessionTransport(id,session,allocation!),new SessionTransport(id,session,motion!));
-          if(process.env.NAV2_EXECUTOR_BASE_PORT) {
-            executor=new Nav2Executor(`http://127.0.0.1:${Number(process.env.NAV2_EXECUTOR_BASE_PORT)+endpoints.indexOf(self)}`,session);
+          if(executorPort!==undefined) {
+            executor=new Nav2Executor(`http://127.0.0.1:${executorPort}`,session);
             await executor.initialize(config.self.position,config.map);
           }
           cpuUs=0;break;
