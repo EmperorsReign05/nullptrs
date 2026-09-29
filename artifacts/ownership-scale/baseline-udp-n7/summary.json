@@ -1,0 +1,241 @@
+{
+  "schema": 1,
+  "mode": "grid",
+  "robots": 7,
+  "quorum": 4,
+  "config": [
+    {
+      "id": "AMR-01",
+      "namespace": "AMR_01",
+      "origin": {
+        "x": 1,
+        "y": 1
+      },
+      "executorPort": 19700
+    },
+    {
+      "id": "AMR-02",
+      "namespace": "AMR_02",
+      "origin": {
+        "x": 1,
+        "y": 4
+      },
+      "executorPort": 19701
+    },
+    {
+      "id": "AMR-03",
+      "namespace": "AMR_03",
+      "origin": {
+        "x": 1,
+        "y": 7
+      },
+      "executorPort": 19702
+    },
+    {
+      "id": "AMR-04",
+      "namespace": "AMR_04",
+      "origin": {
+        "x": 1,
+        "y": 10
+      },
+      "executorPort": 19703
+    },
+    {
+      "id": "AMR-05",
+      "namespace": "AMR_05",
+      "origin": {
+        "x": 1,
+        "y": 13
+      },
+      "executorPort": 19704
+    },
+    {
+      "id": "AMR-06",
+      "namespace": "AMR_06",
+      "origin": {
+        "x": 1,
+        "y": 16
+      },
+      "executorPort": 19705
+    },
+    {
+      "id": "AMR-07",
+      "namespace": "AMR_07",
+      "origin": {
+        "x": 1,
+        "y": 19
+      },
+      "executorPort": 19706
+    }
+  ],
+  "completed": true,
+  "completedTasks": 7,
+  "totalTasks": 7,
+  "ticks": 240,
+  "safety": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0,
+    "nonAdjacentMoves": 0
+  },
+  "wallSeconds": 6.943,
+  "firstCertificateAtTick": 7,
+  "phaseWallMs": {
+    "/prepare": {
+      "calls": 1680,
+      "totalMs": 5080.8,
+      "p50": 2.73,
+      "p95": 5.26,
+      "max": 15.93
+    },
+    "/propose": {
+      "calls": 1680,
+      "totalMs": 4678.3,
+      "p50": 2.66,
+      "p95": 3.85,
+      "max": 8.56
+    },
+    "/commit": {
+      "calls": 1680,
+      "totalMs": 4570.5,
+      "p50": 2.6,
+      "p95": 3.81,
+      "max": 6.15
+    }
+  },
+  "finalSample": {
+    "tick": 240,
+    "wallMs": 26,
+    "perPeer": [
+      {
+        "id": "AMR-01",
+        "liveCount": 7,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "candidate": null,
+        "grants": 19,
+        "bids": 19
+      },
+      {
+        "id": "AMR-02",
+        "liveCount": 7,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "candidate": null,
+        "grants": 19,
+        "bids": 19
+      },
+      {
+        "id": "AMR-03",
+        "liveCount": 7,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "candidate": null,
+        "grants": 19,
+        "bids": 19
+      },
+      {
+        "id": "AMR-04",
+        "liveCount": 7,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "candidate": null,
+        "grants": 19,
+        "bids": 19
+      },
+      {
+        "id": "AMR-05",
+        "liveCount": 7,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "candidate": null,
+        "grants": 19,
+        "bids": 19
+      },
+      {
+        "id": "AMR-06",
+        "liveCount": 7,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "candidate": null,
+        "grants": 19,
+        "bids": 19
+      },
+      {
+        "id": "AMR-07",
+        "liveCount": 7,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "candidate": null,
+        "grants": 19,
+        "bids": 19
+      }
+    ]
+  }
+}

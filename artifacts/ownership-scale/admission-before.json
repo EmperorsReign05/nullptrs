@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "arm": "pre-change serialized admission (frontier pinned to 1)",
+  "ownershipEpochTicks": 32,
+  "runs": [
+    {
+      "schema": 1,
+      "robots": 3,
+      "taskCount": 8,
+      "frontier": "1",
+      "quorum": 2,
+      "ticksRun": 900,
+      "certified": 8,
+      "makespanTicks": 228,
+      "certifiedPer100Ticks": 3.51,
+      "medianCertificationLatencyTicks": 132,
+      "p95CertificationLatencyTicks": 228,
+      "firstCertifiedAtTick": 4,
+      "lastCertifiedAtTick": 228,
+      "ownershipEpochTicks": 32,
+      "duplicateExecutableOwnerViolations": 0
+    },
+    {
+      "schema": 1,
+      "robots": 5,
+      "taskCount": 8,
+      "frontier": "1",
+      "quorum": 3,
+      "ticksRun": 900,
+      "certified": 8,
+      "makespanTicks": 228,
+      "certifiedPer100Ticks": 3.51,
+      "medianCertificationLatencyTicks": 132,
+      "p95CertificationLatencyTicks": 228,
+      "firstCertifiedAtTick": 4,
+      "lastCertifiedAtTick": 228,
+      "ownershipEpochTicks": 32,
+      "duplicateExecutableOwnerViolations": 0
+    },
+    {
+      "schema": 1,
+      "robots": 8,
+      "taskCount": 8,
+      "frontier": "1",
+      "quorum": 5,
+      "ticksRun": 900,
+      "certified": 8,
+      "makespanTicks": 228,
+      "certifiedPer100Ticks": 3.51,
+      "medianCertificationLatencyTicks": 132,
+      "p95CertificationLatencyTicks": 228,
+      "firstCertifiedAtTick": 4,
+      "lastCertifiedAtTick": 228,
+      "ownershipEpochTicks": 32,
+      "duplicateExecutableOwnerViolations": 0
+    }
+  ]
+}

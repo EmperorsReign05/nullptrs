@@ -1,0 +1,276 @@
+{
+  "schema": 1,
+  "mode": "grid",
+  "robots": 8,
+  "quorum": 5,
+  "config": [
+    {
+      "id": "AMR-01",
+      "namespace": "AMR_01",
+      "origin": {
+        "x": 1,
+        "y": 1
+      },
+      "executorPort": 19700
+    },
+    {
+      "id": "AMR-02",
+      "namespace": "AMR_02",
+      "origin": {
+        "x": 1,
+        "y": 4
+      },
+      "executorPort": 19701
+    },
+    {
+      "id": "AMR-03",
+      "namespace": "AMR_03",
+      "origin": {
+        "x": 1,
+        "y": 7
+      },
+      "executorPort": 19702
+    },
+    {
+      "id": "AMR-04",
+      "namespace": "AMR_04",
+      "origin": {
+        "x": 1,
+        "y": 10
+      },
+      "executorPort": 19703
+    },
+    {
+      "id": "AMR-05",
+      "namespace": "AMR_05",
+      "origin": {
+        "x": 1,
+        "y": 13
+      },
+      "executorPort": 19704
+    },
+    {
+      "id": "AMR-06",
+      "namespace": "AMR_06",
+      "origin": {
+        "x": 1,
+        "y": 16
+      },
+      "executorPort": 19705
+    },
+    {
+      "id": "AMR-07",
+      "namespace": "AMR_07",
+      "origin": {
+        "x": 1,
+        "y": 19
+      },
+      "executorPort": 19706
+    },
+    {
+      "id": "AMR-08",
+      "namespace": "AMR_08",
+      "origin": {
+        "x": 1,
+        "y": 22
+      },
+      "executorPort": 19707
+    }
+  ],
+  "completed": true,
+  "completedTasks": 8,
+  "totalTasks": 8,
+  "ticks": 256,
+  "safety": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0,
+    "nonAdjacentMoves": 0
+  },
+  "wallSeconds": 7.562,
+  "firstCertificateAtTick": 7,
+  "phaseWallMs": {
+    "/prepare": {
+      "calls": 2048,
+      "totalMs": 6457.9,
+      "p50": 2.84,
+      "p95": 5.11,
+      "max": 15.51
+    },
+    "/propose": {
+      "calls": 2048,
+      "totalMs": 5940.4,
+      "p50": 2.75,
+      "p95": 3.98,
+      "max": 8.67
+    },
+    "/commit": {
+      "calls": 2048,
+      "totalMs": 5821.1,
+      "p50": 2.71,
+      "p95": 3.75,
+      "max": 9.96
+    }
+  },
+  "finalSample": {
+    "tick": 256,
+    "wallMs": 36,
+    "perPeer": [
+      {
+        "id": "AMR-01",
+        "liveCount": 8,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          8,
+          8
+        ],
+        "candidate": null,
+        "grants": 20,
+        "bids": 20
+      },
+      {
+        "id": "AMR-02",
+        "liveCount": 8,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          8,
+          8
+        ],
+        "candidate": null,
+        "grants": 20,
+        "bids": 20
+      },
+      {
+        "id": "AMR-03",
+        "liveCount": 8,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          8,
+          8
+        ],
+        "candidate": null,
+        "grants": 20,
+        "bids": 20
+      },
+      {
+        "id": "AMR-04",
+        "liveCount": 8,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          8,
+          8
+        ],
+        "candidate": null,
+        "grants": 20,
+        "bids": 20
+      },
+      {
+        "id": "AMR-05",
+        "liveCount": 8,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          8,
+          8
+        ],
+        "candidate": null,
+        "grants": 20,
+        "bids": 20
+      },
+      {
+        "id": "AMR-06",
+        "liveCount": 8,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          8,
+          8
+        ],
+        "candidate": null,
+        "grants": 20,
+        "bids": 20
+      },
+      {
+        "id": "AMR-07",
+        "liveCount": 8,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          8,
+          8
+        ],
+        "candidate": null,
+        "grants": 20,
+        "bids": 20
+      },
+      {
+        "id": "AMR-08",
+        "liveCount": 8,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          8,
+          8
+        ],
+        "candidate": null,
+        "grants": 20,
+        "bids": 20
+      }
+    ]
+  }
+}

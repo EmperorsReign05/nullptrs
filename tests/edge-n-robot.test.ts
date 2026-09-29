@@ -81,10 +81,13 @@ describe(`edge fleet scales to arbitrary N`, () => {
   });
 
   it("killing one controller leaves the rest of the fleet running", () => {
-    const n = 5, killAt = 2, killTick = 150;
+    // Kill well before the fleet drains its work: admission is fast enough
+    // that a late kill can leave nothing left to do, which would make the
+    // progress-after-loss assertion vacuous.
+    const n = 5, killAt = 2, killTick = 40;
     const { peers } = setup(n);
     let movesAtKill = 0;
-    for (let tick = 0; tick < 240; tick++) {
+    for (let tick = 0; tick < 300; tick++) {
       const before = peers.map((p) => ({ ...p.world.robots[0].position }));
       // A crash-stopped controller runs no further phases at all.
       const live = (i: number) => !(tick >= killTick && i === killAt);

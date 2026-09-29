@@ -1,0 +1,208 @@
+{
+  "schema": 1,
+  "mode": "nav2",
+  "robots": 6,
+  "quorum": 4,
+  "config": [
+    {
+      "id": "AMR-01",
+      "namespace": "AMR_01",
+      "origin": {
+        "x": 1,
+        "y": 1
+      },
+      "executorPort": 19700
+    },
+    {
+      "id": "AMR-02",
+      "namespace": "AMR_02",
+      "origin": {
+        "x": 1,
+        "y": 4
+      },
+      "executorPort": 19701
+    },
+    {
+      "id": "AMR-03",
+      "namespace": "AMR_03",
+      "origin": {
+        "x": 1,
+        "y": 7
+      },
+      "executorPort": 19702
+    },
+    {
+      "id": "AMR-04",
+      "namespace": "AMR_04",
+      "origin": {
+        "x": 1,
+        "y": 10
+      },
+      "executorPort": 19703
+    },
+    {
+      "id": "AMR-05",
+      "namespace": "AMR_05",
+      "origin": {
+        "x": 1,
+        "y": 13
+      },
+      "executorPort": 19704
+    },
+    {
+      "id": "AMR-06",
+      "namespace": "AMR_06",
+      "origin": {
+        "x": 1,
+        "y": 16
+      },
+      "executorPort": 19705
+    }
+  ],
+  "completed": true,
+  "completedTasks": 6,
+  "totalTasks": 6,
+  "ticks": 242,
+  "safety": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0,
+    "nonAdjacentMoves": 0
+  },
+  "wallSeconds": 75.449,
+  "firstCertificateAtTick": 7,
+  "phaseWallMs": {
+    "/prepare": {
+      "calls": 1452,
+      "totalMs": 7571.1,
+      "p50": 4.84,
+      "p95": 8.1,
+      "max": 24.53
+    },
+    "/propose": {
+      "calls": 1452,
+      "totalMs": 6934.1,
+      "p50": 4.51,
+      "p95": 7.29,
+      "max": 17.59
+    },
+    "/commit": {
+      "calls": 1452,
+      "totalMs": 101837,
+      "p50": 33.45,
+      "p95": 55.52,
+      "max": 5235.27
+    }
+  },
+  "finalSample": {
+    "tick": 240,
+    "wallMs": 116,
+    "perPeer": [
+      {
+        "id": "AMR-01",
+        "liveCount": 6,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ],
+        "candidate": null,
+        "grants": 9,
+        "bids": 15
+      },
+      {
+        "id": "AMR-02",
+        "liveCount": 6,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ],
+        "candidate": null,
+        "grants": 9,
+        "bids": 15
+      },
+      {
+        "id": "AMR-03",
+        "liveCount": 6,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ],
+        "candidate": null,
+        "grants": 9,
+        "bids": 15
+      },
+      {
+        "id": "AMR-04",
+        "liveCount": 6,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ],
+        "candidate": null,
+        "grants": 9,
+        "bids": 15
+      },
+      {
+        "id": "AMR-05",
+        "liveCount": 6,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ],
+        "candidate": null,
+        "grants": 9,
+        "bids": 15
+      },
+      {
+        "id": "AMR-06",
+        "liveCount": 6,
+        "quorumReachable": true,
+        "dead": [],
+        "bestBidsLive": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ],
+        "candidate": null,
+        "grants": 9,
+        "bids": 15
+      }
+    ]
+  }
+}

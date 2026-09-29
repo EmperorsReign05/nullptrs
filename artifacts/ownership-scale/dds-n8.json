@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "subject": "Fast DDS at N=8 under the redesigned ownership protocol",
+  "note": "Traffic is per-peer outbound ownership messages. Fast DDS fans each broadcast out once per recipient, so mesh-wide delivery is roughly (N-1) x per-peer sends.",
+  "ros2": {
+    "transport": "Fast DDS (UDPv4, no shared memory, no broker)",
+    "completed": true,
+    "tasksCompleted": "8/8",
+    "ticks": 271,
+    "wallSeconds": 21.356,
+    "quorum": 5,
+    "liveCountAtEnd": 8,
+    "freshnessAtEnd": 266,
+    "ownTickAtEnd": 267,
+    "ownershipMsgsPerTick": {
+      "announce": 1.169,
+      "checkpoint": 1.101,
+      "heartbeat": 1.004,
+      "grant": 0.521,
+      "propose": 0.315,
+      "bid": 0.228,
+      "ack": 0.124,
+      "mark": 0.019
+    },
+    "transportCounters": {
+      "allocation": {
+        "sent": 1196,
+        "received": 6281,
+        "dropped": 0
+      },
+      "motion": {
+        "sent": 536,
+        "received": 3752,
+        "dropped": 0
+      }
+    }
+  },
+  "udp": {
+    "transport": "UDP datagram",
+    "completed": true,
+    "tasksCompleted": "8/8",
+    "ticks": 175,
+    "wallSeconds": 11.819,
+    "quorum": 5,
+    "liveCountAtEnd": 8,
+    "freshnessAtEnd": 170,
+    "ownTickAtEnd": 171,
+    "ownershipMsgsPerTick": {
+      "announce": 1.684,
+      "checkpoint": 1.661,
+      "heartbeat": 1.006,
+      "grant": 0.398,
+      "ack": 0.24,
+      "bid": 0.199,
+      "propose": 0.199,
+      "mark": 0.035
+    },
+    "transportCounters": {
+      "allocation": {
+        "sent": 6489,
+        "received": 6244,
+        "dropped": 0
+      },
+      "motion": {
+        "sent": 2408,
+        "received": 2408,
+        "dropped": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "passed": true,
+  "robots": 1,
+  "controllersStarted": 1,
+  "ddsPeersReady": 1,
+  "wallSeconds": 29.72,
+  "scope": "1 independent Node fleet controllers and Fast DDS peers, each executing locally authorized cell moves through actual Nav2 FollowPath, EKF and CollisionMonitor. Shared ideal continuous physical pose bus ray-casts every other robot into lidar. Lockstep clock waits for measured Nav2 arrival before committing cell or task progress.",
+  "limitations": [
+    "Development smoke on crossing routes with transient sensed obstacle, not throughput or choke-point acceptance",
+    "Logical ownership time is frozen while a cell executes; not asynchronous physical robot leases",
+    "Ideal sensors and kinematics, no hardware",
+    "Initial grid blocked cells become continuous lidar/costmap geometry; dynamic block updates are not yet forwarded",
+    "Faults latch with measured partial pose; restart/relocalization is required, no automatic mid-cell recovery",
+    "One transient obstacle is injected on the victim robot only"
+  ],
+  "obstacleEvidence": {
+    "settledDrift": 0,
+    "first": {
+      "x": 0.18595031820150323,
+      "y": 0
+    },
+    "last": {
+      "x": 0.18595031820150323,
+      "y": 0
+    }
+  },
+  "completed": true,
+  "completedTasks": 1,
+  "totalTasks": 1,
+  "ticks": 118,
+  "totalActions": 5,
+  "safety": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0,
+    "nonAdjacentMoves": 0
+  },
+  "physical": [
+    {
+      "id": "AMR-01",
+      "pid": 1054849,
+      "namespace": "AMR_01",
+      "origin": {
+        "x": 1,
+        "y": 1
+      },
+      "executorPort": 19700,
+      "execution": {
+        "kind": "nav2",
+        "fault": null,
+        "feedback": {
+          "ok": true,
+          "error": null,
+          "pose": {
+            "x": 1.2001593148666083,
+            "y": 1.7466372659613179
+          },
+          "groundTruth": {
+            "x": 1.1948042413389608,
+            "y": 1.7487268716724695
+          },
+          "origin": {
+            "x": 1,
+            "y": 1
+          },
+          "cellMetres": 0.6,
+          "actions": 5,
+          "collisions": 0,
+          "fault": null,
+          "poseAgeSeconds": 0.028446828000596724,
+          "cancellationPending": false
+        }
+      },
+      "transport": {
+        "kind": "ros2",
+        "subscriptions": {
+          "motion": 1,
+          "ownership": 1
+        }
+      },
+      "metrics": {
+        "bidAttempts": 4,
+        "corrections": 4,
+        "fallbacks": 0,
+        "moves": 5,
+        "energyHolds": 0
+      }
+    }
+  ]
+}
