@@ -1,0 +1,25 @@
+{
+  "frozenCommit": "f94687230133259ae3c2908c3f321e4c55d08e36",
+  "sha256": {
+    "src/core/distributed/agent.ts": "113431d4b3b37315a01650bd2388049786a08f414ed524b2b22a330c94150900",
+    "src/core/distributed/fleet.ts": "59425e4c0776d3ffe672d9c171cc296575913b132bd15ee05e9df3ebd17de586",
+    "src/core/distributed/protocol.ts": "1571a44b2df0abb9494d3b58c4776f2311f551895bbf73a502cad0aa3e12ce4d",
+    "src/core/distributed/transport.ts": "5342b6e598a58addd0dae8cd456095d247a04694ca8629069acece130ff37429",
+    "src/core/distributed/edge-peer.ts": "e78287917eb9264cd315145340e7c09147c9b0936d7590288d75b34fb1ee598f",
+    "src/core/distributed/execution-energy.ts": "59dfe90d5c2bf4f37e8fd30758871fd0d721a945eb7ef1431cd6b75b66fa915e",
+    "src/server/edge-agent.ts": "2e2e74c84a78238a9538ce822921597597a0e7ec1b6dffbd02b761a3016191f1",
+    "src/core/bench/edge-choke.ts": "657219e523c119e1215adb362679f6682b7d32deebf432f78dfa923a4835e358",
+    "scripts/edge-sim.mjs": "01fc82d9b1a196897b9d4722cf30589013dc9ad0913daed88c412da405eb74e4",
+    "scripts/measure-edge-choke.mjs": "2757968ae56b86deaf2d7a7167fa4dd55f0512b77b0be0249c8af9000a95ae6a",
+    "src/core/ml/bidmodel.ts": "8e16139455a28be37510e3f9f67653836fdd4e953639b81998e83b57cf95a5cc",
+    "src/core/ml/bidfeatures.ts": "704b516c4c2453d1634681888e7018e46bc336508fe9a2936724342ce32999c1",
+    "artifacts/bid-energy-v4/model.json": "5aad9ac9dad7ee4facb7b719154147e95d2069612d9cae1e3e59ef7a4fe455d1",
+    "src/core/bench/stopwait.ts": "da6c16356705314a4cd758c6e4a3c100fe94883a7ac1d6b75904f821cb91bc86"
+  },
+  "unchangedFromPreviousMeasurement": {
+    "src/core/ml/bidmodel.ts": true,
+    "src/core/ml/bidfeatures.ts": true,
+    "artifacts/bid-energy-v4/model.json": true,
+    "src/core/bench/stopwait.ts": true
+  }
+}

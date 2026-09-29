@@ -1,0 +1,29 @@
+{
+  "version": 3,
+  "seedStart": 26000,
+  "seeds": 200,
+  "fleetSizes": [
+    3,
+    6
+  ],
+  "tasksPerRun": 6,
+  "horizon": 800,
+  "map": "stock warehouse",
+  "battery": 100,
+  "taskWeight": 1,
+  "release": "all six pending tasks announced at tick zero",
+  "starts": "uniform open cells without replacement",
+  "endpoints": "uniform open cells; pickup differs from dropoff",
+  "communications": "connected, zero simulated latency",
+  "ai": "identical frozen model and guarded 10% correction in both arms",
+  "comparator": "unchanged resolveStopAndWait, including all stationary bodies; shared obstruction observation and replanning",
+  "asymmetry": "baseline has synchronous global conflict resolution; treatment confirms locally. No packet-loss claims.",
+  "performance": "jointly completed pairs only; bootstrap paired seeds, 10000 resamples, 95% percentile interval",
+  "limitations": [
+    "shared simulation clock",
+    "one Node process",
+    "no charging lifecycle",
+    "six tasks admitted serially by existing ownership epochs",
+    "not an AI ablation"
+  ]
+}

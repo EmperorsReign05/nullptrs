@@ -1,0 +1,14 @@
+{
+  "note": "Parallel measurement inputs appeared during this audit. Preserved unchanged, not used as evidence for the final implementation. Main was 4fa41e6 when these snapshots appeared; labels MAIN NOW refer to that historical checkpoint, not the new integrated main. No outputs from this rig are asserted in this audit.",
+  "files": {
+    "agentMain.ts": "ec92607fa623ed4fea7a48f108cf0fda42f06af8941185c634ffc11f6bda1dbe",
+    "agentMainFixed.ts": "dbf3ad1bf19db9ba10cdf7c72a7a73a592ba481b57054963dc106bcfd4f6a806",
+    "extract-main.py": "b1dc92d956780112544ee4dd8c8e1899fd680e356b3ff8d6281d2116f4a28514",
+    "fleetMain.ts": "49284e7effd1065fb5592a477f1d74db9760f80fe84a3af11f384496dc904b22",
+    "fleetMainFixed.ts": "296ca4ad4783b5d2c5dcc1d29b1c8fd7c538c406514847febbdd0c0c435a0920",
+    "measure-main.ts": "851453b46860a271d750234c191407d494c78bf5cda9ca05f8acaecdeaec55ee",
+    "protocolReal.ts": "fd79907f2264acd8df364fd6a3d20c39242473d204be4e0ed137c318edbb0d7e",
+    "sensorReal.ts": "17c20d2a44f9e4a42225d45d605080421124dfe37eb914b08959007f8213a10c",
+    "transportReal.ts": "d939297e0cf890df4157911e6de4c094637ac2ae6e2bcfaf72b713f594138a00"
+  }
+}

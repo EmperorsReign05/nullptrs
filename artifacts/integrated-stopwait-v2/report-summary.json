@@ -1,0 +1,237 @@
+{
+  "derivedFrom": "artifacts/integrated-stopwait-v2/report.json",
+  "sourceCommit": "65431a3",
+  "summary": {
+    "protocol": {
+      "version": 2,
+      "seedStart": 25000,
+      "seeds": 200,
+      "fleetSizes": [
+        3,
+        6
+      ],
+      "tasksPerRun": 6,
+      "horizon": 800,
+      "map": "stock warehouse",
+      "battery": 100,
+      "taskWeight": 1,
+      "release": "all six pending tasks announced at tick zero",
+      "starts": "uniform open cells without replacement",
+      "endpoints": "uniform open cells; pickup differs from dropoff",
+      "communications": "connected, zero simulated latency",
+      "ai": "identical frozen model and guarded 10% correction in both arms",
+      "comparator": "unchanged resolveStopAndWait, including all stationary bodies; shared obstruction observation and replanning",
+      "asymmetry": "baseline has synchronous global conflict resolution; treatment confirms locally. No packet-loss claims.",
+      "performance": "jointly completed pairs only; bootstrap paired seeds, 10000 resamples, 95% percentile interval",
+      "limitations": [
+        "shared simulation clock",
+        "one Node process",
+        "no charging lifecycle",
+        "six tasks admitted serially by existing ownership epochs",
+        "not an AI ablation"
+      ]
+    },
+    "overall": {
+      "seeds": 200,
+      "baseline": {
+        "completedRuns": 166,
+        "completedTasks": 1141,
+        "safety": {
+          "overlaps": 0,
+          "swaps": 0,
+          "blockedCells": 0,
+          "zeroBatteryWork": 0,
+          "queueOverflow": 0,
+          "payloadViolations": 0
+        },
+        "nonzeroBidCorrections": 12662
+      },
+      "integrated": {
+        "completedRuns": 168,
+        "completedTasks": 1163,
+        "safety": {
+          "overlaps": 0,
+          "swaps": 0,
+          "blockedCells": 0,
+          "zeroBatteryWork": 0,
+          "queueOverflow": 0,
+          "payloadViolations": 0
+        },
+        "nonzeroBidCorrections": 10629
+      },
+      "paired": {
+        "count": 158,
+        "baselineMeanTicks": 190.32911392405063,
+        "integratedMeanTicks": 190.10759493670886,
+        "baselineMedianTicks": 188,
+        "integratedMedianTicks": 188,
+        "meanTicksSaved": 0.22151898734177214,
+        "medianTicksSaved": 0,
+        "aggregateImprovementPercent": 0.11638733705772547,
+        "ticksSaved95CI": [
+          -0.7088607594936709,
+          1.0126582278481013
+        ],
+        "improvementPercent95CI": [
+          -0.3716608594657375,
+          0.5313672744179868
+        ],
+        "wins": 20,
+        "ties": 130,
+        "losses": 8
+      },
+      "baselineOnlyComplete": [
+        25013,
+        25020,
+        25119,
+        25129,
+        25139,
+        25143,
+        25157,
+        25194
+      ],
+      "integratedOnlyComplete": [
+        25004,
+        25014,
+        25040,
+        25076,
+        25081,
+        25103,
+        25104,
+        25110,
+        25128,
+        25159
+      ]
+    },
+    "byFleetSize": [
+      {
+        "n": 3,
+        "seeds": 100,
+        "baseline": {
+          "completedRuns": 90,
+          "completedTasks": 572,
+          "safety": {
+            "overlaps": 0,
+            "swaps": 0,
+            "blockedCells": 0,
+            "zeroBatteryWork": 0,
+            "queueOverflow": 0,
+            "payloadViolations": 0
+          },
+          "nonzeroBidCorrections": 4147
+        },
+        "integrated": {
+          "completedRuns": 95,
+          "completedTasks": 593,
+          "safety": {
+            "overlaps": 0,
+            "swaps": 0,
+            "blockedCells": 0,
+            "zeroBatteryWork": 0,
+            "queueOverflow": 0,
+            "payloadViolations": 0
+          },
+          "nonzeroBidCorrections": 2770
+        },
+        "paired": {
+          "count": 88,
+          "baselineMeanTicks": 191.63636363636363,
+          "integratedMeanTicks": 190.82954545454547,
+          "baselineMedianTicks": 190,
+          "integratedMedianTicks": 189,
+          "meanTicksSaved": 0.8068181818181818,
+          "medianTicksSaved": 0,
+          "aggregateImprovementPercent": 0.42101518026564255,
+          "ticksSaved95CI": [
+            -0.23863636363636365,
+            1.8977272727272727
+          ],
+          "improvementPercent95CI": [
+            -0.12372591763388911,
+            0.986392536692614
+          ],
+          "wins": 15,
+          "ties": 67,
+          "losses": 6
+        },
+        "baselineOnlyComplete": [
+          25020,
+          25194
+        ],
+        "integratedOnlyComplete": [
+          25004,
+          25014,
+          25040,
+          25076,
+          25104,
+          25110,
+          25128
+        ]
+      },
+      {
+        "n": 6,
+        "seeds": 100,
+        "baseline": {
+          "completedRuns": 76,
+          "completedTasks": 569,
+          "safety": {
+            "overlaps": 0,
+            "swaps": 0,
+            "blockedCells": 0,
+            "zeroBatteryWork": 0,
+            "queueOverflow": 0,
+            "payloadViolations": 0
+          },
+          "nonzeroBidCorrections": 8515
+        },
+        "integrated": {
+          "completedRuns": 73,
+          "completedTasks": 570,
+          "safety": {
+            "overlaps": 0,
+            "swaps": 0,
+            "blockedCells": 0,
+            "zeroBatteryWork": 0,
+            "queueOverflow": 0,
+            "payloadViolations": 0
+          },
+          "nonzeroBidCorrections": 7859
+        },
+        "paired": {
+          "count": 70,
+          "baselineMeanTicks": 188.68571428571428,
+          "integratedMeanTicks": 189.2,
+          "baselineMedianTicks": 188,
+          "integratedMedianTicks": 188,
+          "meanTicksSaved": -0.5142857142857142,
+          "medianTicksSaved": 0,
+          "aggregateImprovementPercent": -0.2725620835857009,
+          "ticksSaved95CI": [
+            -2.0285714285714285,
+            0.37142857142857144
+          ],
+          "improvementPercent95CI": [
+            -1.0783718104495748,
+            0.19630049075122688
+          ],
+          "wins": 5,
+          "ties": 63,
+          "losses": 2
+        },
+        "baselineOnlyComplete": [
+          25013,
+          25119,
+          25129,
+          25139,
+          25143,
+          25157
+        ],
+        "integratedOnlyComplete": [
+          25081,
+          25103,
+          25159
+        ]
+      }
+    ]
+  }
+}

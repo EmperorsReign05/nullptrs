@@ -32,22 +32,28 @@ export function WarehouseMap({
   map,
   tooltips = []
 }: WarehouseMapProps) {
-  const dynamicBlockedCells = useMemo(() => {
-    if (!map) return [];
-    const isShelfCell = (x: number, y: number) =>
-      SHELF_BLOCKS.some(([bx, by, bw, bh]) => x >= bx && x < bx + bw && y >= by && y < by + bh);
-    return map.cells.filter((cell) => cell.blocked && !isShelfCell(cell.position.x, cell.position.y));
-  }, [map]);
   const shelfCols = useMemo(() => {
     return Array.from(new Set(SHELF_BLOCKS.map(b => b[0]))).sort((a, b) => a - b);
   }, []);
-
   const displayedShelfBlocks = useMemo(() => {
-    return SHELF_BLOCKS.filter(b => {
-      const colIndex = shelfCols.indexOf(b[0]);
-      return colIndex !== -1 && colIndex < shelfColCount;
+    const blocked = new Set(map?.cells.filter(c => c.blocked).map(c => `${c.position.x},${c.position.y}`));
+    return SHELF_BLOCKS.filter(([x, y, width, height]) => {
+      const colIndex = shelfCols.indexOf(x);
+      if (colIndex === -1 || colIndex >= shelfColCount) return false;
+      if (!map) return true;
+      // A supplied simulation map is authoritative: do not paint stock racks
+      // over traversable cells in a custom choke-point scenario.
+      for (let dx = 0; dx < width; dx++) for (let dy = 0; dy < height; dy++) {
+        if (!blocked.has(`${x + dx},${y + dy}`)) return false;
+      }
+      return true;
     });
-  }, [shelfColCount, shelfCols]);
+  }, [map, shelfColCount, shelfCols]);
+  const dynamicBlockedCells = useMemo(() => {
+    if (!map) return [];
+    return map.cells.filter(cell => cell.blocked && !displayedShelfBlocks.some(([x, y, w, h]) =>
+      cell.position.x >= x && cell.position.x < x + w && cell.position.y >= y && cell.position.y < y + h));
+  }, [map, displayedShelfBlocks]);
 
   const selectedRobot = useMemo(() => {
     return robots.find(r => r.id === selectedRobotId);

@@ -1,0 +1,11 @@
+{
+  "frozenCommit": "f946872",
+  "seedStart": 25000,
+  "seeds": 200,
+  "zeroBatteryWorkNonRegression": true,
+  "aggregateReliabilityNonRegression": true,
+  "perSeedReliabilityNonRegression": false,
+  "twentyPercentEstablished": false,
+  "statisticallyEstablishedSpeedup": false,
+  "hardwareValidated": false
+}

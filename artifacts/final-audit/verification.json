@@ -1,0 +1,107 @@
+{
+  "auditEntry": "4fa41e6",
+  "preservedLivenessCommit": "a150038",
+  "unchangedFromEntry": {
+    "src/core/pathfinding/astar.ts": true,
+    "src/core/pathfinding/pibt.ts": true,
+    "src/core/simulation/engine.ts": true,
+    "src/core/simulation/dispatch.ts": true,
+    "src/core/bench/stopwait.ts": true,
+    "src/core/ml/bidfeatures.ts": true,
+    "src/core/ml/bidmodel.ts": true,
+    "artifacts/bid-energy-v4/model.json": true
+  },
+  "deterministicWeightsUnchanged": true,
+  "node": "v24.18.0",
+  "checks": {
+    "typecheck": "pass",
+    "nextBuild": "pass",
+    "standaloneFleetBuild": "pass",
+    "targeted": {
+      "passed": 69,
+      "skipped": 11
+    },
+    "fullSuite": {
+      "passed": 316,
+      "failed": 3,
+      "skipped": 11,
+      "failures": [
+        "compare.test.ts: 10 AMRs prototype cycles expected 0, actual 2",
+        "compare.test.ts: 20 AMRs prototype cycles expected 0, actual 2",
+        "udp.test.ts: peer datagram observation failed under full-suite load"
+      ]
+    },
+    "baselineFullSuite": {
+      "passed": 299,
+      "failed": 3,
+      "skipped": 11
+    },
+    "udpIsolatedFile": "pass",
+    "httpDashboardTermination": "pass",
+    "ownershipAfterFinalReview": {
+      "passed": 13
+    }
+  },
+  "localCommitSweep": {
+    "fleets": [
+      3,
+      6
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "conditions": [
+      "connected",
+      "severed pair"
+    ],
+    "runs": 80,
+    "ticksPerRun": 100,
+    "fleetTicks": 8000,
+    "overlaps": 0,
+    "swaps": 0
+  },
+  "newIntegratedStopWaitBenchmarkRun": false,
+  "limitations": [
+    "fixed membership",
+    "shared monotonic simulation clock",
+    "honest crash-stop peers",
+    "no durable restart",
+    "simulated sensors",
+    "integrated AMRs share one fleet OS process",
+    "legacy per-AMR UDP workers remain preassigned and separate",
+    "post-pickup physical recovery manual",
+    "no charging lifecycle in new finite-task peer runtime",
+    "no ROS2/DDS/Nav2/Pi/hardware/HIL"
+  ],
+  "sourceHashes": {
+    "src/core/distributed/runtime.ts": "2143083b04c92f06430d8d5d4bd83125a074f4496be30c052d5f2f4482e8fae5",
+    "src/core/distributed/ownership.ts": "b7eeaae7c8d361bfad2859dbd9f4da3eed599e16b7874eb61cc96f2cfe4127d5",
+    "src/core/distributed/agent.ts": "096886ce6a222f8d9df937f329d16e3f86a5f06614e221d852bcf2b109632962",
+    "src/core/distributed/sensor.ts": "d2d3bacba7788d3616f5e2c93a3cd6fea117b89ddee591f9ecc8fd57a761b9d5",
+    "src/core/distributed/worker.ts": "e2f86d97a746fe789732484f4d272242e156d6d7df96964b947550f08b59cad7",
+    "src/core/distributed/fleet.ts": "3a268734a3822b04c7821d8d8043250272b1ca92bce33cdbb57c538362dd17db",
+    "src/core/distributed/transport.ts": "89738bc8f4117c623b5a4cf19596256a0f8ed2b8d04fe62f3511ab3307c0503f",
+    "src/core/distributed/protocol.ts": "abd6ced398701956f5345f48ee035989fb576a8ecfafed77c38736e65c5fa5ab",
+    "src/server/fleet-http.ts": "bbc5855458b445c6c65c7693e82560e93506ccc325b2a5a12f68d091f49e5e56",
+    "src/server/fleet-service.ts": "e96a3a83bede15243f2617bc0638ccb411d8834ef2bce7890ec681a049169366"
+  }
+}

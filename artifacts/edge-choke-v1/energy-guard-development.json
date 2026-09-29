@@ -1,0 +1,304 @@
+{
+  "scope": "13 previously inspected seeds; development replay, not fresh acceptance",
+  "rows": [
+    {
+      "seed": 20001,
+      "completedTasks": 5,
+      "previousCompletedTasks": 5,
+      "minimumBattery": 20,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "metrics": {
+        "aiBidAttempts": 186,
+        "nonzeroCorrections": 165,
+        "disabledFallbacks": 0,
+        "failedModelFallbacks": 0,
+        "moves": 290,
+        "reroutes": 10,
+        "energyHolds": 486
+      }
+    },
+    {
+      "seed": 20018,
+      "completedTasks": 5,
+      "previousCompletedTasks": 5,
+      "minimumBattery": 20,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "metrics": {
+        "aiBidAttempts": 78,
+        "nonzeroCorrections": 60,
+        "disabledFallbacks": 0,
+        "failedModelFallbacks": 0,
+        "moves": 226,
+        "reroutes": 7,
+        "energyHolds": 431
+      }
+    },
+    {
+      "seed": 20037,
+      "completedTasks": 5,
+      "previousCompletedTasks": 5,
+      "minimumBattery": 22,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "metrics": {
+        "aiBidAttempts": 180,
+        "nonzeroCorrections": 160,
+        "disabledFallbacks": 0,
+        "failedModelFallbacks": 0,
+        "moves": 256,
+        "reroutes": 8,
+        "energyHolds": 490
+      }
+    },
+    {
+      "seed": 20041,
+      "completedTasks": 5,
+      "previousCompletedTasks": 5,
+      "minimumBattery": 21,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "metrics": {
+        "aiBidAttempts": 174,
+        "nonzeroCorrections": 156,
+        "disabledFallbacks": 0,
+        "failedModelFallbacks": 0,
+        "moves": 269,
+        "reroutes": 8,
+        "energyHolds": 407
+      }
+    },
+    {
+      "seed": 20045,
+      "completedTasks": 5,
+      "previousCompletedTasks": 5,
+      "minimumBattery": 20,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "metrics": {
+        "aiBidAttempts": 210,
+        "nonzeroCorrections": 169,
+        "disabledFallbacks": 0,
+        "failedModelFallbacks": 0,
+        "moves": 402,
+        "reroutes": 9,
+        "energyHolds": 479
+      }
+    },
+    {
+      "seed": 20051,
+      "completedTasks": 5,
+      "previousCompletedTasks": 5,
+      "minimumBattery": 20,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "metrics": {
+        "aiBidAttempts": 186,
+        "nonzeroCorrections": 166,
+        "disabledFallbacks": 0,
+        "failedModelFallbacks": 0,
+        "moves": 257,
+        "reroutes": 12,
+        "energyHolds": 510
+      }
+    },
+    {
+      "seed": 20075,
+      "completedTasks": 5,
+      "previousCompletedTasks": 5,
+      "minimumBattery": 21,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "metrics": {
+        "aiBidAttempts": 168,
+        "nonzeroCorrections": 154,
+        "disabledFallbacks": 0,
+        "failedModelFallbacks": 0,
+        "moves": 268,
+        "reroutes": 10,
+        "energyHolds": 400
+      }
+    },
+    {
+      "seed": 20111,
+      "completedTasks": 4,
+      "previousCompletedTasks": 4,
+      "minimumBattery": 20,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "metrics": {
+        "aiBidAttempts": 276,
+        "nonzeroCorrections": 213,
+        "disabledFallbacks": 0,
+        "failedModelFallbacks": 0,
+        "moves": 371,
+        "reroutes": 38,
+        "energyHolds": 430
+      }
+    },
+    {
+      "seed": 20113,
+      "completedTasks": 5,
+      "previousCompletedTasks": 5,
+      "minimumBattery": 20,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "metrics": {
+        "aiBidAttempts": 162,
+        "nonzeroCorrections": 146,
+        "disabledFallbacks": 0,
+        "failedModelFallbacks": 0,
+        "moves": 261,
+        "reroutes": 10,
+        "energyHolds": 426
+      }
+    },
+    {
+      "seed": 20139,
+      "completedTasks": 5,
+      "previousCompletedTasks": 5,
+      "minimumBattery": 20,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "metrics": {
+        "aiBidAttempts": 180,
+        "nonzeroCorrections": 162,
+        "disabledFallbacks": 0,
+        "failedModelFallbacks": 0,
+        "moves": 274,
+        "reroutes": 8,
+        "energyHolds": 459
+      }
+    },
+    {
+      "seed": 20149,
+      "completedTasks": 5,
+      "previousCompletedTasks": 5,
+      "minimumBattery": 20,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "metrics": {
+        "aiBidAttempts": 162,
+        "nonzeroCorrections": 125,
+        "disabledFallbacks": 0,
+        "failedModelFallbacks": 0,
+        "moves": 293,
+        "reroutes": 10,
+        "energyHolds": 398
+      }
+    },
+    {
+      "seed": 20191,
+      "completedTasks": 5,
+      "previousCompletedTasks": 5,
+      "minimumBattery": 21.5,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "metrics": {
+        "aiBidAttempts": 174,
+        "nonzeroCorrections": 138,
+        "disabledFallbacks": 0,
+        "failedModelFallbacks": 0,
+        "moves": 270,
+        "reroutes": 8,
+        "energyHolds": 435
+      }
+    },
+    {
+      "seed": 20195,
+      "completedTasks": 5,
+      "previousCompletedTasks": 5,
+      "minimumBattery": 20,
+      "safety": {
+        "overlaps": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "queueOverflow": 0,
+        "payloadViolations": 0
+      },
+      "metrics": {
+        "aiBidAttempts": 168,
+        "nonzeroCorrections": 150,
+        "disabledFallbacks": 0,
+        "failedModelFallbacks": 0,
+        "moves": 287,
+        "reroutes": 10,
+        "energyHolds": 426
+      }
+    }
+  ]
+}

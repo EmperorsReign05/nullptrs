@@ -13,14 +13,13 @@ export function Header() {
             </span>
           </h1>
           <p className="text-[12px] font-mono text-zinc-400 mt-1 tracking-wide">
-            distributed • edge-ai powered • collision-free • scalable
+            central simulation • A* routing • PIBT coordination
           </p>
         </div>
       </div>
       <div className="flex items-center gap-4 text-xs font-mono text-zinc-400">
         <span className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#C9F27D] shadow-[0_0_8px_#C9F27D] animate-pulse" />
-          heartbeat: <span className="text-[#C9F27D]">active</span>
+          source: simulated state
         </span>
       </div>
     </header>

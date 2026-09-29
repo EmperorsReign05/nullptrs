@@ -1,0 +1,85 @@
+{
+  "protocol": {
+    "mode": "development",
+    "seedStart": 23000,
+    "seeds": 4,
+    "fleetSize": 3,
+    "horizon": 512,
+    "motionStartTick": 112,
+    "map": "two rooms, sole bridge cell (9,6), charger stubs do not bypass bridge",
+    "tasks": "three opposing journeys, announced to only AMR-01; distributed auction; simultaneous motion release",
+    "allocation": "same frozen guarded MLP and quorum ownership in both arms",
+    "energy": "same per-move remaining-work + charging + reserve gate",
+    "motion": "negotiated alternatives vs preferred-cell-only; identical sensor memory, A*, local UDP confirmation",
+    "deployment": "three OS processes on this host, peer-to-peer UDP, simulated sensors/time",
+    "controls": "physics host advances time, supplies local contacts, audits moves; no route or movement-winner computation",
+    "performance": "both-completed pairs only; end-to-end and motion-window ticks; capped failures excluded",
+    "hardwareValidated": false,
+    "network": "connected; 8ms delivery opportunity, unknown/late contender means local hold; no delivery guarantee",
+    "modelRetrained": false
+  },
+  "summary": {
+    "byPolicy": {
+      "stop-and-wait": {
+        "completedRuns": 1,
+        "completedTasks": 3,
+        "runsAllThreeCrossed": 1,
+        "runsAllThreeAssignedAtRelease": 4,
+        "safety": {
+          "overlaps": 0,
+          "swaps": 0,
+          "blockedCells": 0,
+          "zeroBatteryWork": 0,
+          "queueOverflow": 0,
+          "payloadViolations": 0,
+          "nonAdjacentMoves": 0
+        }
+      },
+      "negotiated": {
+        "completedRuns": 1,
+        "completedTasks": 3,
+        "runsAllThreeCrossed": 1,
+        "runsAllThreeAssignedAtRelease": 4,
+        "safety": {
+          "overlaps": 0,
+          "swaps": 0,
+          "blockedCells": 0,
+          "zeroBatteryWork": 0,
+          "queueOverflow": 0,
+          "payloadViolations": 0,
+          "nonAdjacentMoves": 0
+        }
+      }
+    },
+    "endToEnd": {
+      "pairs": 1,
+      "baselineMean": 142,
+      "negotiatedMean": 145,
+      "meanTicksSaved": -3,
+      "medianTicksSaved": -3,
+      "improvementPercent": -2.112676056338028,
+      "improvement95CI": [
+        -2.112676056338028,
+        -2.112676056338028
+      ],
+      "wins": 0,
+      "ties": 0,
+      "losses": 1
+    },
+    "motionWindow": {
+      "pairs": 1,
+      "baselineMean": 30,
+      "negotiatedMean": 33,
+      "meanTicksSaved": -3,
+      "medianTicksSaved": -3,
+      "improvementPercent": -10,
+      "improvement95CI": [
+        -10,
+        -10
+      ],
+      "wins": 0,
+      "ties": 0,
+      "losses": 1
+    }
+  }
+}

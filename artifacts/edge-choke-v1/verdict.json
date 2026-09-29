@@ -1,0 +1,22 @@
+{
+  "chokeCodeCommit": "f946872",
+  "postAcceptanceQueueFix": "938af2c",
+  "queueFixReachableInThreeTaskChoke": false,
+  "hardwareValidated": false,
+  "chokeRuns": {
+    "negotiated": 40,
+    "stopAndWait": 0,
+    "seeds": 40,
+    "uniqueGeometries": 20
+  },
+  "chokePairedSpeedupPercent": null,
+  "twentyPercentDemonstrated": false,
+  "warehouseReliabilityPass": false,
+  "fullSuite": {
+    "passed": 326,
+    "failed": 2,
+    "skipped": 14,
+    "failures": "Existing compare.test.ts 10/20 robot cycle assertions"
+  },
+  "buildPassed": true
+}
