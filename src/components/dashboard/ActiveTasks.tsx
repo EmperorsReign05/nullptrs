@@ -15,8 +15,8 @@ export function ActiveTasks({ tasks, robots }: ActiveTasksProps) {
   return (
     <div className="bg-[#12161F]/35 backdrop-blur-xl rounded-xl border border-white/10 flex flex-col shrink-0 shadow-xl overflow-hidden">
       <div className="h-12 px-5 border-b border-white/10 flex justify-between items-center bg-white/[0.03] backdrop-blur-sm">
-        <h3 className="font-mono text-sm font-semibold tracking-wide text-zinc-200">active tasks</h3>
-        <span className="text-xs font-mono text-zinc-400">
+        <h3 className="text-sm font-semibold tracking-wide text-zinc-100">active tasks</h3>
+        <span className="text-xs text-zinc-300">
           active: <span className="text-[#C9F27D] font-semibold">{activeCount}</span>
         </span>
       </div>
@@ -36,9 +36,9 @@ export function ActiveTasks({ tasks, robots }: ActiveTasksProps) {
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-3">
                   <span className="font-mono font-bold text-sm text-[#E6E9EF] tracking-wide">{t.id}</span>
-                  <span className="text-[11px] font-mono text-[#8A93A3]">({t.pickup.x},{t.pickup.y}) → ({t.dropoff.x},{t.dropoff.y})</span>
+                  <span className="text-[12px] text-[#A8B2C4]">({t.pickup.x},{t.pickup.y}) → ({t.dropoff.x},{t.dropoff.y})</span>
                 </div>
-                <div className="text-[11px] font-mono font-bold tracking-wider" style={{ color: robotColor }}>
+                <div className="text-[12px] font-bold tracking-wider" style={{ color: robotColor }}>
                   {t.assignedRobotId ?? 'unassigned'}
                 </div>
               </div>
