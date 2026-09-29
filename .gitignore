@@ -110,3 +110,5 @@ __pycache__/
 /ros2/**/log/
 
 /artifacts/integrated-stopwait-v5/rows.json
+/artifacts/reliability-v5-development/rows.json
+/artifacts/parallel-v5/*.tar.gz

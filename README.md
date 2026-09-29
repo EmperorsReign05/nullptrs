@@ -6,7 +6,7 @@ Three software modes are available:
 - **`npm run edge:demo` — three-process fleet demo:** each robot process runs its own complete ownership, frozen MLP bidding and planning stack, communicating directly over UDP. The same dashboard connects through the simulation host on port 4011. Shared simulation timing and sensors are explicit.
 - **`/simulator` — original central simulator:** A*, PIBT, deterministic auctioning, task queues and charging run in the browser.
 
-The legacy `worker.ts` UDP demo remains preassigned-task-only. The new `edge-agent.ts` deployment includes live auctions and ownership. ROS2/Fast DDS can carry real peer messages via one sidecar per controller. A separate Nav2 simulation validates continuous path following, simulated sensors and Collision Monitor. Nav2 is not yet connected to all three grid controllers; physical hardware remains unvalidated.
+The legacy `worker.ts` UDP demo remains preassigned-task-only. The new `edge-agent.ts` deployment includes live auctions and ownership. ROS2/Fast DDS can carry real peer messages via one sidecar per controller. Three independent controllers can also execute through actual Nav2, with measured arrival gating grid/task progress, simulated sensors, EKF and Collision Monitor. This continuous simulation has a fixed three-robot fixture and shared clock; physical hardware remains unvalidated.
 
 Machine-readable benchmark results are preserved under `artifacts/`. The existing [hosted demo link](https://amr-edge-ai.vercel.app/) has not been updated by this audit; the new fleet runtime requires a long-lived Node process.
 
@@ -232,15 +232,29 @@ npm run nav2:test -- /tmp/nav2-validation
 
 ROS peer traffic uses rmw_fastrtps_cpp with UDP transport; Fast DDS shared memory is disabled in the supplied profile. The Node/ROS bridge is local to each robot, not a message broker. Discovery must find the configured roster before simulation ticks begin. `ROS_BRIDGE_COMMAND` accepts a JSON argv array to use another installed ROS launch command or container engine.
 
-The Nav2 package follows trusted coordinator-authorized paths through FollowPath and cancels on revocation. Its validation is currently **one continuous simulated robot**, separate from the three grid agents. Multi-robot namespaces, coordinate mapping and binding route authorization to fleet ownership remain an integration gap; do not present the separate tests as one complete Nav2 fleet deployment.
+The Nav2 fleet adapter follows each robot controller’s locally authorized cell move through real FollowPath. Separate namespaces and TF graphs isolate robot frames; a shared simulated physical world supplies peer bodies and initial blocked-cell geometry. Logical movement and task progress wait for successful action completion and fresh measured arrival. Cancellation or lost controller heartbeat stops execution and retains partial pose; recovery requires restart/relocalization.
+
+After building the ROS and Nav2 images with the commands above:
+
+```sh
+# Three-robot crossing, transient obstacle, real Nav2 arrival checks.
+bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-fleet-crossing
+# Separate runs validate cancellation and actual controller SIGKILL.
+NAV2_FLEET_MODE=fault bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-fleet-cancel
+NAV2_FLEET_MODE=crash bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-fleet-crash
+# Interactive continuous simulation; connect the dashboard as above.
+NAV2_FLEET_DEMO=1 bash scripts/nav2-fleet-acceptance.sh /tmp/nav2-fleet-demo
+```
+
+This is a fixed three-robot simulation fixture, not general hardware deployment. Ownership uses logical time, which pauses during physical cell execution. Dynamic grid-block and simulated-failure dashboard commands are explicitly rejected in Nav2 mode; they remain supported in the grid demo. The Nav2 fault tests use real cancellation/process termination. Do not claim automatic mid-cell recovery or an asynchronous physical-robot lease protocol.
 
 Distributed charging retains task ownership, reaches a charger, recharges and resumes pre-pickup work. Each active job is recertified; queued jobs can span multiple charging visits. Cargo already picked up is never silently reassigned or diverted: an uncertifiable delivery holds for manual recovery. Local safety controls shared charger occupancy; charger fairness is not guaranteed.
 
 New acceptance results are recorded separately from historical v1–v3 outputs. Development results on inspected seeds are not fresh acceptance evidence. No physical Pi/Jetson or real-sensor validation has occurred.
 
-## Current integrated validation
+## Historical integrated validation (v4)
 
-Code frozen at `e7dd0cd`, after the parallel reliability/charging/ROS work was merged into the main worktree:
+Code frozen at `e7dd0cd`. These results remain unchanged as historical evidence. Seeds 31000–31199 have since informed the clearance fix and are now development data, not a fresh acceptance set for newer code:
 
 - Production and fleet builds pass. Full suite: **356 passed, 17 skipped, zero failures**. The former cycle and UDP tests now pass with their completion/safety assertions retained.
 - **200 untouched warehouse seeds (31000–31199): 198/200 completed runs, 1197/1200 tasks**, versus fair stop-and-wait **170/200 runs, 1147/1200 tasks**. No baseline-successful run becomes incomplete; all six audited safety counters are zero in both arms.
