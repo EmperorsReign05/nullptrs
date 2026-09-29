@@ -79,7 +79,16 @@ function findYieldingRobots(prev: WorldState, next: WorldState): { robotId: stri
 
 export default function Dashboard() {
   const [snapshot, setSnapshot] = useState<FleetSnapshot | null>(null);
+  /**
+   * `connecting` = no answer yet, so there is nothing to report. `live` = the
+   * last poll succeeded. `error` = the last poll actually failed. Kept apart
+   * because only the third of those is a fault, and conflating the first with
+   * the third is what flashed a connection error at a healthy runtime.
+   */
+  const [status, setStatus] = useState<'connecting' | 'live' | 'error'>('connecting');
   const [error, setError] = useState<string | null>(null);
+  /** Wall clock of the last snapshot that actually arrived, for the stale banner. */
+  const [lastUpdateAt, setLastUpdateAt] = useState<number | null>(null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [selectedRobotId, setSelectedRobotId] = useState<string | null>(null);
   const [aisleBlocked, setAisleBlocked] = useState(false);
@@ -92,6 +101,17 @@ export default function Dashboard() {
   const [robotCount, setRobotCount] = useState(0);
 
   const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+  /** True once a poll has actually failed. Derived once, here, so every
+   *  consumer below reads the same value and none of them recomputes it. */
+  const disconnected = status === 'error';
+  /**
+   * How long the visible frame has been frozen, while the runtime is
+   * unreachable. Driven by a 1 Hz timer rather than `Date.now()` read during
+   * render: a component that re-renders for an unrelated reason must not be able
+   * to change what "frozen for Ns" claims, and reading the clock in render is
+   * both impure and a lint error.
+   */
+  const [frozenFor, setFrozenFor] = useState<number | null>(null);
   const worldRef = useRef<WorldState | null>(null);
 
   // Judge tour. Same storage key and same ?tour / ?tutorial overrides as the
@@ -120,16 +140,40 @@ export default function Dashboard() {
   }, []);
 
   // ---- poll the runtime ----
+  //
+  // THREE CONNECTION STATES, NOT TWO. The previous version had one flag,
+  // `error`, and rendered the "Fleet runtime not connected" card whenever
+  // `snapshot` was null. `snapshot` is null on the very first render, before
+  // the first fetch has resolved — so a perfectly healthy runtime produced an
+  // amber "not connected" card for exactly as long as the first round trip took,
+  // and then the dashboard popped in underneath it. On a warm local process that
+  // is the "flash for a split second"; on a cold deployed link it is a visible
+  // loading state dressed as a crash. The page conflated "I have not heard back
+  // yet" with "I heard back and it was a failure", and only one of those is an
+  // error.
+  //
+  // The effect also used to depend on `error`, so every error transition and
+  // every recovery tore the poll loop down and rebuilt it — and because the
+  // effect body was the only thing scheduling the next poll, each teardown also
+  // silently opened a window with no poll in flight. The error is now read
+  // through a ref, so the loop is created exactly once.
+  const errorRef = useRef<string | null>(null);
+
   useEffect(() => {
     let disposed = false;
     let timer: ReturnType<typeof setTimeout> | null = null;
+    const abort = new AbortController();
 
     const poll = async () => {
       try {
-        const response = await fetch('/api/fleet', { cache: 'no-store' });
+        const response = await fetch('/api/fleet', { cache: 'no-store', signal: abort.signal });
         if (!response.ok) {
           const body = await response.json().catch(() => null);
-          if (!disposed) setError(body?.error ?? `Fleet runtime returned ${response.status}`);
+          if (!disposed) {
+            errorRef.current = body?.error ?? `Fleet runtime returned ${response.status}`;
+            setStatus('error');
+            setError(errorRef.current);
+          }
         } else {
           const next = (await response.json()) as FleetSnapshot;
           if (!disposed) {
@@ -146,20 +190,48 @@ export default function Dashboard() {
                 setTimeout(() => setConflictTooltips((t) => t.filter((x) => x.id !== id)), TOOLTIP_LIFETIME_MS);
               }
             }
+            errorRef.current = null;
             setSnapshot(next);
             setRobotCount(next.world.robots.length);
-            if (error) setError(null);
+            setLastUpdateAt(Date.now());
+            setError(null);
+            setStatus('live');
           }
         }
-      } catch {
-        if (!disposed) setError('Fleet runtime unreachable. Start it with: npm run fleet');
+      } catch (caught) {
+        // An abort on unmount is not a failure and must not paint the page red.
+        if (disposed || (caught as Error)?.name === 'AbortError') return;
+        if (!disposed) {
+          errorRef.current = 'Fleet runtime unreachable. Start it with: npm run fleet';
+          setError(errorRef.current);
+          setStatus('error');
+        }
       }
       if (!disposed) timer = setTimeout(poll, POLL_MS);
     };
 
+    // No `setStatus('connecting')` here on purpose. The state already starts as
+    // 'connecting', the effect has empty dependencies so it runs exactly once,
+    // and a remount re-initialises the state anyway — so a setState in the effect
+    // body would be a pure cascading re-render, which is precisely what
+    // `react-hooks/set-state-in-effect` flags (the same trap the judge-tour effect
+    // above documents and works around with a deferred callback).
     void poll();
-    return () => { disposed = true; if (timer) clearTimeout(timer); };
-  }, [error]);
+    return () => { disposed = true; abort.abort(); if (timer) clearTimeout(timer); };
+  }, []);
+
+  // 1 Hz staleness clock. Declared before the early returns so its effect is not
+  // conditionally registered, and it contains no synchronous setState so it does
+  // not trip `react-hooks/set-state-in-effect`.
+  useEffect(() => {
+    const update = () => setFrozenFor(
+      disconnected && lastUpdateAt !== null
+        ? Math.max(0, Math.floor((Date.now() - lastUpdateAt) / 1000))
+        : null,
+    );
+    const id = setInterval(update, 1000);
+    return () => clearInterval(id);
+  }, [disconnected, lastUpdateAt]);
 
   // ---- commands ----
   const send = useCallback(async (command: unknown, describe: (ok: boolean, detail?: string) => void) => {
@@ -276,28 +348,57 @@ export default function Dashboard() {
     [snapshot]
   );
 
-  if (!snapshot) {
+  // ---- connection chrome ----
+  //
+  // The dashboard must never LOOK live while it is not. The previous version
+  // kept rendering the full dashboard after the runtime went away, with the
+  // tick counter frozen and the status dot still pulsing — a stale view that is
+  // indistinguishable from a working one. In front of a jury that is the worst
+  // failure mode available: it does not look like a bug, it looks like a system
+  // that has stalled. So disconnection is stated, with the age of the data.
+  if (status === 'connecting' || (disconnected && !snapshot)) {
+    const connecting = status === 'connecting';
     return (
       <div className="min-h-screen bg-[#09090b] text-[#fafafa] bg-[url('/bg.png')] bg-cover bg-fixed bg-center font-sans py-6 px-4 md:px-8 lg:px-12 flex justify-center items-start">
         <div className="w-full max-w-[1520px] bg-black/40 backdrop-blur-2xl rounded-2xl border border-zinc-800/80 shadow-[0_25px_70_-15px_rgba(0,0,0,0.85)] p-10">
           <Header onOpenTutorial={() => setIsTutorialOpen(true)} />
-          <div className="mt-8 rounded-xl border border-amber-500/30 bg-amber-500/5 p-6 text-sm leading-relaxed">
-            <p className="text-amber-300 text-base mb-2">Fleet runtime not connected.</p>
-            <p className="text-zinc-400 mb-4">
-              This dashboard is driven by the distributed fleet runtime, which runs as its own
-              Node process — the same one-process-per-robot topology as the real deployment.
-              Start it in a second terminal:
-            </p>
-            <pre className="font-mono text-[13px] text-emerald-300 bg-black/50 rounded p-3 mb-4">npm run fleet</pre>
-            <p className="text-zinc-500 text-xs">
-              Then run <span className="text-zinc-300">npm run dev</span> for this page.
-              {error ? ` (${error})` : ''}
-            </p>
+          <div className="mt-8 flex items-start gap-4">
+            {connecting && (
+              <span
+                aria-hidden
+                className="mt-1 h-3 w-3 shrink-0 rounded-full border-2 border-zinc-600 border-t-[#C9F27D] animate-spin"
+                style={{ animationDuration: '900ms' }}
+              />
+            )}
+            <div className="min-w-0">
+              <p className={connecting ? 'text-zinc-200 text-base mb-2' : 'text-amber-300 text-base mb-2'}>
+                {connecting ? 'Connecting to the fleet runtime…' : 'Fleet runtime not connected.'}
+              </p>
+              <p className="text-zinc-400 mb-4 max-w-[68ch] leading-relaxed">
+                {connecting
+                  ? 'Opening a control channel to the distributed peer processes. The map renders as soon as the first telemetry frame lands.'
+                  : error ?? 'The fleet runtime is not answering.'}
+              </p>
+              <p className="text-zinc-400 mb-4 max-w-[68ch] leading-relaxed">
+                This dashboard is driven by the distributed fleet runtime, which runs as its own
+                Node process — the same one-process-per-robot topology as the real deployment.
+                Start it in a second terminal:
+              </p>
+              <pre className="font-mono text-[13px] text-emerald-300 bg-black/50 rounded p-3 mb-4 inline-block">npm run fleet</pre>
+              <p className="text-zinc-500 text-xs">
+                Then run <span className="text-zinc-300">npm run dev</span> for this page.
+              </p>
+            </div>
           </div>
         </div>
       </div>
     );
   }
+
+  // Unreachable in practice — the branch above returns for `connecting` and for an
+  // error with no snapshot — but the type system cannot see that, and the honest
+  // narrowing is better than a non-null assertion scattered through the JSX.
+  if (!snapshot) return null;
 
   const { world, safety, metrics } = snapshot;
 
@@ -332,11 +433,26 @@ export default function Dashboard() {
           <span className="text-zinc-100 uppercase tracking-[0.16em] not-italic">Fleet runtime</span>
           <span className="text-zinc-300">node-hosted distributed peers</span>
 
-          <span className="flex items-center gap-1.5 text-zinc-200">
-            <span className={`w-1.5 h-1.5 rounded-full ${snapshot.running ? 'bg-emerald-300 animate-pulse' : 'bg-zinc-500'}`} />
-            {snapshot.running ? 'running' : 'paused'}
+          {disconnected ? (
+            // A dead runtime must not be rendered as a running one. The dot stops
+            // pulsing, the word changes, and the age of the frozen frame is given
+            // so nobody has to guess whether the tick counter is moving.
+            <span className="flex items-center gap-1.5 text-amber-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+              reconnecting
+            </span>
+          ) : (
+            <span className="flex items-center gap-1.5 text-zinc-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse" />
+              {snapshot.running ? 'running' : 'paused'}
+            </span>
+          )}
+          <span className="text-zinc-400 tabular-nums">
+            tick {world.tick.toLocaleString()}
+            {disconnected && frozenFor !== null && (
+              <span className="text-amber-300"> · frozen for {frozenFor}s</span>
+            )}
           </span>
-          <span className="text-zinc-400 tabular-nums">tick {world.tick.toLocaleString()}</span>
           <span className="text-zinc-400">
             swaps <span className={safety.swaps > 0 ? 'text-amber-300' : 'text-zinc-300'}>{safety.swaps}</span>
           </span>
