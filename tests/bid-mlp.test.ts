@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
+import { cpus, platform, arch } from "node:os";
 import { calculateBid, withBidScorer, type BidScorer } from "../src/core/auction/cost";
 import { getBiddingRobots } from "../src/core/auction/assign";
-import { extractBidFeatures, BID_FEATURE_NAMES, correctionFeasible, assessBidEnergy } from "../src/core/ml/bidfeatures";
-import { guardedBidScorer, hasReciprocalIntent, type WinnerGuard, type WinnerGuardEvent, terminalCost, bidRandom, trainBidModel, predictBid, bidLossGradient, learnedBidScorer, type BidTrainingRow } from "../src/core/ml/bidmodel";
+import { localBidView, type LocalBidInput, extractBidFeatures, BID_FEATURE_NAMES, correctionFeasible, assessBidEnergy } from "../src/core/ml/bidfeatures";
+import { makeLocalBid, selectLocalBid, type LocalBidPacket, guardedBidScorer, hasReciprocalIntent, type WinnerGuard, type WinnerGuardEvent, terminalCost, bidRandom, trainBidModel, predictBid, bidLossGradient, learnedBidScorer, type BidTrainingRow } from "../src/core/ml/bidmodel";
 import { createInitialWorld } from "../src/core/simulation/state";
 import { runDispatchTick } from "../src/core/simulation/dispatch";
 import { computeCongestion } from "../src/core/map/warehouse";
@@ -678,3 +679,187 @@ it.skipIf(process.env.BID_ENERGY_DEVELOPMENT !== "1")("validates hard energy adm
     retrained: false, hardEnergyGate: true }));
   console.log("ENERGY DEVELOPMENT", { ...result, seeds: undefined, perSeed: undefined, performance: { ...result.performance, pairs: undefined } });
 }, 1_800_000);
+
+// Explicit synchronous beacon delivery is a TEST transport, not decentralized
+// consensus. The producer receives a JSON value; no WorldState crosses it.
+function localInput(world: WorldState, task: Task, robotId: string, radius = 100): LocalBidInput {
+  const self = world.robots.find(r => r.id === robotId)!;
+  const neighbors = world.robots.filter(r => r.id !== robotId &&
+    Math.abs(r.position.x - self.position.x) + Math.abs(r.position.y - self.position.y) <= radius);
+  return JSON.parse(JSON.stringify({ tick: world.tick, self, task,
+    ownTasks: world.tasks.filter(t => t.id === self.currentTaskId || self.queuedTaskIds?.includes(t.id)),
+    geometry: { width: world.map.width, height: world.map.height,
+      cells: world.map.cells.map(c => ({ position: c.position, blocked: c.blocked })) },
+    receivedPeers: neighbors.map(r => ({ senderId: r.id, sequence: world.tick, observedTick: world.tick, position: r.position, path: r.path })),
+    expectedPeerIds: neighbors.map(r => r.id), maxPeerAgeTicks: 2 }));
+}
+
+describe("local learned bid boundary", () => {
+  it("cannot observe hidden robot state, foreign tasks, or injected global congestion", () => {
+    const { world, tasks } = scenario(6000), { model } = guardArtifact();
+    const input = localInput(world, tasks[0], world.robots[0].id, 0);
+    const before = JSON.stringify(input), packet = makeLocalBid(input, model);
+    const extra = JSON.parse(before);
+    extra.geometry.cells.forEach((c: { congestion?: number }) => { c.congestion = 999999; });
+    extra.ownTasks.push({ ...tasks[1], weight: 99999 });
+    extra.receivedPeers.push({ senderId: "unreceived", sequence: 0, observedTick: 0,
+      position: input.self.position, path: [input.self.position] });
+    expect(makeLocalBid(extra, model)).toEqual(packet);
+    expect(JSON.stringify(input)).toBe(before);
+    expect(JSON.parse(JSON.stringify(packet))).toEqual(packet);
+  });
+  it("fails closed on stale, future, conflicting and invalid received observations", () => {
+    const { world, tasks } = scenario(6001), { model } = guardArtifact();
+    const input = localInput(world, tasks[0], world.robots[0].id, 100);
+    input.tick = 10;
+    input.receivedPeers.forEach(p => { p.observedTick = 10; });
+    expect(localBidView(input).completePeerKnowledge).toBe(true);
+    for (const observedTick of [0, 11, -1]) {
+      const bad = structuredClone(input); bad.receivedPeers[0].observedTick = observedTick;
+      const packet = makeLocalBid(bad, model);
+      expect(packet.completePeerKnowledge).toBe(false);
+      expect(packet.mlCost).toBe(packet.bid?.totalCost ?? null);
+    }
+    const conflict = structuredClone(input);
+    conflict.receivedPeers = [...conflict.receivedPeers, { ...conflict.receivedPeers[0], path: [input.self.position] }];
+    expect(localBidView(conflict).completePeerKnowledge).toBe(false);
+    const invalid = structuredClone(input); invalid.receivedPeers[0].position.x = NaN;
+    expect(localBidView(invalid).completePeerKnowledge).toBe(false);
+  });
+  it("guards received winner changes and preserves a feasible bounded change", () => {
+    const { world, tasks } = scenario(6000), { model } = guardArtifact();
+    const original = makeLocalBid(localInput(world, tasks[0], world.robots[0].id), model);
+    expect(original.bid).not.toBeNull();
+    const a: LocalBidPacket = { ...original, robotId: "a", bid: { ...original.bid!, robotId: "a", totalCost: 100 }, mlCost: 100,
+      energy: { ...original.energy, admitted: true, activeRouteCertified: true, margin: 20 }, features: Array(16).fill(0), reciprocalIntent: false, completePeerKnowledge: true };
+    const b = { ...structuredClone(a), robotId: "b", bid: { ...a.bid!, robotId: "b", totalCost: 105 }, mlCost: 96 };
+    expect(selectLocalBid([b, a]).winner).toBe("b");
+    expect(selectLocalBid([a, b])).toEqual(selectLocalBid([b, a]));
+    for (const margin of [-0.01, NaN]) {
+      expect(selectLocalBid([a, { ...b, energy: { ...b.energy, margin } }]).winner).toBe("a");
+    }
+    expect(selectLocalBid([a, { ...b, completePeerKnowledge: false }]).winner).toBe("a");
+    expect(selectLocalBid([a, { ...b, reciprocalIntent: true }]).winner).toBe("a");
+    expect(selectLocalBid([a, { ...b, mlCost: 80 }]).reason).toBe("invalid-correction");
+    expect(selectLocalBid([a, { ...b, bid: { ...b.bid!, feasible: false } }]).winner).toBe("a");
+    expect(() => selectLocalBid([a, a])).toThrow("duplicate");
+    expect(() => selectLocalBid([a, { ...b, tick: b.tick + 1 }])).toThrow("Mixed");
+  });
+});
+
+type LocalPolicy = { name: string; mode: "base" | "linear" | "heuristic" | "ml"; weights?: number[] };
+function localScorer(policy: LocalPolicy, events?: ReturnType<typeof selectLocalBid>[]): BidScorer {
+  const { model } = guardArtifact();
+  const cache = new WeakMap<WorldState, Map<string, Map<string, number>>>();
+  return (robot, task, world, bid) => {
+    let tasks = cache.get(world); if (!tasks) { tasks = new Map(); cache.set(world, tasks); }
+    let scores = tasks.get(task.id);
+    if (!scores) {
+      const packets = world.robots.map(r => makeLocalBid(localInput(world, task, r.id), model));
+      if (policy.mode === "heuristic") for (const p of packets) if (p.bid) {
+        // Simple deterministic bounded discount: favor spare energy, short queue,
+        // and little received contention. Same admission guard as learned arm.
+        const pressure = 1 + p.features[6] + p.features[7];
+        p.mlCost = p.bid.totalCost * (1 - 0.1 * Math.max(0, Math.min(1, p.energy.margin / 100)) / pressure);
+      }
+      let winner: string | null = null;
+      if (policy.mode === "ml" || policy.mode === "heuristic") {
+        const decision = selectLocalBid(packets); events?.push(decision); winner = decision.winner;
+      }
+      scores = new Map(packets.map(p => {
+        let score = p.bid?.totalCost ?? Infinity;
+        if (policy.mode === "linear" && p.bid) {
+          const f = p.features, w = policy.weights!;
+          score = f[0] + w[0] * f[1] + w[1] * f[2] + f[3] + 3 * f[4] + w[2] * f[5] + w[3] * f[6];
+        }
+        // Test transport enforces the selected packet winner in the unchanged
+        // dispatcher. Its output is not an on-robot consensus implementation.
+        if (winner !== null) score = p.robotId === winner ? -1 : 1;
+        return [p.robotId, score];
+      }));
+      tasks.set(task.id, scores);
+    }
+    const score = scores.get(robot.id);
+    if (score === undefined || !Number.isFinite(score)) throw new Error("Test transport feasibility mismatch");
+    return score;
+  };
+}
+
+const LOCAL_DIR = "artifacts/bid-local-v5";
+it.skipIf(process.env.BID_LOCAL_DEVELOPMENT !== "1")("local scorer stronger-baseline development and freeze", () => {
+  mkdirSync(LOCAL_DIR, { recursive: true });
+  const seeds = Array.from({ length: 64 }, (_, i) => 6000 + i);
+  const candidates: LocalPolicy[] = [{ name: "original-local", mode: "base" }];
+  for (const congestion of [0, 1.5]) for (const battery of [1, 4]) for (const payload of [0, 0.5]) for (const queue of [0, 10])
+    candidates.push({ name: `linear-${congestion}-${battery}-${payload}-${queue}`, mode: "linear", weights: [congestion, battery, payload, queue] });
+  const results = candidates.map(policy => {
+    const outcomes = seeds.map(s => rollout(s, localScorer(policy)));
+    return { policy, outcomes, reliability: summary(outcomes), safety: sumSafety(outcomes) };
+  });
+  const baseline = results[0];
+  // Rank terminal reliability first; censored elapsed time never rewards failure.
+  const eligible = results.filter(r => safeRelative(baseline.outcomes, r.outcomes));
+  eligible.sort((a, b) => b.reliability.fullyCompleted - a.reliability.fullyCompleted ||
+    b.reliability.completedTasks - a.reliability.completedTasks ||
+    mean(a.outcomes.map(o => o.completionTime ?? 10000)) - mean(b.outcomes.map(o => o.completionTime ?? 10000)));
+  const policies: LocalPolicy[] = [candidates[0], { ...eligible[0].policy, name: "tuned-local" },
+    { name: "guarded-heuristic", mode: "heuristic" }, { name: "guarded-mlp", mode: "ml" }];
+  const checks = policies.map(policy => {
+    const events: ReturnType<typeof selectLocalBid>[] = [];
+    const outcomes = seeds.map(s => rollout(s, localScorer(policy, events)));
+    return { policy, summary: summary(outcomes), safety: sumSafety(outcomes), performance: pairedPerformance(baseline.outcomes, outcomes),
+      proposed: events.filter(e => e.proposedWinner !== e.deterministicWinner).length,
+      allowed: events.filter(e => e.winner !== e.deterministicWinner).length, suppressed: events.filter(e => e.suppressed).length };
+  });
+  writeFileSync(`${LOCAL_DIR}/development.json`, JSON.stringify({ seeds, results, checks }, null, 2));
+  writeFileSync(`${LOCAL_DIR}/frozen.json`, JSON.stringify({ sourceHashes: sourceHashes(), testHash: createHash("sha256").update(readFileSync("tests/bid-mlp.test.ts")).digest("hex"),
+    policies, model: guardArtifact().model, radius: 100, ttl: 2, acceptanceSeeds: Array.from({ length: 200 }, (_, i) => 8000 + i),
+    transport: "synchronous test-only beacons and bid bundle; not distributed agreement", retrained: false }, null, 2));
+}, 600000);
+
+it.skipIf(process.env.BID_LOCAL_ACCEPTANCE !== "1")("frozen local scorer and stronger baselines on untouched paired seeds", () => {
+  const frozen = JSON.parse(readFileSync(`${LOCAL_DIR}/frozen.json`, "utf8"));
+  expect(sourceHashes()).toEqual(frozen.sourceHashes);
+  expect(createHash("sha256").update(readFileSync("tests/bid-mlp.test.ts")).digest("hex")).toBe(frozen.testHash);
+  const arms = (frozen.policies as LocalPolicy[]).map(policy => {
+    const events: ReturnType<typeof selectLocalBid>[] = [];
+    const outcomes = frozen.acceptanceSeeds.map((s: number) => rollout(s, localScorer(policy, events)));
+    return { policy, outcomes, reliability: summary(outcomes), safety: sumSafety(outcomes),
+      proposed: events.filter(e => e.proposedWinner !== e.deterministicWinner).length,
+      allowed: events.filter(e => e.winner !== e.deterministicWinner).length, suppressed: events.filter(e => e.suppressed).length };
+  });
+  const learned = arms.find(a => a.policy.mode === "ml")!;
+  const comparisons = arms.filter(a => a !== learned).map(a => ({ baseline: a.policy.name,
+    reliabilityPass: learned.reliability.fullyCompleted >= a.reliability.fullyCompleted && learned.reliability.completedTasks >= a.reliability.completedTasks,
+    safetyPass: safeRelative(a.outcomes, learned.outcomes), performance: pairedPerformance(a.outcomes, learned.outcomes) }));
+  expect(sourceHashes()).toEqual(frozen.sourceHashes);
+  writeFileSync(`${LOCAL_DIR}/acceptance.json`, JSON.stringify({ frozen, arms, comparisons,
+    accepted: comparisons.every(c => c.reliabilityPass && c.safetyPass && c.performance.meanTicksSaved95CI[0] > 0) }, null, 2));
+}, 600000);
+
+it("explicit complete beacons preserve deterministic auction outcomes", () => {
+  for (const seed of [6000, 6001, 6017, 6199, 5076])
+    expect(rollout(seed, localScorer({ name: "parity", mode: "base" }))).toEqual(rollout(seed));
+});
+
+it.skipIf(process.env.BID_LOCAL_TIMING !== "1")("records host-only inference and local packet timing", () => {
+  mkdirSync(LOCAL_DIR, { recursive: true });
+  const { world, tasks } = scenario(6000), { model } = guardArtifact();
+  const inputs = world.robots.map(r => localInput(world, tasks[0], r.id));
+  const packets = inputs.map(i => makeLocalBid(i, model));
+  const features = packets.find(p => p.features.length > 0)!.features;
+  const measure = (fn: () => unknown, count: number) => {
+    for (let i = 0; i < 1000; i++) fn();
+    const times: number[] = [];
+    for (let i = 0; i < count; i++) { const start = process.hrtime.bigint(); fn(); times.push(Number(process.hrtime.bigint() - start) / 1000); }
+    times.sort((a, b) => a - b);
+    return { samples: count, unit: "microseconds", median: times[Math.floor(count * 0.5)], p95: times[Math.floor(count * 0.95)], p99: times[Math.floor(count * 0.99)] };
+  };
+  writeFileSync(`${LOCAL_DIR}/host-timing.json`, JSON.stringify({ environment: { cpu: cpus()[0]?.model, platform: platform(), arch: arch(), node: process.version },
+    limitation: "Host microbenchmark, warm caches, one representative snapshot; not onboard hardware or network latency.",
+    predict: measure(() => predictBid(model, features), 10000),
+    localPacket: measure(() => makeLocalBid(inputs[0], model), 2000),
+    winnerGuard: measure(() => selectLocalBid(packets), 10000),
+    modelParameters: model.parameters.length, modelJsonBytes: Buffer.byteLength(JSON.stringify(model)),
+    packetJsonBytes: packets.map(p => Buffer.byteLength(JSON.stringify(p))) }, null, 2));
+});

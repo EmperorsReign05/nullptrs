@@ -1,5 +1,5 @@
-import { BID_FEATURE_NAMES, extractBidFeatures, correctionFeasible, assessBidEnergy, type BidEnergyAssessment } from "./bidfeatures";
-import { calculateBid, withBidScorer, type BidScorer } from "../auction/cost";
+import { BID_FEATURE_NAMES, extractBidFeatures, correctionFeasible, assessBidEnergy, type BidEnergyAssessment, localBidView, type LocalBidInput } from "./bidfeatures";
+import { calculateBid, withBidScorer, type BidScorer, type RobotBid } from "../auction/cost";
 import { getBiddingRobots } from "../auction/assign";
 import type { RobotState, WorldState } from "../types";
 
@@ -231,4 +231,62 @@ export function guardedBidScorer(model: BidModel, bound = 0.1,
     }
     return result.fallback ? bid.totalCost : raw(robot, task, world, bid, route);
   };
+}
+
+export type LocalBidPacket = {
+  robotId: string; taskId: string; tick: number;
+  bid: RobotBid | null; features: number[]; mlCost: number | null;
+  energy: BidEnergyAssessment; reciprocalIntent: boolean; completePeerKnowledge: boolean;
+};
+
+/** Local scoring boundary: no WorldState argument, callback, global fleet
+ * lookup, or simulator clock. Returned values are JSON-serializable bid data.
+ */
+export function makeLocalBid(input: LocalBidInput, model: BidModel, bound = 0.1): LocalBidPacket {
+  const { world, completePeerKnowledge } = localBidView(input);
+  const self = world.robots[0];
+  const base = calculateBid(self, input.task, world);
+  const eligible = base.feasible && self.status !== "failed" && self.status !== "charging" &&
+    self.battery >= 20 && (self.queuedTaskIds?.length ?? 0) < 4;
+  const energy = assessBidEnergy(self, input.task, world);
+  const features = eligible ? extractBidFeatures(self, input.task, world, base) : [];
+  const mlCost = !eligible ? null : !completePeerKnowledge ? base.totalCost :
+    calculateBid(self, input.task, withBidScorer(world, learnedBidScorer(model, bound))).totalCost;
+  return { robotId: self.id, taskId: input.task.id, tick: input.tick,
+    bid: eligible ? base : null, features, mlCost, energy,
+    reciprocalIntent: hasReciprocalIntent(self, world), completePeerKnowledge };
+}
+
+/** Pure guard over explicitly received bid packets. This is not a consensus
+ * protocol: the caller must provide one agreed auction round and ownership.
+ * Implementing distributed agreement is outside the learned scorer's scope.
+ */
+export function selectLocalBid(packets: readonly LocalBidPacket[], bound = 0.1) {
+  if (!Number.isFinite(bound) || bound < 0 || bound > 0.2) throw new Error("Invalid bound");
+  const seen = new Set<string>();
+  for (const p of packets) {
+    if (seen.has(p.robotId) || p.tick !== packets[0].tick || p.taskId !== packets[0].taskId)
+      throw new Error("Mixed or duplicate bid round");
+    seen.add(p.robotId);
+  }
+  const viable = packets.filter((p): p is LocalBidPacket & { bid: RobotBid; mlCost: number } =>
+    p.bid !== null && p.bid.feasible && p.mlCost !== null && Number.isFinite(p.mlCost) && Number.isFinite(p.bid.totalCost));
+  const rank = (field: (p: typeof viable[number]) => number) => [...viable].sort((a, b) => field(a) - field(b) || (a.robotId < b.robotId ? -1 : 1))[0];
+  const base = rank(p => p.bid.totalCost);
+  if (!base) return { winner: null, deterministicWinner: null, proposedWinner: null, suppressed: false, reason: "no-bids" };
+  const proposed = rank(p => p.mlCost)!;
+  let reason = "unchanged";
+  if (base.robotId !== proposed.robotId) {
+    if (viable.some(p => p.features.length !== BID_FEATURE_NAMES.length || p.features.some(x => !Number.isFinite(x)))) reason = "invalid-features";
+    else if (viable.some(p => !p.completePeerKnowledge)) reason = "incomplete-peer-view";
+    else if (viable.some(p => p.mlCost > p.bid.totalCost || p.mlCost < p.bid.totalCost - bound * Math.abs(p.bid.totalCost) - 1e-9)) reason = "invalid-correction";
+    else if (proposed.bid.totalCost - base.bid.totalCost > bound * Math.abs(proposed.bid.totalCost)) reason = "score-gap";
+    else if (proposed.reciprocalIntent) reason = "reciprocal-intent";
+    else if (proposed.features[6] > base.features[6] && proposed.features[13] >= base.features[13]) reason = "workload-pressure";
+    else if (!base.energy.activeRouteCertified || !proposed.energy.admitted || !Number.isFinite(proposed.energy.margin) || proposed.energy.margin < 0) reason = "energy-admission";
+    else reason = "allowed";
+  }
+  const suppressed = reason !== "unchanged" && reason !== "allowed";
+  return { winner: suppressed ? base.robotId : proposed.robotId, deterministicWinner: base.robotId,
+    proposedWinner: proposed.robotId, suppressed, reason };
 }

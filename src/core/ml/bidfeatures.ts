@@ -1,6 +1,6 @@
 import type { Position, RobotState, Task, WorldState } from "../types";
 import type { RobotBid } from "../auction/cost";
-import { CHARGING_STATIONS } from "../map/warehouse";
+import { CHARGING_STATIONS, computeCongestion } from "../map/warehouse";
 import { planPath } from "../pathfinding/astar";
 import { BATTERY_PERCENT_PER_CELL } from "../simulation/robotModels";
 
@@ -178,4 +178,60 @@ export function assessBidEnergy(robot: RobotState, task: Task, world: WorldState
   }
   out.admitted = true; out.reason = "certified";
   return out;
+}
+
+/** Explicit received data, not a handle to the fleet or simulator. Static
+ * geometry carries no live congestion; pressure is rebuilt from received poses.
+ * Training may be centralized. Inference sees only this contract.
+ */
+export type PeerBidBeacon = {
+  senderId: string; sequence: number; observedTick: number;
+  position: Position; path: readonly Position[];
+};
+export type LocalBidInput = {
+  tick: number; self: RobotState; task: Task; ownTasks: readonly Task[];
+  geometry: Pick<WorldState["map"], "width" | "height"> & {
+    cells: readonly Pick<WorldState["map"]["cells"][number], "position" | "blocked">[];
+  };
+  receivedPeers: readonly PeerBidBeacon[];
+  expectedPeerIds: readonly string[];
+  maxPeerAgeTicks: number;
+};
+
+export function localBidView(input: LocalBidInput): { world: WorldState; completePeerKnowledge: boolean } {
+  if (!Number.isInteger(input.tick) || input.tick < 0 || !Number.isInteger(input.maxPeerAgeTicks) || input.maxPeerAgeTicks < 0)
+    throw new Error("Invalid local observation time");
+  const expected = new Set(input.expectedPeerIds.filter(id => id !== input.self.id));
+  const validPosition = (p: Position) => Number.isInteger(p.x) && Number.isInteger(p.y) &&
+    p.x >= 0 && p.y >= 0 && p.x < input.geometry.width && p.y < input.geometry.height &&
+    input.geometry.cells.some(c => c.position.x === p.x && c.position.y === p.y && !c.blocked);
+  const latest = new Map<string, PeerBidBeacon>();
+  const conflicted = new Set<string>();
+  for (const message of input.receivedPeers) {
+    if (!expected.has(message.senderId) || !Number.isInteger(message.sequence) || message.sequence < 0 ||
+        !Number.isInteger(message.observedTick) || message.observedTick < 0 || message.observedTick > input.tick ||
+        !validPosition(message.position) || !message.path.every(validPosition) ||
+        input.tick - message.observedTick > input.maxPeerAgeTicks) continue;
+    const old = latest.get(message.senderId);
+    if (old && old.sequence === message.sequence && JSON.stringify([old.position, old.path]) !== JSON.stringify([message.position, message.path]))
+      conflicted.add(message.senderId);
+    if (!old || message.sequence > old.sequence) latest.set(message.senderId, message);
+  }
+  const peers: RobotState[] = [...latest.values()].filter(m => !conflicted.has(m.senderId)).sort((a, b) => a.senderId.localeCompare(b.senderId)).map(m => ({
+    // Only position and intent are used by congestion/features. No peer private
+    // battery, task queue, payload, or unreceived route is reconstructed.
+    id: m.senderId, position: { ...m.position }, home: { ...m.position }, path: m.path.map(p => ({ ...p })),
+    battery: 0, status: "idle", model: { model: "received-intent-only", payloadCapacity: 0 }, priority: 0,
+  }));
+  const self = { ...input.self, position: { ...input.self.position }, home: { ...input.self.home },
+    path: input.self.path.map(p => ({ ...p })), queuedTaskIds: [...(input.self.queuedTaskIds ?? [])] };
+  const knownTaskIds = new Set([self.currentTaskId, ...(self.queuedTaskIds ?? []), input.task.id]);
+  const tasks = input.ownTasks.filter(t => knownTaskIds.has(t.id) && t.id !== input.task.id).map(t => ({ ...t }));
+  tasks.push({ ...input.task });
+  const robots = [self, ...peers];
+  const map = { width: input.geometry.width, height: input.geometry.height,
+    cells: input.geometry.cells.map(c => ({ position: { ...c.position }, blocked: c.blocked, congestion: 0 })) };
+  return { world: { tick: input.tick, robots, tasks, map: computeCongestion(map, robots),
+    metrics: { replans: 0, conflictCount: 0, waitMoves: 0, inheritedPriorities: 0, backtracks: 0 } },
+    completePeerKnowledge: peers.length === expected.size };
 }

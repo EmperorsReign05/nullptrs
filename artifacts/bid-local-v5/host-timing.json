@@ -1,0 +1,38 @@
+{
+  "environment": {
+    "cpu": "Intel(R) Core(TM) Ultra 9 185H",
+    "platform": "linux",
+    "arch": "x64",
+    "node": "v24.18.0"
+  },
+  "limitation": "Host microbenchmark, warm caches, one representative snapshot; not onboard hardware or network latency.",
+  "predict": {
+    "samples": 10000,
+    "unit": "microseconds",
+    "median": 1.4,
+    "p95": 1.874,
+    "p99": 2.752
+  },
+  "localPacket": {
+    "samples": 2000,
+    "unit": "microseconds",
+    "median": 147.799,
+    "p95": 171.1,
+    "p99": 226.911
+  },
+  "winnerGuard": {
+    "samples": 10000,
+    "unit": "microseconds",
+    "median": 0.735,
+    "p95": 1.27,
+    "p99": 2.042
+  },
+  "modelParameters": 289,
+  "modelJsonBytes": 6863,
+  "packetJsonBytes": [
+    602,
+    605,
+    606,
+    606
+  ]
+}
