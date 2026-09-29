@@ -1,0 +1,1260 @@
+{
+  "derivedFrom": "artifacts/bid-energy-v4/acceptance.json",
+  "sourceCommit": "65431a3",
+  "summary": {
+    "protocol": "v4 frozen hard energy admission, unchanged MLP, fresh 200-seed evaluation",
+    "modelSHA256": "68ba20108e796b5a0ca018f39e1d0cce63678eafaf37b9a465273016317ffa44",
+    "sourceHashes": {
+      "src/core/auction/cost.ts": "6c987fe69c4b2cd56ca7247c19c1823245f98cd3a43881b59fff9e058bc0a3f6",
+      "src/core/auction/assign.ts": "93560b8208326910ef851cffd3809b0e482cec2fe4ddf8978b8772c4c6f748f9",
+      "src/core/ml/bidfeatures.ts": "cdce15ea80f1bb661791c17b064ffaef713cf2cf1219cbd5c5ebdca80bb0cccd",
+      "src/core/ml/bidmodel.ts": "7b42059c899344300f2bc1803b69dbf374850f329e12281d8228052a728fd63f",
+      "src/core/simulation/dispatch.ts": "9124ba21e687c3c22ee925f5d3f50312ae7a05c764b8dc4a43ff555386ee98d1",
+      "src/core/simulation/engine.ts": "66f4da127f4cfe80444e7f4dca79439450e6b2f6877506d8b3bf7f4d0e70d870",
+      "src/core/simulation/robotModels.ts": "280323b6c0543311c27e57ca4164b215ebd892f3107a021a248814b365554e32",
+      "src/core/map/warehouse.ts": "05acf7b4d296e27e517fd9d5b6a51335ad8eb49245c3e80b3b8f82a44f12d50c",
+      "src/core/pathfinding/astar.ts": "c822dc66bd7234b065e1b6c6398cc11f56e438aec65da90d3070b1bbfa633fbf",
+      "src/core/pathfinding/pibt.ts": "fc83a4e086580c943b94f9c44d504a00bb0018126bc1de28995e066c9f42a20b",
+      "src/core/bench/stopwait.ts": "da6c16356705314a4cd758c6e4a3c100fe94883a7ac1d6b75904f821cb91bc86"
+    },
+    "guard": "workload",
+    "bound": 0.1,
+    "seeds": [
+      7000,
+      7001,
+      7002,
+      7003,
+      7004,
+      7005,
+      7006,
+      7007,
+      7008,
+      7009,
+      7010,
+      7011,
+      7012,
+      7013,
+      7014,
+      7015,
+      7016,
+      7017,
+      7018,
+      7019,
+      7020,
+      7021,
+      7022,
+      7023,
+      7024,
+      7025,
+      7026,
+      7027,
+      7028,
+      7029,
+      7030,
+      7031,
+      7032,
+      7033,
+      7034,
+      7035,
+      7036,
+      7037,
+      7038,
+      7039,
+      7040,
+      7041,
+      7042,
+      7043,
+      7044,
+      7045,
+      7046,
+      7047,
+      7048,
+      7049,
+      7050,
+      7051,
+      7052,
+      7053,
+      7054,
+      7055,
+      7056,
+      7057,
+      7058,
+      7059,
+      7060,
+      7061,
+      7062,
+      7063,
+      7064,
+      7065,
+      7066,
+      7067,
+      7068,
+      7069,
+      7070,
+      7071,
+      7072,
+      7073,
+      7074,
+      7075,
+      7076,
+      7077,
+      7078,
+      7079,
+      7080,
+      7081,
+      7082,
+      7083,
+      7084,
+      7085,
+      7086,
+      7087,
+      7088,
+      7089,
+      7090,
+      7091,
+      7092,
+      7093,
+      7094,
+      7095,
+      7096,
+      7097,
+      7098,
+      7099,
+      7100,
+      7101,
+      7102,
+      7103,
+      7104,
+      7105,
+      7106,
+      7107,
+      7108,
+      7109,
+      7110,
+      7111,
+      7112,
+      7113,
+      7114,
+      7115,
+      7116,
+      7117,
+      7118,
+      7119,
+      7120,
+      7121,
+      7122,
+      7123,
+      7124,
+      7125,
+      7126,
+      7127,
+      7128,
+      7129,
+      7130,
+      7131,
+      7132,
+      7133,
+      7134,
+      7135,
+      7136,
+      7137,
+      7138,
+      7139,
+      7140,
+      7141,
+      7142,
+      7143,
+      7144,
+      7145,
+      7146,
+      7147,
+      7148,
+      7149,
+      7150,
+      7151,
+      7152,
+      7153,
+      7154,
+      7155,
+      7156,
+      7157,
+      7158,
+      7159,
+      7160,
+      7161,
+      7162,
+      7163,
+      7164,
+      7165,
+      7166,
+      7167,
+      7168,
+      7169,
+      7170,
+      7171,
+      7172,
+      7173,
+      7174,
+      7175,
+      7176,
+      7177,
+      7178,
+      7179,
+      7180,
+      7181,
+      7182,
+      7183,
+      7184,
+      7185,
+      7186,
+      7187,
+      7188,
+      7189,
+      7190,
+      7191,
+      7192,
+      7193,
+      7194,
+      7195,
+      7196,
+      7197,
+      7198,
+      7199
+    ],
+    "trainingActions": 15268,
+    "trainingSeeds": 256,
+    "developmentSeeds": 400,
+    "retrained": false,
+    "baseline": {
+      "seeds": 200,
+      "fullyCompleted": 192,
+      "meanCappedTicks": 142.95,
+      "medianCappedTicks": 130,
+      "meanTasksPerTick": 0.10667937388388099,
+      "completedTasks": 2783,
+      "totalTasks": 2800
+    },
+    "learned": {
+      "seeds": 200,
+      "fullyCompleted": 192,
+      "meanCappedTicks": 140.97,
+      "medianCappedTicks": 129,
+      "meanTasksPerTick": 0.10812537344681603,
+      "completedTasks": 2783,
+      "totalTasks": 2800
+    },
+    "reliabilityPass": true,
+    "safetyPass": true,
+    "safety": {
+      "baseline": {
+        "collisions": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "overloaded": 0,
+        "queueOverflow": 0
+      },
+      "learned": {
+        "collisions": 0,
+        "swaps": 0,
+        "blockedCells": 0,
+        "zeroBatteryWork": 0,
+        "overloaded": 0,
+        "queueOverflow": 0
+      }
+    },
+    "performance": {
+      "pairedSeeds": 192,
+      "meanTicksSaved": 2.0625,
+      "medianTicksSaved": 0,
+      "meanBaselineTicks": 132.23958333333334,
+      "meanLearnedTicks": 130.17708333333334,
+      "medianBaselineTicks": 129,
+      "medianLearnedTicks": 128,
+      "meanPairedPercentImprovement": 1.2704817381064297,
+      "aggregatePercentImprovement": 1.5596691610870421,
+      "wins": 21,
+      "ties": 165,
+      "losses": 6,
+      "meanTicksSaved95CI": [
+        0.8489583333333334,
+        3.4739583333333335
+      ],
+      "pairs": [
+        {
+          "seed": 7000,
+          "baseline": 131,
+          "learned": 131
+        },
+        {
+          "seed": 7001,
+          "baseline": 158,
+          "learned": 158
+        },
+        {
+          "seed": 7002,
+          "baseline": 115,
+          "learned": 132
+        },
+        {
+          "seed": 7003,
+          "baseline": 122,
+          "learned": 122
+        },
+        {
+          "seed": 7004,
+          "baseline": 163,
+          "learned": 163
+        },
+        {
+          "seed": 7005,
+          "baseline": 149,
+          "learned": 149
+        },
+        {
+          "seed": 7006,
+          "baseline": 130,
+          "learned": 130
+        },
+        {
+          "seed": 7007,
+          "baseline": 86,
+          "learned": 86
+        },
+        {
+          "seed": 7008,
+          "baseline": 127,
+          "learned": 127
+        },
+        {
+          "seed": 7009,
+          "baseline": 147,
+          "learned": 147
+        },
+        {
+          "seed": 7010,
+          "baseline": 149,
+          "learned": 149
+        },
+        {
+          "seed": 7011,
+          "baseline": 126,
+          "learned": 126
+        },
+        {
+          "seed": 7012,
+          "baseline": 101,
+          "learned": 101
+        },
+        {
+          "seed": 7013,
+          "baseline": 123,
+          "learned": 123
+        },
+        {
+          "seed": 7014,
+          "baseline": 129,
+          "learned": 129
+        },
+        {
+          "seed": 7015,
+          "baseline": 98,
+          "learned": 85
+        },
+        {
+          "seed": 7016,
+          "baseline": 131,
+          "learned": 118
+        },
+        {
+          "seed": 7017,
+          "baseline": 125,
+          "learned": 119
+        },
+        {
+          "seed": 7018,
+          "baseline": 125,
+          "learned": 116
+        },
+        {
+          "seed": 7019,
+          "baseline": 100,
+          "learned": 98
+        },
+        {
+          "seed": 7020,
+          "baseline": 193,
+          "learned": 193
+        },
+        {
+          "seed": 7021,
+          "baseline": 115,
+          "learned": 115
+        },
+        {
+          "seed": 7022,
+          "baseline": 116,
+          "learned": 116
+        },
+        {
+          "seed": 7023,
+          "baseline": 136,
+          "learned": 136
+        },
+        {
+          "seed": 7024,
+          "baseline": 165,
+          "learned": 171
+        },
+        {
+          "seed": 7025,
+          "baseline": 144,
+          "learned": 144
+        },
+        {
+          "seed": 7026,
+          "baseline": 126,
+          "learned": 126
+        },
+        {
+          "seed": 7027,
+          "baseline": 112,
+          "learned": 112
+        },
+        {
+          "seed": 7028,
+          "baseline": 127,
+          "learned": 127
+        },
+        {
+          "seed": 7029,
+          "baseline": 225,
+          "learned": 225
+        },
+        {
+          "seed": 7030,
+          "baseline": 122,
+          "learned": 122
+        },
+        {
+          "seed": 7031,
+          "baseline": 103,
+          "learned": 103
+        },
+        {
+          "seed": 7032,
+          "baseline": 142,
+          "learned": 142
+        },
+        {
+          "seed": 7033,
+          "baseline": 90,
+          "learned": 90
+        },
+        {
+          "seed": 7034,
+          "baseline": 184,
+          "learned": 184
+        },
+        {
+          "seed": 7035,
+          "baseline": 150,
+          "learned": 150
+        },
+        {
+          "seed": 7036,
+          "baseline": 139,
+          "learned": 139
+        },
+        {
+          "seed": 7037,
+          "baseline": 126,
+          "learned": 126
+        },
+        {
+          "seed": 7038,
+          "baseline": 112,
+          "learned": 118
+        },
+        {
+          "seed": 7039,
+          "baseline": 136,
+          "learned": 136
+        },
+        {
+          "seed": 7040,
+          "baseline": 84,
+          "learned": 84
+        },
+        {
+          "seed": 7041,
+          "baseline": 163,
+          "learned": 98
+        },
+        {
+          "seed": 7042,
+          "baseline": 82,
+          "learned": 88
+        },
+        {
+          "seed": 7043,
+          "baseline": 125,
+          "learned": 125
+        },
+        {
+          "seed": 7044,
+          "baseline": 128,
+          "learned": 128
+        },
+        {
+          "seed": 7045,
+          "baseline": 158,
+          "learned": 158
+        },
+        {
+          "seed": 7046,
+          "baseline": 131,
+          "learned": 131
+        },
+        {
+          "seed": 7047,
+          "baseline": 69,
+          "learned": 69
+        },
+        {
+          "seed": 7048,
+          "baseline": 95,
+          "learned": 95
+        },
+        {
+          "seed": 7049,
+          "baseline": 158,
+          "learned": 158
+        },
+        {
+          "seed": 7050,
+          "baseline": 154,
+          "learned": 154
+        },
+        {
+          "seed": 7051,
+          "baseline": 160,
+          "learned": 138
+        },
+        {
+          "seed": 7052,
+          "baseline": 160,
+          "learned": 160
+        },
+        {
+          "seed": 7053,
+          "baseline": 137,
+          "learned": 137
+        },
+        {
+          "seed": 7054,
+          "baseline": 149,
+          "learned": 137
+        },
+        {
+          "seed": 7055,
+          "baseline": 135,
+          "learned": 135
+        },
+        {
+          "seed": 7057,
+          "baseline": 120,
+          "learned": 120
+        },
+        {
+          "seed": 7058,
+          "baseline": 148,
+          "learned": 148
+        },
+        {
+          "seed": 7059,
+          "baseline": 124,
+          "learned": 124
+        },
+        {
+          "seed": 7060,
+          "baseline": 123,
+          "learned": 123
+        },
+        {
+          "seed": 7061,
+          "baseline": 131,
+          "learned": 131
+        },
+        {
+          "seed": 7062,
+          "baseline": 110,
+          "learned": 110
+        },
+        {
+          "seed": 7063,
+          "baseline": 114,
+          "learned": 114
+        },
+        {
+          "seed": 7064,
+          "baseline": 102,
+          "learned": 102
+        },
+        {
+          "seed": 7065,
+          "baseline": 118,
+          "learned": 118
+        },
+        {
+          "seed": 7066,
+          "baseline": 140,
+          "learned": 140
+        },
+        {
+          "seed": 7067,
+          "baseline": 190,
+          "learned": 201
+        },
+        {
+          "seed": 7068,
+          "baseline": 159,
+          "learned": 159
+        },
+        {
+          "seed": 7069,
+          "baseline": 143,
+          "learned": 143
+        },
+        {
+          "seed": 7070,
+          "baseline": 115,
+          "learned": 115
+        },
+        {
+          "seed": 7071,
+          "baseline": 87,
+          "learned": 87
+        },
+        {
+          "seed": 7072,
+          "baseline": 136,
+          "learned": 136
+        },
+        {
+          "seed": 7073,
+          "baseline": 139,
+          "learned": 139
+        },
+        {
+          "seed": 7074,
+          "baseline": 99,
+          "learned": 99
+        },
+        {
+          "seed": 7075,
+          "baseline": 134,
+          "learned": 134
+        },
+        {
+          "seed": 7076,
+          "baseline": 121,
+          "learned": 121
+        },
+        {
+          "seed": 7077,
+          "baseline": 97,
+          "learned": 97
+        },
+        {
+          "seed": 7078,
+          "baseline": 124,
+          "learned": 124
+        },
+        {
+          "seed": 7079,
+          "baseline": 136,
+          "learned": 136
+        },
+        {
+          "seed": 7080,
+          "baseline": 113,
+          "learned": 113
+        },
+        {
+          "seed": 7081,
+          "baseline": 161,
+          "learned": 161
+        },
+        {
+          "seed": 7082,
+          "baseline": 123,
+          "learned": 123
+        },
+        {
+          "seed": 7083,
+          "baseline": 120,
+          "learned": 120
+        },
+        {
+          "seed": 7084,
+          "baseline": 105,
+          "learned": 105
+        },
+        {
+          "seed": 7085,
+          "baseline": 130,
+          "learned": 130
+        },
+        {
+          "seed": 7086,
+          "baseline": 187,
+          "learned": 187
+        },
+        {
+          "seed": 7087,
+          "baseline": 127,
+          "learned": 127
+        },
+        {
+          "seed": 7088,
+          "baseline": 119,
+          "learned": 119
+        },
+        {
+          "seed": 7089,
+          "baseline": 173,
+          "learned": 136
+        },
+        {
+          "seed": 7091,
+          "baseline": 161,
+          "learned": 161
+        },
+        {
+          "seed": 7092,
+          "baseline": 145,
+          "learned": 145
+        },
+        {
+          "seed": 7093,
+          "baseline": 108,
+          "learned": 108
+        },
+        {
+          "seed": 7094,
+          "baseline": 124,
+          "learned": 124
+        },
+        {
+          "seed": 7095,
+          "baseline": 128,
+          "learned": 128
+        },
+        {
+          "seed": 7096,
+          "baseline": 135,
+          "learned": 135
+        },
+        {
+          "seed": 7097,
+          "baseline": 160,
+          "learned": 159
+        },
+        {
+          "seed": 7098,
+          "baseline": 188,
+          "learned": 188
+        },
+        {
+          "seed": 7099,
+          "baseline": 148,
+          "learned": 148
+        },
+        {
+          "seed": 7100,
+          "baseline": 186,
+          "learned": 139
+        },
+        {
+          "seed": 7101,
+          "baseline": 103,
+          "learned": 103
+        },
+        {
+          "seed": 7103,
+          "baseline": 138,
+          "learned": 138
+        },
+        {
+          "seed": 7105,
+          "baseline": 134,
+          "learned": 134
+        },
+        {
+          "seed": 7106,
+          "baseline": 85,
+          "learned": 85
+        },
+        {
+          "seed": 7109,
+          "baseline": 148,
+          "learned": 158
+        },
+        {
+          "seed": 7110,
+          "baseline": 107,
+          "learned": 107
+        },
+        {
+          "seed": 7111,
+          "baseline": 144,
+          "learned": 144
+        },
+        {
+          "seed": 7112,
+          "baseline": 140,
+          "learned": 140
+        },
+        {
+          "seed": 7113,
+          "baseline": 109,
+          "learned": 109
+        },
+        {
+          "seed": 7114,
+          "baseline": 186,
+          "learned": 133
+        },
+        {
+          "seed": 7115,
+          "baseline": 112,
+          "learned": 112
+        },
+        {
+          "seed": 7116,
+          "baseline": 140,
+          "learned": 140
+        },
+        {
+          "seed": 7117,
+          "baseline": 160,
+          "learned": 160
+        },
+        {
+          "seed": 7118,
+          "baseline": 124,
+          "learned": 124
+        },
+        {
+          "seed": 7119,
+          "baseline": 93,
+          "learned": 93
+        },
+        {
+          "seed": 7120,
+          "baseline": 130,
+          "learned": 130
+        },
+        {
+          "seed": 7121,
+          "baseline": 143,
+          "learned": 143
+        },
+        {
+          "seed": 7122,
+          "baseline": 177,
+          "learned": 177
+        },
+        {
+          "seed": 7123,
+          "baseline": 124,
+          "learned": 124
+        },
+        {
+          "seed": 7124,
+          "baseline": 147,
+          "learned": 147
+        },
+        {
+          "seed": 7125,
+          "baseline": 129,
+          "learned": 129
+        },
+        {
+          "seed": 7126,
+          "baseline": 170,
+          "learned": 170
+        },
+        {
+          "seed": 7127,
+          "baseline": 121,
+          "learned": 121
+        },
+        {
+          "seed": 7128,
+          "baseline": 110,
+          "learned": 110
+        },
+        {
+          "seed": 7129,
+          "baseline": 162,
+          "learned": 162
+        },
+        {
+          "seed": 7130,
+          "baseline": 129,
+          "learned": 129
+        },
+        {
+          "seed": 7131,
+          "baseline": 113,
+          "learned": 113
+        },
+        {
+          "seed": 7132,
+          "baseline": 123,
+          "learned": 123
+        },
+        {
+          "seed": 7133,
+          "baseline": 126,
+          "learned": 126
+        },
+        {
+          "seed": 7134,
+          "baseline": 79,
+          "learned": 79
+        },
+        {
+          "seed": 7135,
+          "baseline": 135,
+          "learned": 135
+        },
+        {
+          "seed": 7136,
+          "baseline": 150,
+          "learned": 150
+        },
+        {
+          "seed": 7137,
+          "baseline": 118,
+          "learned": 118
+        },
+        {
+          "seed": 7138,
+          "baseline": 130,
+          "learned": 130
+        },
+        {
+          "seed": 7139,
+          "baseline": 146,
+          "learned": 146
+        },
+        {
+          "seed": 7140,
+          "baseline": 130,
+          "learned": 130
+        },
+        {
+          "seed": 7141,
+          "baseline": 151,
+          "learned": 151
+        },
+        {
+          "seed": 7142,
+          "baseline": 140,
+          "learned": 140
+        },
+        {
+          "seed": 7143,
+          "baseline": 163,
+          "learned": 163
+        },
+        {
+          "seed": 7144,
+          "baseline": 135,
+          "learned": 135
+        },
+        {
+          "seed": 7145,
+          "baseline": 182,
+          "learned": 182
+        },
+        {
+          "seed": 7146,
+          "baseline": 132,
+          "learned": 132
+        },
+        {
+          "seed": 7147,
+          "baseline": 120,
+          "learned": 113
+        },
+        {
+          "seed": 7148,
+          "baseline": 164,
+          "learned": 164
+        },
+        {
+          "seed": 7149,
+          "baseline": 123,
+          "learned": 123
+        },
+        {
+          "seed": 7150,
+          "baseline": 121,
+          "learned": 120
+        },
+        {
+          "seed": 7151,
+          "baseline": 177,
+          "learned": 177
+        },
+        {
+          "seed": 7152,
+          "baseline": 125,
+          "learned": 125
+        },
+        {
+          "seed": 7153,
+          "baseline": 173,
+          "learned": 150
+        },
+        {
+          "seed": 7154,
+          "baseline": 121,
+          "learned": 121
+        },
+        {
+          "seed": 7155,
+          "baseline": 126,
+          "learned": 126
+        },
+        {
+          "seed": 7156,
+          "baseline": 106,
+          "learned": 106
+        },
+        {
+          "seed": 7157,
+          "baseline": 142,
+          "learned": 142
+        },
+        {
+          "seed": 7158,
+          "baseline": 127,
+          "learned": 127
+        },
+        {
+          "seed": 7159,
+          "baseline": 107,
+          "learned": 107
+        },
+        {
+          "seed": 7160,
+          "baseline": 88,
+          "learned": 88
+        },
+        {
+          "seed": 7162,
+          "baseline": 168,
+          "learned": 168
+        },
+        {
+          "seed": 7163,
+          "baseline": 142,
+          "learned": 123
+        },
+        {
+          "seed": 7164,
+          "baseline": 152,
+          "learned": 125
+        },
+        {
+          "seed": 7165,
+          "baseline": 109,
+          "learned": 109
+        },
+        {
+          "seed": 7166,
+          "baseline": 144,
+          "learned": 144
+        },
+        {
+          "seed": 7167,
+          "baseline": 124,
+          "learned": 124
+        },
+        {
+          "seed": 7168,
+          "baseline": 165,
+          "learned": 165
+        },
+        {
+          "seed": 7169,
+          "baseline": 153,
+          "learned": 153
+        },
+        {
+          "seed": 7170,
+          "baseline": 101,
+          "learned": 101
+        },
+        {
+          "seed": 7171,
+          "baseline": 147,
+          "learned": 147
+        },
+        {
+          "seed": 7172,
+          "baseline": 138,
+          "learned": 138
+        },
+        {
+          "seed": 7173,
+          "baseline": 145,
+          "learned": 145
+        },
+        {
+          "seed": 7174,
+          "baseline": 142,
+          "learned": 134
+        },
+        {
+          "seed": 7175,
+          "baseline": 160,
+          "learned": 160
+        },
+        {
+          "seed": 7176,
+          "baseline": 150,
+          "learned": 150
+        },
+        {
+          "seed": 7177,
+          "baseline": 119,
+          "learned": 119
+        },
+        {
+          "seed": 7178,
+          "baseline": 124,
+          "learned": 114
+        },
+        {
+          "seed": 7179,
+          "baseline": 180,
+          "learned": 139
+        },
+        {
+          "seed": 7180,
+          "baseline": 110,
+          "learned": 110
+        },
+        {
+          "seed": 7181,
+          "baseline": 95,
+          "learned": 95
+        },
+        {
+          "seed": 7182,
+          "baseline": 77,
+          "learned": 77
+        },
+        {
+          "seed": 7183,
+          "baseline": 107,
+          "learned": 107
+        },
+        {
+          "seed": 7184,
+          "baseline": 128,
+          "learned": 128
+        },
+        {
+          "seed": 7185,
+          "baseline": 95,
+          "learned": 95
+        },
+        {
+          "seed": 7186,
+          "baseline": 123,
+          "learned": 123
+        },
+        {
+          "seed": 7187,
+          "baseline": 126,
+          "learned": 126
+        },
+        {
+          "seed": 7188,
+          "baseline": 127,
+          "learned": 127
+        },
+        {
+          "seed": 7189,
+          "baseline": 114,
+          "learned": 114
+        },
+        {
+          "seed": 7190,
+          "baseline": 142,
+          "learned": 106
+        },
+        {
+          "seed": 7191,
+          "baseline": 108,
+          "learned": 108
+        },
+        {
+          "seed": 7192,
+          "baseline": 157,
+          "learned": 157
+        },
+        {
+          "seed": 7193,
+          "baseline": 99,
+          "learned": 99
+        },
+        {
+          "seed": 7194,
+          "baseline": 127,
+          "learned": 127
+        },
+        {
+          "seed": 7195,
+          "baseline": 150,
+          "learned": 150
+        },
+        {
+          "seed": 7196,
+          "baseline": 110,
+          "learned": 110
+        },
+        {
+          "seed": 7197,
+          "baseline": 139,
+          "learned": 139
+        },
+        {
+          "seed": 7199,
+          "baseline": 118,
+          "learned": 118
+        }
+      ]
+    },
+    "performancePass": true,
+    "usefulness": {
+      "evaluatedAuctions": 2800,
+      "proposedWinnerChanges": 62,
+      "allowedWinnerChanges": 43,
+      "suppressedWinnerChanges": 19,
+      "causallyHelpful": 25,
+      "causallyHarmful": 7,
+      "causallyNeutral": 11,
+      "interpretation": "Single-decision reversion under the same frozen downstream policy; effects interact and must not be added as independent savings."
+    },
+    "accepted": true,
+    "limitations": "Synthetic 4..8 robot, 12..16 task workload; 400-tick reliability horizon. Performance is conditional on both policies completing. Shared planner failures are not fixed. No hardware or universal safety/completion guarantee. Core deterministic default is unchanged."
+  }
+}
