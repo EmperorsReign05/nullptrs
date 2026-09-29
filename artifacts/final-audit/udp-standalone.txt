@@ -1,0 +1,24 @@
+
+ RUN  v2.1.9 /tmp/opencode/tr-core
+
+stdout | tests/udp.test.ts > UDP: three real OS processes, peer-to-peer, no coordinator > U1: agents on separate processes and sockets exchange state and finish their tasks
+U1 AMR-01: frames=13 lastTick=12 pos=6,11 task=completed DONE=YES decideUs=undefined rssMb=undefined peers=undefined
+     reasons {"no-move":1,"free":10,"step-aside":1,"undefined":1}
+U1 AMR-02: frames=17 lastTick=16 pos=6,1 task=completed DONE=YES decideUs=undefined rssMb=undefined peers=undefined
+     reasons {"no-move":1,"free":15,"undefined":1}
+U1 AMR-03: frames=7 lastTick=6 pos=5,8 task=completed DONE=YES decideUs=undefined rssMb=undefined peers=undefined
+     reasons {"no-move":3,"free":3,"undefined":1}
+U1 max peers observed per agent: 2, 2, 2  <- datagrams arrived over real UDP sockets
+U1 decision cost over 34 decisions: median 853us  p95 2501us  max 2886us
+U1 agent RSS: 65-69 MB (includes the tsx/Node runtime, not just the agent)
+U1 all three agents completed their task over UDP: true
+U1 frames per agent: 13, 17, 7  (task lengths differ by design)
+
+ ✓ tests/udp.test.ts (1 test) 16022ms
+   ✓ UDP: three real OS processes, peer-to-peer, no coordinator > U1: agents on separate processes and sockets exchange state and finish their tasks 16020ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  14:18:13
+   Duration  16.61s (transform 76ms, setup 0ms, collect 72ms, tests 16.02s, environment 0ms, prepare 107ms)
+

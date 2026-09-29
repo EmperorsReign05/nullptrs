@@ -1,0 +1,19 @@
+
+ RUN  v2.1.9 /tmp/opencode/tr-core
+
+ ✓ tests/bid-mlp.test.ts (27 tests | 11 skipped) 1950ms
+   ✓ winner-change guard > reproduces 5069 and causally removes only the learned-specific regression 370ms
+   ✓ hard learned-promotion energy admission > removes both causal v3 regressions without changing the trained model 440ms
+   ✓ explicit complete beacons preserve deterministic auction outcomes 759ms
+ ✓ tests/auction.test.ts (27 tests) 27ms
+ ✓ tests/charging.test.ts (9 tests) 15ms
+ ✓ tests/ownership.test.ts (11 tests) 62ms
+ ✓ tests/fleet-e2e.test.ts (2 tests) 101ms
+ ✓ tests/local-commit.test.ts (4 tests) 1831ms
+   ✓ per-agent synchronized commit > has no overlap or swaps across small connected and severed scenario sweeps 1788ms
+
+ Test Files  6 passed (6)
+      Tests  69 passed | 11 skipped (80)
+   Start at  14:18:14
+   Duration  7.76s (transform 596ms, setup 0ms, collect 895ms, tests 3.99s, environment 2ms, prepare 553ms)
+
