@@ -15,14 +15,14 @@ export function FleetStatus({ robots, selectedRobotId, onSelectRobot }: FleetSta
   const onlineCount = robots.filter(r => r.status !== 'failed').length;
 
   return (
-    <div className="bg-[#12161F]/35 backdrop-blur-xl rounded-xl border border-white/10 flex flex-col shrink-0 shadow-xl overflow-hidden">
-      <div className="h-12 px-5 border-b border-white/10 flex justify-between items-center bg-white/[0.03] backdrop-blur-sm">
+    <div className="bg-[#12161F]/35 backdrop-blur-xl rounded-xl border border-white/10 flex flex-col shadow-xl overflow-hidden">
+      <div className="h-12 px-5 border-b border-white/10 flex justify-between items-center bg-white/[0.03] backdrop-blur-sm shrink-0">
         <h3 className="font-mono text-sm font-semibold tracking-wide text-zinc-200">fleet status</h3>
         <span className="text-xs font-mono text-zinc-400">
           active: <span className="text-[#C9F27D] font-semibold">{onlineCount} / {robots.length}</span>
         </span>
       </div>
-      <div className="p-3 flex flex-col gap-1.5">
+      <div className="p-2 flex flex-col gap-1 overflow-y-auto max-h-[580px]">
         {robots.map((r, idx) => {
           const isSelected = selectedRobotId === r.id;
           const identityColor = getRobotColor(r.id, idx);
@@ -33,7 +33,7 @@ export function FleetStatus({ robots, selectedRobotId, onSelectRobot }: FleetSta
             <div 
               key={r.id} 
               onClick={() => onSelectRobot(isSelected ? null : r.id)}
-              className={`px-3 py-2.5 rounded-lg flex items-center justify-between transition-all duration-150 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg flex items-center justify-between transition-all duration-150 cursor-pointer ${
                 isSelected 
                   ? 'bg-[#C9F27D]/10 border border-[#C9F27D]/50 shadow-[0_0_15px_rgba(201,242,125,0.2)]' 
                   : 'hover:bg-white/[0.06] hover:border-white/10 border border-transparent'

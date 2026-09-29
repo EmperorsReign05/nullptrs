@@ -408,6 +408,14 @@ export default function Dashboard() {
                 robots={world.robots}
                 metrics={world.metrics}
               />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <ActiveTasks 
+                  tasks={world.tasks}
+                  robots={world.robots}
+                />
+                <EventLog logs={logs} />
+              </div>
             </div>
           </div>
 
@@ -417,13 +425,6 @@ export default function Dashboard() {
               selectedRobotId={selectedRobotId}
               onSelectRobot={setSelectedRobotId}
             />
-
-            <ActiveTasks 
-              tasks={world.tasks}
-              robots={world.robots}
-            />
-
-            <EventLog logs={logs} />
           </div>
         </div>
       </div>
