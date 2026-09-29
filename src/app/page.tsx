@@ -2,7 +2,10 @@
 import { useEffect, useState } from 'react';
 import { WarehouseMap, FleetStatus, ActiveTasks, EventLog, MetricsBar } from '@/components/dashboard';
 import type { FleetRuntime, RuntimeCommand } from '@/core/distributed/runtime';
-type Snapshot = ReturnType<FleetRuntime['snapshot']>;
+type Snapshot = ReturnType<FleetRuntime['snapshot']> & {
+  execution?: { robotId: string; kind?: string; fault?: string | null;
+    feedback?: { pose?: { x: number; y: number } | null; actions?: number; collisions?: number } | null }[];
+};
 export default function Page() {
   const [state, setState] = useState<Snapshot | null>(null);
   const [error, setError] = useState('');
@@ -43,6 +46,16 @@ export default function Page() {
     <p className="text-sm text-zinc-400">Bids with AI: {state.metrics.aiBidAttempts} · nonzero corrections: {state.metrics.nonzeroCorrections} · deterministic fallbacks: {state.metrics.disabledFallbacks + state.metrics.failedModelFallbacks} · observed overlaps: {state.safety.overlaps}</p>
     <div className="grid lg:grid-cols-3 gap-4"><div className="lg:col-span-2"><WarehouseMap robots={world.robots} map={world.map} selectedRobotId={selected} onSelectRobot={setSelected} shelfColCount={6} tooltips={[]} /></div>
       <FleetStatus robots={world.robots} selectedRobotId={selected} onSelectRobot={setSelected} /></div>
+    {state.execution?.some(e => e.kind === 'nav2') && <section aria-label="Nav2 execution" className="rounded border border-zinc-700 p-3">
+      <h2>Continuous simulation — Nav2 execution</h2>
+      <p className="text-sm text-zinc-400">Measured positions below use each robot’s local map frame in metres. The grid advances only after arrival is confirmed.</p>
+      <ul>{state.execution.map(e => <li key={e.robotId}>
+        {e.robotId}: {e.fault ? `stopped: ${e.fault}` : e.kind ?? 'unavailable'}
+        {e.feedback?.pose && ` · measured (${e.feedback.pose.x.toFixed(2)}, ${e.feedback.pose.y.toFixed(2)}) m`}
+        {e.feedback?.actions !== undefined && ` · path actions: ${e.feedback.actions}`}
+        {e.feedback?.collisions !== undefined && ` · observed collision ticks: ${e.feedback.collisions}`}
+      </li>)}</ul>
+    </section>}
     <MetricsBar tasks={world.tasks} robots={world.robots} metrics={world.metrics} />
     <ActiveTasks tasks={world.tasks} robots={world.robots} />
     <p>Manual load recovery required: {state.ownership.flatMap(p => p.tasks.filter(t => t.recoveryRequired).map(t => t.taskId)).filter((id, i, all) => all.indexOf(id) === i).join(', ') || 'none'}</p>
