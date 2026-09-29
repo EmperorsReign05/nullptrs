@@ -122,6 +122,12 @@ export class Agent {
   private sensorFeed: Position[] = [];
   private idleYieldAllowed = false;
   private courtesyPreferred: Position | null = null;
+  // A retreat is advertised from the old position. Allow the next round
+  // for the idle peer to propose its exit, and one more to observe that exit
+  // committed before re-entering. This is bounded courtesy, never permission
+  // to bypass sensing, fresh-intent confirmation or execution energy gates.
+  private clearanceUntil = -1;
+  private clearanceRequest: { id: string; until: number } | null = null;
   /** Lifecycle authorization, never inferred merely from a one-cell route. */
   setIdleYieldAllowed(allowed: boolean): void { this.idleYieldAllowed = allowed; }
 
@@ -395,6 +401,7 @@ export class Agent {
     this.courtesyPreferred = null;
     const from = this.local.position;
     const sensorScan = this.observeMotion(currentTick);
+    if (currentTick <= this.clearanceUntil) return this.lastDecision = { from, to: from, reason: "no-move" };
     // Two agents adjacent in a corridor each forbid the other's cell purely
     // because the other is NEAR, and neither is on its own next step, so
     // neither the sensor gate nor the peer logic offers a move: measured as
@@ -452,6 +459,10 @@ export class Agent {
       // the comment above noteBlocker: the routes it shuffled between pointed
       // straight through robots, so the shuffling never resolved anything.
       const chosen = progressing[0] ?? safe[0] ?? emergencyEscape(from, sensorScan, this.map);
+      const parked = [...this.peers.values()].find(p => !p.preferred && !p.docked &&
+        p.seq >= this.local.seq - 1 && positionsEqual(p.position, preferredCell));
+      if (chosen && parked && getNeighbors(preferredCell, this.map).length <= 2)
+        this.clearanceUntil = currentTick + 2;
       this.lastDecision = chosen
         ? { from, to: chosen, reason: "sensor-yield" }
         : { from, to: from, reason: "sensor-stop" };
@@ -465,12 +476,24 @@ export class Agent {
       // explicitly targeting our cell may ask us to clear it. This is only a
       // local proposal: sensing, normal intent confirmation and the caller's
       // energy/lifecycle gate still have to approve the relocation.
-      const requester = this.idleYieldAllowed && !this.local.docked && [...this.peers.values()].find(p =>
+      const observedRequester = this.idleYieldAllowed && !this.local.docked && [...this.peers.values()].find(p =>
         p.preferred && positionsEqual(p.preferred, from) && p.seq >= this.local.seq - 1 &&
         manhattanDistance(p.position, from) === 1 &&
         (this.scanSees(sensorScan, p.position) || !!p.intent && this.scanSees(sensorScan, p.intent)));
+      if (observedRequester) this.clearanceRequest = { id: observedRequester.id, until: currentTick + 2 };
+      const rememberedRequester = this.clearanceRequest && currentTick <= this.clearanceRequest.until
+        ? this.peers.get(this.clearanceRequest.id) : undefined;
+      const requester = observedRequester || (this.idleYieldAllowed && !this.local.docked && rememberedRequester && !rememberedRequester.docked &&
+        rememberedRequester.seq >= this.local.seq - 1 && manhattanDistance(rememberedRequester.position, from) <= 2
+        ? rememberedRequester : undefined);
       const escape = requester ? getNeighbors(from, this.map)
         .filter(p => isLocallySafe(sensorScan, p) && this.bayIsFree(p))
+        // Do not choose a terminal leaf when another physically clear exit
+        // exists but is awaiting peer confirmation. That parks us on the next
+        // delivery cell. A leaf remains usable when it is the ONLY exit (for
+        // example the last robot clearing an occupied single-file chain).
+        .filter(p => getNeighbors(p, this.map).length > 1 || !getNeighbors(from, this.map)
+          .some(q => !positionsEqual(q, p) && isLocallySafe(sensorScan, q)))
         .sort((a, b) => manhattanDistance(b, requester.position) - manhattanDistance(a, requester.position) ||
           getNeighbors(b, this.map).length - getNeighbors(a, this.map).length)[0] : undefined;
       if (requester && !escape) {
@@ -485,6 +508,7 @@ export class Agent {
             this.scanSees(sensorScan, p)));
         this.courtesyPreferred = exit ?? null;
       }
+      if (escape) this.clearanceRequest = null;
       this.lastDecision = escape ? { from, to: escape, reason: "step-aside" } : decision;
       return this.lastDecision;
     }

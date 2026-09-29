@@ -1,0 +1,38 @@
+{
+  "protocol": {
+    "version": 5,
+    "seedStart": 31000,
+    "seeds": 200,
+    "fleetSizes": [
+      3,
+      6
+    ],
+    "tasksPerRun": 6,
+    "horizon": 800,
+    "map": "stock warehouse",
+    "battery": 100,
+    "taskWeight": 1,
+    "release": "all six pending tasks announced at tick zero",
+    "starts": "uniform open cells without replacement",
+    "endpoints": "uniform open cells; pickup differs from dropoff",
+    "communications": "connected, zero simulated latency",
+    "ai": "identical frozen model and guarded 10% correction in both arms",
+    "comparator": "unchanged resolveStopAndWait, including all stationary bodies; shared obstruction observation and replanning",
+    "asymmetry": "baseline has synchronous global conflict resolution; treatment confirms locally. No packet-loss claims.",
+    "performance": "jointly completed pairs only; bootstrap paired seeds, 10000 resamples, 95% percentile interval",
+    "charging": "same local charging lifecycle and active-job energy reserve in both arms",
+    "limitations": [
+      "shared simulation clock",
+      "one Node process",
+      "six tasks admitted serially by existing ownership epochs",
+      "not an AI ablation"
+    ],
+    "evaluation": "development: previously inspected v4 acceptance seeds"
+  },
+  "provenance": {
+    "commit": "5fb5a7ce14aa9da2885966f04553ba200d065397",
+    "baselineSHA256": "da6c16356705314a4cd758c6e4a3c100fe94883a7ac1d6b75904f821cb91bc86",
+    "modelSHA256": "5aad9ac9dad7ee4facb7b719154147e95d2069612d9cae1e3e59ef7a4fe455d1",
+    "candidateAgentSHA256": "8faee8101770d91e183edb11fa57087ca675b8dfd66bbe6c32cb814e9cf02d33"
+  }
+}

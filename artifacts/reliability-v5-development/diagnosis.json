@@ -1,0 +1,69 @@
+{
+  "scope": "development only; seeds31000..31199 previously inspected; no acceptance claim",
+  "originalCommit": "5fb5a7c",
+  "originalAgentSHA256": "bc4ed8aeef6c471f850da78fa24e378c538906449843420903dd58247fb66877",
+  "fixedAgentSHA256": "8faee8101770d91e183edb11fa57087ca675b8dfd66bbe6c32cb814e9cf02d33",
+  "diagnosis": "Idle courtesy selected the terminal leaf beyond an occupied aisle. The active delivery required that leaf; retreat-and-immediate-reentry prevented the idle body from leaving. Repeated safe moves consumed the spare energy until the existing energy gate correctly stopped work. Both policies failed; no safety violations.",
+  "causalIntervention": {
+    "scope": "Original code, two proposals changed at one tick only; all later decisions unchanged; normal confirmation and energy gates retained. Not an MLP decision.",
+    "31015": {
+      "tick": 177,
+      "requester": "AMR-06",
+      "parked": "AMR-04",
+      "originalIdleTo": {
+        "x": 19,
+        "y": 12
+      },
+      "intervenedIdleTo": {
+        "x": 17,
+        "y": 12
+      },
+      "requesterAction": "hold its post-retreat cell (17,11)"
+    },
+    "31042": {
+      "tick": 91,
+      "requester": "AMR-01",
+      "parked": "AMR-03",
+      "originalIdleTo": {
+        "x": 19,
+        "y": 0
+      },
+      "intervenedIdleTo": {
+        "x": 17,
+        "y": 0
+      },
+      "requesterAction": "hold its post-retreat cell (17,1)"
+    },
+    "resultsFile": "causal-original.json"
+  },
+  "fix": [
+    "Preserve a sensor-confirmed clearance request for two rounds, only with fresh peer state within two cells; consume it when an exit is proposed.",
+    "Requester pauses for two rounds after retreating from a fresh stationary peer in a narrow cell: one round for peer exit proposal, one for commit observation. All normal local safety checks remain mandatory.",
+    "Avoid terminal-leaf courtesy parking when a physically clear alternative exists but awaits confirmation; retain leaf exits for occupied idle chains."
+  ],
+  "regressionCheck": {
+    "previouslySuccessfulRuns": 198,
+    "preserved": 198,
+    "newlyCompleted": [
+      31015,
+      31042
+    ],
+    "oldIntegratedSuccessfulMeanTicks": 191.15151515151516,
+    "newIntegratedSamePairsMeanTicks": 191.53535353535352,
+    "faster": 2,
+    "tie": 172,
+    "slower": 24
+  },
+  "limitations": [
+    "Not a universal deadlock proof; arbitrary deeply occupied cul-de-sacs may require more negotiation.",
+    "The two-round window is protocol-relative, not a wall-clock network latency guarantee. Missing fresh peer state still fails closed at confirmation.",
+    "Reliability improves on development; successful-pair speed remains statistically inconclusive and is slightly slower than the previous treatment on common successes.",
+    "Frozen MLP, energy gates, task ownership, stop-and-wait baseline unchanged."
+  ],
+  "validation": {
+    "fullSuite": "357 passed,18 skipped,0 failed; 63 files passed,2 skipped",
+    "originalCausalReplay": "4 outcomes asserted: unmodified original5/6 and4/6, one-tick intervention both6/6; all safety counters0",
+    "fixedRegression": "both seeds6/6, all safety counters0",
+    "rawRows": "rows.json (224KiB; retained locally for release evidence, not source commit)"
+  }
+}
