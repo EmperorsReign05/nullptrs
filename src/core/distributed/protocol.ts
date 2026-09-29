@@ -26,16 +26,8 @@ export type TickMessage = {
   priority: number;
   /** True while we are parked on a charging dock and must not be pushed. */
   docked: boolean;
-  /**
-   * Consecutive ticks we have been unable to move.
-   *
-   * Without this, two agents that are each other's obstacle form a box-in
-   * that neither can break: both see a peer in the way, both wait, and both
-   * read as equally blocked. Publishing the stall count lets a neighbour tell
-   * "I am briefly yielding" (low count, should proceed) from "I am genuinely
-   * wedged" (high count, must be the one to back off), and break the
-   * symmetry without a coordinator.
-   */
+  /** Diagnostic consecutive holds. Never permission to enter an occupied
+   * cell; the previously proposed stalled-peer exception was rejected. */
   stallTicks: number;
 };
 

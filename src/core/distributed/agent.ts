@@ -1,4 +1,5 @@
-// A single decentralised agent. One instance == one robot == one OS process.
+// A single robot agent. The simulator instantiates contexts; worker.ts wraps
+// one context in an OS process. Those deployments have different safety scope.
 //
 // The agent never sees the fleet. It sees:
 //   - its own position, its own route, its own battery
@@ -71,6 +72,7 @@ export class Agent {
   private commRange: number;
   /** Everything this agent believes about peers, refreshed each tick. */
   private peers = new Map<PeerId, PeerView>();
+  private peerSequence = new Map<PeerId, number>();
   private lastDecision: AgentDecision | null = null;
   /** Tick at which this agent last stepped aside. -1 = never. */
   private lastStepAsideTick = -1;
@@ -280,9 +282,33 @@ export class Agent {
     this.lastDecision = decision;
   }
 
+  /** Optional synchronized-round commit protocol. Uses only received intents
+   * and the radius-two sensor. Unknown possible contenders make us hold, so a
+   * partition loses availability rather than guessing that a free cell is safe.
+   * This is NOT an asynchronous hardware motion protocol. The simulator supplies
+   * a shared tick boundary, broadcasts, then each agent independently confirms.
+   */
+  confirmDecision(currentTick: number): AgentDecision {
+    this.refreshPeers(currentTick);
+    const decision = this.lastDecision ?? this.decide(currentTick);
+    const scanNow = this.getScan();
+    const hold = () => this.lastDecision = { from: this.local.position, to: this.local.position, reason: "lost-claim" };
+    if (positionsEqual(decision.from, decision.to)) return decision;
+    if (!isLocallySafe(scanNow, decision.to)) return hold();
+    for (const contact of scanNow.contacts) {
+      if (manhattanDistance(contact.position, decision.to) > 1) continue;
+      const peer = [...this.peers.values()].find(p => positionsEqual(p.position, contact.position) && p.seq === this.local.seq);
+      if (!peer) return hold();
+      if (peer.intent && positionsEqual(peer.intent, decision.to) && !this.winsAgainst({ id: this.id, priority: this.local.priority }, peer)) return hold();
+    }
+    return decision;
+  }
+
   /** Absorb whatever arrived, keeping only peers inside comm range. */
   private refreshPeers(currentTick: number) {
     for (const msg of this.transport.drain() as Message[]) {
+      if (msg.from === this.id || !Number.isInteger(msg.seq) || msg.seq <= (this.peerSequence.get(msg.from) ?? -1)) continue;
+      this.peerSequence.set(msg.from, msg.seq);
       if (msg.kind === "depart") {
         this.peers.delete(msg.from);
         continue;

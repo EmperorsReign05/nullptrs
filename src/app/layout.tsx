@@ -21,10 +21,10 @@ const instrumentSerif = Instrument_Serif({
 
 export const metadata: Metadata = {
   title: "amr dashboard",
-  description: "Distributed • Edge-AI Powered • Collision-Free • Scalable",
+  description: "Fleet coordination software demo with guarded learned bids and simulated local sensing",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"

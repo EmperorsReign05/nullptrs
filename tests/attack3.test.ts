@@ -121,7 +121,7 @@ describe("V4: the conflict/deadlock demo buttons", () => {
     let w2 = { ...growFleet(createInitialWorld(), 0), robots: dl, tasks: box.map((p, i) => task({ id: `DD${i}`, pickup: p, dropoff: p, status: "assigned" as const, assignedRobotId: `DL${i}` })) };
     const c1 = w2.metrics.conflictCount;
     for (let i = 0; i < 40; i++) w2 = runDispatchTick(w2);
-    console.log(`V4.1 Sim Deadlock scenario: PIBT conflicts = ${w2.metrics.conflictCount - c1}, final positions: ${w2.robots.map((r) => `${r.robotId ?? r.id}@${key(r.position)}`).join(" ")}`);
+    console.log(`V4.1 Sim Deadlock scenario: PIBT conflicts = ${w2.metrics.conflictCount - c1}, final positions: ${w2.robots.map((r) => `${r.id}@${key(r.position)}`).join(" ")}`);
     console.log(`V4.1 => do they stay deadlocked, or does PIBT quietly resolve it and the demo show nothing?`);
   });
 });

@@ -1,3 +1,6 @@
+// Legacy preassigned-task UDP motion demo. No live task auction or physical
+// sensor feed is attached here; do not attribute the integrated runtime or
+// sensor-fed simulator safety results to this entry point.
 // CLI entry point for ONE agent as ONE OS process.
 //
 //   node --experimental-strip-types worker.js --id=AMR-01 --port=5001 \

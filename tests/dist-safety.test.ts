@@ -40,7 +40,7 @@ function auditFleet(n: number, seeds: number, opts: { severed?: [string, string]
         }
       }
       totalTicks++;
-      if (tasks.every((x) => x.status === "completed")) { completed++; break; }
+      if (tasks.every((x: import("../src/core/types").Task) => x.status === "completed")) { completed++; break; }
     }
   }
   return { overlapTicks, totalTicks, selfPeers, realPeerObs, completed, seeds };

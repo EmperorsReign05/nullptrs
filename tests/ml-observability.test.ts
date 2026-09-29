@@ -58,7 +58,7 @@ describe("local observability and causal histories", () => {
     const sc = headOnScenario(2, 1);
     const ctx: FeatureContext = {
       local: { id: "ego", position: { x: 6, y: 4 }, path: [{ x: 6, y: 4 }, { x: 6, y: 5 }], priority: 0, docked: false, seq: 0 },
-      peers: [{ id: "peer", position: { x: 6, y: 6 }, intent: { x: 6, y: 5 }, priority: 0, docked: false, seq: 0, lastSeenTick: 0 }],
+      peers: [{ id: "peer", position: { x: 6, y: 6 }, intent: { x: 6, y: 5 }, priority: 0, docked: false, stallTicks: 0, seq: 0, lastSeenTick: 0 }],
       map: sc.map, bays: new Set(), lastStepAsideTick: -1, currentTick: 0,
     };
     const value = (x: number[], name: string) => x[TEMPORAL_FEATURE_NAMES.indexOf(name)];

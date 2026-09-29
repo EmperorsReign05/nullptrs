@@ -43,7 +43,7 @@ describe("root causes", () => {
     console.log("B: cells visited by BOTH robots (contention):");
     for (const [cell, ids] of Object.entries(occupancy)) {
       if (ids.includes("RA") && ids.includes("RB")) {
-        const at = CHARGING_STATIONS.find((s) => s.position.x === cell.split(",")[0] && s.position.y === cell.split(",")[1]);
+        const at = CHARGING_STATIONS.find((s) => s.position.x === Number(cell.split(",")[0]) && s.position.y === Number(cell.split(",")[1]));
         console.log(`   ${cell}${at ? " <- " + at.id : ""}`);
       }
     }

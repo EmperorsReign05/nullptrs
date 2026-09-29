@@ -3,7 +3,7 @@ import { InMemoryBus, InMemoryTransport } from "../src/core/distributed/transpor
 import type { TickMessage } from "../src/core/distributed/protocol";
 
 function msg(from: string, x: number): TickMessage {
-  return { kind: "tick", from, seq: 0, position: { x, y: 0 }, intent: null, priority: 0, docked: false };
+  return { kind: "tick", from, seq: 0, position: { x, y: 0 }, intent: null, priority: 0, docked: false, stallTicks: 0 };
 }
 
 describe("ISOLATION: a transport must deliver to the RECIPIENT", () => {

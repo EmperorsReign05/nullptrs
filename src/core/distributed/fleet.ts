@@ -1,10 +1,8 @@
-// A whole fleet of independent agents, with NO central coordinator.
-//
-// The only shared things are: the static map (a public constant) and the
-// tick clock (the real world provides time; it is not a coordinator). Every
-// agent is constructed with its own Transport and its own local state, and
-// each one decides alone. This mirrors one-OS-process-per-robot exactly —
-// see UdpTransport, which is the same class with a real socket.
+// Deterministic physical-simulation harness for per-robot agents.
+// Historical default: fleet-wide commit arbitration, retained for reproduction.
+// localCommit=true: each agent confirms using its own received intents and a
+// radius-two simulated sensor; there is no global winner/arbitration pass.
+// Both modes use shared simulation tick boundaries, not asynchronous hardware.
 
 import { computeCongestion } from "../map/warehouse";
 import { planPath } from "../pathfinding/astar";
@@ -15,6 +13,8 @@ import { InMemoryBus, InMemoryTransport, type Transport } from "./transport";
 import type { Position, RobotState, Task, WarehouseMap, WorldState } from "../types";
 
 export type FleetOptions = {
+  localCommit?: boolean;
+  arrivalAllowed?: (robot: RobotState, task: Task, phase: "pickup" | "dropoff") => boolean;
   commRange?: number;
   /** Passing bays this fleet may step aside into. */
   bays?: ReadonlySet<string>;
@@ -26,6 +26,14 @@ export type FleetOptions = {
 
 export class DistributedFleet {
   private agents = new Map<PeerId, Agent>();
+  private inactive = new Set<PeerId>();
+  private get activeAgents() { return [...this.agents.values()].filter(a => !this.inactive.has(a.id)); }
+  setInactive(id: string, inactive: boolean) { if (inactive) this.inactive.add(id); else this.inactive.delete(id); }
+  setLink(a: string, b: string, reachable: boolean) {
+    this.transports.get(a)?.setReachable(b, reachable); this.transports.get(b)?.setReachable(a, reachable);
+  }
+  advance(tick: number) { this.replanAll(tick); this.step(tick); this.applyMoves(tick); }
+
   private transports = new Map<PeerId, InMemoryTransport>();
   readonly severed: [PeerId, PeerId][] = [];
 
@@ -47,7 +55,7 @@ export class DistributedFleet {
       this.transports.set(r.id, t);
       this.agents.set(
         r.id,
-        new Agent(r.id, localOf(r, tasks), map, t, options.commRange ?? DEFAULT_COMM_RANGE, options.bays)
+        new Agent(r.id, localOf(r, tasks), map, t, options.commRange ?? DEFAULT_COMM_RANGE, options.bays, options.localCommit ? 2 : undefined)
       );
     }
     for (const [a, b] of options.severed ?? []) {
@@ -73,7 +81,7 @@ export class DistributedFleet {
     // including ones with no reachable peers, because that is the entire
     // point: a partitioned agent must still see the robot in front of it.
     const physical = this.robots.map((r) => ({ ...r.position }));
-    for (const agent of this.agents.values()) agent.setSensorFeed(physical);
+    for (const agent of this.activeAgents) agent.setSensorFeed(physical);
 
     // Every agent decides from what it can hear, then broadcasts. Order of
     // iteration CANNOT matter, and that is a property of this loop rather
@@ -84,13 +92,20 @@ export class DistributedFleet {
     // updated — making the outcome depend on iteration order, and letting an
     // agent execute a move that commit-time arbitration had never judged.
     const decisions = new Map<PeerId, ReturnType<Agent["decide"]>>();
-    for (const agent of this.agents.values()) decisions.set(agent.id, agent.decide(tick));
+    for (const agent of this.activeAgents) decisions.set(agent.id, agent.decide(tick));
 
-    for (const agent of this.agents.values()) {
+    for (const agent of this.activeAgents) {
       agent.tick(tick);
     }
     // Deliver this tick's broadcasts.
     for (const t of this.transports.values()) t.advanceClock();
+
+    if (this.options.localCommit) {
+      for (const agent of this.activeAgents) decisions.set(agent.id, agent.confirmDecision(tick));
+      return new Set(this.activeAgents.filter(a => {
+        const d = decisions.get(a.id)!; return !positionsEqual(d.from, d.to);
+      }).map(a => a.id));
+    }
 
     // ---- Commit-time arbitration ----
     // Every agent decided BEFORE anyone broadcast, so each was reasoning
@@ -107,7 +122,7 @@ export class DistributedFleet {
     // rule (higher priority wins, then lexicographically smaller id) is one
     // every agent could evaluate identically on its own.
     const claims = new Map<string, { id: PeerId; priority: number }[]>();
-    for (const agent of this.agents.values()) {
+    for (const agent of this.activeAgents) {
       const d = decisions.get(agent.id)!;
       if (positionsEqual(d.to, agent.getLocal().position)) continue;
       const k = `${d.to.x},${d.to.y}`;
@@ -134,10 +149,10 @@ export class DistributedFleet {
     // is trying to enter it. Standing is a stronger claim than arriving, and
     // the rule remains computable from data every agent already broadcasts.
     const occupiedBy = new Map<string, PeerId>();
-    for (const agent of this.agents.values()) {
+    for (const agent of this.activeAgents) {
       occupiedBy.set(`${agent.getLocal().position.x},${agent.getLocal().position.y}`, agent.id);
     }
-    for (const agent of this.agents.values()) {
+    for (const agent of this.activeAgents) {
       const d = decisions.get(agent.id)!;
       if (positionsEqual(d.to, agent.getLocal().position)) continue;
       const key = `${d.to.x},${d.to.y}`;
@@ -160,12 +175,12 @@ export class DistributedFleet {
     for (let pass = 0; pass < this.agents.size + 1; pass++) {
       let changed = false;
       const occupiedNow = new Map<string, PeerId>();
-      for (const agent of this.agents.values()) {
+      for (const agent of this.activeAgents) {
         const d = decisions.get(agent.id)!;
         if (losers.has(agent.id)) continue;
         occupiedNow.set(`${d.to.x},${d.to.y}`, agent.id);
       }
-      for (const agent of this.agents.values()) {
+      for (const agent of this.activeAgents) {
         if (losers.has(agent.id)) continue;
         const d = decisions.get(agent.id)!;
         if (positionsEqual(d.to, agent.getLocal().position)) continue;
@@ -195,7 +210,7 @@ export class DistributedFleet {
     // added above was a no-op. This is why the same-cell check appeared to do
     // nothing across several iterations: the logic was correct and the
     // plumbing was not.
-    for (const agent of this.agents.values()) {
+    for (const agent of this.activeAgents) {
       if (!losers.has(agent.id)) continue;
       const pos = agent.getLocal().position;
       const held = { from: pos, to: pos, reason: "no-move" as const };
@@ -205,7 +220,7 @@ export class DistributedFleet {
 
     const moved = new Set<PeerId>();
 
-    for (const agent of this.agents.values()) {
+    for (const agent of this.activeAgents) {
       const d = decisions.get(agent.id)!;
       if (positionsEqual(d.to, agent.getLocal().position)) continue;
       moved.add(agent.id);
@@ -236,7 +251,7 @@ export class DistributedFleet {
   }
 
   private replanAll(tick: number) {
-    for (const agent of this.agents.values()) {
+    for (const agent of this.activeAgents) {
       const local = agent.getLocal();
       const robot = this.robots.find((r) => r.id === agent.id)!;
       const goal = goalOf(robot, this.tasks);
@@ -360,7 +375,7 @@ export class DistributedFleet {
   }
 
   private applyMoves(tick?: number) {
-    for (const agent of this.agents.values()) {
+    for (const agent of this.activeAgents) {
       const local = agent.getLocal();
       const robot = this.robots.find((r) => r.id === agent.id)!;
       const d = agent.getLastDecision();
@@ -403,7 +418,7 @@ export class DistributedFleet {
 
   private settleArrivals() {
     for (const robot of this.robots) {
-      if (!robot.currentTaskId) continue;
+      if (!robot.currentTaskId || robot.status === "failed") continue;
       const t = this.tasks.find((x) => x.id === robot.currentTaskId);
       if (!t) continue;
       // Not `continue` after registering a pickup. A robot can be standing
@@ -413,10 +428,10 @@ export class DistributedFleet {
       // forever with the robot parked on its own destination. Measured as
       // five of six agents frozen with pathLen=1 and no task ever
       // completing.
-      if (t.status !== "in_progress" && positionsEqual(robot.position, t.pickup)) {
+      if (t.status !== "in_progress" && positionsEqual(robot.position, t.pickup) && (this.options.arrivalAllowed?.(robot, t, "pickup") ?? true)) {
         t.status = "in_progress";
       }
-      if (t.status === "in_progress" && positionsEqual(robot.position, t.dropoff)) {
+      if (t.status === "in_progress" && positionsEqual(robot.position, t.dropoff) && (this.options.arrivalAllowed?.(robot, t, "dropoff") ?? true)) {
         t.status = "completed";
         robot.currentTaskId = undefined;
       }

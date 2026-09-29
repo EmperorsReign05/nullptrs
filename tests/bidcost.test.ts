@@ -1,7 +1,8 @@
+import { calculateBid } from "../src/core/auction/cost";
 import { describe, it } from "vitest";
 import { runDispatchTick } from "../src/core/simulation/dispatch";
 import { createInitialWorld } from "../src/core/simulation/state";
-import { calculateBid, getAllBids, getBiddingRobots } from "../src/core/auction/assign";
+import { getAllBids, getBiddingRobots } from "../src/core/auction/assign";
 import { planPath } from "../src/core/pathfinding/astar";
 import { growFleet, openCells } from "./harness";
 import type { WorldState, Position, Task, RobotState } from "../src/core/types";

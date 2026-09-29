@@ -1,10 +1,11 @@
+import { BATTERY_SAFETY_RESERVE_PERCENT } from "../src/core/auction/cost";
 import { describe, it, expect } from "vitest";
 import { createInitialWorld } from "../src/core/simulation/state";
 import { runDispatchTick } from "../src/core/simulation/dispatch";
 import { planPath } from "../src/core/pathfinding/astar";
 import { resolvePIBT } from "../src/core/pathfinding/pibt";
 import { createWarehouseMap, computeCongestion, isTraversable, SHELF_BLOCKS, CHARGING_STATIONS, WAITING_ZONES, WAREHOUSE_WIDTH, WAREHOUSE_HEIGHT } from "../src/core/map/warehouse";
-import { ROBOT_MODELS, MIN_BATTERY_TO_BID_PERCENT, BATTERY_SAFETY_RESERVE_PERCENT } from "../src/core/simulation/robotModels";
+import { ROBOT_MODELS, MIN_BATTERY_TO_BID_PERCENT } from "../src/core/simulation/robotModels";
 import { getAllBids, getBiddingRobots, assignTask } from "../src/core/auction/assign";
 import type { Position, RobotState, Task, WorldState } from "../src/core/types";
 

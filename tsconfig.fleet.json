@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "target": "ES2020",
+    "outDir": ".fleet-dist",
+    "rootDir": ".",
+    "noEmit": false,
+    "incremental": false,
+    "isolatedModules": true,
+    "plugins": []
+  },
+  "include": ["src/server/fleet-http.ts"],
+  "exclude": ["node_modules", ".next", ".fleet-dist"]
+}

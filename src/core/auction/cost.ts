@@ -70,7 +70,7 @@ const WEIGHTS = {
 
 // Hard safety floor: never accept a bid that would leave a robot below
 // this charge. This is an eligibility cutoff, not a soft preference.
-const BATTERY_SAFETY_RESERVE_PERCENT = 15;
+export const BATTERY_SAFETY_RESERVE_PERCENT = 15;
 
 // How much a task's own priority amplifies urgency sensitivity. Priority
 // 0 leaves urgency cost unscaled; higher priority makes the auction weight

@@ -1,18 +1,18 @@
 # Team Rocket — AMR Fleet Control Dashboard
 
-**Live demo:** [amr-edge-ai.vercel.app](https://amr-edge-ai.vercel.app/)
+Two software modes are available:
 
-A distributed, congestion-aware **Autonomous Mobile Robot (AMR)** warehouse
-fleet simulation and control dashboard. `src/core/` is a deterministic
-simulation engine — collision-free multi-robot pathfinding, a cost-based
-task auction, and a battery/charging system — driving the dashboard
-directly.
+- **`/` — integrated fleet demo:** a standalone Node fleet process runs peer task ownership, frozen guarded learned bids and local motion decisions. The Next dashboard monitors state and submits commands. Agents are private simulated contexts with shared tick rounds and simulated sensors.
+- **`/simulator` — original central simulator:** A*, PIBT, deterministic auctioning, task queues and charging run in the browser.
 
-## Core Capabilities
+The separate UDP worker demo runs independent processes with preassigned tasks; it is not the integrated auction deployment. ROS2, Fast DDS, Nav2 and physical robot hardware are not implemented.
+
+See the [final audit](artifacts/final-audit/summary.md) and [implementation matrix](artifacts/final-audit/final-matrix.md) for measured results, exact tests and claim limits. The existing [hosted demo link](https://amr-edge-ai.vercel.app/) has not been updated by this audit; the new fleet runtime requires a long-lived Node process.
+
+## Central Simulator Capabilities (`/simulator`)
 
 * **Congestion-aware A\*** for per-robot route planning, plus **PIBT**
-  (Priority Inheritance with Backtracking) resolving every robot's next
-  move collision-free, tick by tick.
+  (Priority Inheritance with Backtracking) resolving next-move conflicts in the discrete simulation.
 * A **task auction**: every eligible robot bids on each pending task based
   on route cost, congestion, battery, current workload, task priority,
   deadline urgency, and whether the task's weight actually fits the
@@ -25,11 +25,7 @@ directly.
   work (up to a cap) instead of the fleet ignoring pending tasks just
   because every robot already has one.
 
-Everything above is exercised by a real test suite (100+ tests), including
-stress tests that run thousands of simulated ticks across dozens of robots
-to verify the algorithms never violate a safety invariant — no collisions,
-no double-booked tasks, no negative battery — even under deliberately
-extreme load.
+The suite includes seeded safety and stress checks. Tests establish behavior in their modeled regimes, not universal physical safety. The audit records two pre-existing prototype wait-cycle failures and a load-sensitive UDP test; the full suite is not claimed green.
 
 ## Technologies Used
 
@@ -43,7 +39,7 @@ extreme load.
 
 ### Prerequisites
 
-* Node.js (v18+)
+* Node.js 24 (used for the audit)
 * npm (or yarn/pnpm)
 
 ### Running the Development Server
@@ -54,11 +50,19 @@ Clone the repository and install the dependencies:
 npm install
 ```
 
-Start the local development server:
+Start the fleet in one terminal:
+
+```bash
+npm run fleet
+```
+
+Start the monitoring dashboard in another terminal:
 
 ```bash
 npm run dev
 ```
+
+For production builds, use `npm run build && npm start` for the dashboard. The fleet defaults to `127.0.0.1:4010`; `FLEET_PORT` changes that port and `FLEET_URL` configures the dashboard proxy.
 
 Open `http://localhost:3000` in your web browser. The page will auto-reload
 when you make edits.
@@ -104,13 +108,15 @@ simulation engine.
   constants), `engine.ts` (`stepSimulation`: one simulation tick — route
   planning, PIBT resolution, arrivals, charging), and `dispatch.ts`
   (`runDispatchTick`: runs a full auction round *and* a simulation tick —
-  the one function the dashboard calls each tick).
+  the function the separate central simulator calls each tick).
 
 ### `src/app/` and `src/components/dashboard/` — the UI
 
-* `src/app/page.tsx` — the dashboard page. Owns the live `WorldState` in
-  React state, calls `runDispatchTick` on an interval to advance the
-  simulation, and wires up every control panel action.
+* `src/app/page.tsx` — read-only telemetry snapshots and command buttons. It polls `/api/fleet`; it does not advance robot ticks.
+* `src/server/fleet-http.ts` — standalone fleet process; `/state` and `/command` serve telemetry and control input independently of Next.
+* `src/core/distributed/ownership.ts` — fixed-membership quorum task leases, expiry fencing and pickup custody markers.
+* `src/core/distributed/runtime.ts` — real peer bids, frozen MLP fallback, local motion mode, controls and simulation telemetry.
+* `src/app/simulator/page.tsx` — the preserved browser-owned central simulator.
 * `src/app/globals.css` — custom CSS (warehouse grid background pattern,
   scrollbar styling).
 * `src/app/layout.tsx` — the root Next.js layout (fonts, HTML/body tags).
@@ -126,7 +132,7 @@ The Vitest suite, organized by layer: `astar*.test.ts`, `pibt*.test.ts`,
 `engine-stress.test.ts` / `integration-stress.test.ts` for the whole
 backend running together under sustained load.
 
-## How the Simulation Works
+## How the Central Simulation Works (`/simulator`)
 
 1. `createInitialWorld()` seeds a `WorldState`: a 20x13 warehouse grid, a
    10-robot fleet (5x Scout Agile 2.0, 50kg payload capacity; 5x Addverb
@@ -146,7 +152,7 @@ backend running together under sustained load.
    what makes the stress test suite meaningful — the exact same seed
    reproduces the exact same run.
 
-## Control Panel
+## Central Simulator Control Panel
 
 Every button acts directly on the live `WorldState`:
 

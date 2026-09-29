@@ -6,15 +6,14 @@
 // real stack": with UDPTransport the agents genuinely exchange datagrams
 // over a socket, and a link can genuinely be severed.
 
-import { EventEmitter } from "events";
 import dgram from "dgram";
 import type { Message, PeerId } from "./protocol";
 
-export interface Transport {
+export interface Transport<T = Message> {
   /** Send to one peer, or to all peers when `to` is undefined. */
-  send(to: PeerId | undefined, msg: Message): void;
+  send(to: PeerId | undefined, msg: T): void;
   /** Deliver everything addressed to us since the last drain. */
-  drain(): Message[];
+  drain(): T[];
   close(): void;
   readonly kind: string;
 }
@@ -37,10 +36,10 @@ export interface Transport {
  * interface, and each agent still owns its own Transport instance — nothing
  * here is a coordinator, it is a socket abstraction.
  */
-export class InMemoryBus {
-  private queues = new Map<PeerId, Message[]>();
+export class InMemoryBus<T = Message> {
+  private queues = new Map<PeerId, T[]>();
 
-  queue(id: PeerId): Message[] {
+  queue(id: PeerId): T[] {
     let q = this.queues.get(id);
     if (!q) {
       q = [];
@@ -49,11 +48,11 @@ export class InMemoryBus {
     return q;
   }
 
-  post(to: PeerId, msg: Message): void {
+  post(to: PeerId, msg: T): void {
     this.queue(to).push(msg);
   }
 
-  take(id: PeerId): Message[] {
+  take(id: PeerId): T[] {
     const q = this.queues.get(id) ?? [];
     this.queues.set(id, []);
     return q;
@@ -68,13 +67,13 @@ export class InMemoryBus {
  *
  * Pass the same bus to every agent in a fleet.
  */
-export class InMemoryTransport implements Transport {
+export class InMemoryTransport<T = Message> implements Transport<T> {
   readonly kind = "in-memory";
   private reachable = new Set<PeerId>();
-  private latencyQueue: { at: number; to: PeerId; msg: Message }[] = [];
+  private latencyQueue: { at: number; to: PeerId; msg: T }[] = [];
   private now = 0;
 
-  constructor(private selfId: PeerId, private bus: InMemoryBus) {}
+  constructor(private selfId: PeerId, private bus: InMemoryBus<T>) {}
 
   /** Register a peer we can currently hear. */
   addPeer(id: PeerId) {
@@ -106,7 +105,7 @@ export class InMemoryTransport implements Transport {
     }
   }
 
-  send(to: PeerId | undefined, msg: Message): void {
+  send(to: PeerId | undefined, msg: T): void {
     const targets = to ? [to] : [...this.reachable];
     for (const t of targets) {
       if (t === this.selfId) continue;
@@ -116,7 +115,7 @@ export class InMemoryTransport implements Transport {
     }
   }
 
-  drain(): Message[] {
+  drain(): T[] {
     return this.bus.take(this.selfId);
   }
 
@@ -135,10 +134,10 @@ export class InMemoryTransport implements Transport {
  * killed simply stops receiving — which is exactly the failure the demo
  * needs to show surviving.
  */
-export class UdpTransport implements Transport {
+export class UdpTransport<T = Message> implements Transport<T> {
   readonly kind = "udp";
   private socket: dgram.Socket;
-  private inbox: Message[] = [];
+  private inbox: T[] = [];
 
   constructor(
     private selfId: PeerId,
@@ -150,7 +149,7 @@ export class UdpTransport implements Transport {
     this.socket = dgram.createSocket("udp4");
     this.socket.on("message", (buf) => {
       try {
-        this.inbox.push(JSON.parse(buf.toString()) as Message);
+        this.inbox.push(JSON.parse(buf.toString()) as T);
       } catch {
         /* a corrupt datagram must never take an agent down */
       }
@@ -164,7 +163,7 @@ export class UdpTransport implements Transport {
     });
   }
 
-  send(to: PeerId | undefined, msg: Message): void {
+  send(to: PeerId | undefined, msg: T): void {
     const payload = Buffer.from(JSON.stringify(msg));
     if (to !== undefined) {
       const port = this.peers[to];
@@ -178,7 +177,7 @@ export class UdpTransport implements Transport {
     }
   }
 
-  drain(): Message[] {
+  drain(): T[] {
     const out = this.inbox;
     this.inbox = [];
     return out;

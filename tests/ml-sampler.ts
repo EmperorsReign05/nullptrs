@@ -47,8 +47,8 @@ export function collectRun(
       if (!r.currentTaskId || r.path.length < 2) continue;
       const peers = routed.filter((p) => p.id !== r.id && manhattanDistance(r.position, p.position) <= COMM_RANGE)
         .map((p) => ({ id: p.id, position: p.position, intent: p.path[1] ?? null,
-          priority: p.priority, docked: false, seq: tick, lastSeenTick: tick }));
-      const local = { id: r.id, position: r.position, path: r.path, priority: r.priority, docked: false, seq: tick };
+          priority: p.priority, docked: false, stallTicks: 0, seq: tick, lastSeenTick: tick }));
+      const local = { id: r.id, position: r.position, path: r.path, priority: r.priority, docked: false, stallTicks: 0, seq: tick };
       const ctx = { local, peers, map: state.map,
         bays: options.bays ?? ALL_BAYS, lastStepAsideTick: -1, currentTick: tick };
       rows.push({ seed, tick, x: options.observe ? options.observe(ctx) : extractFeatures(ctx) });

@@ -132,7 +132,7 @@ export function extractFeatures(ctx: FeatureContext): number[] {
   const intentConflict = preferred && peers.some((p) => p.intent !== null && positionsEqual(p.intent, preferred)) ? 1 : 0;
 
   return [
-    intentOccupied,
+    Number(intentOccupied),
     peersInRange,
     blockedPeers,
     contentionRatio,

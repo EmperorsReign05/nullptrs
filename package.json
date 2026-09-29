@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "fleet:build": "tsc -p tsconfig.fleet.json",
+    "fleet": "npm run fleet:build && node .fleet-dist/src/server/fleet-http.js"
   },
   "dependencies": {
     "lucide-react": "^1.42.0",
