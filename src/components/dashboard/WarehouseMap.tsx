@@ -32,6 +32,9 @@ export function WarehouseMap({
   map,
   tooltips = []
 }: WarehouseMapProps) {
+  const mapWidth = map?.width ?? WAREHOUSE_WIDTH;
+  const mapHeight = map?.height ?? WAREHOUSE_HEIGHT;
+
   const shelfCols = useMemo(() => {
     return Array.from(new Set(SHELF_BLOCKS.map(b => b[0]))).sort((a, b) => a - b);
   }, []);
@@ -71,10 +74,10 @@ export function WarehouseMap({
         key={`shelf-${x}-${y}`} 
         className="absolute bg-[#181E29] border border-[#283242] p-[2px] rounded-[3px] shadow-sm z-10"
         style={{ 
-          left: `calc(100% * ${x}/${WAREHOUSE_WIDTH})`, 
-          top: `calc(100% * ${y}/${WAREHOUSE_HEIGHT})`, 
-          width: `calc(100% * ${w}/${WAREHOUSE_WIDTH})`, 
-          height: `calc(100% * ${h}/${WAREHOUSE_HEIGHT})`,
+          left: `calc(100% * ${x}/${mapWidth})`, 
+          top: `calc(100% * ${y}/${mapHeight})`, 
+          width: `calc(100% * ${w}/${mapWidth})`, 
+          height: `calc(100% * ${h}/${mapHeight})`,
           display: 'grid',
           gridTemplateColumns: `repeat(${w}, minmax(0, 1fr))`,
           gridTemplateRows: `repeat(${h}, minmax(0, 1fr))`,
@@ -104,15 +107,19 @@ export function WarehouseMap({
       </div>
       
       <div className="flex-1 bg-black/30 backdrop-blur-sm pt-8 pl-8 pr-4 pb-4 flex items-center justify-center overflow-hidden relative">
-         <div className="warehouse-map w-full h-full relative" style={{ 
+         <div className="warehouse-map relative" style={{ 
+             width: '100%',
+             height: '100%',
+             maxHeight: '100%',
+             aspectRatio: `${mapWidth} / ${mapHeight}`,
              display: 'grid', 
-             gridTemplateColumns: `repeat(${WAREHOUSE_WIDTH}, minmax(0, 1fr))`, 
-             gridTemplateRows: `repeat(${WAREHOUSE_HEIGHT}, minmax(0, 1fr))`,
+             gridTemplateColumns: `repeat(${mapWidth}, minmax(0, 1fr))`, 
+             gridTemplateRows: `repeat(${mapHeight}, minmax(0, 1fr))`,
              gap: '1px'
          }}>
-            {Array.from({ length: WAREHOUSE_WIDTH * WAREHOUSE_HEIGHT }).map((_, i) => {
-              const x = i % WAREHOUSE_WIDTH;
-              const y = Math.floor(i / WAREHOUSE_WIDTH);
+            {Array.from({ length: mapWidth * mapHeight }).map((_, i) => {
+              const x = i % mapWidth;
+              const y = Math.floor(i / mapWidth);
               const isAisle = aisleLanes.horizontalRows.includes(y) || [0, 3, 6, 9, 13, 14, 17].includes(x);
               return (
                 <div 
@@ -127,7 +134,7 @@ export function WarehouseMap({
                 key={`lane-h-${y}`}
                 className="absolute pointer-events-none border-b border-dashed border-[#545C6B]/40 w-full"
                 style={{
-                  top: `calc(100% * ${y + 0.5}/${WAREHOUSE_HEIGHT})`,
+                  top: `calc(100% * ${y + 0.5}/${mapHeight})`,
                   left: 0
                 }}
               />
@@ -138,26 +145,26 @@ export function WarehouseMap({
                 key={`lane-v-${x}`}
                 className="absolute pointer-events-none border-r border-dashed border-[#545C6B]/40 h-full"
                 style={{
-                  left: `calc(100% * ${x + 0.5}/${WAREHOUSE_WIDTH})`,
+                  left: `calc(100% * ${x + 0.5}/${mapWidth})`,
                   top: 0
                 }}
               />
             ))}
 
-            {Array.from({ length: WAREHOUSE_WIDTH }).map((_, i) => (
+            {Array.from({ length: mapWidth }).map((_, i) => (
               <div 
                 key={`col-${i}`} 
                 className="absolute top-[-22px] text-[10px] text-[#8A93A3] font-mono font-medium -translate-x-1/2" 
-                style={{ left: `calc((100% / ${WAREHOUSE_WIDTH}) * ${i + 0.5})` }}
+                style={{ left: `calc((100% / ${mapWidth}) * ${i + 0.5})` }}
               >
                 {i}
               </div>
             ))}
-            {Array.from({ length: WAREHOUSE_HEIGHT }).map((_, i) => (
+            {Array.from({ length: mapHeight }).map((_, i) => (
               <div 
                 key={`row-${i}`} 
                 className="absolute left-[-22px] text-[10px] text-[#8A93A3] font-mono font-medium -translate-y-1/2" 
-                style={{ top: `calc((100% / ${WAREHOUSE_HEIGHT}) * ${i + 0.5})` }}
+                style={{ top: `calc((100% / ${mapHeight}) * ${i + 0.5})` }}
               >
                 {i}
               </div>
@@ -168,10 +175,11 @@ export function WarehouseMap({
                 key={`dock-${y}`}
                 className="absolute border border-dashed border-zinc-700/80 bg-zinc-900/40 rounded-[2px] flex flex-col justify-around p-[2px] z-10"
                 style={{
-                  left: `calc(100% * 0/${WAREHOUSE_WIDTH})`,
-                  top: `calc(100% * ${y}/${WAREHOUSE_HEIGHT})`,
-                  width: `calc(100% * 1/${WAREHOUSE_WIDTH})`,
-                  height: `calc(100% * 3/${WAREHOUSE_HEIGHT})`
+                  left: `calc(100% * 0/${mapWidth})`,
+                  top: `calc(100% * ${y}/${mapHeight})`,
+                  width: `calc(100% * 1/${mapWidth})`,
+                  height: `calc(100% * 3/${mapHeight})`,
+                  display: y + 2 >= mapHeight ? 'none' : 'flex' // Hide if map is smaller than the dock coordinates
                 }}
               >
                 <div className="w-full h-[24%] border border-zinc-700/60 bg-zinc-800/40 rounded-[1px]" />
@@ -187,10 +195,11 @@ export function WarehouseMap({
                 key={`intersection-${idx}`} 
                 className="absolute border border-[#283242] bg-[#181E29]/60 flex items-center justify-center z-10" 
                 style={{ 
-                  left: `calc(100% * ${pos.x}/${WAREHOUSE_WIDTH})`, 
-                  top: `calc(100% * ${pos.y}/${WAREHOUSE_HEIGHT})`, 
-                  width: `calc(100% * 1/${WAREHOUSE_WIDTH})`, 
-                  height: `calc(100% * 1/${WAREHOUSE_HEIGHT})` 
+                  left: `calc(100% * ${pos.x}/${mapWidth})`, 
+                  top: `calc(100% * ${pos.y}/${mapHeight})`, 
+                  width: `calc(100% * 1/${mapWidth})`, 
+                  height: `calc(100% * 1/${mapHeight})`,
+                  display: pos.x >= mapWidth || pos.y >= mapHeight ? 'none' : 'flex'
                 }}
               >
                 <div className="w-[1px] h-full bg-[#545C6B] rotate-45 absolute"></div>
@@ -203,10 +212,11 @@ export function WarehouseMap({
                 key={zone.id} 
                 className="absolute border-2 border-dashed border-[#38bdf8]/80 bg-[#38bdf8]/10 rounded-md flex flex-col items-center justify-center z-10 shadow-[0_0_15px_rgba(56,189,248,0.15)]" 
                 style={{ 
-                  left: `calc(100% * ${zone.x}/${WAREHOUSE_WIDTH})`, 
-                  top: `calc(100% * ${zone.y}/${WAREHOUSE_HEIGHT})`, 
-                  width: `calc(100% * ${zone.width}/${WAREHOUSE_WIDTH})`, 
-                  height: `calc(100% * ${zone.height}/${WAREHOUSE_HEIGHT})` 
+                  left: `calc(100% * ${zone.x}/${mapWidth})`, 
+                  top: `calc(100% * ${zone.y}/${mapHeight})`, 
+                  width: `calc(100% * ${zone.width}/${mapWidth})`, 
+                  height: `calc(100% * ${zone.height}/${mapHeight})`,
+                  display: zone.x >= mapWidth || zone.y >= mapHeight ? 'none' : 'flex'
                 }}
               >
                  <span className="text-[10px] text-[#38bdf8] font-mono font-bold text-center leading-tight">
@@ -220,10 +230,11 @@ export function WarehouseMap({
                 key={station.id} 
                 className="absolute bg-[#22c55e] rounded-[3px] shadow-[0_0_18px_rgba(34,197,94,0.45)] flex items-center justify-center z-20" 
                 style={{ 
-                  left: `calc(100% * ${station.position.x}/${WAREHOUSE_WIDTH})`, 
-                  top: `calc(100% * ${station.position.y}/${WAREHOUSE_HEIGHT})`, 
-                  width: `calc(100% * 1/${WAREHOUSE_WIDTH})`, 
-                  height: `calc(100% * 1/${WAREHOUSE_HEIGHT})` 
+                  left: `calc(100% * ${station.position.x}/${mapWidth})`, 
+                  top: `calc(100% * ${station.position.y}/${mapHeight})`, 
+                  width: `calc(100% * 1/${mapWidth})`, 
+                  height: `calc(100% * 1/${mapHeight})`,
+                  display: station.position.x >= mapWidth || station.position.y >= mapHeight ? 'none' : 'flex'
                 }}
               >
                  <div className="absolute -top-1.5 w-6 h-1.5 bg-[#22c55e]/30 border-t border-x border-[#22c55e] rounded-t-sm" />
@@ -236,10 +247,11 @@ export function WarehouseMap({
                 key={station.id} 
                 className="absolute bg-[#ef4444] rounded-[3px] shadow-[0_0_18px_rgba(239,68,68,0.45)] flex items-center justify-center z-20" 
                 style={{ 
-                  left: `calc(100% * ${station.position.x}/${WAREHOUSE_WIDTH})`, 
-                  top: `calc(100% * ${station.position.y}/${WAREHOUSE_HEIGHT})`, 
-                  width: `calc(100% * 1/${WAREHOUSE_WIDTH})`, 
-                  height: `calc(100% * 1/${WAREHOUSE_HEIGHT})` 
+                  left: `calc(100% * ${station.position.x}/${mapWidth})`, 
+                  top: `calc(100% * ${station.position.y}/${mapHeight})`, 
+                  width: `calc(100% * 1/${mapWidth})`, 
+                  height: `calc(100% * 1/${mapHeight})`,
+                  display: station.position.x >= mapWidth || station.position.y >= mapHeight ? 'none' : 'flex'
                 }}
               >
                  <span className="text-[12px] text-[#090C11] font-mono font-black">{station.id.toLowerCase()}</span>
@@ -251,10 +263,11 @@ export function WarehouseMap({
                 key={station.id}
                 className="absolute bg-[#0f172a] border-2 border-[#f59e0b] rounded-[3px] shadow-[0_0_18px_rgba(245,158,11,0.45)] flex items-center justify-center z-20"
                 style={{
-                  left: `calc(100% * ${station.position.x}/${WAREHOUSE_WIDTH})`,
-                  top: `calc(100% * ${station.position.y}/${WAREHOUSE_HEIGHT})`,
-                  width: `calc(100% * 1/${WAREHOUSE_WIDTH})`,
-                  height: `calc(100% * 1/${WAREHOUSE_HEIGHT})`
+                  left: `calc(100% * ${station.position.x}/${mapWidth})`,
+                  top: `calc(100% * ${station.position.y}/${mapHeight})`,
+                  width: `calc(100% * 1/${mapWidth})`,
+                  height: `calc(100% * 1/${mapHeight})`,
+                  display: station.position.x >= mapWidth || station.position.y >= mapHeight ? 'none' : 'flex'
                 }}
               >
                 <BatteryCharging size={12} className="text-[#f59e0b]" />
@@ -266,10 +279,10 @@ export function WarehouseMap({
                 key={`block-${cell.position.x}-${cell.position.y}`}
                 className="absolute border-2 border-[#F87171] bg-[repeating-linear-gradient(45deg,rgba(248,113,113,0.35)_0px,rgba(248,113,113,0.35)_4px,rgba(15,23,42,0.6)_4px,rgba(15,23,42,0.6)_8px)] flex items-center justify-center z-25 animate-pulse"
                 style={{
-                  left: `calc(100% * ${cell.position.x}/${WAREHOUSE_WIDTH})`,
-                  top: `calc(100% * ${cell.position.y}/${WAREHOUSE_HEIGHT})`,
-                  width: `calc(100% * 1/${WAREHOUSE_WIDTH})`,
-                  height: `calc(100% * 1/${WAREHOUSE_HEIGHT})`
+                  left: `calc(100% * ${cell.position.x}/${mapWidth})`,
+                  top: `calc(100% * ${cell.position.y}/${mapHeight})`,
+                  width: `calc(100% * 1/${mapWidth})`,
+                  height: `calc(100% * 1/${mapHeight})`
                 }}
               >
                 <AlertTriangle size={12} className="text-[#F87171] drop-shadow-[0_0_4px_rgba(248,113,113,0.8)]" />
@@ -278,7 +291,7 @@ export function WarehouseMap({
 
             <svg
               className="absolute inset-0 w-full h-full pointer-events-none z-20 overflow-hidden"
-              viewBox={`0 0 ${WAREHOUSE_WIDTH} ${WAREHOUSE_HEIGHT}`}
+              viewBox={`0 0 ${mapWidth} ${mapHeight}`}
               preserveAspectRatio="none"
             >
               {robots.map((robot, index) => {
@@ -326,10 +339,10 @@ export function WarehouseMap({
                   onClick={() => onSelectRobot(isSelected ? null : robot.id)}
                   className={`absolute flex flex-col items-center justify-center transition-all duration-[650ms] ease-linear cursor-pointer z-30 group ${isSelected ? 'scale-110' : 'hover:scale-105'}`} 
                   style={{ 
-                    left: `calc(100% * ${robot.position.x}/${WAREHOUSE_WIDTH})`, 
-                    top: `calc(100% * ${robot.position.y}/${WAREHOUSE_HEIGHT})`, 
-                    width: `calc(100% * 1/${WAREHOUSE_WIDTH})`, 
-                    height: `calc(100% * 1/${WAREHOUSE_HEIGHT})` 
+                    left: `calc(100% * ${robot.position.x}/${mapWidth})`, 
+                    top: `calc(100% * ${robot.position.y}/${mapHeight})`, 
+                    width: `calc(100% * 1/${mapWidth})`, 
+                    height: `calc(100% * 1/${mapHeight})` 
                   }}
                   title={`${robot.id} | Status: ${robot.status} | Battery: ${robot.battery}%`}
                 >
@@ -373,8 +386,8 @@ export function WarehouseMap({
                 key={tip.id}
                 className="absolute z-50 pointer-events-none animate-in fade-in duration-200"
                 style={{
-                  left: `calc(100% * ${tip.position.x + 0.5}/${WAREHOUSE_WIDTH})`,
-                  top: `calc(100% * ${tip.position.y}/${WAREHOUSE_HEIGHT})`,
+                  left: `calc(100% * ${tip.position.x + 0.5}/${mapWidth})`,
+                  top: `calc(100% * ${tip.position.y}/${mapHeight})`,
                   transform: 'translate(-50%, -135%)'
                 }}
               >
