@@ -131,3 +131,13 @@ it("routes around a failed body's unknown-contender envelope without entering it
   }
   expect(task.status).toBe("completed");
 });
+
+it("a full existing queue does not prevent executing already-owned work",()=>{
+  const world=createInitialWorld();
+  const active={id:"active",pickup:{x:3,y:0},dropoff:{x:3,y:2},weight:1,createdAt:0,priority:1,status:"in_progress" as const};
+  const queued=Array.from({length:4},(_,i)=>({id:`q${i}`,pickup:{x:3,y:2},dropoff:{x:3,y:3},weight:1,createdAt:0,priority:1,status:"assigned" as const}));
+  const robot={...world.robots[0],position:{x:3,y:0},battery:100,currentTaskId:active.id,queuedTaskIds:queued.map(t=>t.id)};
+  world.tasks=[active,...queued];world.robots=[robot];
+  expect(executionEnergyAllowed(robot,active,{x:3,y:1},world)).toBe(true);
+  expect(executionEnergyAllowed({...robot,battery:20},active,{x:3,y:1},world)).toBe(false);
+});

@@ -10,7 +10,7 @@ function rng(seed: number) {
   return () => ((s = (Math.imul(s, 1664525) + 1013904223) >>> 0) / 4294967296);
 }
 const protocol = {
-  version: 2, seedStart: 25000, seeds: 200, fleetSizes: [3, 6], tasksPerRun: 6,
+  version: 3, seedStart: 26000, seeds: 200, fleetSizes: [3, 6], tasksPerRun: 6,
   horizon: 800, map: "stock warehouse", battery: 100, taskWeight: 1,
   release: "all six pending tasks announced at tick zero",
   starts: "uniform open cells without replacement",
@@ -101,7 +101,7 @@ it("stop-and-wait adapter matches the unchanged resolver and shares obstruction 
 });
 
 it.skipIf(process.env.MEASURE_INTEGRATED !== "1")("200 paired integrated runtime seeds, frozen protocol", () => {
-  const dir = "artifacts/integrated-stopwait-v2";
+  const dir = "artifacts/integrated-stopwait-v3";
   mkdirSync(dir,{recursive:true});
   writeFileSync(`${dir}/protocol.json`,JSON.stringify(protocol,null,2)+"\n");
   const rows: Pair[]=[];
@@ -118,7 +118,7 @@ it.skipIf(process.env.MEASURE_INTEGRATED !== "1")("200 paired integrated runtime
 }, 1800000);
 
 it.skipIf(process.env.DIAGNOSE_INTEGRATED !== "1")("diagnose every measured battery-exhaustion run without changing policy", () => {
-  const report = JSON.parse(readFileSync("artifacts/integrated-stopwait-v2/report.json", "utf8")) as { rows: Pair[] };
+  const report = JSON.parse(readFileSync("artifacts/integrated-stopwait-v3/report.json", "utf8")) as { rows: Pair[] };
   const rows = report.rows.filter(r => r.integrated.safety.zeroBatteryWork || r.baseline.completed && !r.integrated.completed);
   const results = rows.map(row => {
     const runtime = new FleetRuntime(scenario(row.seed,row.n));
@@ -145,8 +145,8 @@ it.skipIf(process.env.DIAGNOSE_INTEGRATED !== "1")("diagnose every measured batt
     return {seed:row.seed,n:row.n,underpoweredMoves,depletions,
       finalRobots:runtime.world.robots, finalTasks:runtime.world.tasks, safety:runtime.safety};
   });
-  writeFileSync("artifacts/integrated-stopwait-v2/energy-diagnosis.json",JSON.stringify({
-    scope:"all exhaustion and baseline-only completion seeds from the v2 report; diagnostic replay, no policy tuning",
+  writeFileSync("artifacts/integrated-stopwait-v3/energy-diagnosis.json",JSON.stringify({
+    scope:"all exhaustion and baseline-only completion seeds from the v3 report; diagnostic replay, no policy tuning",
     counterDefinition:"zeroBatteryWork counts robot-ticks at zero battery with a current task, including stationary holds",
     results,
   },null,2)+"\n");
