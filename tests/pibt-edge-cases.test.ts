@@ -15,7 +15,7 @@ describe("PIBT: trivial/degenerate inputs", () => {
     expect(() => resolvePIBT([], world)).not.toThrow();
     const { moves, metrics } = resolvePIBT([], world);
     expect(moves).toEqual([]);
-    expect(metrics).toEqual({ conflictCount: 0, waitMoves: 0, inheritedPriorities: 0, backtracks: 0 });
+    expect(metrics).toEqual({ conflictCount: 0, waitMoves: 0, inheritedPriorities: 0, backtracks: 0, stepAsides: 0 });
   });
 
   it("single robot with no path just waits", () => {

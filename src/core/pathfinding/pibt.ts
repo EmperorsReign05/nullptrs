@@ -25,10 +25,33 @@ import { isTraversable } from "../map/warehouse";
 // simultaneous rotation. Full academic PIBT can resolve those; doing so
 // safely requires more bookkeeping than this scaffold's contract asks for,
 // and waiting is always safe. See resolveCandidate's `inProgress` check.
+const EMPTY_BAYS: ReadonlySet<string> = new Set<string>();
+
 export type PlannedMove = {
   robotId: string;
   from: Position;
   to: Position;
+};
+
+// A "bay" is a cell a robot is allowed to step into WITHOUT making progress
+// toward its goal, purely to let someone else through. This is the
+// "negotiate passage order" move.
+//
+// It has to exist as a first-class concept because of how the candidate
+// filter above works: a robot acting on its own initiative may only take
+// alternates that STRICTLY REDUCE its distance to goal. Stepping into a
+// passing bay does not — it is a lateral or backward move by definition.
+// So at a choke point the correct action is invisible to that filter, and
+// without this rule a blocked robot can only wait or retreat down the
+// corridor it is trying to leave.
+//
+// Bays are the engine-side counterpart of the waiting zones the dashboard
+// already draws (WAITING_ZONES in map/warehouse.ts). Previously those
+// zones were pure decoration — nothing in src/core ever referenced them.
+export type PibtOptions = {
+  // Cells a robot may occupy to step aside. Empty/undefined disables
+  // step-aside entirely, which is the historical behaviour.
+  bays?: ReadonlySet<string>;
 };
 
 export type PIBTMetrics = {
@@ -44,12 +67,21 @@ export type PIBTMetrics = {
   // Number of times a robot's preferred candidate was rejected and it moved
   // on to try the next one.
   backtracks: number;
+  // Times a robot with nowhere better to go stepped into a bay to let
+  // another robot through.
+  stepAsides: number;
 };
 
 export type PIBTResult = {
   moves: PlannedMove[];
   metrics: PIBTMetrics;
 };
+
+/** A robot's current distance to its own committed goal, for shove detection. */
+function distanceToGoal(robot: RobotState): { goal: Position; dist: number } {
+  const goal = robot.path.length > 0 ? robot.path[robot.path.length - 1] : robot.position;
+  return { goal, dist: manhattanDistance(robot.position, goal) };
+}
 
 function rowMajorIndex(pos: Position, map: WarehouseMap): number {
   return pos.y * map.width + pos.x;
@@ -144,7 +176,7 @@ type ResolutionState = {
 // Returns true if the robot ends up somewhere other than where it started
 // (i.e. it successfully vacated its original cell) — this is exactly what a
 // caller needs to know to know whether ITS candidate cell is now free.
-function resolveCandidate(robotId: string, callerId: string | null, state: ResolutionState): boolean {
+function resolveCandidate(robotId: string, callerId: string | null, state: ResolutionState, bays: ReadonlySet<string>): boolean {
   const existing = state.decided.get(robotId);
   if (existing) {
     return !positionsEqual(existing.from, existing.to);
@@ -162,6 +194,11 @@ function resolveCandidate(robotId: string, callerId: string | null, state: Resol
   const callerPosition = callerId ? state.robotsById.get(callerId)!.position : null;
   const candidates = getCandidates(robot, state.map, callerPosition);
   let chosen: Position | null = null;
+  // Did resolving this robot require SHOVING another robot backwards — i.e.
+  // away from its own goal? That is the behaviour we want to avoid at a
+  // choke point: one robot bulldozing another down a corridor it is trying
+  // to leave, when stepping aside was available.
+  let shovedBackward = false;
 
   for (let i = 0; i < candidates.length; i++) {
     const candidate = candidates[i];
@@ -208,15 +245,65 @@ function resolveCandidate(robotId: string, callerId: string | null, state: Resol
     const occupant = state.occupantByCell.get(destKey);
     if (occupant && occupant !== robotId && !state.decided.has(occupant)) {
       state.metrics.inheritedPriorities += 1;
-      const vacated = resolveCandidate(occupant, robotId, state);
+      const occRobot = state.robotsById.get(occupant)!;
+      const occBefore = distanceToGoal(occRobot);
+      const vacated = resolveCandidate(occupant, robotId, state, bays);
       if (!vacated) {
         state.metrics.conflictCount += 1;
         continue;
+      }
+      const occMove = state.decided.get(occupant);
+      if (occMove) {
+        const occAfter = manhattanDistance(occMove.to, occBefore.goal);
+        if (occAfter > occBefore.dist) shovedBackward = true;
       }
     }
 
     chosen = candidate;
     break;
+  }
+
+  // ---- Step aside into a bay ----
+  // Fires in exactly two situations, both of which mean "I am in the way and
+  // there is a legal place to get out of it":
+  //
+  //   1. Every candidate failed outright, so the robot would otherwise sit
+  //      still in the aisle.
+  //   2. The robot could only proceed by SHOVING another robot backwards
+  //      away from that robot's goal. That is the failure mode at a choke
+  //      point: one robot bulldozes another indefinitely down a corridor
+  //      instead of stepping aside, and neither ever arrives.
+  //
+  // In every other case this code does not run and behaviour is unchanged.
+  //
+  // Deliberately does NOT push an occupant to claim a bay — the whole point
+  // is to GET out of the way, so shoving another robot in order to move
+  // sideways would be self-defeating.
+  // Restricted to `shovedBackward` ONLY. An earlier version also fired on
+  // "this robot merely ended up waiting", which caused robots to step into a
+  // bay, find nothing blocking them, step back out, get blocked again, and
+  // oscillate forever (measured: 296 step-asides over 600 ticks on the
+  // T-junction with no progress). Stepping aside is only meaningful when it
+  // resolves a real conflict, and a real conflict is precisely the case
+  // where resolving it would have required shoving someone backwards.
+  if (bays.size > 0 && shovedBackward) {
+    const bayOptions = getNeighbors(robot.position, state.map)
+      .filter((n) => bays.has(positionKey(n)))
+      // Prefer the bay that costs the least detour, so we do not step
+      // further out of the way than necessary.
+      .sort((a, b) => {
+        const ga = robot.path.length > 0 ? robot.path[robot.path.length - 1] : robot.position;
+        return manhattanDistance(a, ga) - manhattanDistance(b, ga);
+      });
+    for (const bay of bayOptions) {
+      const bayKey = positionKey(bay);
+      if (state.reservedNext.has(bayKey)) continue;
+      const occupant = state.occupantByCell.get(bayKey);
+      if (occupant && occupant !== robotId && !state.decided.has(occupant)) continue; // occupied, not ours to take
+      chosen = bay;
+      state.metrics.stepAsides += 1;
+      break;
+    }
   }
 
   state.inProgress.delete(robotId);
@@ -232,8 +319,9 @@ function resolveCandidate(robotId: string, callerId: string | null, state: Resol
   return !positionsEqual(to, robot.position);
 }
 
-export function resolvePIBT(robots: RobotState[], world: WorldState): PIBTResult {
+export function resolvePIBT(robots: RobotState[], world: WorldState, options: PibtOptions = {}): PIBTResult {
   const map = world.map;
+  const bays = options.bays ?? EMPTY_BAYS;
 
   const state: ResolutionState = {
     map,
@@ -242,7 +330,7 @@ export function resolvePIBT(robots: RobotState[], world: WorldState): PIBTResult
     decided: new Map(),
     reservedNext: new Map(),
     inProgress: new Set(),
-    metrics: { conflictCount: 0, waitMoves: 0, inheritedPriorities: 0, backtracks: 0 },
+    metrics: { conflictCount: 0, waitMoves: 0, inheritedPriorities: 0, backtracks: 0, stepAsides: 0 },
   };
 
   // Failed robots never move, decide them first so they act as static
@@ -265,7 +353,7 @@ export function resolvePIBT(robots: RobotState[], world: WorldState): PIBTResult
 
   for (const robot of ordered) {
     if (!state.decided.has(robot.id)) {
-      resolveCandidate(robot.id, null, state);
+      resolveCandidate(robot.id, null, state, bays);
     }
   }
 

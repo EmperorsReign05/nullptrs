@@ -92,6 +92,27 @@ export const WAITING_ZONES: WaitingZone[] = [
   { id: "W3", x: 12, y: 9, width: 2, height: 3 },
 ];
 
+/**
+ * The cells a robot may occupy to step aside and let another pass, as a set
+ * of "x,y" keys ready for direct lookup by the PIBT step-aside rule (see
+ * src/core/pathfinding/pibt.ts's PibtOptions).
+ *
+ * Derived from WAITING_ZONES, which until now were read ONLY by the
+ * dashboard's renderer — src/core never referenced them, so the zones were
+ * decoration. Making them the engine's designated passing bays is what turns
+ * a blocked robot from "sits in the aisle forever" into "steps aside and
+ * lets the other one through".
+ */
+export const WAITING_ZONE_CELLS: ReadonlySet<string> = new Set(
+  WAITING_ZONES.flatMap((z) => {
+    const cells: string[] = [];
+    for (let dx = 0; dx < z.width; dx++) {
+      for (let dy = 0; dy < z.height; dy++) cells.push(`${z.x + dx},${z.y + dy}`);
+    }
+    return cells;
+  })
+);
+
 export const INTERSECTIONS: Position[] = [
   { x: 6, y: 4 },
   { x: 6, y: 8 },
@@ -133,11 +154,25 @@ function buildCells(): Cell[] {
 
 // Creates a fresh WarehouseMap instance (fresh cells array, so callers can
 // mutate congestion per-tick without aliasing shared state).
-export function createWarehouseMap(): WarehouseMap {
+//
+// `extraOpen` un-blocks specific cells that are shelves in the stock layout.
+// Needed by the distributed worker, whose demo spine has passing bays at
+// cells the warehouse shelves (5,3), (7,3) and so on. Without it a declared
+// bay is untraversable and the step-aside rule silently never fires — which
+// is exactly the failure this parameter exists to prevent, so the worker
+// asserts every declared bay is open and exits non-zero if not.
+export function createWarehouseMap(extraOpen: ReadonlySet<string> = new Set()): WarehouseMap {
+  const cells = buildCells();
+  if (extraOpen.size > 0) {
+    for (const cell of cells) {
+      if (!extraOpen.has(`${cell.position.x},${cell.position.y}`)) continue;
+      cell.blocked = false;
+    }
+  }
   return {
     width: WAREHOUSE_WIDTH,
     height: WAREHOUSE_HEIGHT,
-    cells: buildCells(),
+    cells,
   };
 }
 
