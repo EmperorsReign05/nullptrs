@@ -3,6 +3,7 @@
  * Not an asynchronous physical-robot safety controller.
  */
 import http from "node:http";
+import { Nav2Executor } from "./nav2-executor";
 import { readFileSync } from "node:fs";
 import { EdgePeer, type EdgeConfig } from "../core/distributed/edge-peer";
 import { UdpTransport, type Transport } from "../core/distributed/transport";
@@ -38,10 +39,12 @@ async function main() {
     await a.bind();await m.bind();allocation=a;motion=m;
   }
   let controller:EdgePeer|undefined,session="",cpuUs=0;
+  let executor: Nav2Executor | undefined;
   const state=()=>{
     bridge?.refreshDiscovery();
     return {pid:process.pid,id,session,cpuUs,rssMb:process.memoryUsage().rss/1048576,
       transport:{kind:transportKind,subscriptions:bridge?.discovery},
+      execution:executor ? {kind:"nav2",fault:executor.fault,feedback:executor.feedback} : {kind:"grid"},
       datagrams:{allocation:allocation?.stats,motion:motion?.stats},state:controller?.snapshot()};
   };
   const server=http.createServer(async(req,res)=>{
@@ -52,9 +55,10 @@ async function main() {
       if(req.method!=="POST")throw new Error("POST required");
       let raw="";for await(const chunk of req){raw+=chunk;if(raw.length>2_000_000)throw new Error("Body too large");}
       const body=JSON.parse(raw);
-      const started=performance.now();
+      const started=process.cpuUsage();
       switch(req.url){
         case "/initialize": {
+          if(executor) throw new Error("Nav2 reinitialization requires physical executor restart/relocalization");
           const config=body.config as EdgeConfig;
           if(typeof body.session!=="string"||!body.session||config.self.id!==id||
             JSON.stringify([...config.members].sort())!==JSON.stringify(endpoints.map(p=>p.id).sort()))throw new Error("Invalid session membership");
@@ -68,12 +72,18 @@ async function main() {
           }
           allocation!.drain();motion!.drain();
           for(const p of endpoints){allocation!.setReachable(p.id,true);motion!.setReachable(p.id,true);}
-          controller=new EdgePeer(config,new SessionTransport(id,session,allocation!),new SessionTransport(id,session,motion!));cpuUs=0;break;
+          controller=new EdgePeer(config,new SessionTransport(id,session,allocation!),new SessionTransport(id,session,motion!));
+          if(process.env.NAV2_EXECUTOR_BASE_PORT) {
+            executor=new Nav2Executor(`http://127.0.0.1:${Number(process.env.NAV2_EXECUTOR_BASE_PORT)+endpoints.indexOf(self)}`,session);
+            await executor.initialize(config.self.position,config.map);
+          }
+          cpuUs=0;break;
         }
         case "/prepare": {
           if(!controller||body.session!==session)throw new Error("Wrong session");
           const position=controller.world.robots[0].position;
           if(!Array.isArray(body.contacts)||body.contacts.some((p:{x:number;y:number})=>!Number.isInteger(p.x)||!Number.isInteger(p.y)||Math.abs(p.x-position.x)+Math.abs(p.y-position.y)>2))throw new Error("Only local sensor contacts accepted");
+          if(executor && body.blocks?.length) throw new Error("Dynamic grid blocks are unsupported by the Nav2 physical-map adapter");
           controller.prepare(body.tick,body.contacts,body.blocks??[]);break;
         }
         case "/propose":
@@ -81,7 +91,8 @@ async function main() {
           controller.propose(body.tick);break;
         case "/commit":
           if(!controller||body.session!==session)throw new Error("Wrong session");
-          controller.commit(body.tick);break;
+          if(executor) await controller.commitExecuted(body.tick,(from,to)=>executor!.execute(from,to));
+          else controller.commit(body.tick);break;
         case "/link":
           if(!endpoints.some(p=>p.id===body.peer)||typeof body.reachable!=="boolean")throw new Error("Invalid link");
           allocation!.setReachable(body.peer,body.reachable);motion!.setReachable(body.peer,body.reachable);break;
@@ -98,11 +109,14 @@ async function main() {
           controller.aiEnabled=body.enabled;break;
         default:throw new Error("Unknown command");
       }
-      cpuUs+=(performance.now()-started)*1000;res.end(JSON.stringify(state()));
+      const cpu=process.cpuUsage(started);cpuUs+=cpu.user+cpu.system;res.end(JSON.stringify(state()));
     }catch(e){res.writeHead(400);res.end(JSON.stringify({error:String(e)}));}
   });
   server.listen(self.controlPort,bind,()=>process.stdout.write(JSON.stringify({ready:true,id,pid:process.pid})+"\n"));
   const stop=()=>{server.close();allocation?.close();motion?.close();bridge?.close();};
-  process.on("SIGTERM",()=>{stop();process.exit(0);});
+  process.on("SIGTERM",async()=>{
+    if(executor) { try { await executor.revoke(); } catch { /* no physical-stop claim */ } }
+    stop();process.exit(0);
+  });
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});

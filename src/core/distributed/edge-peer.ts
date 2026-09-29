@@ -27,6 +27,7 @@ export class EdgePeer {
   private tick = -1;
   private prepared = false;
   private proposed = false;
+  private executing = false;
   private before: Position = { x: 0, y: 0 };
   constructor(readonly config: EdgeConfig, allocation: Transport<OwnershipMessage>, motion: Transport<Message>) {
     const self = structuredClone(config.self);
@@ -102,15 +103,33 @@ export class EdgePeer {
     this.fleet.proposeExternalMotion(tick); this.proposed = true;
   }
   commit(tick: number) {
+    if (this.executing) throw new Error("External execution in flight or faulted");
     if (!this.prepared || !this.proposed || tick !== this.tick) throw new Error("Out-of-order commit");
     this.fleet.commitExternalMotion(tick);
+    return this.finishCommit(tick);
+  }
+  /** Lockstep continuous simulation: never settle tasks before actual arrival.
+   * Rejection deliberately leaves this tick prepared: no later tick may run. */
+  async commitExecuted(tick: number, execute: (from: Position, to: Position) => Promise<void>) {
+    if (!this.prepared || !this.proposed || tick !== this.tick) throw new Error("Out-of-order commit");
+    if (this.executing) throw new Error("Execution already in flight or faulted");
+    this.executing = true;
+    const decision = this.fleet.confirmExternalMotion(tick);
+    const current = this.world.robots[0].position;
+    if (decision && (decision.from.x !== current.x || decision.from.y !== current.y ||
+      Math.abs(decision.to.x-current.x)+Math.abs(decision.to.y-current.y)>1)) throw new Error("Invalid external decision");
+    if (decision) await execute(decision.from, decision.to);
+    this.fleet.finishExternalMotion(tick);
+    return this.finishCommit(tick);
+  }
+  private finishCommit(tick: number) {
     const self = this.world.robots[0];
     self.path = this.fleet.getAgent(self.id)!.getLocal().path;
     if (self.position.x !== this.before.x || self.position.y !== this.before.y) {
       self.battery = Math.max(0, self.battery - BATTERY_PERCENT_PER_CELL); this.metrics.moves++;
     }
     this.charging.afterMotion(self, this.world, tick);
-    this.prepared = false; this.proposed = false;
+    this.prepared = false; this.proposed = false; this.executing = false;
     return this.snapshot();
   }
   snapshot() {

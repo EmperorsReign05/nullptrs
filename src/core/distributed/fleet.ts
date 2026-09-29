@@ -108,9 +108,23 @@ export class DistributedFleet {
   }
 
   commitExternalMotion(tick: number) {
+    this.confirmExternalMotion(tick);
+    this.finishExternalMotion(tick);
+  }
+
+  /** Freeze the locally confirmed cell decision before external actuation. */
+  confirmExternalMotion(tick: number) {
     if (!this.options.motionTransport) throw new Error("Not an external single-agent fleet");
     const agent = [...this.agents.values()][0];
-    if (!this.inactive.has(agent.id)) agent.confirmDecision(tick);
+    if (this.inactive.has(agent.id)) {
+      const from = agent.getLocal().position;
+      agent.overrideDecision({from, to: from, reason: "no-move"});
+    } else agent.confirmDecision(tick);
+    return structuredClone(agent.getLastDecision());
+  }
+
+  /** External executor must acknowledge physical arrival before this call. */
+  finishExternalMotion(tick: number) {
     this.applyMoves(tick);
   }
 
