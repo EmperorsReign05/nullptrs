@@ -1,0 +1,19 @@
+
+ RUN  v2.1.9 /tmp/nullptrs-event-grouped
+
+ ✓ tests/sih-benchmark.test.ts (32 tests) 4864ms
+   ✓ scenario generation > never places a task endpoint on a blocked cell 1082ms
+   ✓ policy-independent regime classification > re-derives every stored regime label from stored geometry alone 853ms
+   ✓ policy-independent regime classification > places every scenario in exactly one regime, with the precedence the spec declares 327ms
+   ✓ metric correctness > reproduces sumTaskCompletionTime and makespan from the per-task trace 559ms
+   ✓ route-guidance safety envelope > changes nothing at all when the layer is switched OFF 1095ms
+ ✓ tests/ownership-concurrency.test.ts (126 tests) 7196ms
+   ✓ allocator epoch > hostile concurrency: single-owner safety is never violated > N=8: many tasks announced on the same tick never yield two executable owners 327ms
+   ✓ allocator epoch > hostile concurrency: single-owner safety is never violated > N=8: at most one frontier's worth of tasks is ever auctionable at once 379ms
+   ✓ allocator event-single > hostile concurrency: single-owner safety is never violated > N=8: at most one frontier's worth of tasks is ever auctionable at once 392ms
+
+ Test Files  2 passed (2)
+      Tests  158 passed (158)
+   Start at  04:02:22
+   Duration  8.00s (transform 432ms, setup 0ms, collect 646ms, tests 12.06s, environment 1ms, prepare 207ms)
+

@@ -1,0 +1,17 @@
+{
+  "source": "Exact existing frozen PR #28 inputs, copied without regeneration or modification",
+  "files": [
+    {
+      "target": "artifacts/sih-acceptance-v1/scenarios-development.json",
+      "archive": "scenarios-development.json.gz",
+      "sha256": "0c2a6cfe7b1ce87ae96f16d78822af1ae7ca248dbb6a19cdf441dbd48fcc2d47",
+      "bytes": 4095957
+    },
+    {
+      "target": "artifacts/sih-acceptance-v1/current/per-scenario.json",
+      "archive": "per-scenario.json.gz",
+      "sha256": "e5d77faabed37cce59774e94161b8c5756adc6ebda973f5f6c3e6cb2bc8ec3f7",
+      "bytes": 43616738
+    }
+  ]
+}

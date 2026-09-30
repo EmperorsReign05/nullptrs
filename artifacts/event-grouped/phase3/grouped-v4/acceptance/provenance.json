@@ -1,0 +1,13 @@
+{
+  "block": "acceptance",
+  "algorithm": "grouped-v4; four-task spatial groups, exhaustive subset offers, joint set packing, reserved full commitments, per-task quorum plus owner/full-bundle acceptance",
+  "hashes": {
+    "src/core/auction/grouped.ts": "8fc1ae1656c05719a3792ecf05dd721bbeb64c7eaf3ecbe1d97e52600d7adabf",
+    "src/core/distributed/ownership.ts": "6d67fc5532355152f3e5ac8302e321554cb42e01685c9162f660e0a3d63964ef",
+    "src/core/distributed/runtime.ts": "4a75d7166bb27c46836974922160bf81557ae88f8203185929d83fa33fe4df8f",
+    "src/core/bench/sih/runner.ts": "1863b5008900c49cee202aa54706feda40b8a903ff9cfca3021f6408742273e4",
+    "artifacts/sih-acceptance-v1/scenarios.json": "39fc92e7943e41da9b63293a0827e3458cd95f9e1e9813957cd103287c616507"
+  },
+  "baseline": "Recorded fixed EVENT; A and D frozen PR #28",
+  "catastrophicDevelopmentFloor": 0.8
+}

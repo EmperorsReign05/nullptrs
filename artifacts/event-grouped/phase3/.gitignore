@@ -1,0 +1,2 @@
+# Uncompressed checkpoints remain on disk; complete evidence is stored as gzip.
+**/progress.ndjson

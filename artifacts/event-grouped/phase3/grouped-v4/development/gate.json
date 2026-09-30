@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "completionRate": 0.8702020202020202,
+  "catastrophicFloor": 0.8,
+  "scenarios": 1980,
+  "safetyViolations": 0,
+  "duplicateOwners": 0
+}

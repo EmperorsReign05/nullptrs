@@ -4,6 +4,7 @@ import { InMemoryBus, InMemoryTransport } from "../src/core/distributed/transpor
 import type { LocalBidPacket } from "../src/core/ml/bidmodel";
 import type { Task } from "../src/core/types";
 
+describe.each(["epoch", "event-single"] as const)("allocator %s", (allocationMode) => {
 /** Hostile concurrency tests for the redesigned admission and liveness model.
  * The core invariant under test, checked after every single tick:
  *   for every task, the number of live peers allowed to execute it is <= 1
@@ -35,7 +36,7 @@ function rig(n: number, taskCount: number, options: { tie?: boolean; costs?: num
   const peers = ids.map((id, i) => new OwnershipPeer(id, ids, transports[i], (tk) => {
     const p = bidFor(id, i); p.taskId = tk.id; p.tick = 0; p.bid.taskId = tk.id; p.bid.robotId = id;
     return p;
-  }));
+  }, allocationMode));
   const tasks = Array.from({ length: taskCount }, (_, i) => task(`J${i + 1}`, taskCount - i));
   // Announce spread across peers so task knowledge itself must gossip.
   tasks.forEach((t, i) => peers[i % n].announce(t));
@@ -261,4 +262,6 @@ describe("hostile concurrency: single-owner safety is never violated", () => {
     r.advance(60);
     expect(r.peers[0].isLive(r.ids[2])).toBe(true);
   });
+});
+
 });

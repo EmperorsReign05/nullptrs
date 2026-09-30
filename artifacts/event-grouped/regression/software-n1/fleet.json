@@ -1,0 +1,15 @@
+{
+  "cellMetres": 0.6,
+  "rosDomainId": 96,
+  "robots": [
+    {
+      "id": "AMR-01",
+      "namespace": "AMR_01",
+      "origin": {
+        "x": 1,
+        "y": 1
+      },
+      "executorPort": 19700
+    }
+  ]
+}

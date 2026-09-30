@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "completionBefore": 0.8702020202020202,
+  "completionAfter": 0.898989898989899,
+  "recoverableCompletionBefore": 0.8566666666666667,
+  "recoverableCompletionAfter": 0.8966666666666666,
+  "pairedTctReduction": -0.02973937221533607,
+  "safetyViolations": 0,
+  "duplicateOwners": 0
+}

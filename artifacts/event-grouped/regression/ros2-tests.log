@@ -1,0 +1,42 @@
+
+> dashboard@0.1.0 ros2:test
+> bash scripts/ros2-test.sh
+
+STEP 1/10: FROM docker.io/library/ros:jazzy-ros-base@sha256:c3706ef0a0aa45413c07803cf433602f543b22e45b4855f6fca955c2d8ecc4e8
+STEP 2/10: ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+--> Using cache a376af6d45ef6219ba1e15b3c1c804086bf52a4a4f65b3d992f37ffbc3df44f0
+--> a376af6d45ef
+STEP 3/10: COPY containers/fastdds-udp.xml /opt/teamrocket/fastdds-udp.xml
+--> Using cache 5f6d32094dcb1631fde2ad064e5e8dccda8f635f7095beed5ca9c225969328af
+--> 5f6d32094dcb
+STEP 4/10: ENV FASTRTPS_DEFAULT_PROFILES_FILE=/opt/teamrocket/fastdds-udp.xml
+--> Using cache fef3f1f4459e00b71a1955617afe089e42903d4f391911fc64bf91dd4608f4a6
+--> fef3f1f4459e
+STEP 5/10: WORKDIR /opt/teamrocket
+--> Using cache 687d763c05bd1605f01688fcb43ada681edfdcb4311732e8a4360da2b79bb764
+--> 687d763c05bd
+STEP 6/10: COPY ros2/teamrocket_bridge/ /opt/teamrocket/src/teamrocket_bridge/
+--> Using cache 0225dd345c0f20f6bf3444195a6f13a9a00d09bad3767f450a45b8182f970dc6
+--> 0225dd345c0f
+STEP 7/10: RUN . /opt/ros/jazzy/setup.sh && colcon build --merge-install
+--> Using cache 9bf6910ab847eb5966f481671b7dbc6f3c3c1ae4b2fc82768b102c2156db614d
+--> 9bf6910ab847
+STEP 8/10: COPY scripts/ros2-entrypoint.sh /usr/local/bin/teamrocket-ros2
+--> Using cache 43d8267d11467ed74c4d22ac70aa664d1c9f665e9e286fed004e82ec44ddf604
+--> 43d8267d1146
+STEP 9/10: ENTRYPOINT ["/usr/local/bin/teamrocket-ros2"]
+--> Using cache 590af5df7f452d0b447d9cbd19487b1d42f1fbfe7cb52cd1943ca5742f5cc927
+--> 590af5df7f45
+STEP 10/10: CMD ["--help"]
+--> Using cache 94e004645c9145859888c058fc0849ee444924343791967472735b12501b8e55
+COMMIT localhost/teamrocket-ros2:jazzy
+--> 94e004645c91
+Successfully tagged localhost/teamrocket-ros2:jazzy
+94e004645c9145859888c058fc0849ee444924343791967472735b12501b8e55
+test_real_peers_and_fences (test_dds_exchange.DdsExchange.test_real_peers_and_fences) ... ok
+{"test": "real_fast_dds_exchange", "passed": true, "rmw": "rmw_fastrtps_cpp", "peers": 3, "roster": ["AMR-01", "AMR-02", "AMR-03"], "checks": ["state-intent", "bid", "heartbeat", "unicast", "no-self-delivery", "bidirectional-link-cut", "link-heal", "session-fence", "roster-fence", "payload-sender-fence"], "receiverStats": {"event": "stats", "id": "AMR-02", "sent": 1, "received": 5, "dropped": 9, "invalid": 1, "requestId": null, "subscriptions": {"motion": 3, "ownership": 3}}}
+
+----------------------------------------------------------------------
+Ran 1 test in 4.242s
+
+OK

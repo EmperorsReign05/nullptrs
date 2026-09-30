@@ -1,0 +1,15 @@
+{
+  "block": "acceptance",
+  "algorithm": "queue-recharge-v1; unchanged grouped allocation, opt-in pre-pickup full-queue charging and recharge event after rejected energy move",
+  "hashes": {
+    "src/core/auction/grouped.ts": "8fc1ae1656c05719a3792ecf05dd721bbeb64c7eaf3ecbe1d97e52600d7adabf",
+    "src/core/distributed/charging.ts": "430c6a73545a3643482d088c4e59a7b430f8ccb3d648fd7a9a2bc859a0735785",
+    "src/core/distributed/ownership.ts": "6d67fc5532355152f3e5ac8302e321554cb42e01685c9162f660e0a3d63964ef",
+    "src/core/distributed/runtime.ts": "a7b8f3284b8713dcc5cda853f01bb1695f527c8b10f74de9ec8a7b6c46e1f090",
+    "src/core/bench/sih/runner.ts": "d3bde34d802cf9a8d7011142b06540210d1310cd7d3912b9f663be13b670db7e",
+    "artifacts/sih-acceptance-v1/scenarios.json": "39fc92e7943e41da9b63293a0827e3458cd95f9e1e9813957cd103287c616507"
+  },
+  "baseline": "Recorded fixed grouped-v4 and EVENT; A and D frozen PR #28",
+  "catastrophicDevelopmentFloor": 0.8,
+  "developmentAcceptanceGate": "zero safety violations and improved completion versus fixed grouped control; report any paired TCT penalty"
+}

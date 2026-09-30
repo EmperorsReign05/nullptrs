@@ -1,0 +1,866 @@
+{
+  "n0-all": {
+    "runs": 1980,
+    "completionRate": 0.9792929292929293,
+    "releaseToOwnership": {
+      "count": 23757,
+      "mean": 81.71755693058888,
+      "median": 48,
+      "p95": 265
+    },
+    "stages": {
+      "firstAnnouncementTick": {
+        "count": 23757,
+        "mean": 1,
+        "median": 1,
+        "p95": 1
+      },
+      "firstAuctionEligibleTick": {
+        "count": 23757,
+        "mean": 62.313002483478556,
+        "median": 31,
+        "p95": 238
+      },
+      "firstBidTick": {
+        "count": 23757,
+        "mean": 80.3079513406575,
+        "median": 46,
+        "p95": 264
+      },
+      "quorumBidTick": {
+        "count": 23757,
+        "mean": 80.3079513406575,
+        "median": 46,
+        "p95": 264
+      },
+      "proposalTick": {
+        "count": 23757,
+        "mean": 81.3079513406575,
+        "median": 47,
+        "p95": 265
+      },
+      "firstGrantTick": {
+        "count": 23757,
+        "mean": 81.3079513406575,
+        "median": 47,
+        "p95": 265
+      },
+      "certificateTick": {
+        "count": 23757,
+        "mean": 81.3079513406575,
+        "median": 47,
+        "p95": 265
+      }
+    }
+  },
+  "n0-low": {
+    "runs": 600,
+    "completionRate": 0.985,
+    "releaseToOwnership": {
+      "count": 7200,
+      "mean": 81.73972222222223,
+      "median": 51,
+      "p95": 265
+    },
+    "stages": {
+      "firstAnnouncementTick": {
+        "count": 7200,
+        "mean": 1,
+        "median": 1,
+        "p95": 1
+      },
+      "firstAuctionEligibleTick": {
+        "count": 7200,
+        "mean": 61.93361111111111,
+        "median": 30,
+        "p95": 237
+      },
+      "firstBidTick": {
+        "count": 7200,
+        "mean": 80.33333333333333,
+        "median": 50,
+        "p95": 264
+      },
+      "quorumBidTick": {
+        "count": 7200,
+        "mean": 80.33333333333333,
+        "median": 50,
+        "p95": 264
+      },
+      "proposalTick": {
+        "count": 7200,
+        "mean": 81.33333333333333,
+        "median": 51,
+        "p95": 265
+      },
+      "firstGrantTick": {
+        "count": 7200,
+        "mean": 81.33333333333333,
+        "median": 51,
+        "p95": 265
+      },
+      "certificateTick": {
+        "count": 7200,
+        "mean": 81.33333333333333,
+        "median": 51,
+        "p95": 265
+      }
+    }
+  },
+  "n0-recoverable": {
+    "runs": 900,
+    "completionRate": 0.9755555555555555,
+    "releaseToOwnership": {
+      "count": 10798,
+      "mean": 81.70994628634932,
+      "median": 48,
+      "p95": 265
+    },
+    "stages": {
+      "firstAnnouncementTick": {
+        "count": 10798,
+        "mean": 1,
+        "median": 1,
+        "p95": 1
+      },
+      "firstAuctionEligibleTick": {
+        "count": 10798,
+        "mean": 62.4808297832932,
+        "median": 31,
+        "p95": 238
+      },
+      "firstBidTick": {
+        "count": 10798,
+        "mean": 80.296906834599,
+        "median": 46,
+        "p95": 264
+      },
+      "quorumBidTick": {
+        "count": 10798,
+        "mean": 80.296906834599,
+        "median": 46,
+        "p95": 264
+      },
+      "proposalTick": {
+        "count": 10798,
+        "mean": 81.296906834599,
+        "median": 47,
+        "p95": 265
+      },
+      "firstGrantTick": {
+        "count": 10798,
+        "mean": 81.296906834599,
+        "median": 47,
+        "p95": 265
+      },
+      "certificateTick": {
+        "count": 10798,
+        "mean": 81.296906834599,
+        "median": 47,
+        "p95": 265
+      }
+    }
+  },
+  "n0-severe": {
+    "runs": 480,
+    "completionRate": 0.9791666666666666,
+    "releaseToOwnership": {
+      "count": 5759,
+      "mean": 81.70411529779476,
+      "median": 48,
+      "p95": 265
+    },
+    "stages": {
+      "firstAnnouncementTick": {
+        "count": 5759,
+        "mean": 1,
+        "median": 1,
+        "p95": 1
+      },
+      "firstAuctionEligibleTick": {
+        "count": 5759,
+        "mean": 62.47265150199687,
+        "median": 31,
+        "p95": 239
+      },
+      "firstBidTick": {
+        "count": 5759,
+        "mean": 80.29692654974822,
+        "median": 46,
+        "p95": 264
+      },
+      "quorumBidTick": {
+        "count": 5759,
+        "mean": 80.29692654974822,
+        "median": 46,
+        "p95": 264
+      },
+      "proposalTick": {
+        "count": 5759,
+        "mean": 81.29692654974822,
+        "median": 47,
+        "p95": 265
+      },
+      "firstGrantTick": {
+        "count": 5759,
+        "mean": 81.29692654974822,
+        "median": 47,
+        "p95": 265
+      },
+      "certificateTick": {
+        "count": 5759,
+        "mean": 81.29692654974822,
+        "median": 47,
+        "p95": 265
+      }
+    }
+  },
+  "n3-all": {
+    "runs": 660,
+    "completionRate": 0.9893939393939394,
+    "releaseToOwnership": {
+      "count": 7917,
+      "mean": 148.30112416319312,
+      "median": 136,
+      "p95": 291
+    },
+    "stages": {
+      "firstAnnouncementTick": {
+        "count": 7917,
+        "mean": 1,
+        "median": 1,
+        "p95": 1
+      },
+      "firstAuctionEligibleTick": {
+        "count": 7917,
+        "mean": 127.64178350385247,
+        "median": 131,
+        "p95": 267
+      },
+      "firstBidTick": {
+        "count": 7917,
+        "mean": 146.94909688013135,
+        "median": 134,
+        "p95": 290
+      },
+      "quorumBidTick": {
+        "count": 7917,
+        "mean": 146.94909688013135,
+        "median": 134,
+        "p95": 290
+      },
+      "proposalTick": {
+        "count": 7917,
+        "mean": 147.94909688013135,
+        "median": 135,
+        "p95": 291
+      },
+      "firstGrantTick": {
+        "count": 7917,
+        "mean": 147.94909688013135,
+        "median": 135,
+        "p95": 291
+      },
+      "certificateTick": {
+        "count": 7917,
+        "mean": 147.94909688013135,
+        "median": 135,
+        "p95": 291
+      }
+    }
+  },
+  "n3-low": {
+    "runs": 200,
+    "completionRate": 0.995,
+    "releaseToOwnership": {
+      "count": 2400,
+      "mean": 148.34833333333333,
+      "median": 161,
+      "p95": 291
+    },
+    "stages": {
+      "firstAnnouncementTick": {
+        "count": 2400,
+        "mean": 1,
+        "median": 1,
+        "p95": 1
+      },
+      "firstAuctionEligibleTick": {
+        "count": 2400,
+        "mean": 127.22458333333333,
+        "median": 131,
+        "p95": 266
+      },
+      "firstBidTick": {
+        "count": 2400,
+        "mean": 147,
+        "median": 160,
+        "p95": 290
+      },
+      "quorumBidTick": {
+        "count": 2400,
+        "mean": 147,
+        "median": 160,
+        "p95": 290
+      },
+      "proposalTick": {
+        "count": 2400,
+        "mean": 148,
+        "median": 161,
+        "p95": 291
+      },
+      "firstGrantTick": {
+        "count": 2400,
+        "mean": 148,
+        "median": 161,
+        "p95": 291
+      },
+      "certificateTick": {
+        "count": 2400,
+        "mean": 148,
+        "median": 161,
+        "p95": 291
+      }
+    }
+  },
+  "n3-recoverable": {
+    "runs": 300,
+    "completionRate": 0.9866666666666667,
+    "releaseToOwnership": {
+      "count": 3598,
+      "mean": 148.28738187882158,
+      "median": 136,
+      "p95": 291
+    },
+    "stages": {
+      "firstAnnouncementTick": {
+        "count": 3598,
+        "mean": 1,
+        "median": 1,
+        "p95": 1
+      },
+      "firstAuctionEligibleTick": {
+        "count": 3598,
+        "mean": 127.74152306837132,
+        "median": 131,
+        "p95": 267
+      },
+      "firstBidTick": {
+        "count": 3598,
+        "mean": 146.9277376320178,
+        "median": 134,
+        "p95": 290
+      },
+      "quorumBidTick": {
+        "count": 3598,
+        "mean": 146.9277376320178,
+        "median": 134,
+        "p95": 290
+      },
+      "proposalTick": {
+        "count": 3598,
+        "mean": 147.9277376320178,
+        "median": 135,
+        "p95": 291
+      },
+      "firstGrantTick": {
+        "count": 3598,
+        "mean": 147.9277376320178,
+        "median": 135,
+        "p95": 291
+      },
+      "certificateTick": {
+        "count": 3598,
+        "mean": 147.9277376320178,
+        "median": 135,
+        "p95": 291
+      }
+    }
+  },
+  "n3-severe": {
+    "runs": 160,
+    "completionRate": 0.9875,
+    "releaseToOwnership": {
+      "count": 1919,
+      "mean": 148.26784783741533,
+      "median": 136,
+      "p95": 291
+    },
+    "stages": {
+      "firstAnnouncementTick": {
+        "count": 1919,
+        "mean": 1,
+        "median": 1,
+        "p95": 1
+      },
+      "firstAuctionEligibleTick": {
+        "count": 1919,
+        "mean": 127.9765502866076,
+        "median": 131,
+        "p95": 267
+      },
+      "firstBidTick": {
+        "count": 1919,
+        "mean": 146.9254820218864,
+        "median": 134,
+        "p95": 290
+      },
+      "quorumBidTick": {
+        "count": 1919,
+        "mean": 146.9254820218864,
+        "median": 134,
+        "p95": 290
+      },
+      "proposalTick": {
+        "count": 1919,
+        "mean": 147.9254820218864,
+        "median": 135,
+        "p95": 291
+      },
+      "firstGrantTick": {
+        "count": 1919,
+        "mean": 147.9254820218864,
+        "median": 135,
+        "p95": 291
+      },
+      "certificateTick": {
+        "count": 1919,
+        "mean": 147.9254820218864,
+        "median": 135,
+        "p95": 291
+      }
+    }
+  },
+  "n5-all": {
+    "runs": 660,
+    "completionRate": 0.9848484848484849,
+    "releaseToOwnership": {
+      "count": 7920,
+      "mean": 68.38510101010101,
+      "median": 71,
+      "p95": 131
+    },
+    "stages": {
+      "firstAnnouncementTick": {
+        "count": 7920,
+        "mean": 1,
+        "median": 1,
+        "p95": 1
+      },
+      "firstAuctionEligibleTick": {
+        "count": 7920,
+        "mean": 49.25833333333333,
+        "median": 48,
+        "p95": 106
+      },
+      "firstBidTick": {
+        "count": 7920,
+        "mean": 67,
+        "median": 70,
+        "p95": 130
+      },
+      "quorumBidTick": {
+        "count": 7920,
+        "mean": 67,
+        "median": 70,
+        "p95": 130
+      },
+      "proposalTick": {
+        "count": 7920,
+        "mean": 68,
+        "median": 71,
+        "p95": 131
+      },
+      "firstGrantTick": {
+        "count": 7920,
+        "mean": 68,
+        "median": 71,
+        "p95": 131
+      },
+      "certificateTick": {
+        "count": 7920,
+        "mean": 68,
+        "median": 71,
+        "p95": 131
+      }
+    }
+  },
+  "n5-low": {
+    "runs": 200,
+    "completionRate": 0.99,
+    "releaseToOwnership": {
+      "count": 2400,
+      "mean": 68.37791666666666,
+      "median": 71,
+      "p95": 131
+    },
+    "stages": {
+      "firstAnnouncementTick": {
+        "count": 2400,
+        "mean": 1,
+        "median": 1,
+        "p95": 1
+      },
+      "firstAuctionEligibleTick": {
+        "count": 2400,
+        "mean": 48.840833333333336,
+        "median": 47,
+        "p95": 106
+      },
+      "firstBidTick": {
+        "count": 2400,
+        "mean": 67,
+        "median": 70,
+        "p95": 130
+      },
+      "quorumBidTick": {
+        "count": 2400,
+        "mean": 67,
+        "median": 70,
+        "p95": 130
+      },
+      "proposalTick": {
+        "count": 2400,
+        "mean": 68,
+        "median": 71,
+        "p95": 131
+      },
+      "firstGrantTick": {
+        "count": 2400,
+        "mean": 68,
+        "median": 71,
+        "p95": 131
+      },
+      "certificateTick": {
+        "count": 2400,
+        "mean": 68,
+        "median": 71,
+        "p95": 131
+      }
+    }
+  },
+  "n5-recoverable": {
+    "runs": 300,
+    "completionRate": 0.9766666666666667,
+    "releaseToOwnership": {
+      "count": 3600,
+      "mean": 68.38944444444445,
+      "median": 71,
+      "p95": 131
+    },
+    "stages": {
+      "firstAnnouncementTick": {
+        "count": 3600,
+        "mean": 1,
+        "median": 1,
+        "p95": 1
+      },
+      "firstAuctionEligibleTick": {
+        "count": 3600,
+        "mean": 49.573055555555555,
+        "median": 49,
+        "p95": 106
+      },
+      "firstBidTick": {
+        "count": 3600,
+        "mean": 67,
+        "median": 70,
+        "p95": 130
+      },
+      "quorumBidTick": {
+        "count": 3600,
+        "mean": 67,
+        "median": 70,
+        "p95": 130
+      },
+      "proposalTick": {
+        "count": 3600,
+        "mean": 68,
+        "median": 71,
+        "p95": 131
+      },
+      "firstGrantTick": {
+        "count": 3600,
+        "mean": 68,
+        "median": 71,
+        "p95": 131
+      },
+      "certificateTick": {
+        "count": 3600,
+        "mean": 68,
+        "median": 71,
+        "p95": 131
+      }
+    }
+  },
+  "n5-severe": {
+    "runs": 160,
+    "completionRate": 0.99375,
+    "releaseToOwnership": {
+      "count": 1920,
+      "mean": 68.3859375,
+      "median": 71,
+      "p95": 131
+    },
+    "stages": {
+      "firstAnnouncementTick": {
+        "count": 1920,
+        "mean": 1,
+        "median": 1,
+        "p95": 1
+      },
+      "firstAuctionEligibleTick": {
+        "count": 1920,
+        "mean": 49.190104166666664,
+        "median": 47,
+        "p95": 106
+      },
+      "firstBidTick": {
+        "count": 1920,
+        "mean": 67,
+        "median": 70,
+        "p95": 130
+      },
+      "quorumBidTick": {
+        "count": 1920,
+        "mean": 67,
+        "median": 70,
+        "p95": 130
+      },
+      "proposalTick": {
+        "count": 1920,
+        "mean": 68,
+        "median": 71,
+        "p95": 131
+      },
+      "firstGrantTick": {
+        "count": 1920,
+        "mean": 68,
+        "median": 71,
+        "p95": 131
+      },
+      "certificateTick": {
+        "count": 1920,
+        "mean": 68,
+        "median": 71,
+        "p95": 131
+      }
+    }
+  },
+  "n8-all": {
+    "runs": 660,
+    "completionRate": 0.9636363636363636,
+    "releaseToOwnership": {
+      "count": 7920,
+      "mean": 28.491666666666667,
+      "median": 31,
+      "p95": 47
+    },
+    "stages": {
+      "firstAnnouncementTick": {
+        "count": 7920,
+        "mean": 1,
+        "median": 1,
+        "p95": 1
+      },
+      "firstAuctionEligibleTick": {
+        "count": 7920,
+        "mean": 10.063636363636364,
+        "median": 8,
+        "p95": 31
+      },
+      "firstBidTick": {
+        "count": 7920,
+        "mean": 27,
+        "median": 30,
+        "p95": 46
+      },
+      "quorumBidTick": {
+        "count": 7920,
+        "mean": 27,
+        "median": 30,
+        "p95": 46
+      },
+      "proposalTick": {
+        "count": 7920,
+        "mean": 28,
+        "median": 31,
+        "p95": 47
+      },
+      "firstGrantTick": {
+        "count": 7920,
+        "mean": 28,
+        "median": 31,
+        "p95": 47
+      },
+      "certificateTick": {
+        "count": 7920,
+        "mean": 28,
+        "median": 31,
+        "p95": 47
+      }
+    }
+  },
+  "n8-low": {
+    "runs": 200,
+    "completionRate": 0.97,
+    "releaseToOwnership": {
+      "count": 2400,
+      "mean": 28.492916666666666,
+      "median": 31,
+      "p95": 47
+    },
+    "stages": {
+      "firstAnnouncementTick": {
+        "count": 2400,
+        "mean": 1,
+        "median": 1,
+        "p95": 1
+      },
+      "firstAuctionEligibleTick": {
+        "count": 2400,
+        "mean": 9.735416666666667,
+        "median": 8,
+        "p95": 30
+      },
+      "firstBidTick": {
+        "count": 2400,
+        "mean": 27,
+        "median": 30,
+        "p95": 46
+      },
+      "quorumBidTick": {
+        "count": 2400,
+        "mean": 27,
+        "median": 30,
+        "p95": 46
+      },
+      "proposalTick": {
+        "count": 2400,
+        "mean": 28,
+        "median": 31,
+        "p95": 47
+      },
+      "firstGrantTick": {
+        "count": 2400,
+        "mean": 28,
+        "median": 31,
+        "p95": 47
+      },
+      "certificateTick": {
+        "count": 2400,
+        "mean": 28,
+        "median": 31,
+        "p95": 47
+      }
+    }
+  },
+  "n8-recoverable": {
+    "runs": 300,
+    "completionRate": 0.9633333333333334,
+    "releaseToOwnership": {
+      "count": 3600,
+      "mean": 28.49,
+      "median": 31,
+      "p95": 47
+    },
+    "stages": {
+      "firstAnnouncementTick": {
+        "count": 3600,
+        "mean": 1,
+        "median": 1,
+        "p95": 1
+      },
+      "firstAuctionEligibleTick": {
+        "count": 3600,
+        "mean": 10.164166666666667,
+        "median": 8,
+        "p95": 31
+      },
+      "firstBidTick": {
+        "count": 3600,
+        "mean": 27,
+        "median": 30,
+        "p95": 46
+      },
+      "quorumBidTick": {
+        "count": 3600,
+        "mean": 27,
+        "median": 30,
+        "p95": 46
+      },
+      "proposalTick": {
+        "count": 3600,
+        "mean": 28,
+        "median": 31,
+        "p95": 47
+      },
+      "firstGrantTick": {
+        "count": 3600,
+        "mean": 28,
+        "median": 31,
+        "p95": 47
+      },
+      "certificateTick": {
+        "count": 3600,
+        "mean": 28,
+        "median": 31,
+        "p95": 47
+      }
+    }
+  },
+  "n8-severe": {
+    "runs": 160,
+    "completionRate": 0.95625,
+    "releaseToOwnership": {
+      "count": 1920,
+      "mean": 28.493229166666666,
+      "median": 31,
+      "p95": 47
+    },
+    "stages": {
+      "firstAnnouncementTick": {
+        "count": 1920,
+        "mean": 1,
+        "median": 1,
+        "p95": 1
+      },
+      "firstAuctionEligibleTick": {
+        "count": 1920,
+        "mean": 10.285416666666666,
+        "median": 8,
+        "p95": 31
+      },
+      "firstBidTick": {
+        "count": 1920,
+        "mean": 27,
+        "median": 30,
+        "p95": 46
+      },
+      "quorumBidTick": {
+        "count": 1920,
+        "mean": 27,
+        "median": 30,
+        "p95": 46
+      },
+      "proposalTick": {
+        "count": 1920,
+        "mean": 28,
+        "median": 31,
+        "p95": 47
+      },
+      "firstGrantTick": {
+        "count": 1920,
+        "mean": 28,
+        "median": 31,
+        "p95": 47
+      },
+      "certificateTick": {
+        "count": 1920,
+        "mean": 28,
+        "median": 31,
+        "p95": 47
+      }
+    }
+  }
+}

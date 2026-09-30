@@ -1,0 +1,1282 @@
+{
+  "n0-all": {
+    "epoch": {
+      "completion": 0.9732323232323232,
+      "ownership": 81.73353255608401,
+      "safety": 0
+    },
+    "event": {
+      "completion": 0.9590909090909091,
+      "ownership": 17.255008417508417,
+      "safety": 0
+    },
+    "tct": {
+      "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "pairedCompleteCount": 1855,
+      "candidates": 1980,
+      "baselineOnlyComplete": 72,
+      "treatmentOnlyComplete": 44,
+      "neitherComplete": 9,
+      "baselineTotal": 2574902,
+      "treatmentTotal": 1144125,
+      "baselineMean": 1388.087331536388,
+      "treatmentMean": 616.77897574124,
+      "baselineMedian": 1222,
+      "treatmentMedian": 553,
+      "aggregateReduction": 0.5556627009493953,
+      "aggregateReduction95CI": [
+        0.5489915500827101,
+        0.5622075388023254
+      ],
+      "meanPairedReduction": 0.5483248359724278,
+      "meanPairedReduction95CI": [
+        0.541553292074095,
+        0.5550785658513809
+      ],
+      "medianPairedReduction": 0.5655114116652579,
+      "medianPairedReduction95CI": [
+        0.5585509688289806,
+        0.5710186513629842
+      ],
+      "wins": 1842,
+      "ties": 0,
+      "losses": 13,
+      "bootstrapResamples": 10000
+    },
+    "makespan": {
+      "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "pairedCompleteCount": 1855,
+      "candidates": 1980,
+      "baselineOnlyComplete": 72,
+      "treatmentOnlyComplete": 44,
+      "neitherComplete": 9,
+      "baselineTotal": 498400,
+      "treatmentTotal": 294108,
+      "baselineMean": 268.6792452830189,
+      "treatmentMean": 158.5487870619946,
+      "baselineMedian": 236,
+      "treatmentMedian": 151,
+      "aggregateReduction": 0.4098956661316212,
+      "aggregateReduction95CI": [
+        0.4018887507743304,
+        0.4179230395124711
+      ],
+      "meanPairedReduction": 0.3755088807212005,
+      "meanPairedReduction95CI": [
+        0.36622286341995314,
+        0.3848862165384812
+      ],
+      "medianPairedReduction": 0.4073107049608355,
+      "medianPairedReduction95CI": [
+        0.3971631205673759,
+        0.4156378600823045
+      ],
+      "wins": 1773,
+      "ties": 2,
+      "losses": 80,
+      "bootstrapResamples": 10000
+    }
+  },
+  "n0-low": {
+    "epoch": {
+      "completion": 0.995,
+      "ownership": 81.7425,
+      "safety": 0
+    },
+    "event": {
+      "completion": 0.9716666666666667,
+      "ownership": 16.140555555555554,
+      "safety": 0
+    },
+    "tct": {
+      "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "pairedCompleteCount": 581,
+      "candidates": 600,
+      "baselineOnlyComplete": 16,
+      "treatmentOnlyComplete": 2,
+      "neitherComplete": 1,
+      "baselineTotal": 776491,
+      "treatmentTotal": 317502,
+      "baselineMean": 1336.473321858864,
+      "treatmentMean": 546.47504302926,
+      "baselineMedian": 1175,
+      "treatmentMedian": 480,
+      "aggregateReduction": 0.59110665802952,
+      "aggregateReduction95CI": [
+        0.5804861197544254,
+        0.6019433761067778
+      ],
+      "meanPairedReduction": 0.5840437215621234,
+      "meanPairedReduction95CI": [
+        0.5728321957163062,
+        0.5952402819628587
+      ],
+      "medianPairedReduction": 0.5949367088607594,
+      "medianPairedReduction95CI": [
+        0.5838983050847457,
+        0.6063218390804598
+      ],
+      "wins": 578,
+      "ties": 0,
+      "losses": 3,
+      "bootstrapResamples": 10000
+    },
+    "makespan": {
+      "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "pairedCompleteCount": 581,
+      "candidates": 600,
+      "baselineOnlyComplete": 16,
+      "treatmentOnlyComplete": 2,
+      "neitherComplete": 1,
+      "baselineTotal": 151555,
+      "treatmentTotal": 85029,
+      "baselineMean": 260.8519793459553,
+      "treatmentMean": 146.34939759036143,
+      "baselineMedian": 223,
+      "treatmentMedian": 140,
+      "aggregateReduction": 0.4389561545313583,
+      "aggregateReduction95CI": [
+        0.42523869329768127,
+        0.4525804516516052
+      ],
+      "meanPairedReduction": 0.40363321753563924,
+      "meanPairedReduction95CI": [
+        0.38753468192923624,
+        0.4194463502116569
+      ],
+      "medianPairedReduction": 0.432,
+      "medianPairedReduction95CI": [
+        0.41333333333333333,
+        0.45161290322580644
+      ],
+      "wins": 562,
+      "ties": 1,
+      "losses": 18,
+      "bootstrapResamples": 10000
+    }
+  },
+  "n0-recoverable": {
+    "epoch": {
+      "completion": 0.9633333333333334,
+      "ownership": 81.72599314751366,
+      "safety": 0
+    },
+    "event": {
+      "completion": 0.9622222222222222,
+      "ownership": 17.87,
+      "safety": 0
+    },
+    "tct": {
+      "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "pairedCompleteCount": 838,
+      "candidates": 900,
+      "baselineOnlyComplete": 29,
+      "treatmentOnlyComplete": 28,
+      "neitherComplete": 5,
+      "baselineTotal": 1186002,
+      "treatmentTotal": 550476,
+      "baselineMean": 1415.2768496420047,
+      "treatmentMean": 656.8926014319809,
+      "baselineMedian": 1263,
+      "treatmentMedian": 596,
+      "aggregateReduction": 0.5358557574101899,
+      "aggregateReduction95CI": [
+        0.5255453650897046,
+        0.5459514022224227
+      ],
+      "meanPairedReduction": 0.5284881462694623,
+      "meanPairedReduction95CI": [
+        0.5181958507114937,
+        0.5387139649929298
+      ],
+      "medianPairedReduction": 0.5458832998167646,
+      "medianPairedReduction95CI": [
+        0.5366057072821673,
+        0.5550847457627118
+      ],
+      "wins": 832,
+      "ties": 0,
+      "losses": 6,
+      "bootstrapResamples": 10000
+    },
+    "makespan": {
+      "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "pairedCompleteCount": 838,
+      "candidates": 900,
+      "baselineOnlyComplete": 29,
+      "treatmentOnlyComplete": 28,
+      "neitherComplete": 5,
+      "baselineTotal": 229277,
+      "treatmentTotal": 138723,
+      "baselineMean": 273.6002386634845,
+      "treatmentMean": 165.54057279236278,
+      "baselineMedian": 242,
+      "treatmentMedian": 158,
+      "aggregateReduction": 0.39495457459753924,
+      "aggregateReduction95CI": [
+        0.38260620861109274,
+        0.4069080351805995
+      ],
+      "meanPairedReduction": 0.36133097040942636,
+      "meanPairedReduction95CI": [
+        0.3473561099301435,
+        0.3748898656295739
+      ],
+      "medianPairedReduction": 0.3952796067884633,
+      "medianPairedReduction95CI": [
+        0.3817733990147783,
+        0.4086613251258719
+      ],
+      "wins": 798,
+      "ties": 0,
+      "losses": 40,
+      "bootstrapResamples": 10000
+    }
+  },
+  "n0-severe": {
+    "epoch": {
+      "completion": 0.9645833333333333,
+      "ownership": 81.73645833333333,
+      "safety": 0
+    },
+    "event": {
+      "completion": 0.9375,
+      "ownership": 17.494965277777776,
+      "safety": 0
+    },
+    "tct": {
+      "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "pairedCompleteCount": 436,
+      "candidates": 480,
+      "baselineOnlyComplete": 27,
+      "treatmentOnlyComplete": 14,
+      "neitherComplete": 3,
+      "baselineTotal": 612409,
+      "treatmentTotal": 276147,
+      "baselineMean": 1404.6077981651376,
+      "treatmentMean": 633.3646788990826,
+      "baselineMedian": 1228,
+      "treatmentMedian": 570,
+      "aggregateReduction": 0.5490807613865897,
+      "aggregateReduction95CI": [
+        0.5351772921012061,
+        0.5627614387523239
+      ],
+      "meanPairedReduction": 0.5388534447877315,
+      "meanPairedReduction95CI": [
+        0.5233799081442936,
+        0.5536550530436102
+      ],
+      "medianPairedReduction": 0.5560791726478639,
+      "medianPairedReduction95CI": [
+        0.5475834085916134,
+        0.5708502024291497
+      ],
+      "wins": 432,
+      "ties": 0,
+      "losses": 4,
+      "bootstrapResamples": 10000
+    },
+    "makespan": {
+      "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "pairedCompleteCount": 436,
+      "candidates": 480,
+      "baselineOnlyComplete": 27,
+      "treatmentOnlyComplete": 14,
+      "neitherComplete": 3,
+      "baselineTotal": 117568,
+      "treatmentTotal": 70356,
+      "baselineMean": 269.651376146789,
+      "treatmentMean": 161.36697247706422,
+      "baselineMedian": 233.5,
+      "treatmentMedian": 151,
+      "aggregateReduction": 0.4015718562874252,
+      "aggregateReduction95CI": [
+        0.3832280701754386,
+        0.41896034710937635
+      ],
+      "meanPairedReduction": 0.36528147051954374,
+      "meanPairedReduction95CI": [
+        0.34270169355395036,
+        0.38590850164886453
+      ],
+      "medianPairedReduction": 0.4012719324273535,
+      "medianPairedReduction95CI": [
+        0.3869887730553328,
+        0.4191121264774653
+      ],
+      "wins": 413,
+      "ties": 1,
+      "losses": 22,
+      "bootstrapResamples": 10000
+    }
+  },
+  "n3-all": {
+    "epoch": {
+      "completion": 0.9893939393939394,
+      "ownership": 148.33097613335016,
+      "safety": 0
+    },
+    "event": {
+      "completion": 0.9742424242424242,
+      "ownership": 41.69595959595959,
+      "safety": 0
+    },
+    "tct": {
+      "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "pairedCompleteCount": 637,
+      "candidates": 660,
+      "baselineOnlyComplete": 16,
+      "treatmentOnlyComplete": 6,
+      "neitherComplete": 1,
+      "baselineTotal": 1314397,
+      "treatmentTotal": 559879,
+      "baselineMean": 2063.4175824175823,
+      "treatmentMean": 878.9309262166405,
+      "baselineMedian": 2050,
+      "treatmentMedian": 861,
+      "aggregateReduction": 0.5740411762960506,
+      "aggregateReduction95CI": [
+        0.564491345740564,
+        0.5838803141821378
+      ],
+      "meanPairedReduction": 0.5781093064434814,
+      "meanPairedReduction95CI": [
+        0.5685946260979762,
+        0.5879070524663909
+      ],
+      "medianPairedReduction": 0.5809569840502659,
+      "medianPairedReduction95CI": [
+        0.572121746801941,
+        0.5954457364341085
+      ],
+      "wins": 636,
+      "ties": 0,
+      "losses": 1,
+      "bootstrapResamples": 10000
+    },
+    "makespan": {
+      "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "pairedCompleteCount": 637,
+      "candidates": 660,
+      "baselineOnlyComplete": 16,
+      "treatmentOnlyComplete": 6,
+      "neitherComplete": 1,
+      "baselineTotal": 243231,
+      "treatmentTotal": 123063,
+      "baselineMean": 381.8383045525903,
+      "treatmentMean": 193.19152276295134,
+      "baselineMedian": 378,
+      "treatmentMedian": 189,
+      "aggregateReduction": 0.494048867126312,
+      "aggregateReduction95CI": [
+        0.4855319463495167,
+        0.5027502976068305
+      ],
+      "meanPairedReduction": 0.4955904865762271,
+      "meanPairedReduction95CI": [
+        0.4870021680141748,
+        0.5043174926326189
+      ],
+      "medianPairedReduction": 0.5043668122270742,
+      "medianPairedReduction95CI": [
+        0.49473684210526314,
+        0.5135135135135135
+      ],
+      "wins": 637,
+      "ties": 0,
+      "losses": 0,
+      "bootstrapResamples": 10000
+    }
+  },
+  "n3-low": {
+    "epoch": {
+      "completion": 1,
+      "ownership": 148.35166666666666,
+      "safety": 0
+    },
+    "event": {
+      "completion": 0.975,
+      "ownership": 39.232083333333335,
+      "safety": 0
+    },
+    "tct": {
+      "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "pairedCompleteCount": 195,
+      "candidates": 200,
+      "baselineOnlyComplete": 5,
+      "treatmentOnlyComplete": 0,
+      "neitherComplete": 0,
+      "baselineTotal": 396923,
+      "treatmentTotal": 158806,
+      "baselineMean": 2035.502564102564,
+      "treatmentMean": 814.3897435897436,
+      "baselineMedian": 2026,
+      "treatmentMedian": 798,
+      "aggregateReduction": 0.5999072868037377,
+      "aggregateReduction95CI": [
+        0.5841351026056145,
+        0.6155551394111782
+      ],
+      "meanPairedReduction": 0.6025950996463555,
+      "meanPairedReduction95CI": [
+        0.5869396819451813,
+        0.618181898221284
+      ],
+      "medianPairedReduction": 0.6059862610402356,
+      "medianPairedReduction95CI": [
+        0.5879959308240081,
+        0.6256306760847629
+      ],
+      "wins": 195,
+      "ties": 0,
+      "losses": 0,
+      "bootstrapResamples": 10000
+    },
+    "makespan": {
+      "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "pairedCompleteCount": 195,
+      "candidates": 200,
+      "baselineOnlyComplete": 5,
+      "treatmentOnlyComplete": 0,
+      "neitherComplete": 0,
+      "baselineTotal": 74055,
+      "treatmentTotal": 35854,
+      "baselineMean": 379.7692307692308,
+      "treatmentMean": 183.86666666666667,
+      "baselineMedian": 377,
+      "treatmentMedian": 179,
+      "aggregateReduction": 0.5158463304300858,
+      "aggregateReduction95CI": [
+        0.5001748204728221,
+        0.5310232368528333
+      ],
+      "meanPairedReduction": 0.517099878518481,
+      "meanPairedReduction95CI": [
+        0.5013854140366927,
+        0.5322422828001881
+      ],
+      "medianPairedReduction": 0.5260416666666666,
+      "medianPairedReduction95CI": [
+        0.5131578947368421,
+        0.5467032967032966
+      ],
+      "wins": 195,
+      "ties": 0,
+      "losses": 0,
+      "bootstrapResamples": 10000
+    }
+  },
+  "n3-recoverable": {
+    "epoch": {
+      "completion": 0.9833333333333333,
+      "ownership": 148.30869686023897,
+      "safety": 0
+    },
+    "event": {
+      "completion": 0.9766666666666667,
+      "ownership": 43.051944444444445,
+      "safety": 0
+    },
+    "tct": {
+      "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "pairedCompleteCount": 288,
+      "candidates": 300,
+      "baselineOnlyComplete": 7,
+      "treatmentOnlyComplete": 5,
+      "neitherComplete": 0,
+      "baselineTotal": 598506,
+      "treatmentTotal": 264858,
+      "baselineMean": 2078.1458333333335,
+      "treatmentMean": 919.6458333333334,
+      "baselineMedian": 2067.5,
+      "treatmentMedian": 895,
+      "aggregateReduction": 0.5574680955579392,
+      "aggregateReduction95CI": [
+        0.5422069282098022,
+        0.5730428673237504
+      ],
+      "meanPairedReduction": 0.5619799681246413,
+      "meanPairedReduction95CI": [
+        0.5466722539966713,
+        0.577419167641185
+      ],
+      "medianPairedReduction": 0.5721220681557058,
+      "medianPairedReduction95CI": [
+        0.5517882025081282,
+        0.5832935560859188
+      ],
+      "wins": 287,
+      "ties": 0,
+      "losses": 1,
+      "bootstrapResamples": 10000
+    },
+    "makespan": {
+      "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "pairedCompleteCount": 288,
+      "candidates": 300,
+      "baselineOnlyComplete": 7,
+      "treatmentOnlyComplete": 5,
+      "neitherComplete": 0,
+      "baselineTotal": 110461,
+      "treatmentTotal": 57334,
+      "baselineMean": 383.5451388888889,
+      "treatmentMean": 199.07638888888889,
+      "baselineMedian": 380,
+      "treatmentMedian": 197.5,
+      "aggregateReduction": 0.4809570798743448,
+      "aggregateReduction95CI": [
+        0.46780762408138143,
+        0.4941872638718193
+      ],
+      "meanPairedReduction": 0.4825365037743088,
+      "meanPairedReduction95CI": [
+        0.46938599768431666,
+        0.4958038584074747
+      ],
+      "medianPairedReduction": 0.48431013764474545,
+      "medianPairedReduction95CI": [
+        0.46842105263157896,
+        0.5026284658299442
+      ],
+      "wins": 288,
+      "ties": 0,
+      "losses": 0,
+      "bootstrapResamples": 10000
+    }
+  },
+  "n3-severe": {
+    "epoch": {
+      "completion": 0.9875,
+      "ownership": 148.346875,
+      "safety": 0
+    },
+    "event": {
+      "completion": 0.96875,
+      "ownership": 42.233333333333334,
+      "safety": 0
+    },
+    "tct": {
+      "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "pairedCompleteCount": 154,
+      "candidates": 160,
+      "baselineOnlyComplete": 4,
+      "treatmentOnlyComplete": 1,
+      "neitherComplete": 1,
+      "baselineTotal": 318968,
+      "treatmentTotal": 136215,
+      "baselineMean": 2071.220779220779,
+      "treatmentMean": 884.512987012987,
+      "baselineMedian": 2053.5,
+      "treatmentMedian": 877.5,
+      "aggregateReduction": 0.5729508916254922,
+      "aggregateReduction95CI": [
+        0.5537998165292723,
+        0.5917265052182582
+      ],
+      "meanPairedReduction": 0.577268525672476,
+      "meanPairedReduction95CI": [
+        0.5580039517965821,
+        0.5958004517871818
+      ],
+      "medianPairedReduction": 0.5719166769891407,
+      "medianPairedReduction95CI": [
+        0.5514374061755059,
+        0.6012930568562798
+      ],
+      "wins": 154,
+      "ties": 0,
+      "losses": 0,
+      "bootstrapResamples": 10000
+    },
+    "makespan": {
+      "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "pairedCompleteCount": 154,
+      "candidates": 160,
+      "baselineOnlyComplete": 4,
+      "treatmentOnlyComplete": 1,
+      "neitherComplete": 1,
+      "baselineTotal": 58715,
+      "treatmentTotal": 29875,
+      "baselineMean": 381.26623376623377,
+      "treatmentMean": 193.9935064935065,
+      "baselineMedian": 376,
+      "treatmentMedian": 191,
+      "aggregateReduction": 0.4911862386102359,
+      "aggregateReduction95CI": [
+        0.4736993925408084,
+        0.5081318156219602
+      ],
+      "meanPairedReduction": 0.49276721136981677,
+      "meanPairedReduction95CI": [
+        0.47529974366919525,
+        0.5096913887252165
+      ],
+      "medianPairedReduction": 0.4973331626557433,
+      "medianPairedReduction95CI": [
+        0.4700099866443672,
+        0.5148247978436657
+      ],
+      "wins": 154,
+      "ties": 0,
+      "losses": 0,
+      "bootstrapResamples": 10000
+    }
+  },
+  "n5-all": {
+    "epoch": {
+      "completion": 0.9848484848484849,
+      "ownership": 68.38686868686868,
+      "safety": 0
+    },
+    "event": {
+      "completion": 0.9590909090909091,
+      "ownership": 7.30239898989899,
+      "safety": 0
+    },
+    "tct": {
+      "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "pairedCompleteCount": 624,
+      "candidates": 660,
+      "baselineOnlyComplete": 26,
+      "treatmentOnlyComplete": 9,
+      "neitherComplete": 1,
+      "baselineTotal": 758114,
+      "treatmentTotal": 324316,
+      "baselineMean": 1214.926282051282,
+      "treatmentMean": 519.7371794871794,
+      "baselineMedian": 1188.5,
+      "treatmentMedian": 482.5,
+      "aggregateReduction": 0.5722068184995924,
+      "aggregateReduction95CI": [
+        0.5604953857783284,
+        0.5838714350071961
+      ],
+      "meanPairedReduction": 0.5798618428029853,
+      "meanPairedReduction95CI": [
+        0.5681116267206784,
+        0.5913732687977128
+      ],
+      "medianPairedReduction": 0.5995547524565381,
+      "medianPairedReduction95CI": [
+        0.5855915399867813,
+        0.6161740558292282
+      ],
+      "wins": 621,
+      "ties": 0,
+      "losses": 3,
+      "bootstrapResamples": 10000
+    },
+    "makespan": {
+      "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "pairedCompleteCount": 624,
+      "candidates": 660,
+      "baselineOnlyComplete": 26,
+      "treatmentOnlyComplete": 9,
+      "neitherComplete": 1,
+      "baselineTotal": 146660,
+      "treatmentTotal": 90784,
+      "baselineMean": 235.03205128205127,
+      "treatmentMean": 145.48717948717947,
+      "baselineMedian": 224,
+      "treatmentMedian": 140,
+      "aggregateReduction": 0.3809900450020456,
+      "aggregateReduction95CI": [
+        0.3674627113484794,
+        0.39395952015775637
+      ],
+      "meanPairedReduction": 0.3810617354994013,
+      "meanPairedReduction95CI": [
+        0.3677173060923356,
+        0.39388204680558253
+      ],
+      "medianPairedReduction": 0.4056315729955897,
+      "medianPairedReduction95CI": [
+        0.391705069124424,
+        0.41946308724832215
+      ],
+      "wins": 604,
+      "ties": 0,
+      "losses": 20,
+      "bootstrapResamples": 10000
+    }
+  },
+  "n5-low": {
+    "epoch": {
+      "completion": 0.995,
+      "ownership": 68.38958333333333,
+      "safety": 0
+    },
+    "event": {
+      "completion": 0.98,
+      "ownership": 6.505833333333333,
+      "safety": 0
+    },
+    "tct": {
+      "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "pairedCompleteCount": 196,
+      "candidates": 200,
+      "baselineOnlyComplete": 3,
+      "treatmentOnlyComplete": 0,
+      "neitherComplete": 1,
+      "baselineTotal": 230736,
+      "treatmentTotal": 87652,
+      "baselineMean": 1177.2244897959183,
+      "treatmentMean": 447.2040816326531,
+      "baselineMedian": 1154,
+      "treatmentMedian": 417.5,
+      "aggregateReduction": 0.6201199639414743,
+      "aggregateReduction95CI": [
+        0.6023022457755962,
+        0.6371920114547437
+      ],
+      "meanPairedReduction": 0.6252009258634513,
+      "meanPairedReduction95CI": [
+        0.6074467038377359,
+        0.6420271441084854
+      ],
+      "medianPairedReduction": 0.6356412592367648,
+      "medianPairedReduction95CI": [
+        0.6189549342247039,
+        0.6621279954613288
+      ],
+      "wins": 196,
+      "ties": 0,
+      "losses": 0,
+      "bootstrapResamples": 10000
+    },
+    "makespan": {
+      "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "pairedCompleteCount": 196,
+      "candidates": 200,
+      "baselineOnlyComplete": 3,
+      "treatmentOnlyComplete": 0,
+      "neitherComplete": 1,
+      "baselineTotal": 45006,
+      "treatmentTotal": 26013,
+      "baselineMean": 229.62244897959184,
+      "treatmentMean": 132.71938775510205,
+      "baselineMedian": 221,
+      "treatmentMedian": 126.5,
+      "aggregateReduction": 0.4220103986135182,
+      "aggregateReduction95CI": [
+        0.39968565293427494,
+        0.44260854280189843
+      ],
+      "meanPairedReduction": 0.4215302259826769,
+      "meanPairedReduction95CI": [
+        0.39926341832176965,
+        0.44164228121780935
+      ],
+      "medianPairedReduction": 0.44115117636218437,
+      "medianPairedReduction95CI": [
+        0.4095817076490337,
+        0.461864406779661
+      ],
+      "wins": 192,
+      "ties": 0,
+      "losses": 4,
+      "bootstrapResamples": 10000
+    }
+  },
+  "n5-recoverable": {
+    "epoch": {
+      "completion": 0.9833333333333333,
+      "ownership": 68.39138888888888,
+      "safety": 0
+    },
+    "event": {
+      "completion": 0.9566666666666667,
+      "ownership": 7.768888888888889,
+      "safety": 0
+    },
+    "tct": {
+      "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "pairedCompleteCount": 282,
+      "candidates": 300,
+      "baselineOnlyComplete": 13,
+      "treatmentOnlyComplete": 5,
+      "neitherComplete": 0,
+      "baselineTotal": 349475,
+      "treatmentTotal": 159304,
+      "baselineMean": 1239.27304964539,
+      "treatmentMean": 564.9078014184397,
+      "baselineMedian": 1220,
+      "treatmentMedian": 545.5,
+      "aggregateReduction": 0.5441619572215466,
+      "aggregateReduction95CI": [
+        0.526930506654537,
+        0.5615740085956825
+      ],
+      "meanPairedReduction": 0.5517986443651585,
+      "meanPairedReduction95CI": [
+        0.534260963928493,
+        0.5693330257233058
+      ],
+      "medianPairedReduction": 0.5654371399780415,
+      "medianPairedReduction95CI": [
+        0.5520402843910315,
+        0.5844954811999838
+      ],
+      "wins": 280,
+      "ties": 0,
+      "losses": 2,
+      "bootstrapResamples": 10000
+    },
+    "makespan": {
+      "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "pairedCompleteCount": 282,
+      "candidates": 300,
+      "baselineOnlyComplete": 13,
+      "treatmentOnlyComplete": 5,
+      "neitherComplete": 0,
+      "baselineTotal": 67363,
+      "treatmentTotal": 43334,
+      "baselineMean": 238.8758865248227,
+      "treatmentMean": 153.66666666666666,
+      "baselineMedian": 232,
+      "treatmentMedian": 150.5,
+      "aggregateReduction": 0.35670917269124003,
+      "aggregateReduction95CI": [
+        0.33695814537089597,
+        0.37655663751697155
+      ],
+      "meanPairedReduction": 0.35595076444174106,
+      "meanPairedReduction95CI": [
+        0.3361772251828154,
+        0.37525527427888267
+      ],
+      "medianPairedReduction": 0.37967698056029064,
+      "medianPairedReduction95CI": [
+        0.35135135135135137,
+        0.4056222687378356
+      ],
+      "wins": 273,
+      "ties": 0,
+      "losses": 9,
+      "bootstrapResamples": 10000
+    }
+  },
+  "n5-severe": {
+    "epoch": {
+      "completion": 0.975,
+      "ownership": 68.375,
+      "safety": 0
+    },
+    "event": {
+      "completion": 0.9375,
+      "ownership": 7.4234375,
+      "safety": 0
+    },
+    "tct": {
+      "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "pairedCompleteCount": 146,
+      "candidates": 160,
+      "baselineOnlyComplete": 10,
+      "treatmentOnlyComplete": 4,
+      "neitherComplete": 0,
+      "baselineTotal": 177903,
+      "treatmentTotal": 77360,
+      "baselineMean": 1218.513698630137,
+      "treatmentMean": 529.8630136986301,
+      "baselineMedian": 1176,
+      "treatmentMedian": 470,
+      "aggregateReduction": 0.5651562930360927,
+      "aggregateReduction95CI": [
+        0.5401971040026428,
+        0.5895890940952901
+      ],
+      "meanPairedReduction": 0.5731999364989823,
+      "meanPairedReduction95CI": [
+        0.5481039831936497,
+        0.5974089619745553
+      ],
+      "medianPairedReduction": 0.5978454607337347,
+      "medianPairedReduction95CI": [
+        0.5728328865058088,
+        0.6261261261261262
+      ],
+      "wins": 145,
+      "ties": 0,
+      "losses": 1,
+      "bootstrapResamples": 10000
+    },
+    "makespan": {
+      "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "pairedCompleteCount": 146,
+      "candidates": 160,
+      "baselineOnlyComplete": 10,
+      "treatmentOnlyComplete": 4,
+      "neitherComplete": 0,
+      "baselineTotal": 34291,
+      "treatmentTotal": 21437,
+      "baselineMean": 234.86986301369862,
+      "treatmentMean": 146.82876712328766,
+      "baselineMedian": 221,
+      "treatmentMedian": 138,
+      "aggregateReduction": 0.374850543874486,
+      "aggregateReduction95CI": [
+        0.34633296277378844,
+        0.4024717407686511
+      ],
+      "meanPairedReduction": 0.3752361855236348,
+      "meanPairedReduction95CI": [
+        0.34642495456149935,
+        0.4022662565288988
+      ],
+      "medianPairedReduction": 0.4023144038623915,
+      "medianPairedReduction95CI": [
+        0.37727272727272726,
+        0.4351851851851852
+      ],
+      "wins": 139,
+      "ties": 0,
+      "losses": 7,
+      "bootstrapResamples": 10000
+    }
+  },
+  "n8-all": {
+    "epoch": {
+      "completion": 0.9454545454545454,
+      "ownership": 28.491161616161616,
+      "safety": 0
+    },
+    "event": {
+      "completion": 0.943939393939394,
+      "ownership": 2.7666666666666666,
+      "safety": 0
+    },
+    "tct": {
+      "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "pairedCompleteCount": 594,
+      "candidates": 660,
+      "baselineOnlyComplete": 30,
+      "treatmentOnlyComplete": 29,
+      "neitherComplete": 7,
+      "baselineTotal": 502391,
+      "treatmentTotal": 259930,
+      "baselineMean": 845.7760942760942,
+      "treatmentMean": 437.5925925925926,
+      "baselineMedian": 810.5,
+      "treatmentMedian": 400.5,
+      "aggregateReduction": 0.4826141391864106,
+      "aggregateReduction95CI": [
+        0.4689874736294921,
+        0.49591337951611236
+      ],
+      "meanPairedReduction": 0.4832544656823126,
+      "meanPairedReduction95CI": [
+        0.46980066163593587,
+        0.49621422758701345
+      ],
+      "medianPairedReduction": 0.5124072604714518,
+      "medianPairedReduction95CI": [
+        0.49936143039591313,
+        0.526699760204165
+      ],
+      "wins": 585,
+      "ties": 0,
+      "losses": 9,
+      "bootstrapResamples": 10000
+    },
+    "makespan": {
+      "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "pairedCompleteCount": 594,
+      "candidates": 660,
+      "baselineOnlyComplete": 30,
+      "treatmentOnlyComplete": 29,
+      "neitherComplete": 7,
+      "baselineTotal": 108509,
+      "treatmentTotal": 80261,
+      "baselineMean": 182.67508417508418,
+      "treatmentMean": 135.1195286195286,
+      "baselineMedian": 173,
+      "treatmentMedian": 127,
+      "aggregateReduction": 0.26032863633431325,
+      "aggregateReduction95CI": [
+        0.24058489182251563,
+        0.2796678594366455
+      ],
+      "meanPairedReduction": 0.24090119669552734,
+      "meanPairedReduction95CI": [
+        0.22101126003628468,
+        0.2602262188562745
+      ],
+      "medianPairedReduction": 0.28062237040565213,
+      "medianPairedReduction95CI": [
+        0.26750047107593744,
+        0.29763854763854763
+      ],
+      "wins": 532,
+      "ties": 2,
+      "losses": 60,
+      "bootstrapResamples": 10000
+    }
+  },
+  "n8-low": {
+    "epoch": {
+      "completion": 0.99,
+      "ownership": 28.48625,
+      "safety": 0
+    },
+    "event": {
+      "completion": 0.96,
+      "ownership": 2.68375,
+      "safety": 0
+    },
+    "tct": {
+      "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "pairedCompleteCount": 190,
+      "candidates": 200,
+      "baselineOnlyComplete": 8,
+      "treatmentOnlyComplete": 2,
+      "neitherComplete": 0,
+      "baselineTotal": 148832,
+      "treatmentTotal": 71044,
+      "baselineMean": 783.3263157894737,
+      "treatmentMean": 373.9157894736842,
+      "baselineMedian": 749.5,
+      "treatmentMedian": 343.5,
+      "aggregateReduction": 0.5226564179746291,
+      "aggregateReduction95CI": [
+        0.497460729094912,
+        0.5456409371703084
+      ],
+      "meanPairedReduction": 0.5225472438279898,
+      "meanPairedReduction95CI": [
+        0.4989354662766566,
+        0.5431555252769084
+      ],
+      "medianPairedReduction": 0.5454986770462049,
+      "medianPairedReduction95CI": [
+        0.526626275510204,
+        0.5677154966275829
+      ],
+      "wins": 187,
+      "ties": 0,
+      "losses": 3,
+      "bootstrapResamples": 10000
+    },
+    "makespan": {
+      "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "pairedCompleteCount": 190,
+      "candidates": 200,
+      "baselineOnlyComplete": 8,
+      "treatmentOnlyComplete": 2,
+      "neitherComplete": 0,
+      "baselineTotal": 32494,
+      "treatmentTotal": 23162,
+      "baselineMean": 171.02105263157895,
+      "treatmentMean": 121.90526315789474,
+      "baselineMedian": 166,
+      "treatmentMedian": 113,
+      "aggregateReduction": 0.28719148150427776,
+      "aggregateReduction95CI": [
+        0.2528081195655537,
+        0.31937124927651017
+      ],
+      "meanPairedReduction": 0.2687184146552511,
+      "meanPairedReduction95CI": [
+        0.23472988541853695,
+        0.2989421244659224
+      ],
+      "medianPairedReduction": 0.2933743169398907,
+      "medianPairedReduction95CI": [
+        0.2733812949640288,
+        0.31426197400439193
+      ],
+      "wins": 175,
+      "ties": 1,
+      "losses": 14,
+      "bootstrapResamples": 10000
+    }
+  },
+  "n8-recoverable": {
+    "epoch": {
+      "completion": 0.9233333333333333,
+      "ownership": 28.496388888888887,
+      "safety": 0
+    },
+    "event": {
+      "completion": 0.9533333333333334,
+      "ownership": 2.7891666666666666,
+      "safety": 0
+    },
+    "tct": {
+      "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "pairedCompleteCount": 268,
+      "candidates": 300,
+      "baselineOnlyComplete": 9,
+      "treatmentOnlyComplete": 18,
+      "neitherComplete": 5,
+      "baselineTotal": 238021,
+      "treatmentTotal": 126314,
+      "baselineMean": 888.1380597014926,
+      "treatmentMean": 471.32089552238807,
+      "baselineMedian": 858.5,
+      "treatmentMedian": 448,
+      "aggregateReduction": 0.4693157326454388,
+      "aggregateReduction95CI": [
+        0.45053494482396217,
+        0.4868005415162455
+      ],
+      "meanPairedReduction": 0.467968724040811,
+      "meanPairedReduction95CI": [
+        0.44950281351820953,
+        0.48535938453579786
+      ],
+      "medianPairedReduction": 0.48958482377068724,
+      "medianPairedReduction95CI": [
+        0.4677334016043693,
+        0.510828025477707
+      ],
+      "wins": 265,
+      "ties": 0,
+      "losses": 3,
+      "bootstrapResamples": 10000
+    },
+    "makespan": {
+      "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "pairedCompleteCount": 268,
+      "candidates": 300,
+      "baselineOnlyComplete": 9,
+      "treatmentOnlyComplete": 18,
+      "neitherComplete": 5,
+      "baselineTotal": 51453,
+      "treatmentTotal": 38055,
+      "baselineMean": 191.98880597014926,
+      "treatmentMean": 141.9962686567164,
+      "baselineMedian": 183,
+      "treatmentMedian": 136,
+      "aggregateReduction": 0.26039298000116606,
+      "aggregateReduction95CI": [
+        0.23139783260498936,
+        0.28680810028929604
+      ],
+      "meanPairedReduction": 0.2367415094907724,
+      "meanPairedReduction95CI": [
+        0.2072939141276864,
+        0.2633129109813873
+      ],
+      "medianPairedReduction": 0.27823315118397085,
+      "medianPairedReduction95CI": [
+        0.25482850482850483,
+        0.3045634920634921
+      ],
+      "wins": 237,
+      "ties": 0,
+      "losses": 31,
+      "bootstrapResamples": 10000
+    }
+  },
+  "n8-severe": {
+    "epoch": {
+      "completion": 0.93125,
+      "ownership": 28.4875,
+      "safety": 0
+    },
+    "event": {
+      "completion": 0.90625,
+      "ownership": 2.828125,
+      "safety": 0
+    },
+    "tct": {
+      "metric": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "definition": "sumTaskCompletionTime = SUM over COMPLETED tasks of flowTime. Total time all tasks collectively spent from release to completion. This is the PRIMARY SIH metric and is always reported by this name.",
+      "pairedCompleteCount": 136,
+      "candidates": 160,
+      "baselineOnlyComplete": 13,
+      "treatmentOnlyComplete": 9,
+      "neitherComplete": 2,
+      "baselineTotal": 115538,
+      "treatmentTotal": 62572,
+      "baselineMean": 849.5441176470588,
+      "treatmentMean": 460.0882352941176,
+      "baselineMedian": 817.5,
+      "treatmentMedian": 419.5,
+      "aggregateReduction": 0.4584292613685541,
+      "aggregateReduction95CI": [
+        0.4266544379541245,
+        0.4874953686550574
+      ],
+      "meanPairedReduction": 0.45848204591939884,
+      "meanPairedReduction95CI": [
+        0.4259987978443056,
+        0.48789620572003556
+      ],
+      "medianPairedReduction": 0.5053530838729394,
+      "medianPairedReduction95CI": [
+        0.4739912519918295,
+        0.536150234741784
+      ],
+      "wins": 133,
+      "ties": 0,
+      "losses": 3,
+      "bootstrapResamples": 10000
+    },
+    "makespan": {
+      "metric": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "definition": "makespan = lastTaskCompletionTick - firstTaskCreationTick, in ticks. How long the fleet took to finish the whole workload. Reported as the SECOND reading, never merged with the sum.",
+      "pairedCompleteCount": 136,
+      "candidates": 160,
+      "baselineOnlyComplete": 13,
+      "treatmentOnlyComplete": 9,
+      "neitherComplete": 2,
+      "baselineTotal": 24562,
+      "treatmentTotal": 19044,
+      "baselineMean": 180.60294117647058,
+      "treatmentMean": 140.02941176470588,
+      "baselineMedian": 174,
+      "treatmentMedian": 133,
+      "aggregateReduction": 0.2246559726406644,
+      "aggregateReduction95CI": [
+        0.17359310979178866,
+        0.2692607003891051
+      ],
+      "meanPairedReduction": 0.21023593756704878,
+      "meanPairedReduction95CI": [
+        0.15891884706372023,
+        0.25415884490368557
+      ],
+      "medianPairedReduction": 0.2637792286668691,
+      "medianPairedReduction95CI": [
+        0.23984750189569468,
+        0.2970369825748107
+      ],
+      "wins": 120,
+      "ties": 1,
+      "losses": 15,
+      "bootstrapResamples": 10000
+    }
+  }
+}

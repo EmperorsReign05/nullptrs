@@ -1,0 +1,7 @@
+{
+  "reason": "New grouped execution gate incorrectly reused the 20% new-bid admission floor instead of the 15% execution reserve. Stopped during development; never evaluated on acceptance.",
+  "partialScenarios": 263,
+  "completionRate": 0.8022813688212928,
+  "auditedSafetyTotal": 0,
+  "notAFullSuiteResult": true
+}

@@ -1,0 +1,18 @@
+{
+  "base": "6ad2458d6e32ee57e0267482fa6740124f7f04b2",
+  "frozenSuiteSha256": {
+    "scenarios.json": "39fc92e7943e41da9b63293a0827e3458cd95f9e1e9813957cd103287c616507",
+    "scenarios-development.json": "0c2a6cfe7b1ce87ae96f16d78822af1ae7ca248dbb6a19cdf441dbd48fcc2d47"
+  },
+  "sourceSha256": {
+    "src/core/distributed/ownership.ts": "aa0a28102d9c39eeb763fb0f16019cb3c570199567cbecbed3411ea848c8b8b3",
+    "src/core/distributed/runtime.ts": "a02f3de57d05405004c8fbb1f5696028d9e1b4c55cac08653c16ab997a53ef01",
+    "src/core/bench/sih/runner.ts": "b90eeed3394e3512c579434b1b809f03175d96441eff92510bd478697e406640",
+    "src/core/bench/stopwait.ts": "da6c16356705314a4cd758c6e4a3c100fe94883a7ac1d6b75904f821cb91bc86",
+    "src/core/pathfinding/astar.ts": "c822dc66bd7234b065e1b6c6398cc11f56e438aec65da90d3070b1bbfa633fbf",
+    "src/core/distributed/agent.ts": "9f57d4a85d3dacd4bd28b3eb700772c29655c37f148b998bde9503f3aa171efc",
+    "src/core/distributed/fleet.ts": "ede49e5aa9473f1eb2277a74e1ac7fb7546da4d4cf220bc06ccb742b0eb6aaf6",
+    "artifacts/bid-energy-v4/model.json": "5aad9ac9dad7ee4facb7b719154147e95d2069612d9cae1e3e59ef7a4fe455d1"
+  },
+  "stop": "phase2 reliability regression; phases3/4 and G/H acceptance not run"
+}

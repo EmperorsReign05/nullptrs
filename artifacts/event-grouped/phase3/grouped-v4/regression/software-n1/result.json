@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "passed": true,
+  "robots": 1,
+  "quorum": 1,
+  "controllersStarted": 1,
+  "ddsPeersReady": 1,
+  "ddsPeersAfterKill": 1,
+  "transport": "ros2",
+  "settleMs": 32,
+  "tasksCompleted": 1,
+  "totalTasks": 1,
+  "completed": true,
+  "ticks": 138,
+  "killedController": null,
+  "survivingControllers": 1,
+  "survivorsAreMajority": true,
+  "survivorsResponsive": true,
+  "safety": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0,
+    "nonAdjacentMoves": 0
+  },
+  "fleet": [
+    {
+      "id": "AMR-01",
+      "namespace": "AMR_01",
+      "origin": {
+        "x": 1,
+        "y": 1
+      },
+      "executorPort": 19700
+    }
+  ],
+  "peers": [
+    {
+      "id": "AMR-01",
+      "pid": 1254913,
+      "subscriptions": {
+        "motion": 1,
+        "ownership": 1
+      },
+      "failed": false
+    }
+  ],
+  "wallSeconds": 11.867,
+  "scope": "1 independent OS-process controllers over ros2; membership, namespaces and endpoints derived from artifacts/event-grouped/phase3/grouped-v4/regression/software-n1/fleet.json",
+  "limitations": [
+    "Shared logical clock; not an asynchronous physical-robot lease protocol",
+    "No Nav2 or hardware: this path uses the grid executor",
+    "One controller is killed at tick 2 to prove fleet survivability. Its task cannot complete unless the survivors still form a quorum (N-1 >= floor(N/2)+1), so N=2 legitimately completes fewer tasks."
+  ]
+}

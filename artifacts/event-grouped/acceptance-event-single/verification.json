@@ -1,0 +1,7 @@
+{
+  "scenarios": 1980,
+  "independentlyCheckedAggregateComparisons": 64,
+  "safetyCounterTotal": 0,
+  "duplicateExecutableOwnerRobotTicks": 0,
+  "typescriptCompile": "passed"
+}
