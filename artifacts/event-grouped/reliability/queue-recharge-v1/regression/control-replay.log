@@ -1,0 +1,20 @@
+epoch 200/1980
+epoch 400/1980
+epoch 600/1980
+epoch 800/1980
+epoch 1000/1980
+epoch 1200/1980
+epoch 1400/1980
+epoch 1600/1980
+epoch 1800/1980
+{"mode":"epoch","scenarios":1980,"exactRows":1980}
+event-single 200/1980
+event-single 400/1980
+event-single 600/1980
+event-single 800/1980
+event-single 1000/1980
+event-single 1200/1980
+event-single 1400/1980
+event-single 1600/1980
+event-single 1800/1980
+{"mode":"event-single","scenarios":1980,"exactRows":1980}

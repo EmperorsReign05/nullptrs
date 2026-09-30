@@ -1,0 +1,118 @@
+development {
+  "pairedCompleteRuns": 749,
+  "pairedCompleteTaskFlow": {
+    "event": {
+      "releaseToOwnership": {
+        "mean": 18.505896751223855,
+        "median": 3.0,
+        "tasks": 8988
+      },
+      "ownershipToPickup": {
+        "mean": 21.17834890965732,
+        "median": 12.0,
+        "tasks": 8988
+      },
+      "pickupToCompletion": {
+        "mean": 15.286938139741878,
+        "median": 13.0,
+        "tasks": 8988
+      },
+      "releaseToCompletion": {
+        "mean": 54.97118380062305,
+        "median": 42.0,
+        "tasks": 8988
+      }
+    },
+    "grouped": {
+      "releaseToOwnership": {
+        "mean": 4.527703604806408,
+        "median": 2.0,
+        "tasks": 8988
+      },
+      "ownershipToPickup": {
+        "mean": 19.7283044058745,
+        "median": 12.0,
+        "tasks": 8988
+      },
+      "pickupToCompletion": {
+        "mean": 16.055407209612817,
+        "median": 13.0,
+        "tasks": 8988
+      },
+      "releaseToCompletion": {
+        "mean": 40.311415220293725,
+        "median": 33.0,
+        "tasks": 8988
+      }
+    }
+  },
+  "eventCompleteGroupedIncomplete": {
+    "runs": 117,
+    "unfinishedTasks": 511,
+    "neverAssigned": 377,
+    "assignedUnpicked": 78,
+    "pickedUncompleted": 56,
+    "groupedEnergyHoldRobotTicks": 107638,
+    "eventEnergyHoldRobotTicks": 61,
+    "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+  }
+}
+acceptance {
+  "pairedCompleteRuns": 766,
+  "pairedCompleteTaskFlow": {
+    "event": {
+      "releaseToOwnership": {
+        "mean": 19.05330722367276,
+        "median": 3.0,
+        "tasks": 9192
+      },
+      "ownershipToPickup": {
+        "mean": 21.626414273281114,
+        "median": 13.0,
+        "tasks": 9192
+      },
+      "pickupToCompletion": {
+        "mean": 15.104873803307223,
+        "median": 12.0,
+        "tasks": 9192
+      },
+      "releaseToCompletion": {
+        "mean": 55.784595300261095,
+        "median": 42.0,
+        "tasks": 9192
+      }
+    },
+    "grouped": {
+      "releaseToOwnership": {
+        "mean": 4.488903394255875,
+        "median": 2.0,
+        "tasks": 9192
+      },
+      "ownershipToPickup": {
+        "mean": 19.54982593559617,
+        "median": 12.0,
+        "tasks": 9192
+      },
+      "pickupToCompletion": {
+        "mean": 16.238685813751086,
+        "median": 13.0,
+        "tasks": 9192
+      },
+      "releaseToCompletion": {
+        "mean": 40.277415143603136,
+        "median": 33.0,
+        "tasks": 9192
+      }
+    }
+  },
+  "eventCompleteGroupedIncomplete": {
+    "runs": 100,
+    "unfinishedTasks": 443,
+    "neverAssigned": 340,
+    "assignedUnpicked": 51,
+    "pickedUncompleted": 52,
+    "groupedEnergyHoldRobotTicks": 89367,
+    "eventEnergyHoldRobotTicks": 26,
+    "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+  }
+}

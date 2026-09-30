@@ -54,8 +54,6 @@ export class OwnershipPeer {
   private bundlePlans = new Map<string, GroupAssignment>();
   private reservationGenerations = new Map<string,number>();
   private reservations = new Map<string, string[]>();
-  private queueOwners = new Map<string,string>();
-  private nextQueueOrder=0;
   private queueOrder = new Map<string, number>();
   certifiedOrder(taskId: string) { return this.queueOrder.get(taskId) ?? Number.MAX_SAFE_INTEGER; }
   private votes = new Map<string, Ownership>();
@@ -91,7 +89,7 @@ export class OwnershipPeer {
   constructor(readonly id: string, members: readonly string[], private transport: Transport<OwnershipMessage>,
     private computeBid: (task: Task, tick: number) => LocalBidPacket,
     readonly allocationMode: "epoch" | "event-single" | "event-grouped" = "epoch",
-    private computeGroupBid?: (tasks: Task[], tick: number, fresh?: boolean) => GroupBid) {
+    private computeGroupBid?: (tasks: Task[], tick: number) => GroupBid) {
     if (allocationMode === "event-grouped" && !computeGroupBid) throw new Error("Grouped mode needs local bundle bids");
     this.members = [...new Set(members)].sort();
     if (this.members.length !== members.length || !this.members.includes(id)) throw new Error("Invalid membership");
@@ -172,7 +170,7 @@ export class OwnershipPeer {
     }
     if (m.kind === "propose") {
       const p = m.proposal, key = this.key(p.taskId, generation);
-      if (this.allocationMode === "event-grouped" && (!this.previousOwner(p.taskId)||p.owner!==this.previousOwner(p.taskId))) return;
+      if (this.allocationMode === "event-grouped" && !this.previousOwner(p.taskId)) return;
       if (!this.validLease(p) || (this.allocationMode === "epoch" && this.now % OWNERSHIP_EPOCH_TICKS < BID_WINDOW)) return;
       const marker = this.markers.get(p.taskId);
       if (this.completed(p.taskId) || (marker && marker.owner !== p.owner)) return;
@@ -203,13 +201,6 @@ export class OwnershipPeer {
       if (this.ownership(m.lease.taskId)) this.observe(m.lease.taskId, "certificateTick");
       if(m.lease.bundleId && this.bundleCertified(m.lease)) {
         const plan=this.bundlePlans.get(m.lease.bundleId)!;
-        if(!this.certifiedBundles.has(m.lease.bundleId)) {
-          for(const id of plan.taskIds) {
-            if(this.queueOwners.get(id)!==plan.owner) {
-              this.queueOwners.set(id,plan.owner);this.queueOrder.set(id,this.nextQueueOrder++);
-            }
-          }
-        }
         this.certifiedBundles.set(m.lease.bundleId,{...plan,size:plan.taskIds.length});
         for(const id of plan.taskIds)this.observe(id,"certificateTick");
       }
@@ -257,14 +248,14 @@ export class OwnershipPeer {
     if(leases.every(lease=>{const vote=this.votes.get(this.key(lease.taskId,generation));return vote&&same(vote,lease);})) return;
     for(const lease of leases) {
       const prior=this.votes.get(this.key(lease.taskId,generation));
-      if(this.completed(lease.taskId)||this.markers.has(lease.taskId)||(prior&&!same(prior,lease))||(this.previousOwner(lease.taskId)&&this.isLive(this.previousOwner(lease.taskId)!))) { this.groupMetrics.rejected++; return; }
+      if(this.completed(lease.taskId)||this.markers.has(lease.taskId)||(prior&&!same(prior,lease))||this.previousOwner(lease.taskId)) { this.groupMetrics.rejected++; return; }
     }
     for(const assignment of result) {
       const bid=p.bids.find(b=>b.robotId===assignment.owner)!;
       const reserved=(this.reservations.get(assignment.owner)??[]).filter(id=>this.reservationActive(assignment.owner,id));
       if(reserved.some(id=>!bid.commitmentIds.includes(id)&&!assignment.taskIds.includes(id))) {this.groupMetrics.rejected++;return;}
       if(assignment.owner===this.id) {
-        const fresh=this.computeGroupBid!(tasks as Task[],this.now,true);
+        const fresh=this.computeGroupBid!(tasks as Task[],this.now);
         if(!fresh.offers.some(o=>JSON.stringify(o.taskIds)===JSON.stringify(assignment.taskIds))) {this.groupMetrics.rejected++;this.groupSent.delete(p.groupId);return;}
       }
     }
@@ -272,6 +263,7 @@ export class OwnershipPeer {
     // deliveries cannot expose an unreserved partial plan.
     for(const assignment of result) {
       this.bundlePlans.set(bundleId+":"+assignment.owner,assignment);
+      for(const id of assignment.taskIds) if(!this.queueOrder.has(id)) this.queueOrder.set(id,this.queueOrder.size);
       this.reservations.set(assignment.owner,[...new Set([...(this.reservations.get(assignment.owner)??[]).filter(id=>this.reservationActive(assignment.owner,id)),...assignment.taskIds])]);
       for(const id of assignment.taskIds)this.reservationGenerations.set(assignment.owner+":"+id,generation);
     }
@@ -288,7 +280,7 @@ export class OwnershipPeer {
   }
   private tickGroups() {
     const generation=Math.floor(this.now/OWNERSHIP_EPOCH_TICKS);
-    const pending=[...this.tasks.values()].filter(t=>!this.completed(t.id)&&!this.markers.has(t.id)&&!this.ownership(t.id)&&(!this.previousOwner(t.id)||!this.isLive(this.previousOwner(t.id)!)));
+    const pending=[...this.tasks.values()].filter(t=>!this.completed(t.id)&&!this.previousOwner(t.id)&&!this.ownership(t.id));
     this.candidateTaskIds=new Set(pending.map(t=>t.id));
     for(const tasks of taskGroups(pending)) {
       const id=groupIdentity(generation,tasks);
@@ -464,7 +456,7 @@ export class OwnershipPeer {
         this.send({ ...checkpoint, from: this.id, tick });
       }
       if (this.completed(task.id) || !this.previousOwner(task.id) && !candidates.has(task.id)) continue;
-      if (this.allocationMode === "event-grouped" && (!this.previousOwner(task.id)||(!this.isLive(this.previousOwner(task.id)!)&&!this.markers.has(task.id)))) continue;
+      if (this.allocationMode === "event-grouped" && !this.previousOwner(task.id)) continue;
       this.observe(task.id, "firstAuctionEligibleTick");
       const key = this.key(task.id, generation);
       const vote = this.votes.get(key);

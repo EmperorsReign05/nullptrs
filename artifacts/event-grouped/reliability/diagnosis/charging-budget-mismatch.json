@@ -1,0 +1,214 @@
+[
+  {
+    "scenario": "development-stock-n8-columnTransit-s701212",
+    "mismatches": {
+      "before-pickup": 42
+    },
+    "examples": [
+      {
+        "tick": 262,
+        "robot": "AMR-08",
+        "battery": 27,
+        "position": {
+          "x": 17,
+          "y": 0
+        },
+        "task": "M-10",
+        "status": "assigned",
+        "queued": [],
+        "charge": {
+          "mode": "work",
+          "reason": "ready",
+          "hold": false
+        }
+      },
+      {
+        "tick": 263,
+        "robot": "AMR-08",
+        "battery": 27,
+        "position": {
+          "x": 17,
+          "y": 0
+        },
+        "task": "M-10",
+        "status": "assigned",
+        "queued": [],
+        "charge": {
+          "mode": "work",
+          "reason": "ready",
+          "hold": false
+        }
+      },
+      {
+        "tick": 324,
+        "robot": "AMR-08",
+        "battery": 27,
+        "position": {
+          "x": 17,
+          "y": 0
+        },
+        "task": "M-10",
+        "status": "assigned",
+        "queued": [],
+        "charge": {
+          "mode": "work",
+          "reason": "ready",
+          "hold": false
+        }
+      },
+      {
+        "tick": 325,
+        "robot": "AMR-08",
+        "battery": 27,
+        "position": {
+          "x": 17,
+          "y": 0
+        },
+        "task": "M-10",
+        "status": "assigned",
+        "queued": [],
+        "charge": {
+          "mode": "work",
+          "reason": "ready",
+          "hold": false
+        }
+      },
+      {
+        "tick": 386,
+        "robot": "AMR-08",
+        "battery": 27,
+        "position": {
+          "x": 17,
+          "y": 0
+        },
+        "task": "M-10",
+        "status": "assigned",
+        "queued": [],
+        "charge": {
+          "mode": "work",
+          "reason": "ready",
+          "hold": false
+        }
+      },
+      {
+        "tick": 387,
+        "robot": "AMR-08",
+        "battery": 27,
+        "position": {
+          "x": 17,
+          "y": 0
+        },
+        "task": "M-10",
+        "status": "assigned",
+        "queued": [],
+        "charge": {
+          "mode": "work",
+          "reason": "ready",
+          "hold": false
+        }
+      },
+      {
+        "tick": 449,
+        "robot": "AMR-08",
+        "battery": 27,
+        "position": {
+          "x": 17,
+          "y": 0
+        },
+        "task": "M-10",
+        "status": "assigned",
+        "queued": [],
+        "charge": {
+          "mode": "work",
+          "reason": "ready",
+          "hold": false
+        }
+      },
+      {
+        "tick": 450,
+        "robot": "AMR-08",
+        "battery": 27,
+        "position": {
+          "x": 17,
+          "y": 0
+        },
+        "task": "M-10",
+        "status": "assigned",
+        "queued": [],
+        "charge": {
+          "mode": "work",
+          "reason": "ready",
+          "hold": false
+        }
+      },
+      {
+        "tick": 511,
+        "robot": "AMR-08",
+        "battery": 27,
+        "position": {
+          "x": 17,
+          "y": 0
+        },
+        "task": "M-10",
+        "status": "assigned",
+        "queued": [],
+        "charge": {
+          "mode": "work",
+          "reason": "ready",
+          "hold": false
+        }
+      },
+      {
+        "tick": 512,
+        "robot": "AMR-08",
+        "battery": 27,
+        "position": {
+          "x": 17,
+          "y": 0
+        },
+        "task": "M-10",
+        "status": "pending",
+        "queued": [],
+        "charge": {
+          "mode": "work",
+          "reason": "ready",
+          "hold": false
+        }
+      }
+    ],
+    "safety": {
+      "overlaps": 0,
+      "swaps": 0,
+      "blockedCells": 0,
+      "zeroBatteryWork": 0,
+      "queueOverflow": 0,
+      "payloadViolations": 0
+    }
+  },
+  {
+    "scenario": "development-stock-n8-columnTransit-s701216",
+    "mismatches": {},
+    "examples": [],
+    "safety": {
+      "overlaps": 0,
+      "swaps": 0,
+      "blockedCells": 0,
+      "zeroBatteryWork": 0,
+      "queueOverflow": 0,
+      "payloadViolations": 0
+    }
+  },
+  {
+    "scenario": "development-stock-n8-columnTransit-s701218",
+    "mismatches": {},
+    "examples": [],
+    "safety": {
+      "overlaps": 0,
+      "swaps": 0,
+      "blockedCells": 0,
+      "zeroBatteryWork": 0,
+      "queueOverflow": 0,
+      "payloadViolations": 0
+    }
+  }
+]

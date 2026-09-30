@@ -1,0 +1,5 @@
+{
+  "scenarios": 1980,
+  "exactDefaultEpochRows": 1980,
+  "reference": "PR #28 D, previously matched exactly on all acceptance scenarios"
+}

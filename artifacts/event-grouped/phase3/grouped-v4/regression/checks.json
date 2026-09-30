@@ -1,0 +1,14 @@
+{
+  "npmTests": {
+    "passed": 608,
+    "skipped": 20
+  },
+  "typescript": "passed",
+  "productionBuild": "passed (webpack)",
+  "fleetBuild": "passed",
+  "ros2": "passed, including real Fast DDS",
+  "eventFaultScenarios": 30,
+  "groupedTests": 25,
+  "publication": "on hold",
+  "nav2N8": "failed twice: Nav2 status=6 code=105; no recorded collisions; default epoch mode"
+}

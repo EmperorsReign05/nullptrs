@@ -1,0 +1,13 @@
+file:///tmp/nullptrs-event-grouped/scripts/edge-sim.mjs:34
+    const result=await response.json();if(!response.ok)throw new Error(JSON.stringify(result));return result;
+                                                             ^
+
+Error: {"error":"Error: {\"ok\":false,\"error\":\"Nav2 status=6 code=105 arrived=False\",\"pose\":{\"x\":0.00044162354510246846,\"y\":-1.7422497337912404},\"groundTruth\":{\"x\":-0.005303116725393125,\"y\":-1.744412827692396},\"origin\":{\"x\":1,\"y\":13},\"cellMetres\":0.6,\"actions\":6,\"collisions\":0,\"fault\":\"Nav2 status=6 code=105 arrived=False\",\"poseAgeSeconds\":0.0034564840025268495,\"cancellationPending\":false}"}
+    at EdgeSimulation.request (file:///tmp/nullptrs-event-grouped/scripts/edge-sim.mjs:34:62)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///tmp/nullptrs-event-grouped/scripts/edge-sim.mjs:122:57
+    at async Promise.all (index 4)
+    at async EdgeSimulation.step (file:///tmp/nullptrs-event-grouped/scripts/edge-sim.mjs:122:5)
+    at async file:///tmp/nullptrs-event-grouped/scripts/nav2-fleet-smoke.mjs:40:11
+
+Node.js v24.18.0

@@ -1,0 +1,7 @@
+{
+  "scenarios": 1980,
+  "independentlyCheckedPairedComparisons": 96,
+  "allSafetyCountersZero": true,
+  "duplicateExecutableOwners": 0,
+  "taskIdsAndReleaseTicksMatch": true
+}

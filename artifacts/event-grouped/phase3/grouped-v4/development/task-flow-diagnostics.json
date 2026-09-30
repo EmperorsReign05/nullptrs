@@ -1,0 +1,946 @@
+{
+  "n0-all": {
+    "pairedCompleteRuns": 1670,
+    "pairedCompleteTaskFlow": {
+      "event": {
+        "releaseToOwnership": {
+          "mean": 18.087774451097804,
+          "median": 3.0,
+          "tasks": 20040
+        },
+        "ownershipToPickup": {
+          "mean": 19.684630738522955,
+          "median": 12.0,
+          "tasks": 20040
+        },
+        "pickupToCompletion": {
+          "mean": 14.050948103792415,
+          "median": 11.0,
+          "tasks": 20040
+        },
+        "releaseToCompletion": {
+          "mean": 51.82335329341317,
+          "median": 39.0,
+          "tasks": 20040
+        }
+      },
+      "grouped": {
+        "releaseToOwnership": {
+          "mean": 4.4758982035928145,
+          "median": 2.0,
+          "tasks": 20040
+        },
+        "ownershipToPickup": {
+          "mean": 18.25868263473054,
+          "median": 12.0,
+          "tasks": 20040
+        },
+        "pickupToCompletion": {
+          "mean": 14.670558882235529,
+          "median": 11.0,
+          "tasks": 20040
+        },
+        "releaseToCompletion": {
+          "mean": 37.405139720558886,
+          "median": 30.0,
+          "tasks": 20040
+        }
+      }
+    },
+    "eventCompleteGroupedIncomplete": {
+      "runs": 229,
+      "unfinishedTasks": 1052,
+      "neverAssigned": 841,
+      "assignedUnpicked": 118,
+      "pickedUncompleted": 93,
+      "groupedEnergyHoldRobotTicks": 176028,
+      "eventEnergyHoldRobotTicks": 82,
+      "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+    }
+  },
+  "n0-low": {
+    "pairedCompleteRuns": 525,
+    "pairedCompleteTaskFlow": {
+      "event": {
+        "releaseToOwnership": {
+          "mean": 17.323492063492065,
+          "median": 3.0,
+          "tasks": 6300
+        },
+        "ownershipToPickup": {
+          "mean": 17.392222222222223,
+          "median": 11.0,
+          "tasks": 6300
+        },
+        "pickupToCompletion": {
+          "mean": 11.906666666666666,
+          "median": 9.0,
+          "tasks": 6300
+        },
+        "releaseToCompletion": {
+          "mean": 46.62238095238095,
+          "median": 35.0,
+          "tasks": 6300
+        }
+      },
+      "grouped": {
+        "releaseToOwnership": {
+          "mean": 4.306984126984127,
+          "median": 2.0,
+          "tasks": 6300
+        },
+        "ownershipToPickup": {
+          "mean": 15.801111111111112,
+          "median": 11.0,
+          "tasks": 6300
+        },
+        "pickupToCompletion": {
+          "mean": 12.191587301587301,
+          "median": 9.0,
+          "tasks": 6300
+        },
+        "releaseToCompletion": {
+          "mean": 32.29968253968254,
+          "median": 27.0,
+          "tasks": 6300
+        }
+      }
+    },
+    "eventCompleteGroupedIncomplete": {
+      "runs": 58,
+      "unfinishedTasks": 312,
+      "neverAssigned": 288,
+      "assignedUnpicked": 13,
+      "pickedUncompleted": 11,
+      "groupedEnergyHoldRobotTicks": 25543,
+      "eventEnergyHoldRobotTicks": 7,
+      "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+    }
+  },
+  "n0-recoverable": {
+    "pairedCompleteRuns": 749,
+    "pairedCompleteTaskFlow": {
+      "event": {
+        "releaseToOwnership": {
+          "mean": 18.505896751223855,
+          "median": 3.0,
+          "tasks": 8988
+        },
+        "ownershipToPickup": {
+          "mean": 21.17834890965732,
+          "median": 12.0,
+          "tasks": 8988
+        },
+        "pickupToCompletion": {
+          "mean": 15.286938139741878,
+          "median": 13.0,
+          "tasks": 8988
+        },
+        "releaseToCompletion": {
+          "mean": 54.97118380062305,
+          "median": 42.0,
+          "tasks": 8988
+        }
+      },
+      "grouped": {
+        "releaseToOwnership": {
+          "mean": 4.527703604806408,
+          "median": 2.0,
+          "tasks": 8988
+        },
+        "ownershipToPickup": {
+          "mean": 19.7283044058745,
+          "median": 12.0,
+          "tasks": 8988
+        },
+        "pickupToCompletion": {
+          "mean": 16.055407209612817,
+          "median": 13.0,
+          "tasks": 8988
+        },
+        "releaseToCompletion": {
+          "mean": 40.311415220293725,
+          "median": 33.0,
+          "tasks": 8988
+        }
+      }
+    },
+    "eventCompleteGroupedIncomplete": {
+      "runs": 117,
+      "unfinishedTasks": 511,
+      "neverAssigned": 377,
+      "assignedUnpicked": 78,
+      "pickedUncompleted": 56,
+      "groupedEnergyHoldRobotTicks": 107638,
+      "eventEnergyHoldRobotTicks": 61,
+      "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+    }
+  },
+  "n0-severe": {
+    "pairedCompleteRuns": 396,
+    "pairedCompleteTaskFlow": {
+      "event": {
+        "releaseToOwnership": {
+          "mean": 18.310185185185187,
+          "median": 3.0,
+          "tasks": 4752
+        },
+        "ownershipToPickup": {
+          "mean": 19.898569023569024,
+          "median": 12.0,
+          "tasks": 4752
+        },
+        "pickupToCompletion": {
+          "mean": 14.55597643097643,
+          "median": 12.0,
+          "tasks": 4752
+        },
+        "releaseToCompletion": {
+          "mean": 52.76473063973064,
+          "median": 39.0,
+          "tasks": 4752
+        }
+      },
+      "grouped": {
+        "releaseToOwnership": {
+          "mean": 4.601851851851852,
+          "median": 2.0,
+          "tasks": 4752
+        },
+        "ownershipToPickup": {
+          "mean": 18.7371632996633,
+          "median": 12.0,
+          "tasks": 4752
+        },
+        "pickupToCompletion": {
+          "mean": 15.337752525252526,
+          "median": 12.0,
+          "tasks": 4752
+        },
+        "releaseToCompletion": {
+          "mean": 38.676767676767675,
+          "median": 31.0,
+          "tasks": 4752
+        }
+      }
+    },
+    "eventCompleteGroupedIncomplete": {
+      "runs": 54,
+      "unfinishedTasks": 229,
+      "neverAssigned": 176,
+      "assignedUnpicked": 27,
+      "pickedUncompleted": 26,
+      "groupedEnergyHoldRobotTicks": 42847,
+      "eventEnergyHoldRobotTicks": 14,
+      "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+    }
+  },
+  "n3-all": {
+    "pairedCompleteRuns": 598,
+    "pairedCompleteTaskFlow": {
+      "event": {
+        "releaseToOwnership": {
+          "mean": 41.143115942028984,
+          "median": 36.0,
+          "tasks": 7176
+        },
+        "ownershipToPickup": {
+          "mean": 18.590997770345595,
+          "median": 14.0,
+          "tasks": 7176
+        },
+        "pickupToCompletion": {
+          "mean": 12.71948160535117,
+          "median": 11.0,
+          "tasks": 7176
+        },
+        "releaseToCompletion": {
+          "mean": 72.45359531772576,
+          "median": 64.0,
+          "tasks": 7176
+        }
+      },
+      "grouped": {
+        "releaseToOwnership": {
+          "mean": 3.3853121516164992,
+          "median": 2.0,
+          "tasks": 7176
+        },
+        "ownershipToPickup": {
+          "mean": 26.50083612040134,
+          "median": 19.0,
+          "tasks": 7176
+        },
+        "pickupToCompletion": {
+          "mean": 12.997073578595318,
+          "median": 11.0,
+          "tasks": 7176
+        },
+        "releaseToCompletion": {
+          "mean": 42.883221850613154,
+          "median": 36.0,
+          "tasks": 7176
+        }
+      }
+    },
+    "eventCompleteGroupedIncomplete": {
+      "runs": 45,
+      "unfinishedTasks": 119,
+      "neverAssigned": 1,
+      "assignedUnpicked": 84,
+      "pickedUncompleted": 34,
+      "groupedEnergyHoldRobotTicks": 77741,
+      "eventEnergyHoldRobotTicks": 52,
+      "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+    }
+  },
+  "n3-low": {
+    "pairedCompleteRuns": 191,
+    "pairedCompleteTaskFlow": {
+      "event": {
+        "releaseToOwnership": {
+          "mean": 39.2630890052356,
+          "median": 35.0,
+          "tasks": 2292
+        },
+        "ownershipToPickup": {
+          "mean": 17.6326352530541,
+          "median": 13.0,
+          "tasks": 2292
+        },
+        "pickupToCompletion": {
+          "mean": 11.31806282722513,
+          "median": 9.0,
+          "tasks": 2292
+        },
+        "releaseToCompletion": {
+          "mean": 68.21378708551484,
+          "median": 60.5,
+          "tasks": 2292
+        }
+      },
+      "grouped": {
+        "releaseToOwnership": {
+          "mean": 3.2853403141361257,
+          "median": 2.0,
+          "tasks": 2292
+        },
+        "ownershipToPickup": {
+          "mean": 23.3935427574171,
+          "median": 18.0,
+          "tasks": 2292
+        },
+        "pickupToCompletion": {
+          "mean": 11.228184991273997,
+          "median": 9.0,
+          "tasks": 2292
+        },
+        "releaseToCompletion": {
+          "mean": 37.90706806282723,
+          "median": 32.0,
+          "tasks": 2292
+        }
+      }
+    },
+    "eventCompleteGroupedIncomplete": {
+      "runs": 4,
+      "unfinishedTasks": 10,
+      "neverAssigned": 0,
+      "assignedUnpicked": 7,
+      "pickedUncompleted": 3,
+      "groupedEnergyHoldRobotTicks": 7842,
+      "eventEnergyHoldRobotTicks": 0,
+      "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+    }
+  },
+  "n3-recoverable": {
+    "pairedCompleteRuns": 264,
+    "pairedCompleteTaskFlow": {
+      "event": {
+        "releaseToOwnership": {
+          "mean": 42.37215909090909,
+          "median": 36.0,
+          "tasks": 3168
+        },
+        "ownershipToPickup": {
+          "mean": 19.327651515151516,
+          "median": 14.0,
+          "tasks": 3168
+        },
+        "pickupToCompletion": {
+          "mean": 13.647727272727273,
+          "median": 12.0,
+          "tasks": 3168
+        },
+        "releaseToCompletion": {
+          "mean": 75.34753787878788,
+          "median": 66.0,
+          "tasks": 3168
+        }
+      },
+      "grouped": {
+        "releaseToOwnership": {
+          "mean": 3.469381313131313,
+          "median": 2.0,
+          "tasks": 3168
+        },
+        "ownershipToPickup": {
+          "mean": 28.084280303030305,
+          "median": 20.0,
+          "tasks": 3168
+        },
+        "pickupToCompletion": {
+          "mean": 13.861742424242424,
+          "median": 12.0,
+          "tasks": 3168
+        },
+        "releaseToCompletion": {
+          "mean": 45.41540404040404,
+          "median": 38.0,
+          "tasks": 3168
+        }
+      }
+    },
+    "eventCompleteGroupedIncomplete": {
+      "runs": 29,
+      "unfinishedTasks": 81,
+      "neverAssigned": 1,
+      "assignedUnpicked": 57,
+      "pickedUncompleted": 23,
+      "groupedEnergyHoldRobotTicks": 51834,
+      "eventEnergyHoldRobotTicks": 48,
+      "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+    }
+  },
+  "n3-severe": {
+    "pairedCompleteRuns": 143,
+    "pairedCompleteTaskFlow": {
+      "event": {
+        "releaseToOwnership": {
+          "mean": 41.38519813519814,
+          "median": 35.5,
+          "tasks": 1716
+        },
+        "ownershipToPickup": {
+          "mean": 18.51107226107226,
+          "median": 14.0,
+          "tasks": 1716
+        },
+        "pickupToCompletion": {
+          "mean": 12.877622377622378,
+          "median": 11.0,
+          "tasks": 1716
+        },
+        "releaseToCompletion": {
+          "mean": 72.77389277389277,
+          "median": 64.0,
+          "tasks": 1716
+        }
+      },
+      "grouped": {
+        "releaseToOwnership": {
+          "mean": 3.3636363636363638,
+          "median": 2.0,
+          "tasks": 1716
+        },
+        "ownershipToPickup": {
+          "mean": 27.727855477855478,
+          "median": 20.0,
+          "tasks": 1716
+        },
+        "pickupToCompletion": {
+          "mean": 13.763403263403264,
+          "median": 11.0,
+          "tasks": 1716
+        },
+        "releaseToCompletion": {
+          "mean": 44.85489510489511,
+          "median": 37.0,
+          "tasks": 1716
+        }
+      }
+    },
+    "eventCompleteGroupedIncomplete": {
+      "runs": 12,
+      "unfinishedTasks": 28,
+      "neverAssigned": 0,
+      "assignedUnpicked": 20,
+      "pickedUncompleted": 8,
+      "groupedEnergyHoldRobotTicks": 18065,
+      "eventEnergyHoldRobotTicks": 4,
+      "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+    }
+  },
+  "n5-all": {
+    "pairedCompleteRuns": 607,
+    "pairedCompleteTaskFlow": {
+      "event": {
+        "releaseToOwnership": {
+          "mean": 7.1334431630971995,
+          "median": 3.0,
+          "tasks": 7284
+        },
+        "ownershipToPickup": {
+          "mean": 22.0113948380011,
+          "median": 12.0,
+          "tasks": 7284
+        },
+        "pickupToCompletion": {
+          "mean": 14.149780340472269,
+          "median": 11.0,
+          "tasks": 7284
+        },
+        "releaseToCompletion": {
+          "mean": 43.29461834157057,
+          "median": 33.0,
+          "tasks": 7284
+        }
+      },
+      "grouped": {
+        "releaseToOwnership": {
+          "mean": 3.067133443163097,
+          "median": 2.0,
+          "tasks": 7284
+        },
+        "ownershipToPickup": {
+          "mean": 15.159665019220208,
+          "median": 11.0,
+          "tasks": 7284
+        },
+        "pickupToCompletion": {
+          "mean": 14.799011532125206,
+          "median": 12.0,
+          "tasks": 7284
+        },
+        "releaseToCompletion": {
+          "mean": 33.02580999450851,
+          "median": 27.0,
+          "tasks": 7284
+        }
+      }
+    },
+    "eventCompleteGroupedIncomplete": {
+      "runs": 26,
+      "unfinishedTasks": 41,
+      "neverAssigned": 0,
+      "assignedUnpicked": 18,
+      "pickedUncompleted": 23,
+      "groupedEnergyHoldRobotTicks": 38295,
+      "eventEnergyHoldRobotTicks": 8,
+      "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+    }
+  },
+  "n5-low": {
+    "pairedCompleteRuns": 191,
+    "pairedCompleteTaskFlow": {
+      "event": {
+        "releaseToOwnership": {
+          "mean": 6.349476439790576,
+          "median": 3.0,
+          "tasks": 2292
+        },
+        "ownershipToPickup": {
+          "mean": 18.656195462478184,
+          "median": 11.0,
+          "tasks": 2292
+        },
+        "pickupToCompletion": {
+          "mean": 12.00174520069808,
+          "median": 10.0,
+          "tasks": 2292
+        },
+        "releaseToCompletion": {
+          "mean": 37.00741710296684,
+          "median": 29.0,
+          "tasks": 2292
+        }
+      },
+      "grouped": {
+        "releaseToOwnership": {
+          "mean": 2.93891797556719,
+          "median": 2.0,
+          "tasks": 2292
+        },
+        "ownershipToPickup": {
+          "mean": 12.631326352530541,
+          "median": 10.0,
+          "tasks": 2292
+        },
+        "pickupToCompletion": {
+          "mean": 12.105148342059337,
+          "median": 9.0,
+          "tasks": 2292
+        },
+        "releaseToCompletion": {
+          "mean": 27.67539267015707,
+          "median": 24.0,
+          "tasks": 2292
+        }
+      }
+    },
+    "eventCompleteGroupedIncomplete": {
+      "runs": 5,
+      "unfinishedTasks": 7,
+      "neverAssigned": 0,
+      "assignedUnpicked": 3,
+      "pickedUncompleted": 4,
+      "groupedEnergyHoldRobotTicks": 8900,
+      "eventEnergyHoldRobotTicks": 3,
+      "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+    }
+  },
+  "n5-recoverable": {
+    "pairedCompleteRuns": 272,
+    "pairedCompleteTaskFlow": {
+      "event": {
+        "releaseToOwnership": {
+          "mean": 7.689031862745098,
+          "median": 3.0,
+          "tasks": 3264
+        },
+        "ownershipToPickup": {
+          "mean": 24.06311274509804,
+          "median": 13.0,
+          "tasks": 3264
+        },
+        "pickupToCompletion": {
+          "mean": 15.401041666666666,
+          "median": 13.0,
+          "tasks": 3264
+        },
+        "releaseToCompletion": {
+          "mean": 47.15318627450981,
+          "median": 37.0,
+          "tasks": 3264
+        }
+      },
+      "grouped": {
+        "releaseToOwnership": {
+          "mean": 3.1112132352941178,
+          "median": 2.0,
+          "tasks": 3264
+        },
+        "ownershipToPickup": {
+          "mean": 16.909313725490197,
+          "median": 11.0,
+          "tasks": 3264
+        },
+        "pickupToCompletion": {
+          "mean": 16.463848039215687,
+          "median": 13.0,
+          "tasks": 3264
+        },
+        "releaseToCompletion": {
+          "mean": 36.484375,
+          "median": 30.0,
+          "tasks": 3264
+        }
+      }
+    },
+    "eventCompleteGroupedIncomplete": {
+      "runs": 15,
+      "unfinishedTasks": 26,
+      "neverAssigned": 0,
+      "assignedUnpicked": 13,
+      "pickedUncompleted": 13,
+      "groupedEnergyHoldRobotTicks": 22203,
+      "eventEnergyHoldRobotTicks": 4,
+      "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+    }
+  },
+  "n5-severe": {
+    "pairedCompleteRuns": 144,
+    "pairedCompleteTaskFlow": {
+      "event": {
+        "releaseToOwnership": {
+          "mean": 7.123842592592593,
+          "median": 3.0,
+          "tasks": 1728
+        },
+        "ownershipToPickup": {
+          "mean": 22.58622685185185,
+          "median": 12.0,
+          "tasks": 1728
+        },
+        "pickupToCompletion": {
+          "mean": 14.635416666666666,
+          "median": 12.0,
+          "tasks": 1728
+        },
+        "releaseToCompletion": {
+          "mean": 44.345486111111114,
+          "median": 33.0,
+          "tasks": 1728
+        }
+      },
+      "grouped": {
+        "releaseToOwnership": {
+          "mean": 3.153935185185185,
+          "median": 2.0,
+          "tasks": 1728
+        },
+        "ownershipToPickup": {
+          "mean": 15.208333333333334,
+          "median": 11.0,
+          "tasks": 1728
+        },
+        "pickupToCompletion": {
+          "mean": 15.227430555555555,
+          "median": 12.0,
+          "tasks": 1728
+        },
+        "releaseToCompletion": {
+          "mean": 33.589699074074076,
+          "median": 27.0,
+          "tasks": 1728
+        }
+      }
+    },
+    "eventCompleteGroupedIncomplete": {
+      "runs": 6,
+      "unfinishedTasks": 8,
+      "neverAssigned": 0,
+      "assignedUnpicked": 2,
+      "pickedUncompleted": 6,
+      "groupedEnergyHoldRobotTicks": 7192,
+      "eventEnergyHoldRobotTicks": 1,
+      "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+    }
+  },
+  "n8-all": {
+    "pairedCompleteRuns": 465,
+    "pairedCompleteTaskFlow": {
+      "event": {
+        "releaseToOwnership": {
+          "mean": 2.7376344086021507,
+          "median": 3.0,
+          "tasks": 5580
+        },
+        "ownershipToPickup": {
+          "mean": 18.053763440860216,
+          "median": 9.0,
+          "tasks": 5580
+        },
+        "pickupToCompletion": {
+          "mean": 15.634229390681003,
+          "median": 12.0,
+          "tasks": 5580
+        },
+        "releaseToCompletion": {
+          "mean": 36.42562724014337,
+          "median": 27.0,
+          "tasks": 5580
+        }
+      },
+      "grouped": {
+        "releaseToOwnership": {
+          "mean": 7.717383512544803,
+          "median": 3.0,
+          "tasks": 5580
+        },
+        "ownershipToPickup": {
+          "mean": 11.70448028673835,
+          "median": 8.0,
+          "tasks": 5580
+        },
+        "pickupToCompletion": {
+          "mean": 16.655017921146953,
+          "median": 12.0,
+          "tasks": 5580
+        },
+        "releaseToCompletion": {
+          "mean": 36.07688172043011,
+          "median": 29.0,
+          "tasks": 5580
+        }
+      }
+    },
+    "eventCompleteGroupedIncomplete": {
+      "runs": 158,
+      "unfinishedTasks": 892,
+      "neverAssigned": 840,
+      "assignedUnpicked": 16,
+      "pickedUncompleted": 36,
+      "groupedEnergyHoldRobotTicks": 59992,
+      "eventEnergyHoldRobotTicks": 22,
+      "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+    }
+  },
+  "n8-low": {
+    "pairedCompleteRuns": 143,
+    "pairedCompleteTaskFlow": {
+      "event": {
+        "releaseToOwnership": {
+          "mean": 2.6771561771561774,
+          "median": 2.0,
+          "tasks": 1716
+        },
+        "ownershipToPickup": {
+          "mean": 15.382867132867133,
+          "median": 8.0,
+          "tasks": 1716
+        },
+        "pickupToCompletion": {
+          "mean": 12.565850815850816,
+          "median": 10.0,
+          "tasks": 1716
+        },
+        "releaseToCompletion": {
+          "mean": 30.625874125874127,
+          "median": 23.0,
+          "tasks": 1716
+        }
+      },
+      "grouped": {
+        "releaseToOwnership": {
+          "mean": 7.498834498834499,
+          "median": 3.0,
+          "tasks": 1716
+        },
+        "ownershipToPickup": {
+          "mean": 9.893939393939394,
+          "median": 7.0,
+          "tasks": 1716
+        },
+        "pickupToCompletion": {
+          "mean": 13.593822843822844,
+          "median": 10.0,
+          "tasks": 1716
+        },
+        "releaseToCompletion": {
+          "mean": 30.986596736596738,
+          "median": 25.0,
+          "tasks": 1716
+        }
+      }
+    },
+    "eventCompleteGroupedIncomplete": {
+      "runs": 49,
+      "unfinishedTasks": 295,
+      "neverAssigned": 288,
+      "assignedUnpicked": 3,
+      "pickedUncompleted": 4,
+      "groupedEnergyHoldRobotTicks": 8801,
+      "eventEnergyHoldRobotTicks": 4,
+      "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+    }
+  },
+  "n8-recoverable": {
+    "pairedCompleteRuns": 213,
+    "pairedCompleteTaskFlow": {
+      "event": {
+        "releaseToOwnership": {
+          "mean": 2.738262910798122,
+          "median": 3.0,
+          "tasks": 2556
+        },
+        "ownershipToPickup": {
+          "mean": 19.788341158059467,
+          "median": 10.0,
+          "tasks": 2556
+        },
+        "pickupToCompletion": {
+          "mean": 17.172926447574334,
+          "median": 14.0,
+          "tasks": 2556
+        },
+        "releaseToCompletion": {
+          "mean": 39.69953051643193,
+          "median": 30.0,
+          "tasks": 2556
+        }
+      },
+      "grouped": {
+        "releaseToOwnership": {
+          "mean": 7.648278560250391,
+          "median": 3.0,
+          "tasks": 2556
+        },
+        "ownershipToPickup": {
+          "mean": 12.971439749608765,
+          "median": 9.0,
+          "tasks": 2556
+        },
+        "pickupToCompletion": {
+          "mean": 18.252738654147105,
+          "median": 14.0,
+          "tasks": 2556
+        },
+        "releaseToCompletion": {
+          "mean": 38.87245696400626,
+          "median": 32.0,
+          "tasks": 2556
+        }
+      }
+    },
+    "eventCompleteGroupedIncomplete": {
+      "runs": 73,
+      "unfinishedTasks": 404,
+      "neverAssigned": 376,
+      "assignedUnpicked": 8,
+      "pickedUncompleted": 20,
+      "groupedEnergyHoldRobotTicks": 33601,
+      "eventEnergyHoldRobotTicks": 9,
+      "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+    }
+  },
+  "n8-severe": {
+    "pairedCompleteRuns": 109,
+    "pairedCompleteTaskFlow": {
+      "event": {
+        "releaseToOwnership": {
+          "mean": 2.815749235474006,
+          "median": 2.0,
+          "tasks": 1308
+        },
+        "ownershipToPickup": {
+          "mean": 18.168195718654435,
+          "median": 9.0,
+          "tasks": 1308
+        },
+        "pickupToCompletion": {
+          "mean": 16.652905198776757,
+          "median": 13.0,
+          "tasks": 1308
+        },
+        "releaseToCompletion": {
+          "mean": 37.6368501529052,
+          "median": 28.0,
+          "tasks": 1308
+        }
+      },
+      "grouped": {
+        "releaseToOwnership": {
+          "mean": 8.13914373088685,
+          "median": 3.0,
+          "tasks": 1308
+        },
+        "ownershipToPickup": {
+          "mean": 11.603975535168196,
+          "median": 8.0,
+          "tasks": 1308
+        },
+        "pickupToCompletion": {
+          "mean": 17.54892966360856,
+          "median": 13.0,
+          "tasks": 1308
+        },
+        "releaseToCompletion": {
+          "mean": 37.29204892966361,
+          "median": 30.0,
+          "tasks": 1308
+        }
+      }
+    },
+    "eventCompleteGroupedIncomplete": {
+      "runs": 36,
+      "unfinishedTasks": 193,
+      "neverAssigned": 176,
+      "assignedUnpicked": 5,
+      "pickedUncompleted": 12,
+      "groupedEnergyHoldRobotTicks": 17590,
+      "eventEnergyHoldRobotTicks": 9,
+      "interpretation": "Descriptive associations; no causal ablation. Grouped execution conservatively rechecks full remaining commitments."
+    }
+  }
+}

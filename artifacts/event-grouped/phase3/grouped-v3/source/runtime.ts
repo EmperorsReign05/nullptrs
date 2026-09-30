@@ -26,11 +26,10 @@ export class FleetRuntime {
   readonly metrics = { aiBidAttempts: 0, nonzeroCorrections: 0, disabledFallbacks: 0, failedModelFallbacks: 0, moves: 0, reroutes: 0, energyHolds: 0 };
   private channels = new Map<string, InMemoryTransport<OwnershipMessage>>();
   private groupCache = new Map<string,{state:string;bid:GroupBid}>();
-  private groupedEnergyBlocked = new Set<string>();
   private dead = new Set<string>();
   running = true;
   aiEnabled = true;
-  constructor(world?: WorldState, private model: BidModel = frozen.model, private options: { motionPolicy?: "stop-and-wait"; fleetSize?: number; allocationMode?: "epoch" | "event-single" | "event-grouped"; groupedQueueRecharge?: boolean } = {}) {
+  constructor(world?: WorldState, private model: BidModel = frozen.model, options: { motionPolicy?: "stop-and-wait"; fleetSize?: number; allocationMode?: "epoch" | "event-single" | "event-grouped" } = {}) {
     this.world = structuredClone(world ?? createInitialWorld());
     if (!world) {
       this.world.tasks = [];
@@ -46,7 +45,7 @@ export class FleetRuntime {
       this.charging.set(r.id, new DistributedCharging());
       const channel = new InMemoryTransport(r.id, bus); ids.filter(id => id !== r.id).forEach(id => channel.addPeer(id)); this.channels.set(r.id, channel);
       this.peers.set(r.id, new OwnershipPeer(r.id, ids, channel, (task, tick) => this.bid(r.id, task, tick), options.allocationMode,
-        (tasks, tick, fresh) => this.bundleBid(r.id,tasks,tick,fresh)));
+        (tasks, tick) => this.bundleBid(r.id,tasks,tick)));
     }
     this.fleet = new DistributedFleet(this.world.map, this.world.robots, this.world.tasks, { commRange: 6, localCommit: true, motionPolicy: options.motionPolicy,
       goalOverride: r => this.charging.get(r.id)!.active ? this.charging.get(r.id)!.goal ?? null : undefined,
@@ -55,35 +54,26 @@ export class FleetRuntime {
         const allowed = charge.active ? charge.allowsMove(r, to, this.world) : task
           ? executionActiveTaskAllowed(r, task, to, this.world) : executionIdleMoveAllowed(r, to, this.world);
         const groupedBudget = options.allocationMode !== "event-grouped" || charge.active || !task || bundleExecutionAllowed(r,to,this.world);
-        if(options.groupedQueueRecharge && options.allocationMode === "event-grouped" && !charge.active && task && task.status !== "in_progress" && (!allowed || !groupedBudget)) this.groupedEnergyBlocked.add(r.id);
         if (!allowed || !groupedBudget) this.metrics.energyHolds++;
         return allowed && groupedBudget;
       },
       arrivalAllowed: (r, t, phase) => {
         if (this.charging.get(r.id)!.active) return false;
-        if(options.allocationMode === "event-grouped" && phase === "pickup" && !bundleExecutionAllowed(r,r.position,this.world)) return false;
         const peer = this.peers.get(r.id)!;
         if (!peer.mayExecute(t.id)) return phase === "dropoff" && peer.acknowledged(t.id, "completed");
         return peer.mark(t.id, phase === "pickup" ? "custody" : "completed");
       } });
     for (const task of this.world.tasks) this.peers.get(ids[0])!.announce({ ...task, status: "pending", assignedRobotId: undefined });
   }
-  private bundleBid(id:string,tasks:Task[],tick:number,fresh=false):GroupBid {
+  private bundleBid(id:string,tasks:Task[],tick:number):GroupBid {
     const input=this.bidInput(id,tasks[0],tick),generation=Math.floor(tick/OWNERSHIP_EPOCH_TICKS);
     const key=id+":"+groupIdentity(generation,tasks);
-    // Refresh on commitments, charging/availability, membership, geometry,
-    // auction generation and 5%-battery transitions. Motion alone does not
-    // cause a new auction. Winning owners always bypass this cache at grant.
-    const peers=input.receivedPeers.filter(p=>tick-p.observedTick<=input.maxPeerAgeTicks).map(p=>p.senderId).sort();
-    const active=input.ownTasks.find(t=>t.id===input.self.currentTaskId);
-    const goal=active?(active.status==="in_progress"?active.dropoff:active.pickup):undefined;
-    const path=input.self.path;
-    const validActive=!active||path.length>0&&path[0].x===input.self.position.x&&path[0].y===input.self.position.y&&
-      path[path.length-1].x===goal!.x&&path[path.length-1].y===goal!.y;
-    const state=JSON.stringify([input.self.currentTaskId,input.self.queuedTaskIds,input.self.status,Math.floor(input.self.battery/5),validActive,
-      input.ownTasks.map(t=>[t.id,t.status]),peers,this.aiEnabled,input.geometry.cells.map(c=>c.blocked),tasks.some(t=>t.deadline!==undefined)?tick:null]);
+    // Clock-only heartbeats are not useful auction changes. Cache identical
+    // local observations; eligibility transitions still invalidate this entry.
+    const peers=input.receivedPeers.filter(p=>tick-p.observedTick<=input.maxPeerAgeTicks).map(p=>[p.senderId,p.position,p.path]);
+    const state=JSON.stringify([input.self,input.ownTasks,peers,this.aiEnabled,input.geometry.cells.map(c=>c.blocked),tasks.some(t=>t.deadline!==undefined)?tick:null]);
     const cached=this.groupCache.get(key);
-    if(!fresh&&cached?.state===state)return {...cached.bid,tick};
+    if(cached?.state===state)return {...cached.bid,tick};
     const bid=groupBid(input,tasks,generation,this.model,this.aiEnabled?frozen.bound:0);
     this.groupCache.set(key,{state,bid});return bid;
   }
@@ -193,13 +183,7 @@ export class FleetRuntime {
       // Ownership is necessary but not sufficient: before installing a new
       // commitment, energy must cover task + charging + reserve. No movement
       // with depleted battery. Existing active certified routes remain intact.
-      // A rejected pre-pickup energy move is a useful recharge event, even
-      // when the cheaper static active-task estimate still says "ready".
-      // The full commitment guard remains enforced and custody stays sticky.
-      const queueRecharge = this.options.groupedQueueRecharge && peer.allocationMode === "event-grouped" && active && active.status !== "in_progress";
-      const commitmentsAffordable = !queueRecharge || !this.groupedEnergyBlocked.has(r.id) && bundleExecutionAllowed(r,r.position,this.world);
-      this.groupedEnergyBlocked.delete(r.id);
-      const charge = this.charging.get(r.id)!.prepare(r, this.world, tick, commitmentsAffordable);
+      const charge = this.charging.get(r.id)!.prepare(r, this.world, tick);
       this.fleet.setInactive(r.id, charge.hold || r.battery <= 0 || charge.mode === "work" && !!active && !peer.mayExecute(active.id));
       if (active && active.status === "in_progress" && !peer.acknowledged(active.id, "custody")) peer.mark(active.id, "custody");
     }

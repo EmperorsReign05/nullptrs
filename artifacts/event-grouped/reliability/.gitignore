@@ -1,0 +1,2 @@
+# Keep uncompressed checkpoints locally; committed evidence uses gzip.
+**/progress.ndjson

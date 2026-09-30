@@ -26,11 +26,10 @@ export class FleetRuntime {
   readonly metrics = { aiBidAttempts: 0, nonzeroCorrections: 0, disabledFallbacks: 0, failedModelFallbacks: 0, moves: 0, reroutes: 0, energyHolds: 0 };
   private channels = new Map<string, InMemoryTransport<OwnershipMessage>>();
   private groupCache = new Map<string,{state:string;bid:GroupBid}>();
-  private groupedEnergyBlocked = new Set<string>();
   private dead = new Set<string>();
   running = true;
   aiEnabled = true;
-  constructor(world?: WorldState, private model: BidModel = frozen.model, private options: { motionPolicy?: "stop-and-wait"; fleetSize?: number; allocationMode?: "epoch" | "event-single" | "event-grouped"; groupedQueueRecharge?: boolean } = {}) {
+  constructor(world?: WorldState, private model: BidModel = frozen.model, options: { motionPolicy?: "stop-and-wait"; fleetSize?: number; allocationMode?: "epoch" | "event-single" | "event-grouped" } = {}) {
     this.world = structuredClone(world ?? createInitialWorld());
     if (!world) {
       this.world.tasks = [];
@@ -55,7 +54,6 @@ export class FleetRuntime {
         const allowed = charge.active ? charge.allowsMove(r, to, this.world) : task
           ? executionActiveTaskAllowed(r, task, to, this.world) : executionIdleMoveAllowed(r, to, this.world);
         const groupedBudget = options.allocationMode !== "event-grouped" || charge.active || !task || bundleExecutionAllowed(r,to,this.world);
-        if(options.groupedQueueRecharge && options.allocationMode === "event-grouped" && !charge.active && task && task.status !== "in_progress" && (!allowed || !groupedBudget)) this.groupedEnergyBlocked.add(r.id);
         if (!allowed || !groupedBudget) this.metrics.energyHolds++;
         return allowed && groupedBudget;
       },
@@ -193,13 +191,7 @@ export class FleetRuntime {
       // Ownership is necessary but not sufficient: before installing a new
       // commitment, energy must cover task + charging + reserve. No movement
       // with depleted battery. Existing active certified routes remain intact.
-      // A rejected pre-pickup energy move is a useful recharge event, even
-      // when the cheaper static active-task estimate still says "ready".
-      // The full commitment guard remains enforced and custody stays sticky.
-      const queueRecharge = this.options.groupedQueueRecharge && peer.allocationMode === "event-grouped" && active && active.status !== "in_progress";
-      const commitmentsAffordable = !queueRecharge || !this.groupedEnergyBlocked.has(r.id) && bundleExecutionAllowed(r,r.position,this.world);
-      this.groupedEnergyBlocked.delete(r.id);
-      const charge = this.charging.get(r.id)!.prepare(r, this.world, tick, commitmentsAffordable);
+      const charge = this.charging.get(r.id)!.prepare(r, this.world, tick);
       this.fleet.setInactive(r.id, charge.hold || r.battery <= 0 || charge.mode === "work" && !!active && !peer.mayExecute(active.id));
       if (active && active.status === "in_progress" && !peer.acknowledged(active.id, "custody")) peer.mark(active.id, "custody");
     }

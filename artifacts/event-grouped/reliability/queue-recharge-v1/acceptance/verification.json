@@ -1,0 +1,9 @@
+{
+  "scenarios": 1980,
+  "independentlyCheckedPairedComparisons": 128,
+  "sourceHashesMatch": true,
+  "recordedGroupedControlUnchanged": true,
+  "taskIdsAndReleaseTicksMatch": true,
+  "allSafetyCountersZero": true,
+  "duplicateExecutableOwners": 0
+}

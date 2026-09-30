@@ -1,0 +1,303 @@
+{
+  "schema": 1,
+  "subject": "Fault behaviour after the liveness and admission redesign",
+  "invariant": "For every task, live peers allowed to execute <= 1; and 0 when quorum is unreachable (except N=1).",
+  "scenarios": [
+    {
+      "scenario": "prePickupOwnerFailure",
+      "robots": 1,
+      "quorum": 1,
+      "killedOwner": "R1",
+      "survivors": 0,
+      "survivorsFormQuorum": false,
+      "distinctOwners": 0,
+      "executableOwners": 0,
+      "safe": true,
+      "reassigned": true
+    },
+    {
+      "scenario": "postPickupCustodyFailure",
+      "robots": 1,
+      "quorum": 1,
+      "killedOwner": "R1",
+      "recoveryRequiredOnAllSurvivors": null,
+      "anySurvivorMayExecute": false,
+      "safe": true
+    },
+    {
+      "scenario": "partitionThenHeal",
+      "robots": 1,
+      "quorum": 1,
+      "minoritySize": 0,
+      "minorityExecuted": false,
+      "majorityDistinctOwners": 0,
+      "afterHealDistinctOwners": 1,
+      "staleTrafficOverrodeNewerState": false,
+      "safe": true
+    },
+    {
+      "scenario": "completePartition",
+      "robots": 1,
+      "quorum": 1,
+      "isolated": false,
+      "anyoneMayExecute": true,
+      "safe": true,
+      "note": "single robot is its own majority; nothing to fence"
+    },
+    {
+      "scenario": "quorumLossAndRecovery",
+      "robots": 1,
+      "quorum": 1,
+      "isolatedBelowQuorum": 0,
+      "splitDuringLoss": false,
+      "splitAfterRecovery": false,
+      "safe": true
+    },
+    {
+      "scenario": "prePickupOwnerFailure",
+      "robots": 2,
+      "quorum": 2,
+      "killedOwner": "R1",
+      "survivors": 1,
+      "survivorsFormQuorum": false,
+      "distinctOwners": 0,
+      "executableOwners": 0,
+      "safe": true,
+      "reassigned": true
+    },
+    {
+      "scenario": "postPickupCustodyFailure",
+      "robots": 2,
+      "quorum": 2,
+      "killedOwner": "R1",
+      "recoveryRequiredOnAllSurvivors": true,
+      "anySurvivorMayExecute": false,
+      "safe": true
+    },
+    {
+      "scenario": "partitionThenHeal",
+      "robots": 2,
+      "quorum": 2,
+      "minoritySize": 0,
+      "minorityExecuted": false,
+      "majorityDistinctOwners": 0,
+      "afterHealDistinctOwners": 1,
+      "staleTrafficOverrodeNewerState": false,
+      "safe": true
+    },
+    {
+      "scenario": "completePartition",
+      "robots": 2,
+      "quorum": 2,
+      "isolated": true,
+      "anyoneMayExecute": false,
+      "safe": true
+    },
+    {
+      "scenario": "quorumLossAndRecovery",
+      "robots": 2,
+      "quorum": 2,
+      "isolatedBelowQuorum": 0,
+      "splitDuringLoss": false,
+      "splitAfterRecovery": false,
+      "safe": true
+    },
+    {
+      "scenario": "prePickupOwnerFailure",
+      "robots": 3,
+      "quorum": 2,
+      "killedOwner": "R1",
+      "survivors": 2,
+      "survivorsFormQuorum": true,
+      "distinctOwners": 1,
+      "executableOwners": 1,
+      "safe": true,
+      "reassigned": true
+    },
+    {
+      "scenario": "postPickupCustodyFailure",
+      "robots": 3,
+      "quorum": 2,
+      "killedOwner": "R1",
+      "recoveryRequiredOnAllSurvivors": true,
+      "anySurvivorMayExecute": false,
+      "safe": true
+    },
+    {
+      "scenario": "partitionThenHeal",
+      "robots": 3,
+      "quorum": 2,
+      "minoritySize": 1,
+      "minorityExecuted": false,
+      "majorityDistinctOwners": 0,
+      "afterHealDistinctOwners": 1,
+      "staleTrafficOverrodeNewerState": false,
+      "safe": true
+    },
+    {
+      "scenario": "completePartition",
+      "robots": 3,
+      "quorum": 2,
+      "isolated": true,
+      "anyoneMayExecute": false,
+      "safe": true
+    },
+    {
+      "scenario": "quorumLossAndRecovery",
+      "robots": 3,
+      "quorum": 2,
+      "isolatedBelowQuorum": 1,
+      "splitDuringLoss": false,
+      "splitAfterRecovery": false,
+      "safe": true
+    },
+    {
+      "scenario": "prePickupOwnerFailure",
+      "robots": 4,
+      "quorum": 3,
+      "killedOwner": "R1",
+      "survivors": 3,
+      "survivorsFormQuorum": true,
+      "distinctOwners": 1,
+      "executableOwners": 1,
+      "safe": true,
+      "reassigned": true
+    },
+    {
+      "scenario": "postPickupCustodyFailure",
+      "robots": 4,
+      "quorum": 3,
+      "killedOwner": "R1",
+      "recoveryRequiredOnAllSurvivors": true,
+      "anySurvivorMayExecute": false,
+      "safe": true
+    },
+    {
+      "scenario": "partitionThenHeal",
+      "robots": 4,
+      "quorum": 3,
+      "minoritySize": 1,
+      "minorityExecuted": false,
+      "majorityDistinctOwners": 0,
+      "afterHealDistinctOwners": 1,
+      "staleTrafficOverrodeNewerState": false,
+      "safe": true
+    },
+    {
+      "scenario": "completePartition",
+      "robots": 4,
+      "quorum": 3,
+      "isolated": true,
+      "anyoneMayExecute": false,
+      "safe": true
+    },
+    {
+      "scenario": "quorumLossAndRecovery",
+      "robots": 4,
+      "quorum": 3,
+      "isolatedBelowQuorum": 1,
+      "splitDuringLoss": false,
+      "splitAfterRecovery": false,
+      "safe": true
+    },
+    {
+      "scenario": "prePickupOwnerFailure",
+      "robots": 5,
+      "quorum": 3,
+      "killedOwner": "R1",
+      "survivors": 4,
+      "survivorsFormQuorum": true,
+      "distinctOwners": 1,
+      "executableOwners": 1,
+      "safe": true,
+      "reassigned": true
+    },
+    {
+      "scenario": "postPickupCustodyFailure",
+      "robots": 5,
+      "quorum": 3,
+      "killedOwner": "R1",
+      "recoveryRequiredOnAllSurvivors": true,
+      "anySurvivorMayExecute": false,
+      "safe": true
+    },
+    {
+      "scenario": "partitionThenHeal",
+      "robots": 5,
+      "quorum": 3,
+      "minoritySize": 2,
+      "minorityExecuted": false,
+      "majorityDistinctOwners": 0,
+      "afterHealDistinctOwners": 1,
+      "staleTrafficOverrodeNewerState": false,
+      "safe": true
+    },
+    {
+      "scenario": "completePartition",
+      "robots": 5,
+      "quorum": 3,
+      "isolated": true,
+      "anyoneMayExecute": false,
+      "safe": true
+    },
+    {
+      "scenario": "quorumLossAndRecovery",
+      "robots": 5,
+      "quorum": 3,
+      "isolatedBelowQuorum": 2,
+      "splitDuringLoss": false,
+      "splitAfterRecovery": false,
+      "safe": true
+    },
+    {
+      "scenario": "prePickupOwnerFailure",
+      "robots": 8,
+      "quorum": 5,
+      "killedOwner": "R1",
+      "survivors": 7,
+      "survivorsFormQuorum": true,
+      "distinctOwners": 1,
+      "executableOwners": 1,
+      "safe": true,
+      "reassigned": true
+    },
+    {
+      "scenario": "postPickupCustodyFailure",
+      "robots": 8,
+      "quorum": 5,
+      "killedOwner": "R1",
+      "recoveryRequiredOnAllSurvivors": true,
+      "anySurvivorMayExecute": false,
+      "safe": true
+    },
+    {
+      "scenario": "partitionThenHeal",
+      "robots": 8,
+      "quorum": 5,
+      "minoritySize": 3,
+      "minorityExecuted": false,
+      "majorityDistinctOwners": 0,
+      "afterHealDistinctOwners": 1,
+      "staleTrafficOverrodeNewerState": false,
+      "safe": true
+    },
+    {
+      "scenario": "completePartition",
+      "robots": 8,
+      "quorum": 5,
+      "isolated": true,
+      "anyoneMayExecute": false,
+      "safe": true
+    },
+    {
+      "scenario": "quorumLossAndRecovery",
+      "robots": 8,
+      "quorum": 5,
+      "isolatedBelowQuorum": 3,
+      "splitDuringLoss": false,
+      "splitAfterRecovery": false,
+      "safe": true
+    }
+  ],
+  "allSafe": true
+}

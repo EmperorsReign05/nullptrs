@@ -91,7 +91,7 @@ export class OwnershipPeer {
   constructor(readonly id: string, members: readonly string[], private transport: Transport<OwnershipMessage>,
     private computeBid: (task: Task, tick: number) => LocalBidPacket,
     readonly allocationMode: "epoch" | "event-single" | "event-grouped" = "epoch",
-    private computeGroupBid?: (tasks: Task[], tick: number, fresh?: boolean) => GroupBid) {
+    private computeGroupBid?: (tasks: Task[], tick: number) => GroupBid) {
     if (allocationMode === "event-grouped" && !computeGroupBid) throw new Error("Grouped mode needs local bundle bids");
     this.members = [...new Set(members)].sort();
     if (this.members.length !== members.length || !this.members.includes(id)) throw new Error("Invalid membership");
@@ -264,7 +264,7 @@ export class OwnershipPeer {
       const reserved=(this.reservations.get(assignment.owner)??[]).filter(id=>this.reservationActive(assignment.owner,id));
       if(reserved.some(id=>!bid.commitmentIds.includes(id)&&!assignment.taskIds.includes(id))) {this.groupMetrics.rejected++;return;}
       if(assignment.owner===this.id) {
-        const fresh=this.computeGroupBid!(tasks as Task[],this.now,true);
+        const fresh=this.computeGroupBid!(tasks as Task[],this.now);
         if(!fresh.offers.some(o=>JSON.stringify(o.taskIds)===JSON.stringify(assignment.taskIds))) {this.groupMetrics.rejected++;this.groupSent.delete(p.groupId);return;}
       }
     }

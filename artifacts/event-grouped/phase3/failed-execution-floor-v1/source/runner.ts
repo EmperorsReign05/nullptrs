@@ -99,14 +99,14 @@ export type ArmRun = {
   centralisedPibtCounters: { conflictCount: number; waitMoves: number; inheritedPriorities: number; backtracks: number };
 };
 
-export function runArm(record: ScenarioRecord, armId: ArmId, guidance?: RouteGuidanceModel, allocationMode: "epoch" | "event-single" | "event-grouped" = "epoch", groupedQueueRecharge = false): ArmRun {
+export function runArm(record: ScenarioRecord, armId: ArmId, guidance?: RouteGuidanceModel, allocationMode: "epoch" | "event-single" | "event-grouped" = "epoch"): ArmRun {
   const arm = ARMS.find((a) => a.id === armId)!;
   const map = layoutMap(record.layout);
   const world = scenarioWorld(record, map);
   const runtime = new FleetRuntime(
     world,
     FROZEN.model,
-    { motionPolicy: arm.runtime.motionPolicy, allocationMode, groupedQueueRecharge },
+    { motionPolicy: arm.runtime.motionPolicy, allocationMode },
   );
   runtime.aiEnabled = arm.runtime.aiEnabled;
   const guidanceStats = { predictedCells: 0, rejectedFeatures: 0, replansWithGuidance: 0 };
