@@ -7,10 +7,22 @@ import { getRobotColor } from './types';
 interface ActiveTasksProps {
   tasks: Task[];
   robots: RobotState[];
+  /**
+   * Task ids the operator injected by hand, so a just-announced job reads as
+   * "awaiting auction" instead of the generic "unassigned".
+   *
+   * A newly announced task legitimately sits `pending` with no owner until the
+   * next ownership epoch, which at the 250 ms tick rate is up to eight seconds,
+   * and a full pickup-and-delivery is more like thirty. Showing that interval as
+   * an indistinguishable blank is what made the create-task button look broken,
+   * so the waiting is named rather than hidden.
+   */
+  awaitingAuction?: readonly string[];
 }
 
-export function ActiveTasks({ tasks, robots }: ActiveTasksProps) {
+export function ActiveTasks({ tasks, robots, awaitingAuction }: ActiveTasksProps) {
   const activeCount = tasks.filter(t => t.status !== 'pending' && t.status !== 'completed').length;
+  const awaiting = new Set(awaitingAuction ?? []);
 
   return (
     <div className="bg-[#12161F]/35 backdrop-blur-xl rounded-xl border border-white/10 flex flex-col shrink-0 shadow-xl overflow-hidden">
@@ -39,10 +51,17 @@ export function ActiveTasks({ tasks, robots }: ActiveTasksProps) {
                   <span className="text-[12px] text-[#A8B2C4]">({t.pickup.x},{t.pickup.y}) → ({t.dropoff.x},{t.dropoff.y})</span>
                 </div>
                 <div className="text-[12px] font-bold tracking-wider" style={{ color: robotColor }}>
-                  {t.assignedRobotId ?? 'unassigned'}
+                  {t.assignedRobotId ?? (awaiting.has(t.id) ? 'awaiting auction' : 'unassigned')}
                 </div>
               </div>
               
+              {t.status === 'pending' && awaiting.has(t.id) && (
+                <span className="bg-white/[0.06] border border-white/10 text-[#E6E9EF] text-[9px] font-sans font-bold px-2.5 py-1 rounded-full tracking-wider flex items-center gap-1.5 shadow-sm">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#A8B2C4] animate-pulse"></span>
+                  announced
+                </span>
+              )}
+
               {t.status === 'in_progress' && (
                 <span className="bg-white/[0.06] border border-white/10 text-[#E6E9EF] text-[9px] font-sans font-bold px-2.5 py-1 rounded-full tracking-wider flex items-center gap-1.5 shadow-sm">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse"></span>

@@ -36,7 +36,8 @@ import {
   ActiveTasks,
   EventLog,
   type LogEntry,
-  type MapTooltip
+  type MapTooltip,
+  useSmoothRobots
 } from '@/components/dashboard';
 
 type FleetSnapshot = {
@@ -49,6 +50,14 @@ type FleetSnapshot = {
     aiBidAttempts: number; nonzeroCorrections: number; disabledFallbacks: number;
     failedModelFallbacks: number; moves: number; reroutes: number; energyHolds: number;
   };
+  /** Harness-level demand. Present only on the fleet runtime, not the simulator. */
+  orderStream?: { announced: number; enabled: boolean; intervalTicks: number };
+  /**
+   * Which runtime is actually serving this frame. Displayed, because claiming
+   * one-process-per-robot while serving a single in-process fleet would be a lie
+   * told to a judge, and this is the one thing the dashboard must not do.
+   */
+  topology?: "in-process" | "external";
 };
 
 // x=9, rows 5-7: a true single-file stretch, so blocking it forces a real
@@ -60,7 +69,7 @@ const AISLE_BLOCK_CELLS: Position[] = [
 ];
 
 const TOOLTIP_LIFETIME_MS = 2200;
-const POLL_MS = 500;
+const POLL_MS = 250;
 
 // Which robot to point a yield tooltip at — derived from a real state
 // transition the runtime just made (a robot that only just became "waiting"),
@@ -79,19 +88,46 @@ function findYieldingRobots(prev: WorldState, next: WorldState): { robotId: stri
 
 export default function Dashboard() {
   const [snapshot, setSnapshot] = useState<FleetSnapshot | null>(null);
+  /**
+   * `connecting` = no answer yet, so there is nothing to report. `live` = the
+   * last poll succeeded. `error` = the last poll actually failed. Kept apart
+   * because only the third of those is a fault, and conflating the first with
+   * the third is what flashed a connection error at a healthy runtime.
+   */
+  const [status, setStatus] = useState<'connecting' | 'live' | 'error'>('connecting');
   const [error, setError] = useState<string | null>(null);
+  /** Wall clock of the last snapshot that actually arrived, for the stale banner. */
+  const [lastUpdateAt, setLastUpdateAt] = useState<number | null>(null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [selectedRobotId, setSelectedRobotId] = useState<string | null>(null);
   const [aisleBlocked, setAisleBlocked] = useState(false);
   const [severed, setSevered] = useState(false);
   const [conflictTooltips, setConflictTooltips] = useState<MapTooltip[]>([]);
+  /**
+   * Task ids the operator just injected, so the ActiveTasks panel can show them
+   * as "awaiting auction" immediately. The runtime's own snapshot does not change
+   * for up to a full ownership epoch after an announcement, so without this the
+   * click has literally no visible effect for ~30 seconds.
+   */
+  const [justAnnounced, setJustAnnounced] = useState<string[]>([]);
   // The fleet size and shelf layout belong to the runtime, not the view, so
   // these are reported from telemetry rather than owned here. Kept as state
   // only so the ControlPanel sliders can render a truthful value.
-  const [shelfColCount] = useState(6);
+  const [shelfColCount, setShelfColCount] = useState(6);
   const [robotCount, setRobotCount] = useState(0);
 
   const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+  /** True once a poll has actually failed. Derived once, here, so every
+   *  consumer below reads the same value and none of them recomputes it. */
+  const disconnected = status === 'error';
+  /**
+   * How long the visible frame has been frozen, while the runtime is
+   * unreachable. Driven by a 1 Hz timer rather than `Date.now()` read during
+   * render: a component that re-renders for an unrelated reason must not be able
+   * to change what "frozen for Ns" claims, and reading the clock in render is
+   * both impure and a lint error.
+   */
+  const [frozenFor, setFrozenFor] = useState<number | null>(null);
   const worldRef = useRef<WorldState | null>(null);
 
   // Judge tour. Same storage key and same ?tour / ?tutorial overrides as the
@@ -120,16 +156,40 @@ export default function Dashboard() {
   }, []);
 
   // ---- poll the runtime ----
+  //
+  // THREE CONNECTION STATES, NOT TWO. The previous version had one flag,
+  // `error`, and rendered the "Fleet runtime not connected" card whenever
+  // `snapshot` was null. `snapshot` is null on the very first render, before
+  // the first fetch has resolved — so a perfectly healthy runtime produced an
+  // amber "not connected" card for exactly as long as the first round trip took,
+  // and then the dashboard popped in underneath it. On a warm local process that
+  // is the "flash for a split second"; on a cold deployed link it is a visible
+  // loading state dressed as a crash. The page conflated "I have not heard back
+  // yet" with "I heard back and it was a failure", and only one of those is an
+  // error.
+  //
+  // The effect also used to depend on `error`, so every error transition and
+  // every recovery tore the poll loop down and rebuilt it — and because the
+  // effect body was the only thing scheduling the next poll, each teardown also
+  // silently opened a window with no poll in flight. The error is now read
+  // through a ref, so the loop is created exactly once.
+  const errorRef = useRef<string | null>(null);
+
   useEffect(() => {
     let disposed = false;
     let timer: ReturnType<typeof setTimeout> | null = null;
+    const abort = new AbortController();
 
     const poll = async () => {
       try {
-        const response = await fetch('/api/fleet', { cache: 'no-store' });
+        const response = await fetch('/api/fleet', { cache: 'no-store', signal: abort.signal });
         if (!response.ok) {
           const body = await response.json().catch(() => null);
-          if (!disposed) setError(body?.error ?? `Fleet runtime returned ${response.status}`);
+          if (!disposed) {
+            errorRef.current = body?.error ?? `Fleet runtime returned ${response.status}`;
+            setStatus('error');
+            setError(errorRef.current);
+          }
         } else {
           const next = (await response.json()) as FleetSnapshot;
           if (!disposed) {
@@ -146,20 +206,48 @@ export default function Dashboard() {
                 setTimeout(() => setConflictTooltips((t) => t.filter((x) => x.id !== id)), TOOLTIP_LIFETIME_MS);
               }
             }
+            errorRef.current = null;
             setSnapshot(next);
             setRobotCount(next.world.robots.length);
-            if (error) setError(null);
+            setLastUpdateAt(Date.now());
+            setError(null);
+            setStatus('live');
           }
         }
-      } catch {
-        if (!disposed) setError('Fleet runtime unreachable. Start it with: npm run fleet');
+      } catch (caught) {
+        // An abort on unmount is not a failure and must not paint the page red.
+        if (disposed || (caught as Error)?.name === 'AbortError') return;
+        if (!disposed) {
+          errorRef.current = 'Fleet runtime unreachable. Start it with: npm run fleet';
+          setError(errorRef.current);
+          setStatus('error');
+        }
       }
       if (!disposed) timer = setTimeout(poll, POLL_MS);
     };
 
+    // No `setStatus('connecting')` here on purpose. The state already starts as
+    // 'connecting', the effect has empty dependencies so it runs exactly once,
+    // and a remount re-initialises the state anyway — so a setState in the effect
+    // body would be a pure cascading re-render, which is precisely what
+    // `react-hooks/set-state-in-effect` flags (the same trap the judge-tour effect
+    // above documents and works around with a deferred callback).
     void poll();
-    return () => { disposed = true; if (timer) clearTimeout(timer); };
-  }, [error]);
+    return () => { disposed = true; abort.abort(); if (timer) clearTimeout(timer); };
+  }, []);
+
+  // 1 Hz staleness clock. Declared before the early returns so its effect is not
+  // conditionally registered, and it contains no synchronous setState so it does
+  // not trip `react-hooks/set-state-in-effect`.
+  useEffect(() => {
+    const update = () => setFrozenFor(
+      disconnected && lastUpdateAt !== null
+        ? Math.max(0, Math.floor((Date.now() - lastUpdateAt) / 1000))
+        : null,
+    );
+    const id = setInterval(update, 1000);
+    return () => clearInterval(id);
+  }, [disconnected, lastUpdateAt]);
 
   // ---- commands ----
   const send = useCallback(async (command: unknown, describe: (ok: boolean, detail?: string) => void) => {
@@ -188,23 +276,56 @@ export default function Dashboard() {
     });
   };
 
+  // Manual task injection.
+  //
+  // Two things were wrong here. The weight came from Math.random, so every click
+  // produced a different job and a demo could not be rehearsed or repeated. And
+  // the success log fired on the HTTP 200 alone — which only means the runtime
+  // ACCEPTED the announcement, not that anything happened — so a job whose
+  // auction could not start for another 32 ticks produced one cheerful line and
+  // then thirty seconds of silence that looked identical to a dead button.
+  //
+  // Now the id and endpoints are deterministic, the weight is chosen from a fixed
+  // ladder (including a 60 kg job that only the Addverb can carry, so the payload
+  // gate is visible), and the log states what is actually true at that instant:
+  // announced, awaiting an ownership round.
   const handleCreateTask = () => {
-    const taskId = `T-${105 + (snapshot?.world.tasks.length ?? 0)}`;
+    const n = snapshot?.world.tasks.length ?? 0;
+    const taskId = `M-${String(n).padStart(3, '0')}`;
     const pickups: Position[] = [{ x: 1, y: 0 }, { x: 14, y: 0 }, { x: 3, y: 9 }, { x: 9, y: 9 }];
     const dropoffs: Position[] = [{ x: 6, y: 12 }, { x: 17, y: 12 }, { x: 9, y: 1 }, { x: 13, y: 1 }];
-    const n = snapshot?.world.tasks.length ?? 0;
+    const weights = [15, 30, 60, 10, 45, 75];
     const task: Task = {
       id: taskId,
       pickup: pickups[n % pickups.length],
       dropoff: dropoffs[(n + 1) % dropoffs.length],
-      weight: Math.floor(Math.random() * 80) + 10,
+      weight: weights[n % weights.length],
       createdAt: snapshot?.world.tick ?? 0,
       priority: 1,
       status: 'pending',
     };
+    setJustAnnounced((prev) => [...prev.slice(-2), taskId]);
     void send({ kind: 'task', task }, (ok, detail) => {
       if (!ok) { addLog(`task rejected: ${detail}`, 'error'); return; }
-      addLog(`task ${taskId.toLowerCase()} announced — peers will bid for it`, 'info');
+      addLog(
+        `${taskId.toLowerCase()} announced (${task.weight} kg) — awaiting an ownership round, then A* and peer bidding`,
+        'info',
+      );
+    });
+  };
+
+  const handleToggleOrderStream = () => {
+    const next = !(snapshot?.orderStream?.enabled ?? false);
+    // `order-stream` is harness state, not part of the runtime's command union,
+    // so the cast is honest about widening the shape rather than pretending.
+    void send({ kind: 'order-stream', on: next }, (ok, detail) => {
+      if (!ok) { addLog(`could not change the order stream: ${detail}`, 'error'); return; }
+      addLog(
+        next
+          ? 'order stream resumed — jobs are arriving every few ticks, so the fleet stays busy'
+          : 'order stream paused — the fleet will drain its queue and go idle',
+        next ? 'info' : 'warning',
+      );
     });
   };
 
@@ -260,14 +381,48 @@ export default function Dashboard() {
   // scenario that isn't happening. The central simulator still exists at
   // /simulator for anyone who wants to compare against it, but it is
   // deliberately not linked from the demo: one page, one story.
+  // The two staged scenarios genuinely do not exist on the distributed runtime.
+  // They are now DISABLED in the panel with a visible reason, so these handlers
+  // exist only to explain the tooltip and are never reachable from the UI.
   const notOnFleet = (what: string) => () =>
     addLog(`${what} is a central-simulation scenario and is not available on the distributed runtime`, 'warning');
 
-  const handleReset = () =>
-    addLog('the fleet runtime cannot be reset in place — restart it with: npm run fleet', 'warning');
+  /**
+   * Why each control is inert, shown on the control itself. A button that looks
+   * live, takes the click, and only prints an internal error string into the log
+   * is worse than a visibly disabled button: it costs the operator a demo cycle
+   * and tells the audience nothing true.
+   */
+  const UNAVAILABLE = {
+    simConflict: 'central-simulation scenario — use “block aisle” or “sever peer link” to force real contention',
+    simDeadlock: 'central-simulation scenario — use “block aisle” to force a real detour',
+  } as const;
 
-  const handleRobotCountChange = () =>
-    addLog('fleet size is fixed by the runtime, not the dashboard', 'warning');
+  /**
+   * Fleet size and the shelf layout are baked into a runtime at construction, so
+   * changing either rebuilds it. That used to be impossible from here, which is
+   * why both sliders were dead: they called a handler whose entire body was a log
+   * message saying the dashboard could not do it. The server can now, so these
+   * do the real thing and say plainly that the fleet restarted.
+   */
+  const reconfigure = (change: { robots?: number; shelfColumns?: number }, describe: string) => {
+    void send({ kind: 'reconfigure', ...change }, (ok, detail) => {
+      if (!ok) { addLog(`could not ${describe}: ${detail}`, 'error'); return; }
+      addLog(`fleet restarted — ${describe}`, 'warning');
+    });
+  };
+
+  const handleReset = () => reconfigure({ robots: robotCount || 3 }, 'world rebuilt from scratch');
+
+  const handleRobotCountChange = (count: number) => {
+    setRobotCount(count);
+    reconfigure({ robots: count }, `fleet resized to ${count} ${count === 1 ? 'robot' : 'robots'}`);
+  };
+
+  const handleShelfColCountChange = (count: number) => {
+    setShelfColCount(count);
+    reconfigure({ shelfColumns: count }, `warehouse rebuilt with ${count} shelf ${count === 1 ? 'column' : 'columns'}`);
+  };
 
   // The runtime owns the authoritative event log, so the feed is derived from
   // it rather than mirrored into state — no chance of the two drifting.
@@ -276,28 +431,69 @@ export default function Dashboard() {
     [snapshot]
   );
 
-  if (!snapshot) {
+  /**
+   * Robot motion, reconstructed on a real clock from the tick difference between
+   * two snapshots so it runs at a constant speed instead of at the mercy of poll
+   * jitter. See useSmoothRobots for the defect this replaces.
+   *
+   * Called unconditionally and ABOVE every early return, because a hook may not
+   * be called conditionally. Before the first snapshot there are no robots, so an
+   * empty list and a sentinel tick are passed; the hook simply has nothing to
+   * animate and idles.
+   */
+  const pose = useSmoothRobots(snapshot?.world.robots ?? [], snapshot?.world.tick ?? -1);
+
+  // ---- connection chrome ----
+  //
+  // The dashboard must never LOOK live while it is not. The previous version
+  // kept rendering the full dashboard after the runtime went away, with the
+  // tick counter frozen and the status dot still pulsing — a stale view that is
+  // indistinguishable from a working one. In front of a jury that is the worst
+  // failure mode available: it does not look like a bug, it looks like a system
+  // that has stalled. So disconnection is stated, with the age of the data.
+  if (status === 'connecting' || (disconnected && !snapshot)) {
+    const connecting = status === 'connecting';
     return (
       <div className="min-h-screen bg-[#09090b] text-[#fafafa] bg-[url('/bg.png')] bg-cover bg-fixed bg-center font-sans py-6 px-4 md:px-8 lg:px-12 flex justify-center items-start">
         <div className="w-full max-w-[1520px] bg-black/40 backdrop-blur-2xl rounded-2xl border border-zinc-800/80 shadow-[0_25px_70_-15px_rgba(0,0,0,0.85)] p-10">
           <Header onOpenTutorial={() => setIsTutorialOpen(true)} />
-          <div className="mt-8 rounded-xl border border-amber-500/30 bg-amber-500/5 p-6 text-sm leading-relaxed">
-            <p className="text-amber-300 text-base mb-2">Fleet runtime not connected.</p>
-            <p className="text-zinc-400 mb-4">
-              This dashboard is driven by the distributed fleet runtime, which runs as its own
-              Node process — the same one-process-per-robot topology as the real deployment.
-              Start it in a second terminal:
-            </p>
-            <pre className="font-mono text-[13px] text-emerald-300 bg-black/50 rounded p-3 mb-4">npm run fleet</pre>
-            <p className="text-zinc-500 text-xs">
-              Then run <span className="text-zinc-300">npm run dev</span> for this page.
-              {error ? ` (${error})` : ''}
-            </p>
+          <div className="mt-8 flex items-start gap-4">
+            {connecting && (
+              <span
+                aria-hidden
+                className="mt-1 h-3 w-3 shrink-0 rounded-full border-2 border-zinc-600 border-t-[#C9F27D] animate-spin"
+                style={{ animationDuration: '900ms' }}
+              />
+            )}
+            <div className="min-w-0">
+              <p className={connecting ? 'text-zinc-200 text-base mb-2' : 'text-amber-300 text-base mb-2'}>
+                {connecting ? 'Connecting to the fleet runtime…' : 'Fleet runtime not connected.'}
+              </p>
+              <p className="text-zinc-400 mb-4 max-w-[68ch] leading-relaxed">
+                {connecting
+                  ? 'Opening a control channel to the distributed peer processes. The map renders as soon as the first telemetry frame lands.'
+                  : error ?? 'The fleet runtime is not answering.'}
+              </p>
+              <p className="text-zinc-400 mb-4 max-w-[68ch] leading-relaxed">
+                This dashboard is driven by the distributed fleet runtime, which runs as its own
+                Node process — the same one-process-per-robot topology as the real deployment.
+                Start it in a second terminal:
+              </p>
+              <pre className="font-mono text-[13px] text-emerald-300 bg-black/50 rounded p-3 mb-4 inline-block">npm run fleet</pre>
+              <p className="text-zinc-500 text-xs">
+                Then run <span className="text-zinc-300">npm run dev</span> for this page.
+              </p>
+            </div>
           </div>
         </div>
       </div>
     );
   }
+
+  // Unreachable in practice — the branch above returns for `connecting` and for an
+  // error with no snapshot — but the type system cannot see that, and the honest
+  // narrowing is better than a non-null assertion scattered through the JSX.
+  if (!snapshot) return null;
 
   const { world, safety, metrics } = snapshot;
 
@@ -330,13 +526,32 @@ export default function Dashboard() {
             case in this set is 7.52:1, i.e. AA and AAA. */}
         <div className="px-5 py-2.5 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-zinc-800/60 bg-[#0e0e12] text-[11px] font-mono">
           <span className="text-zinc-100 uppercase tracking-[0.16em] not-italic">Fleet runtime</span>
-          <span className="text-zinc-300">node-hosted distributed peers</span>
-
-          <span className="flex items-center gap-1.5 text-zinc-200">
-            <span className={`w-1.5 h-1.5 rounded-full ${snapshot.running ? 'bg-emerald-300 animate-pulse' : 'bg-zinc-500'}`} />
-            {snapshot.running ? 'running' : 'paused'}
+          <span className={snapshot.topology === 'in-process' ? 'text-amber-300' : 'text-zinc-300'}>
+            {snapshot.topology === 'in-process'
+              ? 'in-process runtime — single Next server (set FLEET_URL for one-process-per-robot)'
+              : 'node-hosted distributed peers'}
           </span>
-          <span className="text-zinc-400 tabular-nums">tick {world.tick.toLocaleString()}</span>
+
+          {disconnected ? (
+            // A dead runtime must not be rendered as a running one. The dot stops
+            // pulsing, the word changes, and the age of the frozen frame is given
+            // so nobody has to guess whether the tick counter is moving.
+            <span className="flex items-center gap-1.5 text-amber-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+              reconnecting
+            </span>
+          ) : (
+            <span className="flex items-center gap-1.5 text-zinc-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse" />
+              {snapshot.running ? 'running' : 'paused'}
+            </span>
+          )}
+          <span className="text-zinc-400 tabular-nums">
+            tick {world.tick.toLocaleString()}
+            {disconnected && frozenFor !== null && (
+              <span className="text-amber-300"> · frozen for {frozenFor}s</span>
+            )}
+          </span>
           <span className="text-zinc-400">
             swaps <span className={safety.swaps > 0 ? 'text-amber-300' : 'text-zinc-300'}>{safety.swaps}</span>
           </span>
@@ -374,6 +589,7 @@ export default function Dashboard() {
               shelfColCount={shelfColCount}
               map={world.map}
               tooltips={conflictTooltips}
+              pose={pose}
             />
 
             <div className="shrink-0 flex flex-col gap-4">
@@ -390,7 +606,8 @@ export default function Dashboard() {
                 onBlockAisle={handleBlockAisle}
                 onReset={handleReset}
                 onRobotCountChange={handleRobotCountChange}
-                onShelfColCountChange={() => addLog('shelf layout is fixed by the runtime', 'warning')}
+                onShelfColCountChange={handleShelfColCountChange}
+                unavailable={UNAVAILABLE}
               />
 
               {/* The two controls the central simulator has no equivalent for.
@@ -403,6 +620,16 @@ export default function Dashboard() {
                   className="px-3 py-1.5 rounded-lg text-xs font-medium border border-amber-500/40 text-amber-300 hover:bg-amber-500/10 transition-colors"
                 >
                   {severed ? 'Heal peer link' : 'Sever peer link'}
+                </button>
+                <button
+                  onClick={handleToggleOrderStream}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+                    snapshot.orderStream?.enabled
+                      ? 'border-emerald-300/40 text-emerald-300 hover:bg-emerald-400/10'
+                      : 'border-zinc-600 text-zinc-300 hover:bg-white/5'
+                  }`}
+                >
+                  {snapshot.orderStream?.enabled ? 'Pause order stream' : 'Resume order stream'}
                 </button>
                 <button
                   onClick={handleToggleBids}
@@ -420,7 +647,7 @@ export default function Dashboard() {
               <MetricsBar tasks={world.tasks} robots={world.robots} metrics={world.metrics} />
 
               <div id="tour-tasks-and-logs" className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <ActiveTasks tasks={world.tasks} robots={world.robots} />
+                <ActiveTasks tasks={world.tasks} robots={world.robots} awaitingAuction={justAnnounced} />
                 <EventLog logs={[...eventFeed, ...logs]} />
               </div>
             </div>

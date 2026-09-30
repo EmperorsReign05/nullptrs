@@ -16,6 +16,13 @@ import type { RobotState, WarehouseMap as WarehouseMapData } from '@/core/types'
 import { getRobotColor, getRobotHeading, type MapTooltip } from './types';
 
 interface WarehouseMapProps {
+  /**
+   * Optional interpolated positions, keyed by robot id, in CELL units (fractional
+   * allowed). Supplied by useSmoothRobots. When present they override
+   * `robot.position` for the marker, so motion is driven by a real clock at a
+   * constant speed instead of by whenever a poll happened to land.
+   */
+  pose?: Record<string, { x: number; y: number }>;
   robots: RobotState[];
   selectedRobotId: string | null;
   onSelectRobot: (id: string | null) => void;
@@ -30,7 +37,8 @@ export function WarehouseMap({
   onSelectRobot,
   shelfColCount,
   map,
-  tooltips = []
+  tooltips = [],
+  pose
 }: WarehouseMapProps) {
   const mapWidth = map?.width ?? WAREHOUSE_WIDTH;
   const mapHeight = map?.height ?? WAREHOUSE_HEIGHT;
@@ -333,14 +341,25 @@ export function WarehouseMap({
               const isSelected = selectedRobotId === robot.id;
               const color = getRobotColor(robot.id);
               const heading = getRobotHeading(robot);
+              // Interpolated position when the caller supplies one, otherwise the
+              // raw snapshot position. Fractional cells are fine: the container is
+              // sized in percentages, so a half-cell offset is just a percentage.
+              const at = pose?.[robot.id] ?? robot.position;
               return (
                 <div 
                   key={robot.id}
                   onClick={() => onSelectRobot(isSelected ? null : robot.id)}
-                  className={`absolute flex flex-col items-center justify-center transition-all duration-[650ms] ease-linear cursor-pointer z-30 group ${isSelected ? 'scale-110' : 'hover:scale-105'}`} 
+                  // No CSS transition on POSITION. The old 650ms `transition-all`
+                  // was the direct cause of the stutter: a poll arriving mid-move
+                  // restarted it from the current computed value, so every frame
+                  // was a partial move and the perceived speed was poll jitter.
+                  // Position is now driven per-frame by useSmoothRobots; the
+                  // transition is kept only for the scale change, which is a
+                  // discrete user action and reads correctly when eased.
+                  className={`absolute flex flex-col items-center justify-center cursor-pointer z-30 group transition-transform duration-150 ${isSelected ? 'scale-110' : 'hover:scale-105'}`} 
                   style={{ 
-                    left: `calc(100% * ${robot.position.x}/${mapWidth})`, 
-                    top: `calc(100% * ${robot.position.y}/${mapHeight})`, 
+                    left: `calc(100% * ${at.x}/${mapWidth})`, 
+                    top: `calc(100% * ${at.y}/${mapHeight})`, 
                     width: `calc(100% * 1/${mapWidth})`, 
                     height: `calc(100% * 1/${mapHeight})` 
                   }}
