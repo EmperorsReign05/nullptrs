@@ -125,3 +125,16 @@ __pycache__/
 /artifacts/ownership-scale/**/phase-timing.json
 /artifacts/ownership-scale/**/samples.json
 /artifacts/ownership-scale/**/build.log
+
+# SIH 2026 acceptance benchmark (sih-acceptance-v1)
+# Raw per-scenario rows and the development-block mirrors are bulky transcripts;
+# the compact, tracked evidence is the per-arm reports, summary.json,
+# delay-breakdown.json, final-summary.json, the frozen suite and its index, and
+# the frozen guidance model with its train/validation/test splits. Same policy as
+# the other benchmark directories above: summaries in Git, raw rows fetchable
+# from a checksummed archive if ever needed.
+/artifacts/sih-acceptance-v1/current/per-scenario.json
+/artifacts/sih-acceptance-v1/development/
+/artifacts/sih-acceptance-v1/scenarios-development.json
+/artifacts/sih-acceptance-v1/scenarios-development-index.json
+/artifacts/sih-acceptance-v1/delay-breakdown-development.json

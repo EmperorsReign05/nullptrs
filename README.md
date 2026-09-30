@@ -327,6 +327,104 @@ Distributed charging retains task ownership, reaches a charger, recharges and re
 
 New acceptance results are recorded separately from historical v1–v3 outputs. Development results on inspected seeds are not fresh acceptance evidence. No physical Pi/Jetson or real-sensor validation has occurred.
 
+## SIH 2026 acceptance benchmark (v1)
+
+This is the benchmark built to measure the actual SIH26123 criterion rather than the historical Edge-AI ablation. Every number below is read from `artifacts/sih-acceptance-v1/` and regenerable with the commands listed at the end.
+
+### The two percentages are not the same experiment
+
+**1.56% = bid-MLP incremental ablation. 20% = whole-system improvement over stop-and-wait. They are different experiments.**
+
+- The accepted **1.56%** replaces *deterministic task bidding* with the *learned bid-refinement MLP* on the **same** coordination stack and the **same** motion system: 2,800 tasks, 200 unseen scenarios, 43 allocation winners changed. It measures the bid MLP and nothing else. It is not a SIH comparison and must never be compared to the 20% threshold.
+- SIH's **20%** compares our *complete* proposed decentralized system against a *traditional stop-and-wait coordination baseline*, on workloads with **overlapping paths**, with **zero inter-robot collisions**.
+
+### Metric definitions, fixed before any arm ran
+
+"Total task completion time" is not defined mathematically by the problem statement, so both readings are measured and never merged:
+
+- `sumTaskCompletionTime` = Σ over **completed** tasks of (`completionTick` − `createdAt`). **Primary.**
+- `makespan` = `lastTaskCompletionTick` − `firstTaskCreationTick`. **Secondary.**
+
+`reduction_i = (T_baseline_i − T_system_i) / T_baseline_i`; `aggregateReduction = 1 − Σ T_system / Σ T_baseline`, on **mutually complete pairs** only, with a 10,000-resample 95% paired bootstrap. A timed-out run has no completion time and its horizon is never imputed for it — speed and reliability are reported with separate denominators and are never combined.
+
+### The baseline is not a straw man
+
+Arm A is the **unchanged, hash-frozen** `resolveStopAndWait` (`src/core/bench/stopwait.ts`, SHA-256 `da6c1635…`, the same bytes the v5 acceptance recorded): follow the A* route; if the next cell is occupied now or already claimed this tick, do not move; resume when clear. It shares the treatment's congestion-aware A*, map, replanning triggers, stall-triggered rerouting, locally-sensed obstruction memory, ownership, quorum, custody, charging, energy admission and horizon. It uses no priority arbitration, no recursive displacement, no backtracking, no escape-chain breaking, no congestion guidance. It is additionally given an **advantage**: it resolves conflicts *synchronously with global visibility* while the treatment confirms locally.
+
+### Workload and regime classification
+
+1,980 frozen scenarios: 2 layouts (the production corridor warehouse, and a 3-to-4-cell-aisle AMR warehouse), 4 endpoint families, 3 fleet sizes (N=3, 5, 8), 12 tasks per run on a saturated release schedule, 1,500-tick horizon, every arm handed byte-identical geometry, starts, capabilities, batteries, endpoints, priorities and release times. The same (layout, family, seed) order book appears at all three fleet sizes, so fleet size is the only variable.
+
+Regimes are assigned from **geometry only**, before any policy runs, and the label is re-derivable from the stored workload (asserted in `tests/sih-benchmark.test.ts`):
+
+| Regime | Meaning | Scenarios |
+|---|---|---:|
+| `low` | overlap index below the control threshold | 600 |
+| `recoverable` | **SIH acceptance regime**: genuine interference, geometry has passing opportunities | 900 |
+| `severe` | overlap at/above threshold, or the routes have no passing place | 480 |
+
+### Results (frozen, recoverable-overlap suite)
+
+| Arm | Motion | Bidding | Guidance | Completion | Paired N | `sumTaskCompletionTime` | 95% CI | `makespan` | Safety |
+|---|---|---|---:|---:|---:|---:|---|---:|
+| A | stop-and-wait | deterministic | off | 66.9% | 602 | baseline | — | baseline | 0 |
+| B | stop-and-wait | edge-AI bid | off | 67.7% | 588 | 0.11% | −0.17 … 0.39 | 0.03% | 0 |
+| C | distributed | deterministic | off | 97.7% | 593 | **2.22%** | 1.46 … 3.05 | 1.53% | 0 |
+| D | distributed | edge-AI bid | off | 97.6% | 590 | **2.32%** | 1.53 … 3.14 | 1.83% | 0 |
+| E | distributed | deterministic | congestion toll | 97.8% | 594 | 2.26% | 1.48 … 3.08 | 1.58% | 0 |
+| F | distributed | edge-AI bid | congestion toll | 97.6% | 591 | 2.33% | 1.54 … 3.17 | 1.86% | 0 |
+
+**Answer: NO. The current system does not meet the 20% criterion.** The 95% paired bootstrap lower bound for the A→D reduction in `sumTaskCompletionTime` is **1.53%**, against a 20% gate. The 95% lower bound for `makespan` is **1.00%**.
+
+The honest positives are large and are reported on their own terms:
+
+- **Reliability.** On the same 900 scenarios, the full system completes **97.6%** of runs (10,768/10,800 tasks) against stop-and-wait's **66.9%** (10,028/10,800 tasks). On the severe-contention regime, 97.9% versus 63.3%. Stop-and-wait livelocks: it typically retires 10 or 11 of 12 tasks and then makes no progress for 1,200+ consecutive ticks.
+- **Zero audited robot-to-robot collision violations** in all 11,880 arm-runs, in every arm, every regime, every fleet size.
+- **Motion efficiency.** 26.8% of the full system's productive robot-ticks are congestion waits, against 72.1% for stop-and-wait; 98.6% of its movement ticks advance toward its goal, against 91.8%.
+- **Ablations stay separate.** A→C (distributed motion alone) 2.22%; C→D (the bid MLP alone) **0.15%**, CI −0.07 … 0.35 — the same experiment as the historical 1.56%, on a different workload. A→B (learned bidding with primitive motion) 0.11%.
+
+### Where the time actually goes
+
+Per completed task on the recoverable suite (sum of the three components equals flow time exactly, verified per slice):
+
+| Component | Stop-and-wait | Full system |
+|---|---:|---:|
+| release → first ownership (certification, allocation, queueing) | 94.5 ticks | 82.2 ticks |
+| ownership → pickup (approach travel + its congestion) | 19.2 | 19.3 |
+| pickup → done (loaded travel + its congestion) | 15.9 | 15.6 |
+| **total flow time** | **129.5** | **117.1** |
+
+**70% of total task completion time is the wait for a task to be certified and assigned, not the wait for a route.** The A→D gain is essentially all queue drain: the two travel components are unchanged to within a tick, while the queue component is 12.3 ticks per task shorter because the fleet retires work faster. Congestion is 26.8% of *productive* robot-ticks, and productive ticks are only 25% of all robot-ticks — the rest is fleet slack, which is reported separately and never counted as delay.
+
+### Route-guidance experiment (implemented, measured, and honestly null)
+
+An experimental **local predictive congestion guidance** layer: a bounded non-negative per-cell additive A* cost, `baseEdgeCost + deterministicCurrentCongestion + boundedPredictedCongestionToll`. A* still chooses the route, the agent still resolves immediate conflict and guarantees safety, and ownership, custody, charging and energy admission are untouched. A 16-feature linear model predicts the realised expected additional wait, trained on whole-run rollouts on a **disjoint development seed block** and split by seed and layout family. Runtime inference reads only `Agent.guidanceObservation()`: own position, route, goal, route length, wait and stall history, own sensor contacts, received peer intents, own recent edge and cell history — no simulator state, no other robot's queue or battery, no global task or dashboard state, no centrally computed congestion field, no future ground truth. Centralised Training + Decentralised Execution.
+
+It **ranks congested cells well** (the worst-predicted decile of cells carries 3.5× the base-rate realised wait, against 1.8× for a hand-set deterministic heuristic — see `guidance/test.json`) and it **changes nothing end to end**: C→E **+0.08%** (CI 0.00 … 0.16) and D→F **+0.06%** (CI −0.01 … 0.14) on the recoverable suite, and it is *negative* on the severe suite. The delay breakdown above explains why: the dominant cost is a queue that a per-cell routing toll cannot move, and the second is raw travel toward destinations that lie behind the penalised cells. Reported as a measured null result, not as a success. The 8-unit MLP ranked slightly better than the linear model (4.3× vs 3.5× decile lift) on 112 positive rows, which is inside the noise of that sample, so the smaller linear model is the frozen one.
+
+### Reproduce
+
+```sh
+npx vite-node scripts/sih-benchmark.ts generate      # freeze the suite (refuses to re-freeze)
+npx vite-node scripts/sih-benchmark.ts train-guidance
+npx vite-node scripts/sih-benchmark.ts evaluate --arms A,B,C,D,E,F \
+  --model artifacts/sih-acceptance-v1/guidance/model.json
+npx vite-node scripts/sih-benchmark.ts delay
+npx vite-node scripts/sih-benchmark.ts final         # writes final-summary.json
+npx vitest run tests/sih-benchmark.test.ts
+```
+
+Every headline number above is `acceptance.primaryGate.*`, `acceptance.ablation.*` or `acceptance.guidanceExperiment.*` in `artifacts/sih-acceptance-v1/final-summary.json`, which is assembled by reading the other artifacts and recomputing nothing.
+
+### Measured limitations
+
+- One Node process, a shared logical tick, simulated sensors. No hardware, no real sensor noise, no asynchronous physical leases.
+- Workload is queue-saturated by design, so `sumTaskCompletionTime` is dominated by certification-and-queueing latency that both arms pay equally; the reported 2.32% is the coordination difference measured on the part of the metric that coordination can move.
+- The paired-complete set is 590 of 900 recoverable scenarios, because stop-and-wait times out on 298 of them. Those 298 are reported in the reliability section and are **not** scored as a speedup.
+- The 20% gate is evaluated on the mutually complete subset, which is biased toward scenarios the baseline can finish. On the full suite the system-level difference is larger and is a reliability difference, not a speed one.
+- `commRange` is still 6, so per-tick ownership cost grows toward O(N²) and N=8 is close to the transport ceiling.
+- `ownership-scale-probe.mjs` aborted in this pass at its own instrumentation step; `fault-scenarios.mjs` (30/30 safe) and `admission-benchmark.mjs` (0 duplicate executable owners) both ran clean.
+
 ## Historical integrated validation (v4)
 
 Code frozen at `e7dd0cd`. These results remain unchanged as historical evidence. Seeds 31000–31199 have since informed the clearance fix and are now development data, not a fresh acceptance set for newer code:
