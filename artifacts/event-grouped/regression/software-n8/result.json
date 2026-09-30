@@ -1,0 +1,183 @@
+{
+  "schema": 1,
+  "passed": true,
+  "robots": 8,
+  "quorum": 5,
+  "controllersStarted": 8,
+  "ddsPeersReady": 8,
+  "ddsPeersAfterKill": 7,
+  "transport": "ros2",
+  "settleMs": 116,
+  "tasksCompleted": 6,
+  "totalTasks": 8,
+  "completed": false,
+  "ticks": 1120,
+  "killedController": "AMR-03",
+  "survivingControllers": 7,
+  "survivorsAreMajority": true,
+  "survivorsResponsive": true,
+  "safety": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0,
+    "nonAdjacentMoves": 0
+  },
+  "fleet": [
+    {
+      "id": "AMR-01",
+      "namespace": "AMR_01",
+      "origin": {
+        "x": 1,
+        "y": 1
+      },
+      "executorPort": 19700
+    },
+    {
+      "id": "AMR-02",
+      "namespace": "AMR_02",
+      "origin": {
+        "x": 1,
+        "y": 4
+      },
+      "executorPort": 19701
+    },
+    {
+      "id": "AMR-03",
+      "namespace": "AMR_03",
+      "origin": {
+        "x": 1,
+        "y": 7
+      },
+      "executorPort": 19702
+    },
+    {
+      "id": "AMR-04",
+      "namespace": "AMR_04",
+      "origin": {
+        "x": 1,
+        "y": 10
+      },
+      "executorPort": 19703
+    },
+    {
+      "id": "AMR-05",
+      "namespace": "AMR_05",
+      "origin": {
+        "x": 1,
+        "y": 13
+      },
+      "executorPort": 19704
+    },
+    {
+      "id": "AMR-06",
+      "namespace": "AMR_06",
+      "origin": {
+        "x": 1,
+        "y": 16
+      },
+      "executorPort": 19705
+    },
+    {
+      "id": "AMR-07",
+      "namespace": "AMR_07",
+      "origin": {
+        "x": 1,
+        "y": 19
+      },
+      "executorPort": 19706
+    },
+    {
+      "id": "AMR-08",
+      "namespace": "AMR_08",
+      "origin": {
+        "x": 1,
+        "y": 22
+      },
+      "executorPort": 19707
+    }
+  ],
+  "peers": [
+    {
+      "id": "AMR-01",
+      "pid": 1220173,
+      "subscriptions": {
+        "motion": 7,
+        "ownership": 7
+      },
+      "failed": false
+    },
+    {
+      "id": "AMR-02",
+      "pid": 1220174,
+      "subscriptions": {
+        "motion": 7,
+        "ownership": 7
+      },
+      "failed": false
+    },
+    {
+      "id": "AMR-03",
+      "pid": 1220175,
+      "subscriptions": {
+        "motion": 8,
+        "ownership": 8
+      },
+      "failed": true
+    },
+    {
+      "id": "AMR-04",
+      "pid": 1220176,
+      "subscriptions": {
+        "motion": 7,
+        "ownership": 7
+      },
+      "failed": false
+    },
+    {
+      "id": "AMR-05",
+      "pid": 1220177,
+      "subscriptions": {
+        "motion": 7,
+        "ownership": 7
+      },
+      "failed": false
+    },
+    {
+      "id": "AMR-06",
+      "pid": 1220178,
+      "subscriptions": {
+        "motion": 7,
+        "ownership": 7
+      },
+      "failed": false
+    },
+    {
+      "id": "AMR-07",
+      "pid": 1220184,
+      "subscriptions": {
+        "motion": 7,
+        "ownership": 7
+      },
+      "failed": false
+    },
+    {
+      "id": "AMR-08",
+      "pid": 1220185,
+      "subscriptions": {
+        "motion": 7,
+        "ownership": 7
+      },
+      "failed": false
+    }
+  ],
+  "wallSeconds": 291.008,
+  "scope": "8 independent OS-process controllers over ros2; membership, namespaces and endpoints derived from artifacts/event-grouped/regression/software-n8/fleet.json",
+  "limitations": [
+    "Shared logical clock; not an asynchronous physical-robot lease protocol",
+    "No Nav2 or hardware: this path uses the grid executor",
+    "One controller is killed at tick 2 to prove fleet survivability. Its task cannot complete unless the survivors still form a quorum (N-1 >= floor(N/2)+1), so N=2 legitimately completes fewer tasks."
+  ]
+}

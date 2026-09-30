@@ -1,0 +1,299 @@
+
+> dashboard@0.1.0 fleet:build
+> tsc -p tsconfig.fleet.json
+
+fleet: N=5 config=/tmp/nullptrs-event-grouped/artifacts/event-grouped/regression/nav2-n5/fleet.json domain=96 executors=19700,19701,19702,19703,19704
+{
+  "schema": 1,
+  "passed": true,
+  "robots": 5,
+  "controllersStarted": 5,
+  "ddsPeersReady": 5,
+  "wallSeconds": 34.437,
+  "scope": "5 independent Node fleet controllers and Fast DDS peers, each executing locally authorized cell moves through actual Nav2 FollowPath, EKF and CollisionMonitor. Shared ideal continuous physical pose bus ray-casts every other robot into lidar. Lockstep clock waits for measured Nav2 arrival before committing cell or task progress.",
+  "limitations": [
+    "Development smoke on crossing routes with transient sensed obstacle, not throughput or choke-point acceptance",
+    "Logical ownership time is frozen while a cell executes; not asynchronous physical robot leases",
+    "Ideal sensors and kinematics, no hardware",
+    "Initial grid blocked cells become continuous lidar/costmap geometry; dynamic block updates are not yet forwarded",
+    "Faults latch with measured partial pose; restart/relocalization is required, no automatic mid-cell recovery",
+    "One transient obstacle is injected on the victim robot only"
+  ],
+  "obstacleEvidence": {
+    "settledDrift": 0,
+    "first": {
+      "x": 0.19200087779900057,
+      "y": 0
+    },
+    "last": {
+      "x": 0.19200087779900057,
+      "y": 0
+    }
+  },
+  "completed": true,
+  "completedTasks": 5,
+  "totalTasks": 5,
+  "ticks": 120,
+  "totalActions": 16,
+  "safety": {
+    "overlaps": 0,
+    "swaps": 0,
+    "blockedCells": 0,
+    "zeroBatteryWork": 0,
+    "queueOverflow": 0,
+    "payloadViolations": 0,
+    "nonAdjacentMoves": 0
+  },
+  "physical": [
+    {
+      "id": "AMR-01",
+      "pid": 1225768,
+      "namespace": "AMR_01",
+      "origin": {
+        "x": 1,
+        "y": 1
+      },
+      "executorPort": 19700,
+      "execution": {
+        "kind": "nav2",
+        "fault": null,
+        "feedback": {
+          "ok": true,
+          "error": null,
+          "pose": {
+            "x": 1.2001665488505455,
+            "y": 1.7446488633044441
+          },
+          "groundTruth": {
+            "x": 1.1946953419757083,
+            "y": 1.7470020817299876
+          },
+          "origin": {
+            "x": 1,
+            "y": 1
+          },
+          "cellMetres": 0.6,
+          "actions": 5,
+          "collisions": 0,
+          "fault": null,
+          "poseAgeSeconds": 0.015437713009305298,
+          "cancellationPending": false
+        }
+      },
+      "transport": {
+        "kind": "ros2",
+        "subscriptions": {
+          "motion": 5,
+          "ownership": 5
+        }
+      },
+      "metrics": {
+        "bidAttempts": 16,
+        "corrections": 16,
+        "fallbacks": 0,
+        "moves": 5,
+        "energyHolds": 0
+      }
+    },
+    {
+      "id": "AMR-02",
+      "pid": 1225769,
+      "namespace": "AMR_02",
+      "origin": {
+        "x": 1,
+        "y": 4
+      },
+      "executorPort": 19701,
+      "execution": {
+        "kind": "nav2",
+        "fault": null,
+        "feedback": {
+          "ok": true,
+          "error": null,
+          "pose": {
+            "x": 1.1465361645643255,
+            "y": -1.7989975709548227
+          },
+          "groundTruth": {
+            "x": 1.1428169119967675,
+            "y": -1.7955649908941518
+          },
+          "origin": {
+            "x": 1,
+            "y": 4
+          },
+          "cellMetres": 0.6,
+          "actions": 5,
+          "collisions": 0,
+          "fault": null,
+          "poseAgeSeconds": 0.029828162005287595,
+          "cancellationPending": false
+        }
+      },
+      "transport": {
+        "kind": "ros2",
+        "subscriptions": {
+          "motion": 5,
+          "ownership": 5
+        }
+      },
+      "metrics": {
+        "bidAttempts": 16,
+        "corrections": 16,
+        "fallbacks": 0,
+        "moves": 5,
+        "energyHolds": 0
+      }
+    },
+    {
+      "id": "AMR-03",
+      "pid": 1225770,
+      "namespace": "AMR_03",
+      "origin": {
+        "x": 1,
+        "y": 7
+      },
+      "executorPort": 19702,
+      "execution": {
+        "kind": "nav2",
+        "fault": null,
+        "feedback": {
+          "ok": true,
+          "error": null,
+          "pose": {
+            "x": 1.1444754888924544,
+            "y": 0
+          },
+          "groundTruth": {
+            "x": 1.1444413665731625,
+            "y": 0
+          },
+          "origin": {
+            "x": 1,
+            "y": 7
+          },
+          "cellMetres": 0.6,
+          "actions": 2,
+          "collisions": 0,
+          "fault": null,
+          "poseAgeSeconds": 0.0009784350113477558,
+          "cancellationPending": false
+        }
+      },
+      "transport": {
+        "kind": "ros2",
+        "subscriptions": {
+          "motion": 5,
+          "ownership": 5
+        }
+      },
+      "metrics": {
+        "bidAttempts": 16,
+        "corrections": 16,
+        "fallbacks": 0,
+        "moves": 2,
+        "energyHolds": 0
+      }
+    },
+    {
+      "id": "AMR-04",
+      "pid": 1225771,
+      "namespace": "AMR_04",
+      "origin": {
+        "x": 1,
+        "y": 10
+      },
+      "executorPort": 19703,
+      "execution": {
+        "kind": "nav2",
+        "fault": null,
+        "feedback": {
+          "ok": true,
+          "error": null,
+          "pose": {
+            "x": 1.1464035053174522,
+            "y": 0
+          },
+          "groundTruth": {
+            "x": 1.146357741369428,
+            "y": 0
+          },
+          "origin": {
+            "x": 1,
+            "y": 10
+          },
+          "cellMetres": 0.6,
+          "actions": 2,
+          "collisions": 0,
+          "fault": null,
+          "poseAgeSeconds": 0.013422046002233401,
+          "cancellationPending": false
+        }
+      },
+      "transport": {
+        "kind": "ros2",
+        "subscriptions": {
+          "motion": 5,
+          "ownership": 5
+        }
+      },
+      "metrics": {
+        "bidAttempts": 16,
+        "corrections": 16,
+        "fallbacks": 0,
+        "moves": 2,
+        "energyHolds": 0
+      }
+    },
+    {
+      "id": "AMR-05",
+      "pid": 1225772,
+      "namespace": "AMR_05",
+      "origin": {
+        "x": 1,
+        "y": 13
+      },
+      "executorPort": 19704,
+      "execution": {
+        "kind": "nav2",
+        "fault": null,
+        "feedback": {
+          "ok": true,
+          "error": null,
+          "pose": {
+            "x": 1.1437002843905504,
+            "y": 0
+          },
+          "groundTruth": {
+            "x": 1.143817285568998,
+            "y": 0
+          },
+          "origin": {
+            "x": 1,
+            "y": 13
+          },
+          "cellMetres": 0.6,
+          "actions": 2,
+          "collisions": 0,
+          "fault": null,
+          "poseAgeSeconds": 0.008373996999580413,
+          "cancellationPending": false
+        }
+      },
+      "transport": {
+        "kind": "ros2",
+        "subscriptions": {
+          "motion": 5,
+          "ownership": 5
+        }
+      },
+      "metrics": {
+        "bidAttempts": 16,
+        "corrections": 16,
+        "fallbacks": 0,
+        "moves": 2,
+        "energyHolds": 0
+      }
+    }
+  ]
+}

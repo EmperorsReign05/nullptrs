@@ -29,6 +29,7 @@ const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
 export type TaskTrace = {
   id: string;
   createdAt: number;
+  ownershipStages?: Record<string, number>;
   firstAssignedTick: number | null;
   pickedUpTick: number | null;
   completedTick: number | null;
@@ -59,6 +60,12 @@ export type ArmRun = {
   /** Longest stretch of consecutive ticks with no task completion while work was outstanding. */
   longestNoProgressTicks: number;
 
+  ownershipTelemetry?: {
+    messages: number; peerTicks: number; staleRejected: number;
+    auctionRounds: number; certifiedRounds: number;
+    peakConcurrentTasks: number; meanConcurrentTasks: number;
+    duplicateExecutableOwners: number;
+  };
   tasks: TaskTrace[];
   /** Per-task time decomposition; the three components sum to flowTime. */
   releaseToAssignmentTicks: number;
@@ -91,14 +98,14 @@ export type ArmRun = {
   centralisedPibtCounters: { conflictCount: number; waitMoves: number; inheritedPriorities: number; backtracks: number };
 };
 
-export function runArm(record: ScenarioRecord, armId: ArmId, guidance?: RouteGuidanceModel): ArmRun {
+export function runArm(record: ScenarioRecord, armId: ArmId, guidance?: RouteGuidanceModel, allocationMode: "epoch" | "event-single" = "epoch"): ArmRun {
   const arm = ARMS.find((a) => a.id === armId)!;
   const map = layoutMap(record.layout);
   const world = scenarioWorld(record, map);
   const runtime = new FleetRuntime(
     world,
     FROZEN.model,
-    arm.runtime.motionPolicy ? { motionPolicy: arm.runtime.motionPolicy } : {},
+    { motionPolicy: arm.runtime.motionPolicy, allocationMode },
   );
   runtime.aiEnabled = arm.runtime.aiEnabled;
   const guidanceStats = { predictedCells: 0, rejectedFeatures: 0, replansWithGuidance: 0 };
@@ -122,6 +129,8 @@ export function runArm(record: ScenarioRecord, armId: ArmId, guidance?: RouteGui
   const progressTicks = { advancing: 0, lateral: 0, retreating: 0 };
   let longestNoProgress = 0, noProgressRun = 0, completedSeen = 0;
   let inFlightSum = 0, peakInFlight = 0, movingSum = 0, concurrentMotionTicks = 0, motionTicks = 0;
+  const auctionRounds = new Set<string>(), certifiedRounds = new Set<string>();
+  let concurrentSum = 0, concurrentPeak = 0, duplicateExecutableOwners = 0;
   const pending = record.tasks.filter((t) => t.createdAt > 0);
 
   for (let tick = 0; tick < record.horizonTicks; tick++) {
@@ -133,10 +142,33 @@ export function runArm(record: ScenarioRecord, armId: ArmId, guidance?: RouteGui
     const before = runtime.world.robots.map((r) => ({ x: r.position.x, y: r.position.y }));
     runtime.step();
     const now = runtime.world.tick;
+    const concurrent = new Set<string>();
+    for (const peer of runtime.peers.values()) {
+      const diag = peer.diagnostics();
+      for (const [taskId, raw] of Object.entries(diag.auctions)) {
+        const auction = raw as { isCandidate: boolean; bidsHeld: number; certificateReached: boolean };
+        const key = `${diag.generation}:${taskId}`;
+        if (auction.bidsHeld > 0) auctionRounds.add(key);
+        if (auction.certificateReached) certifiedRounds.add(key);
+        if (auction.isCandidate && !auction.certificateReached) concurrent.add(taskId);
+      }
+    }
+    concurrentSum += concurrent.size;
+    concurrentPeak = Math.max(concurrentPeak, concurrent.size);
+    for (const task of runtime.world.tasks) {
+      if ([...runtime.peers.values()].filter(p=>p.mayExecute(task.id)).length > 1) duplicateExecutableOwners++;
+    }
 
     for (const t of runtime.world.tasks) {
       const trace = byId.get(t.id);
       if (!trace) continue;
+      trace.ownershipStages ??= {};
+      for (const peer of runtime.peers.values()) {
+        for (const [stage, observed] of Object.entries(peer.latency.get(t.id) ?? {})) {
+          // Protocol tick t executes during runner step t -> t+1.
+          trace.ownershipStages[stage] = Math.min(trace.ownershipStages[stage] ?? Infinity, observed + 1);
+        }
+      }
       if (trace.firstAssignedTick === null && t.assignedRobotId !== undefined) trace.firstAssignedTick = now;
       if (trace.pickedUpTick === null && t.status === "in_progress") trace.pickedUpTick = now;
       if (trace.completedTick === null && t.status === "completed") trace.completedTick = now;
@@ -219,6 +251,14 @@ export function runArm(record: ScenarioRecord, armId: ArmId, guidance?: RouteGui
     makespan: completed && lastCompletion !== null ? lastCompletion - firstCreation : null,
     longestNoProgressTicks: longestNoProgress,
     tasks,
+    ownershipTelemetry: {
+      messages: [...runtime.peers.values()].reduce((s,p)=>s+Object.values(p.sentByKind).reduce((a,b)=>a+b,0),0),
+      peerTicks: runtime.world.tick * runtime.peers.size,
+      staleRejected: [...runtime.peers.values()].reduce((s,p)=>s+p.metrics.stale,0),
+      auctionRounds: auctionRounds.size, certifiedRounds: certifiedRounds.size,
+      peakConcurrentTasks: concurrentPeak, meanConcurrentTasks: concurrentSum/runtime.world.tick,
+      duplicateExecutableOwners,
+    },
     releaseToAssignmentTicks: releaseToAssignment,
     assignmentToPickupTicks: assignmentToPickup,
     pickupToCompletionTicks: pickupToCompletion,

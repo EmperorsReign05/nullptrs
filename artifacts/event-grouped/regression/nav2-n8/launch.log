@@ -1,0 +1,568 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-09-29-22-40-31-417517-fedora-1
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [base-1]: process started with pid [30]
+[INFO] [ekf_node-2]: process started with pid [31]
+[INFO] [static_transform_publisher-3]: process started with pid [32]
+[INFO] [controller_server-4]: process started with pid [33]
+[INFO] [collision_monitor-5]: process started with pid [34]
+[INFO] [lifecycle_manager-6]: process started with pid [35]
+[INFO] [fleet_executor-7]: process started with pid [36]
+[INFO] [base-8]: process started with pid [37]
+[INFO] [ekf_node-9]: process started with pid [38]
+[INFO] [static_transform_publisher-10]: process started with pid [39]
+[INFO] [controller_server-11]: process started with pid [40]
+[INFO] [collision_monitor-12]: process started with pid [41]
+[INFO] [lifecycle_manager-13]: process started with pid [42]
+[INFO] [fleet_executor-14]: process started with pid [68]
+[INFO] [base-15]: process started with pid [69]
+[INFO] [ekf_node-16]: process started with pid [72]
+[INFO] [static_transform_publisher-17]: process started with pid [76]
+[INFO] [controller_server-18]: process started with pid [79]
+[INFO] [collision_monitor-19]: process started with pid [83]
+[INFO] [lifecycle_manager-20]: process started with pid [88]
+[INFO] [fleet_executor-21]: process started with pid [91]
+[INFO] [base-22]: process started with pid [106]
+[INFO] [ekf_node-23]: process started with pid [113]
+[INFO] [static_transform_publisher-24]: process started with pid [120]
+[INFO] [controller_server-25]: process started with pid [138]
+[INFO] [collision_monitor-26]: process started with pid [161]
+[INFO] [lifecycle_manager-27]: process started with pid [169]
+[INFO] [fleet_executor-28]: process started with pid [171]
+[INFO] [base-29]: process started with pid [182]
+[INFO] [ekf_node-30]: process started with pid [198]
+[INFO] [static_transform_publisher-31]: process started with pid [206]
+[INFO] [controller_server-32]: process started with pid [213]
+[INFO] [collision_monitor-33]: process started with pid [217]
+[INFO] [lifecycle_manager-34]: process started with pid [228]
+[INFO] [fleet_executor-35]: process started with pid [229]
+[INFO] [base-36]: process started with pid [245]
+[INFO] [ekf_node-37]: process started with pid [256]
+[INFO] [static_transform_publisher-38]: process started with pid [263]
+[INFO] [controller_server-39]: process started with pid [264]
+[INFO] [collision_monitor-40]: process started with pid [269]
+[INFO] [lifecycle_manager-41]: process started with pid [274]
+[INFO] [fleet_executor-42]: process started with pid [278]
+[INFO] [base-43]: process started with pid [283]
+[INFO] [ekf_node-44]: process started with pid [288]
+[INFO] [static_transform_publisher-45]: process started with pid [298]
+[INFO] [controller_server-46]: process started with pid [304]
+[INFO] [collision_monitor-47]: process started with pid [311]
+[INFO] [lifecycle_manager-48]: process started with pid [322]
+[INFO] [fleet_executor-49]: process started with pid [330]
+[INFO] [base-50]: process started with pid [342]
+[INFO] [ekf_node-51]: process started with pid [364]
+[INFO] [static_transform_publisher-52]: process started with pid [368]
+[INFO] [controller_server-53]: process started with pid [373]
+[INFO] [collision_monitor-54]: process started with pid [375]
+[INFO] [lifecycle_manager-55]: process started with pid [376]
+[INFO] [fleet_executor-56]: process started with pid [385]
+[static_transform_publisher-3] [INFO] [1790721631.609661054] [AMR_01.static_transform_publisher_XpBQ3TXcQ5o507Ry]: Spinning until stopped - publishing transform
+[static_transform_publisher-3] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-3] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-3] from 'map' to 'odom'
+[controller_server-4] [INFO] [1790721631.604653026] [AMR_01.controller_server]: 
+[controller_server-4] 	controller_server lifecycle node launched. 
+[controller_server-4] 	Waiting on external lifecycle transitions to activate
+[controller_server-4] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-4] [INFO] [1790721631.621871665] [AMR_01.controller_server]: Creating controller server
+[controller_server-4] [INFO] [1790721631.665018897] [AMR_01.local_costmap.local_costmap]: 
+[controller_server-4] 	local_costmap lifecycle node launched. 
+[controller_server-4] 	Waiting on external lifecycle transitions to activate
+[controller_server-4] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-4] [INFO] [1790721631.667739331] [AMR_01.local_costmap.local_costmap]: Creating Costmap
+[collision_monitor-5] [INFO] [1790721631.580087385] [AMR_01.collision_monitor]: 
+[collision_monitor-5] 	collision_monitor lifecycle node launched. 
+[collision_monitor-5] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-6] [INFO] [1790721631.582259008] [AMR_01.lifecycle_manager_execution]: Creating
+[lifecycle_manager-6] [INFO] [1790721631.591620544] [AMR_01.lifecycle_manager_execution]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[static_transform_publisher-10] [INFO] [1790721631.569020026] [AMR_02.static_transform_publisher_MFv2RXPVSXykOBos]: Spinning until stopped - publishing transform
+[static_transform_publisher-10] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-10] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-10] from 'map' to 'odom'
+[controller_server-11] [INFO] [1790721631.616332349] [AMR_02.controller_server]: 
+[controller_server-11] 	controller_server lifecycle node launched. 
+[controller_server-11] 	Waiting on external lifecycle transitions to activate
+[controller_server-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-11] [INFO] [1790721631.617790266] [AMR_02.controller_server]: Creating controller server
+[controller_server-11] [INFO] [1790721631.653748603] [AMR_02.local_costmap.local_costmap]: 
+[controller_server-11] 	local_costmap lifecycle node launched. 
+[controller_server-11] 	Waiting on external lifecycle transitions to activate
+[controller_server-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-11] [INFO] [1790721631.656533502] [AMR_02.local_costmap.local_costmap]: Creating Costmap
+[collision_monitor-12] [INFO] [1790721631.604133374] [AMR_02.collision_monitor]: 
+[collision_monitor-12] 	collision_monitor lifecycle node launched. 
+[collision_monitor-12] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-12] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-13] [INFO] [1790721631.593179597] [AMR_02.lifecycle_manager_execution]: Creating
+[lifecycle_manager-13] [INFO] [1790721631.598962748] [AMR_02.lifecycle_manager_execution]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[static_transform_publisher-17] [INFO] [1790721631.641336938] [AMR_03.static_transform_publisher_JjPv3cwGIqk23tIK]: Spinning until stopped - publishing transform
+[static_transform_publisher-17] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-17] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-17] from 'map' to 'odom'
+[collision_monitor-19] [INFO] [1790721631.623894884] [AMR_03.collision_monitor]: 
+[collision_monitor-19] 	collision_monitor lifecycle node launched. 
+[collision_monitor-19] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-19] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-20] [INFO] [1790721631.633250055] [AMR_03.lifecycle_manager_execution]: Creating
+[lifecycle_manager-20] [INFO] [1790721631.652088033] [AMR_03.lifecycle_manager_execution]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[static_transform_publisher-24] [INFO] [1790721631.635110358] [AMR_04.static_transform_publisher_17QuFT3msSlxUZbl]: Spinning until stopped - publishing transform
+[static_transform_publisher-24] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-24] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-24] from 'map' to 'odom'
+[controller_server-25] [INFO] [1790721631.677590014] [AMR_04.controller_server]: 
+[controller_server-25] 	controller_server lifecycle node launched. 
+[controller_server-25] 	Waiting on external lifecycle transitions to activate
+[controller_server-25] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-25] [INFO] [1790721631.678586262] [AMR_04.controller_server]: Creating controller server
+[collision_monitor-26] [INFO] [1790721631.677202936] [AMR_04.collision_monitor]: 
+[collision_monitor-26] 	collision_monitor lifecycle node launched. 
+[collision_monitor-26] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-26] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-27] [INFO] [1790721631.669327652] [AMR_04.lifecycle_manager_execution]: Creating
+[lifecycle_manager-27] [INFO] [1790721631.675034746] [AMR_04.lifecycle_manager_execution]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[controller_server-18] [INFO] [1790721631.717184675] [AMR_03.controller_server]: 
+[controller_server-18] 	controller_server lifecycle node launched. 
+[controller_server-18] 	Waiting on external lifecycle transitions to activate
+[controller_server-18] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-18] [INFO] [1790721631.722407699] [AMR_03.controller_server]: Creating controller server
+[lifecycle_manager-41] [INFO] [1790721631.745526777] [AMR_06.lifecycle_manager_execution]: Creating
+[controller_server-25] [INFO] [1790721631.748525177] [AMR_04.local_costmap.local_costmap]: 
+[controller_server-25] 	local_costmap lifecycle node launched. 
+[controller_server-25] 	Waiting on external lifecycle transitions to activate
+[controller_server-25] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-25] [INFO] [1790721631.749121358] [AMR_04.local_costmap.local_costmap]: Creating Costmap
+[controller_server-39] [INFO] [1790721631.768057617] [AMR_06.controller_server]: 
+[controller_server-39] 	controller_server lifecycle node launched. 
+[controller_server-39] 	Waiting on external lifecycle transitions to activate
+[controller_server-39] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-41] [INFO] [1790721631.774965173] [AMR_06.lifecycle_manager_execution]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[controller_server-39] [INFO] [1790721631.777973234] [AMR_06.controller_server]: Creating controller server
+[lifecycle_manager-34] [INFO] [1790721631.796035421] [AMR_05.lifecycle_manager_execution]: Creating
+[lifecycle_manager-34] [INFO] [1790721631.823259893] [AMR_05.lifecycle_manager_execution]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[lifecycle_manager-41] [INFO] [1790721631.841947919] [AMR_06.lifecycle_manager_execution]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-41] [INFO] [1790721631.842072093] [AMR_06.lifecycle_manager_execution]: [34m[1mConfiguring controller_server[0m[0m
+[lifecycle_manager-48] [INFO] [1790721631.853414517] [AMR_07.lifecycle_manager_execution]: Creating
+[collision_monitor-40] [INFO] [1790721631.854144798] [AMR_06.collision_monitor]: 
+[collision_monitor-40] 	collision_monitor lifecycle node launched. 
+[collision_monitor-40] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-40] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-32] [INFO] [1790721631.859026995] [AMR_05.controller_server]: 
+[controller_server-32] 	controller_server lifecycle node launched. 
+[controller_server-32] 	Waiting on external lifecycle transitions to activate
+[controller_server-32] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-32] [INFO] [1790721631.863803699] [AMR_05.controller_server]: Creating controller server
+[static_transform_publisher-52] [INFO] [1790721631.866861712] [AMR_08.static_transform_publisher_XxAkvYGjCAyVoQdN]: Spinning until stopped - publishing transform
+[static_transform_publisher-52] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-52] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-52] from 'map' to 'odom'
+[lifecycle_manager-48] [INFO] [1790721631.883817359] [AMR_07.lifecycle_manager_execution]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[static_transform_publisher-45] [INFO] [1790721631.908746871] [AMR_07.static_transform_publisher_l7zY86S4uDqfD47d]: Spinning until stopped - publishing transform
+[static_transform_publisher-45] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-45] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-45] from 'map' to 'odom'
+[lifecycle_manager-13] [INFO] [1790721631.920377792] [AMR_02.lifecycle_manager_execution]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-13] [INFO] [1790721631.920457449] [AMR_02.lifecycle_manager_execution]: [34m[1mConfiguring controller_server[0m[0m
+[static_transform_publisher-38] [INFO] [1790721631.926234066] [AMR_06.static_transform_publisher_0Nq20CUwr2gzZ78A]: Spinning until stopped - publishing transform
+[static_transform_publisher-38] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-38] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-38] from 'map' to 'odom'
+[lifecycle_manager-55] [INFO] [1790721631.927526153] [AMR_08.lifecycle_manager_execution]: Creating
+[collision_monitor-33] [INFO] [1790721631.931705811] [AMR_05.collision_monitor]: 
+[collision_monitor-33] 	collision_monitor lifecycle node launched. 
+[collision_monitor-33] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-33] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-11] [INFO] [1790721631.936001905] [AMR_02.controller_server]: Configuring controller interface
+[controller_server-11] [INFO] [1790721631.936047037] [AMR_02.controller_server]: getting progress checker plugins..
+[controller_server-11] [INFO] [1790721631.936380319] [AMR_02.controller_server]: getting goal checker plugins..
+[controller_server-11] [INFO] [1790721631.936732043] [AMR_02.controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-11] [INFO] [1790721631.936777623] [AMR_02.local_costmap.local_costmap]: Configuring
+[lifecycle_manager-55] [INFO] [1790721631.953243579] [AMR_08.lifecycle_manager_execution]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[lifecycle_manager-20] [INFO] [1790721631.966296222] [AMR_03.lifecycle_manager_execution]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-20] [INFO] [1790721631.966360437] [AMR_03.lifecycle_manager_execution]: [34m[1mConfiguring controller_server[0m[0m
+[collision_monitor-47] [INFO] [1790721631.973593944] [AMR_07.collision_monitor]: 
+[collision_monitor-47] 	collision_monitor lifecycle node launched. 
+[collision_monitor-47] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-47] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-39] [INFO] [1790721632.010414994] [AMR_06.local_costmap.local_costmap]: 
+[controller_server-39] 	local_costmap lifecycle node launched. 
+[controller_server-39] 	Waiting on external lifecycle transitions to activate
+[controller_server-39] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-18] [INFO] [1790721632.010800310] [AMR_03.local_costmap.local_costmap]: 
+[controller_server-18] 	local_costmap lifecycle node launched. 
+[controller_server-18] 	Waiting on external lifecycle transitions to activate
+[controller_server-18] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-53] [INFO] [1790721632.012120231] [AMR_08.controller_server]: 
+[controller_server-53] 	controller_server lifecycle node launched. 
+[controller_server-53] 	Waiting on external lifecycle transitions to activate
+[controller_server-53] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-18] [INFO] [1790721632.013699873] [AMR_03.local_costmap.local_costmap]: Creating Costmap
+[controller_server-39] [INFO] [1790721632.019223687] [AMR_06.local_costmap.local_costmap]: Creating Costmap
+[controller_server-53] [INFO] [1790721632.021082634] [AMR_08.controller_server]: Creating controller server
+[controller_server-18] [INFO] [1790721632.040028936] [AMR_03.controller_server]: Configuring controller interface
+[controller_server-18] [INFO] [1790721632.040086762] [AMR_03.controller_server]: getting progress checker plugins..
+[controller_server-18] [INFO] [1790721632.044737287] [AMR_03.controller_server]: getting goal checker plugins..
+[controller_server-18] [INFO] [1790721632.045323979] [AMR_03.controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-18] [INFO] [1790721632.045394273] [AMR_03.local_costmap.local_costmap]: Configuring
+[controller_server-53] [INFO] [1790721632.077176118] [AMR_08.local_costmap.local_costmap]: 
+[controller_server-53] 	local_costmap lifecycle node launched. 
+[controller_server-53] 	Waiting on external lifecycle transitions to activate
+[controller_server-53] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-53] [INFO] [1790721632.081381407] [AMR_08.local_costmap.local_costmap]: Creating Costmap
+[controller_server-18] [INFO] [1790721632.106900834] [AMR_03.local_costmap.local_costmap]: Using plugin "static_layer"
+[controller_server-18] [INFO] [1790721632.122221540] [AMR_03.local_costmap.local_costmap]: Subscribing to the map topic (/AMR_03/map) with transient local durability
+[lifecycle_manager-27] [INFO] [1790721632.126216458] [AMR_04.lifecycle_manager_execution]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-27] [INFO] [1790721632.126327170] [AMR_04.lifecycle_manager_execution]: [34m[1mConfiguring controller_server[0m[0m
+[static_transform_publisher-31] [INFO] [1790721632.132231979] [AMR_05.static_transform_publisher_1mRSTAEeki3FbEFy]: Spinning until stopped - publishing transform
+[static_transform_publisher-31] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-31] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-31] from 'map' to 'odom'
+[controller_server-32] [INFO] [1790721632.139397293] [AMR_05.local_costmap.local_costmap]: 
+[controller_server-32] 	local_costmap lifecycle node launched. 
+[controller_server-32] 	Waiting on external lifecycle transitions to activate
+[controller_server-32] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[collision_monitor-54] [INFO] [1790721632.139446689] [AMR_08.collision_monitor]: 
+[collision_monitor-54] 	collision_monitor lifecycle node launched. 
+[collision_monitor-54] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-54] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-32] [INFO] [1790721632.142394989] [AMR_05.local_costmap.local_costmap]: Creating Costmap
+[controller_server-18] [INFO] [1790721632.146491170] [AMR_03.local_costmap.local_costmap]: Initialized plugin "static_layer"
+[controller_server-18] [INFO] [1790721632.146547107] [AMR_03.local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-18] [INFO] [1790721632.165096827] [AMR_03.local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-46] [INFO] [1790721632.199774155] [AMR_07.controller_server]: 
+[controller_server-46] 	controller_server lifecycle node launched. 
+[controller_server-46] 	Waiting on external lifecycle transitions to activate
+[controller_server-46] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-46] [INFO] [1790721632.211101519] [AMR_07.controller_server]: Creating controller server
+[controller_server-39] [INFO] [1790721632.213599995] [AMR_06.controller_server]: Configuring controller interface
+[controller_server-39] [INFO] [1790721632.219863102] [AMR_06.controller_server]: getting progress checker plugins..
+[controller_server-39] [INFO] [1790721632.226991133] [AMR_06.controller_server]: getting goal checker plugins..
+[controller_server-39] [INFO] [1790721632.241940060] [AMR_06.controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-39] [INFO] [1790721632.242069110] [AMR_06.local_costmap.local_costmap]: Configuring
+[lifecycle_manager-6] [INFO] [1790721632.272358676] [AMR_01.lifecycle_manager_execution]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-6] [INFO] [1790721632.273416033] [AMR_01.lifecycle_manager_execution]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-4] [INFO] [1790721632.279102298] [AMR_01.controller_server]: Configuring controller interface
+[controller_server-4] [INFO] [1790721632.279319615] [AMR_01.controller_server]: getting progress checker plugins..
+[controller_server-4] [INFO] [1790721632.283408163] [AMR_01.controller_server]: getting goal checker plugins..
+[controller_server-25] [INFO] [1790721632.285037636] [AMR_04.controller_server]: Configuring controller interface
+[controller_server-25] [INFO] [1790721632.285074405] [AMR_04.controller_server]: getting progress checker plugins..
+[controller_server-25] [INFO] [1790721632.285429563] [AMR_04.controller_server]: getting goal checker plugins..
+[controller_server-25] [INFO] [1790721632.285968089] [AMR_04.controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-25] [INFO] [1790721632.286030220] [AMR_04.local_costmap.local_costmap]: Configuring
+[controller_server-4] [INFO] [1790721632.287861185] [AMR_01.controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-4] [INFO] [1790721632.287945170] [AMR_01.local_costmap.local_costmap]: Configuring
+[controller_server-11] [INFO] [1790721632.308339423] [AMR_02.local_costmap.local_costmap]: Using plugin "static_layer"
+[controller_server-11] [INFO] [1790721632.334049547] [AMR_02.local_costmap.local_costmap]: Subscribing to the map topic (/AMR_02/map) with transient local durability
+[controller_server-11] [INFO] [1790721632.347638320] [AMR_02.local_costmap.local_costmap]: Initialized plugin "static_layer"
+[controller_server-11] [INFO] [1790721632.347691085] [AMR_02.local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-25] [INFO] [1790721632.350755598] [AMR_04.local_costmap.local_costmap]: Using plugin "static_layer"
+[controller_server-11] [INFO] [1790721632.360129598] [AMR_02.local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-4] [INFO] [1790721632.372590637] [AMR_01.local_costmap.local_costmap]: Using plugin "static_layer"
+[controller_server-25] [INFO] [1790721632.383490682] [AMR_04.local_costmap.local_costmap]: Subscribing to the map topic (/AMR_04/map) with transient local durability
+[controller_server-4] [INFO] [1790721632.398236492] [AMR_01.local_costmap.local_costmap]: Subscribing to the map topic (/AMR_01/map) with transient local durability
+[controller_server-25] [INFO] [1790721632.409692043] [AMR_04.local_costmap.local_costmap]: Initialized plugin "static_layer"
+[controller_server-25] [INFO] [1790721632.409754477] [AMR_04.local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-4] [INFO] [1790721632.413100540] [AMR_01.local_costmap.local_costmap]: Initialized plugin "static_layer"
+[controller_server-4] [INFO] [1790721632.413156138] [AMR_01.local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-46] [INFO] [1790721632.413334805] [AMR_07.local_costmap.local_costmap]: 
+[controller_server-46] 	local_costmap lifecycle node launched. 
+[controller_server-46] 	Waiting on external lifecycle transitions to activate
+[controller_server-46] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-46] [INFO] [1790721632.414140534] [AMR_07.local_costmap.local_costmap]: Creating Costmap
+[controller_server-4] [INFO] [1790721632.417074761] [AMR_01.local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-25] [INFO] [1790721632.424490787] [AMR_04.local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-11] [INFO] [1790721632.565255195] [AMR_02.controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-11] [INFO] [1790721632.579119790] [AMR_02.controller_server]: Controller Server has progress_checker  progress checkers available.
+[controller_server-11] [INFO] [1790721632.596005241] [AMR_02.controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-11] [INFO] [1790721632.614228717] [AMR_02.controller_server]: Controller Server has goal_checker  goal checkers available.
+[controller_server-11] [INFO] [1790721632.619193475] [AMR_02.controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-39] [INFO] [1790721632.656084162] [AMR_06.local_costmap.local_costmap]: Using plugin "static_layer"
+[controller_server-18] [INFO] [1790721632.659668286] [AMR_03.controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-18] [INFO] [1790721632.662128263] [AMR_03.controller_server]: Controller Server has progress_checker  progress checkers available.
+[controller_server-18] [INFO] [1790721632.662967946] [AMR_03.controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-18] [INFO] [1790721632.665500549] [AMR_03.controller_server]: Controller Server has goal_checker  goal checkers available.
+[controller_server-18] [INFO] [1790721632.674253401] [AMR_03.controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-39] [INFO] [1790721632.675968080] [AMR_06.local_costmap.local_costmap]: Subscribing to the map topic (/AMR_06/map) with transient local durability
+[lifecycle_manager-34] [INFO] [1790721632.676666372] [AMR_05.lifecycle_manager_execution]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-34] [INFO] [1790721632.676772544] [AMR_05.lifecycle_manager_execution]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-39] [INFO] [1790721632.689748198] [AMR_06.local_costmap.local_costmap]: Initialized plugin "static_layer"
+[controller_server-39] [INFO] [1790721632.689903942] [AMR_06.local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-39] [INFO] [1790721632.699429611] [AMR_06.local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-32] [INFO] [1790721632.702396941] [AMR_05.controller_server]: Configuring controller interface
+[controller_server-32] [INFO] [1790721632.702456317] [AMR_05.controller_server]: getting progress checker plugins..
+[controller_server-32] [INFO] [1790721632.705870565] [AMR_05.controller_server]: getting goal checker plugins..
+[controller_server-32] [INFO] [1790721632.725978081] [AMR_05.controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-32] [INFO] [1790721632.726101940] [AMR_05.local_costmap.local_costmap]: Configuring
+[controller_server-18] [INFO] [1790721632.762913548] [AMR_03.controller_server]: Controller Server has FollowPath  controllers available.
+[controller_server-4] [INFO] [1790721632.778508632] [AMR_01.controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-4] [INFO] [1790721632.787881585] [AMR_01.controller_server]: Controller Server has progress_checker  progress checkers available.
+[controller_server-4] [INFO] [1790721632.791963055] [AMR_01.controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-4] [INFO] [1790721632.802199999] [AMR_01.controller_server]: Controller Server has goal_checker  goal checkers available.
+[controller_server-4] [INFO] [1790721632.809142291] [AMR_01.controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[lifecycle_manager-48] [INFO] [1790721632.832073520] [AMR_07.lifecycle_manager_execution]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-48] [INFO] [1790721632.832187468] [AMR_07.lifecycle_manager_execution]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-32] [INFO] [1790721632.842317352] [AMR_05.local_costmap.local_costmap]: Using plugin "static_layer"
+[controller_server-46] [INFO] [1790721632.863826808] [AMR_07.controller_server]: Configuring controller interface
+[controller_server-46] [INFO] [1790721632.863886420] [AMR_07.controller_server]: getting progress checker plugins..
+[controller_server-46] [INFO] [1790721632.866261527] [AMR_07.controller_server]: getting goal checker plugins..
+[controller_server-46] [INFO] [1790721632.869789006] [AMR_07.controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-46] [INFO] [1790721632.869905560] [AMR_07.local_costmap.local_costmap]: Configuring
+[controller_server-11] [INFO] [1790721632.875531859] [AMR_02.controller_server]: Controller Server has FollowPath  controllers available.
+[controller_server-39] [INFO] [1790721632.877834034] [AMR_06.controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-25] [INFO] [1790721632.878510358] [AMR_04.controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-39] [INFO] [1790721632.879915638] [AMR_06.controller_server]: Controller Server has progress_checker  progress checkers available.
+[controller_server-39] [INFO] [1790721632.880902085] [AMR_06.controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-25] [INFO] [1790721632.884833242] [AMR_04.controller_server]: Controller Server has progress_checker  progress checkers available.
+[controller_server-25] [INFO] [1790721632.894213382] [AMR_04.controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-39] [INFO] [1790721632.898391686] [AMR_06.controller_server]: Controller Server has goal_checker  goal checkers available.
+[controller_server-39] [INFO] [1790721632.902213207] [AMR_06.controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-4] [INFO] [1790721632.913154349] [AMR_01.controller_server]: Controller Server has FollowPath  controllers available.
+[controller_server-25] [INFO] [1790721632.916694392] [AMR_04.controller_server]: Controller Server has goal_checker  goal checkers available.
+[controller_server-32] [INFO] [1790721632.921686348] [AMR_05.local_costmap.local_costmap]: Subscribing to the map topic (/AMR_05/map) with transient local durability
+[controller_server-25] [INFO] [1790721632.929401821] [AMR_04.controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-32] [INFO] [1790721632.934359907] [AMR_05.local_costmap.local_costmap]: Initialized plugin "static_layer"
+[controller_server-32] [INFO] [1790721632.934420145] [AMR_05.local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-32] [INFO] [1790721632.952586353] [AMR_05.local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[lifecycle_manager-55] [INFO] [1790721632.991057719] [AMR_08.lifecycle_manager_execution]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-55] [INFO] [1790721632.991171400] [AMR_08.lifecycle_manager_execution]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-53] [INFO] [1790721632.998207414] [AMR_08.controller_server]: Configuring controller interface
+[controller_server-53] [INFO] [1790721632.998263126] [AMR_08.controller_server]: getting progress checker plugins..
+[controller_server-53] [INFO] [1790721633.006883347] [AMR_08.controller_server]: getting goal checker plugins..
+[controller_server-53] [INFO] [1790721633.008017585] [AMR_08.controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-53] [INFO] [1790721633.008120902] [AMR_08.local_costmap.local_costmap]: Configuring
+[lifecycle_manager-6] [INFO] [1790721633.021995560] [AMR_01.lifecycle_manager_execution]: [34m[1mConfiguring collision_monitor[0m[0m
+[collision_monitor-5] [INFO] [1790721633.025499436] [AMR_01.collision_monitor]: Configuring
+[controller_server-39] [INFO] [1790721633.065136480] [AMR_06.controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-20] [INFO] [1790721633.083062826] [AMR_03.lifecycle_manager_execution]: [34m[1mConfiguring collision_monitor[0m[0m
+[collision_monitor-5] [INFO] [1790721633.083593327] [collision_monitor]: [scan]: Creating Scan
+[lifecycle_manager-13] [INFO] [1790721633.130515695] [AMR_02.lifecycle_manager_execution]: [34m[1mConfiguring collision_monitor[0m[0m
+[collision_monitor-12] [INFO] [1790721633.132272930] [AMR_02.collision_monitor]: Configuring
+[collision_monitor-19] [INFO] [1790721633.139465259] [AMR_03.collision_monitor]: Configuring
+[collision_monitor-5] [INFO] [1790721633.171801670] [collision_monitor]: [StopZone]: Creating Polygon
+[collision_monitor-12] [INFO] [1790721633.226955336] [collision_monitor]: [scan]: Creating Scan
+[collision_monitor-12] [INFO] [1790721633.239507459] [collision_monitor]: [StopZone]: Creating Polygon
+[collision_monitor-19] [INFO] [1790721633.241571703] [collision_monitor]: [scan]: Creating Scan
+[controller_server-46] [INFO] [1790721633.277721076] [AMR_07.local_costmap.local_costmap]: Using plugin "static_layer"
+[collision_monitor-19] [INFO] [1790721633.300717101] [collision_monitor]: [StopZone]: Creating Polygon
+[controller_server-46] [INFO] [1790721633.374292542] [AMR_07.local_costmap.local_costmap]: Subscribing to the map topic (/AMR_07/map) with transient local durability
+[lifecycle_manager-13] [INFO] [1790721633.381970864] [AMR_02.lifecycle_manager_execution]: [34m[1mActivating controller_server[0m[0m
+[controller_server-11] [INFO] [1790721633.382655839] [AMR_02.controller_server]: Activating
+[controller_server-11] [INFO] [1790721633.382702186] [AMR_02.local_costmap.local_costmap]: Activating
+[controller_server-11] [INFO] [1790721633.382712562] [AMR_02.local_costmap.local_costmap]: Checking transform
+[controller_server-11] [INFO] [1790721633.382771589] [AMR_02.local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "base_link" passed to canTransform argument source_frame - frame does not exist
+[lifecycle_manager-6] [INFO] [1790721633.412888361] [AMR_01.lifecycle_manager_execution]: [34m[1mActivating controller_server[0m[0m
+[controller_server-4] [INFO] [1790721633.413320359] [AMR_01.controller_server]: Activating
+[controller_server-4] [INFO] [1790721633.413364541] [AMR_01.local_costmap.local_costmap]: Activating
+[controller_server-4] [INFO] [1790721633.413373594] [AMR_01.local_costmap.local_costmap]: Checking transform
+[controller_server-4] [INFO] [1790721633.413428740] [AMR_01.local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "base_link" passed to canTransform argument source_frame - frame does not exist
+[controller_server-46] [INFO] [1790721633.437602696] [AMR_07.local_costmap.local_costmap]: Initialized plugin "static_layer"
+[controller_server-46] [INFO] [1790721633.437665346] [AMR_07.local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-46] [INFO] [1790721633.468606214] [AMR_07.local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-32] [INFO] [1790721633.589333908] [AMR_05.controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-32] [INFO] [1790721633.593193039] [AMR_05.controller_server]: Controller Server has progress_checker  progress checkers available.
+[controller_server-32] [INFO] [1790721633.593811849] [AMR_05.controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-32] [INFO] [1790721633.610549621] [AMR_05.controller_server]: Controller Server has goal_checker  goal checkers available.
+[lifecycle_manager-20] [INFO] [1790721633.616499918] [AMR_03.lifecycle_manager_execution]: [34m[1mActivating controller_server[0m[0m
+[controller_server-32] [INFO] [1790721633.620255313] [AMR_05.controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-18] [INFO] [1790721633.621250264] [AMR_03.controller_server]: Activating
+[controller_server-18] [INFO] [1790721633.621315507] [AMR_03.local_costmap.local_costmap]: Activating
+[controller_server-18] [INFO] [1790721633.621333407] [AMR_03.local_costmap.local_costmap]: Checking transform
+[controller_server-18] [INFO] [1790721633.621412555] [AMR_03.local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "base_link" passed to canTransform argument source_frame - frame does not exist
+[controller_server-53] [INFO] [1790721633.659020047] [AMR_08.local_costmap.local_costmap]: Using plugin "static_layer"
+[controller_server-39] [INFO] [1790721633.689743907] [AMR_06.local_costmap.local_costmap]: StaticLayer: Resizing static layer to 100 X 100 at 0.100000 m/pix
+[controller_server-53] [INFO] [1790721633.699903308] [AMR_08.local_costmap.local_costmap]: Subscribing to the map topic (/AMR_08/map) with transient local durability
+[controller_server-53] [INFO] [1790721633.712790565] [AMR_08.local_costmap.local_costmap]: Initialized plugin "static_layer"
+[controller_server-53] [INFO] [1790721633.712853208] [AMR_08.local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-53] [INFO] [1790721633.729393753] [AMR_08.local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[lifecycle_manager-41] [INFO] [1790721633.737855300] [AMR_06.lifecycle_manager_execution]: [34m[1mConfiguring collision_monitor[0m[0m
+[collision_monitor-40] [INFO] [1790721633.738772196] [AMR_06.collision_monitor]: Configuring
+[controller_server-32] [INFO] [1790721633.784414635] [AMR_05.controller_server]: Controller Server has FollowPath  controllers available.
+[collision_monitor-40] [INFO] [1790721633.802170804] [collision_monitor]: [scan]: Creating Scan
+[collision_monitor-40] [INFO] [1790721633.816640985] [collision_monitor]: [StopZone]: Creating Polygon
+[controller_server-46] [INFO] [1790721633.824282493] [AMR_07.controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-46] [INFO] [1790721633.831473858] [AMR_07.controller_server]: Controller Server has progress_checker  progress checkers available.
+[controller_server-46] [INFO] [1790721633.832386230] [AMR_07.controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-46] [INFO] [1790721633.838570973] [AMR_07.controller_server]: Controller Server has goal_checker  goal checkers available.
+[controller_server-46] [INFO] [1790721633.843810550] [AMR_07.controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-25] [INFO] [1790721633.871152132] [AMR_04.controller_server]: Controller Server has FollowPath  controllers available.
+[controller_server-11] [INFO] [1790721633.882974504] [AMR_02.local_costmap.local_costmap]: start
+[lifecycle_manager-34] [INFO] [1790721633.890453867] [AMR_05.lifecycle_manager_execution]: [34m[1mConfiguring collision_monitor[0m[0m
+[collision_monitor-33] [INFO] [1790721633.891880095] [AMR_05.collision_monitor]: Configuring
+[lifecycle_manager-41] [INFO] [1790721633.907513054] [AMR_06.lifecycle_manager_execution]: [34m[1mActivating controller_server[0m[0m
+[controller_server-39] [INFO] [1790721633.908220730] [AMR_06.controller_server]: Activating
+[controller_server-39] [INFO] [1790721633.908268740] [AMR_06.local_costmap.local_costmap]: Activating
+[controller_server-39] [INFO] [1790721633.908279231] [AMR_06.local_costmap.local_costmap]: Checking transform
+[controller_server-39] [INFO] [1790721633.908338079] [AMR_06.local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "base_link" passed to canTransform argument source_frame - frame does not exist
+[controller_server-4] [INFO] [1790721633.913448103] [AMR_01.local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "base_link" passed to canTransform argument source_frame - frame does not exist
+[controller_server-46] [INFO] [1790721633.918256724] [AMR_07.controller_server]: Controller Server has FollowPath  controllers available.
+[controller_server-11] [INFO] [1790721633.933317677] [AMR_02.controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-11] [INFO] [1790721633.933392321] [AMR_02.controller_server]: Creating bond (controller_server) to lifecycle manager.
+[collision_monitor-33] [INFO] [1790721633.942608149] [collision_monitor]: [scan]: Creating Scan
+[lifecycle_manager-27] [INFO] [1790721633.943658488] [AMR_04.lifecycle_manager_execution]: [34m[1mConfiguring collision_monitor[0m[0m
+[collision_monitor-26] [INFO] [1790721633.950948178] [AMR_04.collision_monitor]: Configuring
+[controller_server-53] [INFO] [1790721633.955400333] [AMR_08.controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[lifecycle_manager-13] [INFO] [1790721633.957506281] [AMR_02.lifecycle_manager_execution]: [34m[1mActivating collision_monitor[0m[0m
+[controller_server-53] [INFO] [1790721633.960745346] [AMR_08.controller_server]: Controller Server has progress_checker  progress checkers available.
+[controller_server-53] [INFO] [1790721633.961614226] [AMR_08.controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[collision_monitor-33] [INFO] [1790721633.961385985] [collision_monitor]: [StopZone]: Creating Polygon
+[collision_monitor-12] [INFO] [1790721633.964163740] [AMR_02.collision_monitor]: Activating
+[collision_monitor-12] [INFO] [1790721633.964485109] [AMR_02.collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[controller_server-53] [INFO] [1790721633.971406254] [AMR_08.controller_server]: Controller Server has goal_checker  goal checkers available.
+[controller_server-53] [INFO] [1790721633.975665937] [AMR_08.controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[lifecycle_manager-48] [INFO] [1790721633.979496053] [AMR_07.lifecycle_manager_execution]: [34m[1mConfiguring collision_monitor[0m[0m
+[collision_monitor-47] [INFO] [1790721633.985237503] [AMR_07.collision_monitor]: Configuring
+[lifecycle_manager-13] [INFO] [1790721633.988247042] [AMR_02.lifecycle_manager_execution]: [34m[1mManaged nodes are active[0m[0m
+[collision_monitor-26] [INFO] [1790721633.992322871] [collision_monitor]: [scan]: Creating Scan
+[collision_monitor-26] [INFO] [1790721634.014795445] [collision_monitor]: [StopZone]: Creating Polygon
+[collision_monitor-47] [INFO] [1790721634.023648067] [collision_monitor]: [scan]: Creating Scan
+[lifecycle_manager-34] [INFO] [1790721634.032868926] [AMR_05.lifecycle_manager_execution]: [34m[1mActivating controller_server[0m[0m
+[controller_server-32] [INFO] [1790721634.033661227] [AMR_05.controller_server]: Activating
+[controller_server-32] [INFO] [1790721634.033759895] [AMR_05.local_costmap.local_costmap]: Activating
+[controller_server-32] [INFO] [1790721634.033784243] [AMR_05.local_costmap.local_costmap]: Checking transform
+[controller_server-32] [INFO] [1790721634.034111492] [AMR_05.local_costmap.local_costmap]: start
+[controller_server-53] [INFO] [1790721634.037195181] [AMR_08.controller_server]: Controller Server has FollowPath  controllers available.
+[collision_monitor-47] [INFO] [1790721634.038529632] [collision_monitor]: [StopZone]: Creating Polygon
+[controller_server-25] [INFO] [1790721634.045850337] [AMR_04.local_costmap.local_costmap]: StaticLayer: Resizing static layer to 100 X 100 at 0.100000 m/pix
+[lifecycle_manager-27] [INFO] [1790721634.074642111] [AMR_04.lifecycle_manager_execution]: [34m[1mActivating controller_server[0m[0m
+[controller_server-25] [INFO] [1790721634.079039770] [AMR_04.controller_server]: Activating
+[controller_server-25] [INFO] [1790721634.079101633] [AMR_04.local_costmap.local_costmap]: Activating
+[controller_server-25] [INFO] [1790721634.079111024] [AMR_04.local_costmap.local_costmap]: Checking transform
+[controller_server-25] [INFO] [1790721634.079303922] [AMR_04.local_costmap.local_costmap]: start
+[controller_server-32] [INFO] [1790721634.090579246] [AMR_05.controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-32] [INFO] [1790721634.090644711] [AMR_05.controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-48] [INFO] [1790721634.121916372] [AMR_07.lifecycle_manager_execution]: [34m[1mActivating controller_server[0m[0m
+[controller_server-18] [INFO] [1790721634.123213686] [AMR_03.local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "base_link" passed to canTransform argument source_frame - frame does not exist
+[controller_server-46] [INFO] [1790721634.123248760] [AMR_07.controller_server]: Activating
+[controller_server-46] [INFO] [1790721634.123295190] [AMR_07.local_costmap.local_costmap]: Activating
+[controller_server-46] [INFO] [1790721634.123306138] [AMR_07.local_costmap.local_costmap]: Checking transform
+[lifecycle_manager-55] [INFO] [1790721634.123418070] [AMR_08.lifecycle_manager_execution]: [34m[1mConfiguring collision_monitor[0m[0m
+[lifecycle_manager-34] [INFO] [1790721634.124008184] [AMR_05.lifecycle_manager_execution]: [34m[1mActivating collision_monitor[0m[0m
+[controller_server-46] [INFO] [1790721634.123640363] [AMR_07.local_costmap.local_costmap]: start
+[collision_monitor-33] [INFO] [1790721634.124920957] [AMR_05.collision_monitor]: Activating
+[collision_monitor-33] [INFO] [1790721634.125089101] [AMR_05.collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[collision_monitor-54] [INFO] [1790721634.129835316] [AMR_08.collision_monitor]: Configuring
+[controller_server-25] [INFO] [1790721634.130651295] [AMR_04.controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-25] [INFO] [1790721634.130708227] [AMR_04.controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-34] [INFO] [1790721634.146674128] [AMR_05.lifecycle_manager_execution]: [34m[1mManaged nodes are active[0m[0m
+[controller_server-46] [INFO] [1790721634.163978475] [AMR_07.local_costmap.local_costmap]: StaticLayer: Resizing static layer to 100 X 100 at 0.100000 m/pix
+[lifecycle_manager-27] [INFO] [1790721634.167163895] [AMR_04.lifecycle_manager_execution]: [34m[1mActivating collision_monitor[0m[0m
+[collision_monitor-26] [INFO] [1790721634.172523976] [AMR_04.collision_monitor]: Activating
+[collision_monitor-26] [INFO] [1790721634.172717714] [AMR_04.collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[controller_server-46] [INFO] [1790721634.174761453] [AMR_07.controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-46] [INFO] [1790721634.174817864] [AMR_07.controller_server]: Creating bond (controller_server) to lifecycle manager.
+[collision_monitor-54] [INFO] [1790721634.184202364] [collision_monitor]: [scan]: Creating Scan
+[controller_server-4] [INFO] [1790721634.184281117] [AMR_01.local_costmap.local_costmap]: StaticLayer: Resizing static layer to 100 X 100 at 0.100000 m/pix
+[lifecycle_manager-48] [INFO] [1790721634.189716337] [AMR_07.lifecycle_manager_execution]: [34m[1mActivating collision_monitor[0m[0m
+[lifecycle_manager-27] [INFO] [1790721634.189841989] [AMR_04.lifecycle_manager_execution]: [34m[1mManaged nodes are active[0m[0m
+[collision_monitor-47] [INFO] [1790721634.190840421] [AMR_07.collision_monitor]: Activating
+[collision_monitor-47] [INFO] [1790721634.191033791] [AMR_07.collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[collision_monitor-54] [INFO] [1790721634.197362462] [collision_monitor]: [StopZone]: Creating Polygon
+[controller_server-32] [INFO] [1790721634.201107023] [AMR_05.local_costmap.local_costmap]: StaticLayer: Resizing static layer to 100 X 100 at 0.100000 m/pix
+[controller_server-18] [INFO] [1790721634.201743574] [AMR_03.local_costmap.local_costmap]: StaticLayer: Resizing static layer to 100 X 100 at 0.100000 m/pix
+[lifecycle_manager-48] [INFO] [1790721634.204391323] [AMR_07.lifecycle_manager_execution]: [34m[1mManaged nodes are active[0m[0m
+[controller_server-53] [INFO] [1790721634.215994763] [AMR_08.local_costmap.local_costmap]: StaticLayer: Resizing static layer to 100 X 100 at 0.100000 m/pix
+[lifecycle_manager-55] [INFO] [1790721634.239367943] [AMR_08.lifecycle_manager_execution]: [34m[1mActivating controller_server[0m[0m
+[controller_server-53] [INFO] [1790721634.239869458] [AMR_08.controller_server]: Activating
+[controller_server-53] [INFO] [1790721634.239914231] [AMR_08.local_costmap.local_costmap]: Activating
+[controller_server-53] [INFO] [1790721634.239924002] [AMR_08.local_costmap.local_costmap]: Checking transform
+[controller_server-53] [INFO] [1790721634.240077652] [AMR_08.local_costmap.local_costmap]: start
+[controller_server-11] [INFO] [1790721634.240201301] [AMR_02.local_costmap.local_costmap]: StaticLayer: Resizing static layer to 100 X 100 at 0.100000 m/pix
+[controller_server-53] [INFO] [1790721634.290173446] [AMR_08.controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-53] [INFO] [1790721634.290224250] [AMR_08.controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-55] [INFO] [1790721634.297746893] [AMR_08.lifecycle_manager_execution]: [34m[1mActivating collision_monitor[0m[0m
+[collision_monitor-54] [INFO] [1790721634.298121564] [AMR_08.collision_monitor]: Activating
+[collision_monitor-54] [INFO] [1790721634.298228604] [AMR_08.collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[lifecycle_manager-55] [INFO] [1790721634.306295205] [AMR_08.lifecycle_manager_execution]: [34m[1mManaged nodes are active[0m[0m
+[controller_server-39] [INFO] [1790721634.408396074] [AMR_06.local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "base_link" passed to canTransform argument source_frame - frame does not exist
+[controller_server-4] [INFO] [1790721634.413570569] [AMR_01.local_costmap.local_costmap]: start
+[controller_server-4] [INFO] [1790721634.463715660] [AMR_01.controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-4] [INFO] [1790721634.463767995] [AMR_01.controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1790721634.469689401] [AMR_01.lifecycle_manager_execution]: [34m[1mActivating collision_monitor[0m[0m
+[collision_monitor-5] [INFO] [1790721634.469947317] [AMR_01.collision_monitor]: Activating
+[collision_monitor-5] [INFO] [1790721634.470056925] [AMR_01.collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1790721634.476696132] [AMR_01.lifecycle_manager_execution]: [34m[1mManaged nodes are active[0m[0m
+[controller_server-18] [INFO] [1790721634.621574345] [AMR_03.local_costmap.local_costmap]: start
+[controller_server-18] [INFO] [1790721634.671760905] [AMR_03.controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-18] [INFO] [1790721634.671808865] [AMR_03.controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-20] [INFO] [1790721634.679136573] [AMR_03.lifecycle_manager_execution]: [34m[1mActivating collision_monitor[0m[0m
+[collision_monitor-19] [INFO] [1790721634.679538353] [AMR_03.collision_monitor]: Activating
+[collision_monitor-19] [INFO] [1790721634.679661921] [AMR_03.collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[lifecycle_manager-20] [INFO] [1790721634.686652785] [AMR_03.lifecycle_manager_execution]: [34m[1mManaged nodes are active[0m[0m
+[controller_server-39] [INFO] [1790721634.908365456] [AMR_06.local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "base_link" passed to canTransform argument source_frame - frame does not exist
+[controller_server-39] [INFO] [1790721635.408534509] [AMR_06.local_costmap.local_costmap]: start
+[controller_server-39] [INFO] [1790721635.458675435] [AMR_06.controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-39] [INFO] [1790721635.458731162] [AMR_06.controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-41] [INFO] [1790721635.465313298] [AMR_06.lifecycle_manager_execution]: [34m[1mActivating collision_monitor[0m[0m
+[collision_monitor-40] [INFO] [1790721635.465582469] [AMR_06.collision_monitor]: Activating
+[collision_monitor-40] [INFO] [1790721635.465678031] [AMR_06.collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[lifecycle_manager-41] [INFO] [1790721635.471303594] [AMR_06.lifecycle_manager_execution]: [34m[1mManaged nodes are active[0m[0m
+[ekf_node-44] [ERROR] [1790721638.991924082] [AMR_07.ekf_filter_node]: Failed to meet update rate! Took 0.040717467000000000243seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[ekf_node-9] [ERROR] [1790721639.091811891] [AMR_02.ekf_filter_node]: Failed to meet update rate! Took 0.10078389199999999992seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[ekf_node-30] [ERROR] [1790721639.095699329] [AMR_05.ekf_filter_node]: Failed to meet update rate! Took 0.15940887200000000701seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[ekf_node-23] [ERROR] [1790721639.156847524] [AMR_04.ekf_filter_node]: Failed to meet update rate! Took 0.089782224999999993287seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[controller_server-4] [INFO] [1790721639.229428607] [AMR_01.local_costmap.local_costmap]: StaticLayer: Resizing static layer to 120 X 156 at 0.100000 m/pix
+[ekf_node-16] [ERROR] [1790721639.259079596] [AMR_03.ekf_filter_node]: Failed to meet update rate! Took 0.058808815999999999868seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[ekf_node-30] [ERROR] [1790721639.266770745] [AMR_05.ekf_filter_node]: Failed to meet update rate! Took 0.097707922000000002605seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[controller_server-32] [INFO] [1790721639.334680346] [AMR_05.local_costmap.local_costmap]: StaticLayer: Resizing static layer to 120 X 156 at 0.100000 m/pix
+[ekf_node-51] [ERROR] [1790721639.360813294] [AMR_08.ekf_filter_node]: Failed to meet update rate! Took 0.05187915099999999835seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[controller_server-11] [INFO] [1790721639.389095021] [AMR_02.local_costmap.local_costmap]: StaticLayer: Resizing static layer to 120 X 156 at 0.100000 m/pix
+[ekf_node-37] [ERROR] [1790721639.404206458] [AMR_06.ekf_filter_node]: Failed to meet update rate! Took 0.039875924999999999565seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[controller_server-18] [INFO] [1790721639.422962213] [AMR_03.local_costmap.local_costmap]: StaticLayer: Resizing static layer to 120 X 156 at 0.100000 m/pix
+[ekf_node-9] [ERROR] [1790721639.434193424] [AMR_02.ekf_filter_node]: Failed to meet update rate! Took 0.041754767999999997663seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[ekf_node-23] [ERROR] [1790721639.435562989] [AMR_04.ekf_filter_node]: Failed to meet update rate! Took 0.10183452499999999519seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[ekf_node-30] [ERROR] [1790721639.435751162] [AMR_05.ekf_filter_node]: Failed to meet update rate! Took 0.088845232999999995682seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[ekf_node-2] [ERROR] [1790721639.443529571] [AMR_01.ekf_filter_node]: Failed to meet update rate! Took 0.034737314999999997778seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[ekf_node-37] [ERROR] [1790721639.496122071] [AMR_06.ekf_filter_node]: Failed to meet update rate! Took 0.035149317999999998841seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[ekf_node-16] [ERROR] [1790721639.520312539] [AMR_03.ekf_filter_node]: Failed to meet update rate! Took 0.10184025100000000663seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[controller_server-25] [INFO] [1790721639.681583951] [AMR_04.local_costmap.local_costmap]: StaticLayer: Resizing static layer to 120 X 156 at 0.100000 m/pix
+[controller_server-53] [INFO] [1790721639.740562713] [AMR_08.local_costmap.local_costmap]: StaticLayer: Resizing static layer to 120 X 156 at 0.100000 m/pix
+[ekf_node-51] [ERROR] [1790721639.748278589] [AMR_08.ekf_filter_node]: Failed to meet update rate! Took 0.035411112000000001532seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[ekf_node-9] [ERROR] [1790721639.752633678] [AMR_02.ekf_filter_node]: Failed to meet update rate! Took 0.050783197000000002141seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[ekf_node-23] [ERROR] [1790721639.772942362] [AMR_04.ekf_filter_node]: Failed to meet update rate! Took 0.034806598000000001092seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[controller_server-46] [INFO] [1790721639.825732357] [AMR_07.local_costmap.local_costmap]: StaticLayer: Resizing static layer to 120 X 156 at 0.100000 m/pix
+[controller_server-39] [INFO] [1790721639.908787087] [AMR_06.local_costmap.local_costmap]: StaticLayer: Resizing static layer to 120 X 156 at 0.100000 m/pix
+[controller_server-25] [INFO] [1790721658.267833975] [AMR_04.controller_server]: Received a goal, begin computing control effort.
+[controller_server-18] [INFO] [1790721658.276815816] [AMR_03.controller_server]: Received a goal, begin computing control effort.
+[controller_server-25] [INFO] [1790721660.818106710] [AMR_04.controller_server]: Reached the goal!
+[controller_server-18] [INFO] [1790721660.827075756] [AMR_03.controller_server]: Reached the goal!
+[controller_server-18] [INFO] [1790721660.926055378] [AMR_03.controller_server]: Received a goal, begin computing control effort.
+[controller_server-39] [INFO] [1790721660.929185639] [AMR_06.controller_server]: Received a goal, begin computing control effort.
+[controller_server-11] [INFO] [1790721660.930886044] [AMR_02.controller_server]: Received a goal, begin computing control effort.
+[controller_server-32] [INFO] [1790721660.931826293] [AMR_05.controller_server]: Received a goal, begin computing control effort.
+[controller_server-4] [INFO] [1790721660.956561659] [AMR_01.controller_server]: Received a goal, begin computing control effort.
+[controller_server-25] [INFO] [1790721660.967160522] [AMR_04.controller_server]: Received a goal, begin computing control effort.
+[controller_server-46] [INFO] [1790721660.978633477] [AMR_07.controller_server]: Received a goal, begin computing control effort.
+[controller_server-39] [INFO] [1790721663.479449745] [AMR_06.controller_server]: Reached the goal!
+[controller_server-32] [INFO] [1790721663.482019185] [AMR_05.controller_server]: Reached the goal!
+[controller_server-4] [INFO] [1790721663.506777327] [AMR_01.controller_server]: Reached the goal!
+[controller_server-46] [INFO] [1790721663.528889622] [AMR_07.controller_server]: Reached the goal!
+[controller_server-18] [INFO] [1790721663.676259243] [AMR_03.controller_server]: Reached the goal!
+[controller_server-25] [INFO] [1790721663.717367064] [AMR_04.controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790721666.081091923] [AMR_02.controller_server]: Reached the goal!
+[controller_server-39] [INFO] [1790721666.176733988] [AMR_06.controller_server]: Received a goal, begin computing control effort.
+[controller_server-46] [INFO] [1790721666.178079112] [AMR_07.controller_server]: Received a goal, begin computing control effort.
+[controller_server-32] [INFO] [1790721666.178477656] [AMR_05.controller_server]: Received a goal, begin computing control effort.
+[controller_server-11] [INFO] [1790721666.180342387] [AMR_02.controller_server]: Received a goal, begin computing control effort.
+[controller_server-53] [INFO] [1790721666.198797829] [AMR_08.controller_server]: Received a goal, begin computing control effort.
+[controller_server-4] [INFO] [1790721666.205913101] [AMR_01.controller_server]: Received a goal, begin computing control effort.
+[controller_server-53] [INFO] [1790721668.749015033] [AMR_08.controller_server]: Reached the goal!
+[controller_server-32] [INFO] [1790721668.878675392] [AMR_05.controller_server]: Reached the goal!
+[controller_server-4] [INFO] [1790721668.906112782] [AMR_01.controller_server]: Reached the goal!
+[controller_server-39] [INFO] [1790721668.926914101] [AMR_06.controller_server]: Reached the goal!
+[controller_server-46] [INFO] [1790721668.928239856] [AMR_07.controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790721668.930545023] [AMR_02.controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790721669.029378807] [AMR_02.controller_server]: Received a goal, begin computing control effort.
+[controller_server-53] [INFO] [1790721669.048693899] [AMR_08.controller_server]: Received a goal, begin computing control effort.
+[controller_server-4] [INFO] [1790721669.055556642] [AMR_01.controller_server]: Received a goal, begin computing control effort.
+[controller_server-11] [INFO] [1790721671.779603833] [AMR_02.controller_server]: Reached the goal!
+[controller_server-53] [INFO] [1790721671.798916345] [AMR_08.controller_server]: Reached the goal!
+[controller_server-4] [INFO] [1790721673.705766250] [AMR_01.controller_server]: Reached the goal!
+[controller_server-4] [INFO] [1790721673.805729396] [AMR_01.controller_server]: Received a goal, begin computing control effort.
+[controller_server-11] [INFO] [1790721673.829452226] [AMR_02.controller_server]: Received a goal, begin computing control effort.
+[controller_server-4] [INFO] [1790721676.505939819] [AMR_01.controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790721678.529641956] [AMR_02.controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790721678.629276763] [AMR_02.controller_server]: Received a goal, begin computing control effort.
+[controller_server-4] [INFO] [1790721678.655963582] [AMR_01.controller_server]: Received a goal, begin computing control effort.
+[controller_server-11] [INFO] [1790721681.379500334] [AMR_02.controller_server]: Reached the goal!
+[controller_server-4] [INFO] [1790721681.406149622] [AMR_01.controller_server]: Reached the goal!
+[ekf_node-51] [ERROR] [1790721681.906282558] [AMR_08.ekf_filter_node]: Failed to meet update rate! Took 0.059312774999999998138seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.

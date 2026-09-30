@@ -1,0 +1,2703 @@
+[
+  {
+    "scenarioId": "development-stock-n3-mirroredCross-s700819",
+    "N": 3,
+    "regime": "severe",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-7",
+        "createdAt": 42,
+        "firstAssignedTick": 127,
+        "pickedUpTick": 239,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 43,
+          "firstAuctionEligibleTick": 125,
+          "firstBidTick": 125,
+          "quorumBidTick": 125,
+          "proposalTick": 127,
+          "firstGrantTick": 127,
+          "certificateTick": 127
+        }
+      },
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 130,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 129,
+          "firstBidTick": 129,
+          "quorumBidTick": 129,
+          "proposalTick": 130,
+          "firstGrantTick": 130,
+          "certificateTick": 130
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n3-mirroredCross-s700820",
+    "N": 3,
+    "regime": "severe",
+    "tasksCompleted": 9,
+    "unfinished": [
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 115,
+        "pickedUpTick": 154,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 113,
+          "firstBidTick": 113,
+          "quorumBidTick": 114,
+          "proposalTick": 115,
+          "firstGrantTick": 115,
+          "certificateTick": 115
+        }
+      },
+      {
+        "id": "M-9",
+        "createdAt": 54,
+        "firstAssignedTick": 130,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 55,
+          "firstAuctionEligibleTick": 129,
+          "firstBidTick": 129,
+          "quorumBidTick": 129,
+          "proposalTick": 130,
+          "firstGrantTick": 130,
+          "certificateTick": 130
+        }
+      },
+      {
+        "id": "M-10",
+        "createdAt": 60,
+        "firstAssignedTick": 162,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 61,
+          "firstAuctionEligibleTick": 161,
+          "firstBidTick": 161,
+          "quorumBidTick": 161,
+          "proposalTick": 162,
+          "firstGrantTick": 162,
+          "certificateTick": 162
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n3-mirroredCross-s700910",
+    "N": 3,
+    "regime": "recoverable",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-10",
+        "createdAt": 60,
+        "firstAssignedTick": 162,
+        "pickedUpTick": 169,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 61,
+          "firstAuctionEligibleTick": 161,
+          "firstBidTick": 161,
+          "quorumBidTick": 161,
+          "proposalTick": 162,
+          "firstGrantTick": 162,
+          "certificateTick": 162
+        }
+      },
+      {
+        "id": "M-11",
+        "createdAt": 66,
+        "firstAssignedTick": 170,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 67,
+          "firstAuctionEligibleTick": 169,
+          "firstBidTick": 169,
+          "quorumBidTick": 169,
+          "proposalTick": 170,
+          "firstGrantTick": 170,
+          "certificateTick": 170
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n3-mirroredCross-s700915",
+    "N": 3,
+    "regime": "recoverable",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-11",
+        "createdAt": 66,
+        "firstAssignedTick": 162,
+        "pickedUpTick": 167,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 67,
+          "firstAuctionEligibleTick": 161,
+          "firstBidTick": 161,
+          "quorumBidTick": 161,
+          "proposalTick": 162,
+          "firstGrantTick": 162,
+          "certificateTick": 162
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n3-mirroredCross-s700917",
+    "N": 3,
+    "regime": "recoverable",
+    "tasksCompleted": 9,
+    "unfinished": [
+      {
+        "id": "M-6",
+        "createdAt": 36,
+        "firstAssignedTick": 95,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 37,
+          "firstAuctionEligibleTick": 94,
+          "firstBidTick": 94,
+          "quorumBidTick": 94,
+          "proposalTick": 95,
+          "firstGrantTick": 95,
+          "certificateTick": 95
+        }
+      },
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 121,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 119,
+          "firstBidTick": 119,
+          "quorumBidTick": 119,
+          "proposalTick": 121,
+          "firstGrantTick": 121,
+          "certificateTick": 121
+        }
+      },
+      {
+        "id": "M-11",
+        "createdAt": 66,
+        "firstAssignedTick": 185,
+        "pickedUpTick": 221,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 67,
+          "firstAuctionEligibleTick": 183,
+          "firstBidTick": 183,
+          "quorumBidTick": 184,
+          "proposalTick": 185,
+          "firstGrantTick": 185,
+          "certificateTick": 185
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n3-mirroredCross-s700974",
+    "N": 3,
+    "regime": "recoverable",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-10",
+        "createdAt": 60,
+        "firstAssignedTick": 99,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 61,
+          "firstAuctionEligibleTick": 97,
+          "firstBidTick": 97,
+          "quorumBidTick": 97,
+          "proposalTick": 98,
+          "firstGrantTick": 98,
+          "certificateTick": 98
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n3-mirroredCross-s700985",
+    "N": 3,
+    "regime": "recoverable",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-10",
+        "createdAt": 60,
+        "firstAssignedTick": 158,
+        "pickedUpTick": 220,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 61,
+          "firstAuctionEligibleTick": 156,
+          "firstBidTick": 156,
+          "quorumBidTick": 156,
+          "proposalTick": 157,
+          "firstGrantTick": 157,
+          "certificateTick": 157
+        }
+      },
+      {
+        "id": "M-11",
+        "createdAt": 66,
+        "firstAssignedTick": 163,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 67,
+          "firstAuctionEligibleTick": 161,
+          "firstBidTick": 161,
+          "quorumBidTick": 161,
+          "proposalTick": 162,
+          "firstGrantTick": 162,
+          "certificateTick": 162
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n3-sameAisle-s700441",
+    "N": 3,
+    "regime": "severe",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 98,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 97,
+          "firstBidTick": 97,
+          "quorumBidTick": 97,
+          "proposalTick": 98,
+          "firstGrantTick": 98,
+          "certificateTick": 98
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n3-uniform-s700031",
+    "N": 3,
+    "regime": "low",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-9",
+        "createdAt": 54,
+        "firstAssignedTick": 135,
+        "pickedUpTick": 163,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 55,
+          "firstAuctionEligibleTick": 134,
+          "firstBidTick": 134,
+          "quorumBidTick": 134,
+          "proposalTick": 135,
+          "firstGrantTick": 135,
+          "certificateTick": 135
+        }
+      },
+      {
+        "id": "M-10",
+        "createdAt": 60,
+        "firstAssignedTick": 163,
+        "pickedUpTick": 249,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 61,
+          "firstAuctionEligibleTick": 161,
+          "firstBidTick": 161,
+          "quorumBidTick": 161,
+          "proposalTick": 162,
+          "firstGrantTick": 162,
+          "certificateTick": 162
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n3-uniform-s700047",
+    "N": 3,
+    "regime": "recoverable",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 140,
+        "pickedUpTick": 183,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 139,
+          "firstBidTick": 139,
+          "quorumBidTick": 139,
+          "proposalTick": 140,
+          "firstGrantTick": 140,
+          "certificateTick": 140
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n3-uniform-s700071",
+    "N": 3,
+    "regime": "low",
+    "tasksCompleted": 7,
+    "unfinished": [
+      {
+        "id": "M-0",
+        "createdAt": 0,
+        "firstAssignedTick": 3,
+        "pickedUpTick": 14,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 1,
+          "firstAuctionEligibleTick": 1,
+          "firstBidTick": 1,
+          "quorumBidTick": 1,
+          "proposalTick": 2,
+          "firstGrantTick": 2,
+          "certificateTick": 2
+        }
+      },
+      {
+        "id": "M-1",
+        "createdAt": 6,
+        "firstAssignedTick": 15,
+        "pickedUpTick": 21,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 7,
+          "firstAuctionEligibleTick": 13,
+          "firstBidTick": 13,
+          "quorumBidTick": 13,
+          "proposalTick": 15,
+          "firstGrantTick": 15,
+          "certificateTick": 15
+        }
+      },
+      {
+        "id": "M-2",
+        "createdAt": 12,
+        "firstAssignedTick": 22,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 13,
+          "firstAuctionEligibleTick": 21,
+          "firstBidTick": 21,
+          "quorumBidTick": 21,
+          "proposalTick": 22,
+          "firstGrantTick": 22,
+          "certificateTick": 22
+        }
+      },
+      {
+        "id": "M-4",
+        "createdAt": 24,
+        "firstAssignedTick": 41,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 25,
+          "firstAuctionEligibleTick": 39,
+          "firstBidTick": 39,
+          "quorumBidTick": 40,
+          "proposalTick": 41,
+          "firstGrantTick": 41,
+          "certificateTick": 41
+        }
+      },
+      {
+        "id": "M-9",
+        "createdAt": 54,
+        "firstAssignedTick": 162,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 55,
+          "firstAuctionEligibleTick": 161,
+          "firstBidTick": 161,
+          "quorumBidTick": 161,
+          "proposalTick": 162,
+          "firstGrantTick": 162,
+          "certificateTick": 162
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-mirroredCross-s700802",
+    "N": 5,
+    "regime": "severe",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-11",
+        "createdAt": 66,
+        "firstAssignedTick": 99,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 67,
+          "firstAuctionEligibleTick": 97,
+          "firstBidTick": 97,
+          "quorumBidTick": 97,
+          "proposalTick": 98,
+          "firstGrantTick": 98,
+          "certificateTick": 98
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-mirroredCross-s700803",
+    "N": 5,
+    "regime": "severe",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-5",
+        "createdAt": 30,
+        "firstAssignedTick": 35,
+        "pickedUpTick": 102,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 31,
+          "firstAuctionEligibleTick": 33,
+          "firstBidTick": 33,
+          "quorumBidTick": 33,
+          "proposalTick": 34,
+          "firstGrantTick": 34,
+          "certificateTick": 34
+        }
+      },
+      {
+        "id": "M-7",
+        "createdAt": 42,
+        "firstAssignedTick": 59,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 43,
+          "firstAuctionEligibleTick": 56,
+          "firstBidTick": 56,
+          "quorumBidTick": 57,
+          "proposalTick": 58,
+          "firstGrantTick": 58,
+          "certificateTick": 58
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-mirroredCross-s700804",
+    "N": 5,
+    "regime": "severe",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 67,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 65,
+          "firstBidTick": 65,
+          "quorumBidTick": 65,
+          "proposalTick": 66,
+          "firstGrantTick": 66,
+          "certificateTick": 66
+        }
+      },
+      {
+        "id": "M-9",
+        "createdAt": 54,
+        "firstAssignedTick": 67,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 55,
+          "firstAuctionEligibleTick": 65,
+          "firstBidTick": 65,
+          "quorumBidTick": 65,
+          "proposalTick": 66,
+          "firstGrantTick": 66,
+          "certificateTick": 66
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-mirroredCross-s700805",
+    "N": 5,
+    "regime": "severe",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-4",
+        "createdAt": 24,
+        "firstAssignedTick": 34,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-04",
+        "ownershipStages": {
+          "firstAnnouncementTick": 25,
+          "firstAuctionEligibleTick": 33,
+          "firstBidTick": 33,
+          "quorumBidTick": 33,
+          "proposalTick": 34,
+          "firstGrantTick": 34,
+          "certificateTick": 34
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-mirroredCross-s700812",
+    "N": 5,
+    "regime": "severe",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-6",
+        "createdAt": 36,
+        "firstAssignedTick": 39,
+        "pickedUpTick": 94,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 37,
+          "firstAuctionEligibleTick": 37,
+          "firstBidTick": 37,
+          "quorumBidTick": 37,
+          "proposalTick": 38,
+          "firstGrantTick": 38,
+          "certificateTick": 38
+        }
+      },
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 66,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-04",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 63,
+          "firstBidTick": 63,
+          "quorumBidTick": 64,
+          "proposalTick": 66,
+          "firstGrantTick": 66,
+          "certificateTick": 66
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-mirroredCross-s700818",
+    "N": 5,
+    "regime": "severe",
+    "tasksCompleted": 9,
+    "unfinished": [
+      {
+        "id": "M-4",
+        "createdAt": 24,
+        "firstAssignedTick": 26,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 25,
+          "firstAuctionEligibleTick": 25,
+          "firstBidTick": 25,
+          "quorumBidTick": 25,
+          "proposalTick": 26,
+          "firstGrantTick": 26,
+          "certificateTick": 26
+        }
+      },
+      {
+        "id": "M-6",
+        "createdAt": 36,
+        "firstAssignedTick": 38,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 37,
+          "firstAuctionEligibleTick": 37,
+          "firstBidTick": 37,
+          "quorumBidTick": 37,
+          "proposalTick": 38,
+          "firstGrantTick": 38,
+          "certificateTick": 38
+        }
+      },
+      {
+        "id": "M-7",
+        "createdAt": 42,
+        "firstAssignedTick": 44,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 43,
+          "firstAuctionEligibleTick": 43,
+          "firstBidTick": 43,
+          "quorumBidTick": 43,
+          "proposalTick": 44,
+          "firstGrantTick": 44,
+          "certificateTick": 44
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-mirroredCross-s700828",
+    "N": 5,
+    "regime": "recoverable",
+    "tasksCompleted": 7,
+    "unfinished": [
+      {
+        "id": "M-2",
+        "createdAt": 12,
+        "firstAssignedTick": 14,
+        "pickedUpTick": 47,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 13,
+          "firstAuctionEligibleTick": 13,
+          "firstBidTick": 13,
+          "quorumBidTick": 13,
+          "proposalTick": 14,
+          "firstGrantTick": 14,
+          "certificateTick": 14
+        }
+      },
+      {
+        "id": "M-4",
+        "createdAt": 24,
+        "firstAssignedTick": 34,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 25,
+          "firstAuctionEligibleTick": 31,
+          "firstBidTick": 31,
+          "quorumBidTick": 32,
+          "proposalTick": 34,
+          "firstGrantTick": 34,
+          "certificateTick": 34
+        }
+      },
+      {
+        "id": "M-6",
+        "createdAt": 36,
+        "firstAssignedTick": 44,
+        "pickedUpTick": 53,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 37,
+          "firstAuctionEligibleTick": 41,
+          "firstBidTick": 41,
+          "quorumBidTick": 42,
+          "proposalTick": 43,
+          "firstGrantTick": 43,
+          "certificateTick": 43
+        }
+      },
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 67,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 65,
+          "firstBidTick": 65,
+          "quorumBidTick": 65,
+          "proposalTick": 66,
+          "firstGrantTick": 66,
+          "certificateTick": 66
+        }
+      },
+      {
+        "id": "M-9",
+        "createdAt": 54,
+        "firstAssignedTick": 67,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 55,
+          "firstAuctionEligibleTick": 65,
+          "firstBidTick": 65,
+          "quorumBidTick": 65,
+          "proposalTick": 66,
+          "firstGrantTick": 66,
+          "certificateTick": 66
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-mirroredCross-s700870",
+    "N": 5,
+    "regime": "recoverable",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-9",
+        "createdAt": 54,
+        "firstAssignedTick": 66,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 55,
+          "firstAuctionEligibleTick": 65,
+          "firstBidTick": 65,
+          "quorumBidTick": 65,
+          "proposalTick": 66,
+          "firstGrantTick": 66,
+          "certificateTick": 66
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-mirroredCross-s700887",
+    "N": 5,
+    "regime": "recoverable",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-11",
+        "createdAt": 66,
+        "firstAssignedTick": 92,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 67,
+          "firstAuctionEligibleTick": 90,
+          "firstBidTick": 90,
+          "quorumBidTick": 90,
+          "proposalTick": 92,
+          "firstGrantTick": 92,
+          "certificateTick": 92
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-mirroredCross-s700915",
+    "N": 5,
+    "regime": "recoverable",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 66,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-04",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 64,
+          "firstBidTick": 64,
+          "quorumBidTick": 65,
+          "proposalTick": 66,
+          "firstGrantTick": 66,
+          "certificateTick": 66
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-mirroredCross-s700969",
+    "N": 5,
+    "regime": "recoverable",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 51,
+        "pickedUpTick": 203,
+        "completedTick": null,
+        "finalOwner": "AMR-04",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 49,
+          "firstBidTick": 49,
+          "quorumBidTick": 49,
+          "proposalTick": 50,
+          "firstGrantTick": 50,
+          "certificateTick": 50
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-sameAisle-s700426",
+    "N": 5,
+    "regime": "severe",
+    "tasksCompleted": 9,
+    "unfinished": [
+      {
+        "id": "M-0",
+        "createdAt": 0,
+        "firstAssignedTick": 2,
+        "pickedUpTick": 11,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 1,
+          "firstAuctionEligibleTick": 1,
+          "firstBidTick": 1,
+          "quorumBidTick": 1,
+          "proposalTick": 2,
+          "firstGrantTick": 2,
+          "certificateTick": 2
+        }
+      },
+      {
+        "id": "M-1",
+        "createdAt": 6,
+        "firstAssignedTick": 8,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 7,
+          "firstAuctionEligibleTick": 7,
+          "firstBidTick": 7,
+          "quorumBidTick": 7,
+          "proposalTick": 8,
+          "firstGrantTick": 8,
+          "certificateTick": 8
+        }
+      },
+      {
+        "id": "M-3",
+        "createdAt": 18,
+        "firstAssignedTick": 22,
+        "pickedUpTick": 25,
+        "completedTick": null,
+        "finalOwner": "AMR-04",
+        "ownershipStages": {
+          "firstAnnouncementTick": 19,
+          "firstAuctionEligibleTick": 21,
+          "firstBidTick": 21,
+          "quorumBidTick": 21,
+          "proposalTick": 22,
+          "firstGrantTick": 22,
+          "certificateTick": 22
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-sameAisle-s700427",
+    "N": 5,
+    "regime": "severe",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-10",
+        "createdAt": 60,
+        "firstAssignedTick": 62,
+        "pickedUpTick": 207,
+        "completedTick": null,
+        "finalOwner": "AMR-04",
+        "ownershipStages": {
+          "firstAnnouncementTick": 61,
+          "firstAuctionEligibleTick": 61,
+          "firstBidTick": 61,
+          "quorumBidTick": 61,
+          "proposalTick": 62,
+          "firstGrantTick": 62,
+          "certificateTick": 62
+        }
+      },
+      {
+        "id": "M-11",
+        "createdAt": 66,
+        "firstAssignedTick": 68,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 67,
+          "firstAuctionEligibleTick": 67,
+          "firstBidTick": 67,
+          "quorumBidTick": 67,
+          "proposalTick": 68,
+          "firstGrantTick": 68,
+          "certificateTick": 68
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-sameAisle-s700511",
+    "N": 5,
+    "regime": "recoverable",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-2",
+        "createdAt": 12,
+        "firstAssignedTick": 14,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 13,
+          "firstAuctionEligibleTick": 13,
+          "firstBidTick": 13,
+          "quorumBidTick": 13,
+          "proposalTick": 14,
+          "firstGrantTick": 14,
+          "certificateTick": 14
+        }
+      },
+      {
+        "id": "M-4",
+        "createdAt": 24,
+        "firstAssignedTick": 34,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 25,
+          "firstAuctionEligibleTick": 33,
+          "firstBidTick": 33,
+          "quorumBidTick": 33,
+          "proposalTick": 34,
+          "firstGrantTick": 34,
+          "certificateTick": 34
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-sameAisle-s700529",
+    "N": 5,
+    "regime": "recoverable",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-5",
+        "createdAt": 30,
+        "firstAssignedTick": 34,
+        "pickedUpTick": 175,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 31,
+          "firstAuctionEligibleTick": 33,
+          "firstBidTick": 33,
+          "quorumBidTick": 33,
+          "proposalTick": 34,
+          "firstGrantTick": 34,
+          "certificateTick": 34
+        }
+      },
+      {
+        "id": "M-6",
+        "createdAt": 36,
+        "firstAssignedTick": 38,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 37,
+          "firstAuctionEligibleTick": 37,
+          "firstBidTick": 37,
+          "quorumBidTick": 37,
+          "proposalTick": 38,
+          "firstGrantTick": 38,
+          "certificateTick": 38
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-sameAisle-s700589",
+    "N": 5,
+    "regime": "recoverable",
+    "tasksCompleted": 9,
+    "unfinished": [
+      {
+        "id": "M-6",
+        "createdAt": 36,
+        "firstAssignedTick": 38,
+        "pickedUpTick": 79,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 37,
+          "firstAuctionEligibleTick": 37,
+          "firstBidTick": 37,
+          "quorumBidTick": 37,
+          "proposalTick": 38,
+          "firstGrantTick": 38,
+          "certificateTick": 38
+        }
+      },
+      {
+        "id": "M-9",
+        "createdAt": 54,
+        "firstAssignedTick": 67,
+        "pickedUpTick": 89,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 55,
+          "firstAuctionEligibleTick": 65,
+          "firstBidTick": 65,
+          "quorumBidTick": 65,
+          "proposalTick": 66,
+          "firstGrantTick": 66,
+          "certificateTick": 66
+        }
+      },
+      {
+        "id": "M-10",
+        "createdAt": 60,
+        "firstAssignedTick": 73,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 61,
+          "firstAuctionEligibleTick": 70,
+          "firstBidTick": 70,
+          "quorumBidTick": 70,
+          "proposalTick": 72,
+          "firstGrantTick": 72,
+          "certificateTick": 72
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n5-uniform-s700007",
+    "N": 5,
+    "regime": "severe",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-5",
+        "createdAt": 30,
+        "firstAssignedTick": 34,
+        "pickedUpTick": 185,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 31,
+          "firstAuctionEligibleTick": 33,
+          "firstBidTick": 33,
+          "quorumBidTick": 33,
+          "proposalTick": 34,
+          "firstGrantTick": 34,
+          "certificateTick": 34
+        }
+      },
+      {
+        "id": "M-6",
+        "createdAt": 36,
+        "firstAssignedTick": 38,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 37,
+          "firstAuctionEligibleTick": 37,
+          "firstBidTick": 37,
+          "quorumBidTick": 37,
+          "proposalTick": 38,
+          "firstGrantTick": 38,
+          "certificateTick": 38
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-mirroredCross-s700807",
+    "N": 8,
+    "regime": "severe",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-10",
+        "createdAt": 60,
+        "firstAssignedTick": 66,
+        "pickedUpTick": 202,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 61,
+          "firstAuctionEligibleTick": 61,
+          "firstBidTick": 61,
+          "quorumBidTick": 65,
+          "proposalTick": 66,
+          "firstGrantTick": 66,
+          "certificateTick": 66
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-mirroredCross-s700822",
+    "N": 8,
+    "regime": "severe",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-6",
+        "createdAt": 36,
+        "firstAssignedTick": 38,
+        "pickedUpTick": 51,
+        "completedTick": null,
+        "finalOwner": "AMR-08",
+        "ownershipStages": {
+          "firstAnnouncementTick": 37,
+          "firstAuctionEligibleTick": 37,
+          "firstBidTick": 37,
+          "quorumBidTick": 37,
+          "proposalTick": 38,
+          "firstGrantTick": 38,
+          "certificateTick": 38
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-mirroredCross-s700826",
+    "N": 8,
+    "regime": "severe",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-9",
+        "createdAt": 54,
+        "firstAssignedTick": 56,
+        "pickedUpTick": 232,
+        "completedTick": null,
+        "finalOwner": "AMR-06",
+        "ownershipStages": {
+          "firstAnnouncementTick": 55,
+          "firstAuctionEligibleTick": 55,
+          "firstBidTick": 55,
+          "quorumBidTick": 55,
+          "proposalTick": 56,
+          "firstGrantTick": 56,
+          "certificateTick": 56
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-mirroredCross-s700964",
+    "N": 8,
+    "regime": "recoverable",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-9",
+        "createdAt": 54,
+        "firstAssignedTick": 59,
+        "pickedUpTick": 201,
+        "completedTick": null,
+        "finalOwner": "AMR-04",
+        "ownershipStages": {
+          "firstAnnouncementTick": 55,
+          "firstAuctionEligibleTick": 55,
+          "firstBidTick": 55,
+          "quorumBidTick": 57,
+          "proposalTick": 58,
+          "firstGrantTick": 58,
+          "certificateTick": 58
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-sameAisle-s700400",
+    "N": 8,
+    "regime": "severe",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-7",
+        "createdAt": 42,
+        "firstAssignedTick": 45,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 43,
+          "firstAuctionEligibleTick": 43,
+          "firstBidTick": 43,
+          "quorumBidTick": 43,
+          "proposalTick": 44,
+          "firstGrantTick": 44,
+          "certificateTick": 44
+        }
+      },
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 51,
+        "pickedUpTick": 62,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 49,
+          "firstBidTick": 49,
+          "quorumBidTick": 49,
+          "proposalTick": 50,
+          "firstGrantTick": 50,
+          "certificateTick": 50
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-sameAisle-s700403",
+    "N": 8,
+    "regime": "severe",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-3",
+        "createdAt": 18,
+        "firstAssignedTick": 20,
+        "pickedUpTick": 29,
+        "completedTick": null,
+        "finalOwner": "AMR-06",
+        "ownershipStages": {
+          "firstAnnouncementTick": 19,
+          "firstAuctionEligibleTick": 19,
+          "firstBidTick": 19,
+          "quorumBidTick": 19,
+          "proposalTick": 20,
+          "firstGrantTick": 20,
+          "certificateTick": 20
+        }
+      },
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 51,
+        "pickedUpTick": 59,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 49,
+          "firstBidTick": 49,
+          "quorumBidTick": 49,
+          "proposalTick": 50,
+          "firstGrantTick": 50,
+          "certificateTick": 50
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-sameAisle-s700409",
+    "N": 8,
+    "regime": "severe",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-4",
+        "createdAt": 24,
+        "firstAssignedTick": 27,
+        "pickedUpTick": 74,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 25,
+          "firstAuctionEligibleTick": 25,
+          "firstBidTick": 25,
+          "quorumBidTick": 25,
+          "proposalTick": 26,
+          "firstGrantTick": 26,
+          "certificateTick": 26
+        }
+      },
+      {
+        "id": "M-6",
+        "createdAt": 36,
+        "firstAssignedTick": 39,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 37,
+          "firstAuctionEligibleTick": 37,
+          "firstBidTick": 37,
+          "quorumBidTick": 37,
+          "proposalTick": 38,
+          "firstGrantTick": 38,
+          "certificateTick": 38
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-sameAisle-s700414",
+    "N": 8,
+    "regime": "severe",
+    "tasksCompleted": 8,
+    "unfinished": [
+      {
+        "id": "M-4",
+        "createdAt": 24,
+        "firstAssignedTick": 27,
+        "pickedUpTick": 126,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 25,
+          "firstAuctionEligibleTick": 25,
+          "firstBidTick": 25,
+          "quorumBidTick": 25,
+          "proposalTick": 26,
+          "firstGrantTick": 26,
+          "certificateTick": 26
+        }
+      },
+      {
+        "id": "M-7",
+        "createdAt": 42,
+        "firstAssignedTick": 45,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-04",
+        "ownershipStages": {
+          "firstAnnouncementTick": 43,
+          "firstAuctionEligibleTick": 43,
+          "firstBidTick": 43,
+          "quorumBidTick": 43,
+          "proposalTick": 44,
+          "firstGrantTick": 44,
+          "certificateTick": 44
+        }
+      },
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 50,
+        "pickedUpTick": 58,
+        "completedTick": null,
+        "finalOwner": "AMR-06",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 49,
+          "firstBidTick": 49,
+          "quorumBidTick": 49,
+          "proposalTick": 50,
+          "firstGrantTick": 50,
+          "certificateTick": 50
+        }
+      },
+      {
+        "id": "M-9",
+        "createdAt": 54,
+        "firstAssignedTick": 56,
+        "pickedUpTick": 58,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 55,
+          "firstAuctionEligibleTick": 55,
+          "firstBidTick": 55,
+          "quorumBidTick": 55,
+          "proposalTick": 56,
+          "firstGrantTick": 56,
+          "certificateTick": 56
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-sameAisle-s700418",
+    "N": 8,
+    "regime": "severe",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-4",
+        "createdAt": 24,
+        "firstAssignedTick": 27,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 25,
+          "firstAuctionEligibleTick": 25,
+          "firstBidTick": 25,
+          "quorumBidTick": 25,
+          "proposalTick": 26,
+          "firstGrantTick": 26,
+          "certificateTick": 26
+        }
+      },
+      {
+        "id": "M-7",
+        "createdAt": 42,
+        "firstAssignedTick": 45,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 43,
+          "firstAuctionEligibleTick": 43,
+          "firstBidTick": 43,
+          "quorumBidTick": 43,
+          "proposalTick": 44,
+          "firstGrantTick": 44,
+          "certificateTick": 44
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-sameAisle-s700437",
+    "N": 8,
+    "regime": "low",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-0",
+        "createdAt": 0,
+        "firstAssignedTick": 3,
+        "pickedUpTick": 8,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 1,
+          "firstAuctionEligibleTick": 1,
+          "firstBidTick": 1,
+          "quorumBidTick": 1,
+          "proposalTick": 2,
+          "firstGrantTick": 2,
+          "certificateTick": 2
+        }
+      },
+      {
+        "id": "M-1",
+        "createdAt": 6,
+        "firstAssignedTick": 8,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-07",
+        "ownershipStages": {
+          "firstAnnouncementTick": 7,
+          "firstAuctionEligibleTick": 7,
+          "firstBidTick": 7,
+          "quorumBidTick": 7,
+          "proposalTick": 8,
+          "firstGrantTick": 8,
+          "certificateTick": 8
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-sameAisle-s700448",
+    "N": 8,
+    "regime": "low",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 50,
+        "pickedUpTick": 63,
+        "completedTick": null,
+        "finalOwner": "AMR-08",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 49,
+          "firstBidTick": 49,
+          "quorumBidTick": 49,
+          "proposalTick": 50,
+          "firstGrantTick": 50,
+          "certificateTick": 50
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-sameAisle-s700457",
+    "N": 8,
+    "regime": "severe",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-6",
+        "createdAt": 36,
+        "firstAssignedTick": 39,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 37,
+          "firstAuctionEligibleTick": 37,
+          "firstBidTick": 37,
+          "quorumBidTick": 37,
+          "proposalTick": 38,
+          "firstGrantTick": 38,
+          "certificateTick": 38
+        }
+      },
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 51,
+        "pickedUpTick": 211,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 49,
+          "firstBidTick": 49,
+          "quorumBidTick": 49,
+          "proposalTick": 50,
+          "firstGrantTick": 50,
+          "certificateTick": 50
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-sameAisle-s700458",
+    "N": 8,
+    "regime": "recoverable",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-5",
+        "createdAt": 30,
+        "firstAssignedTick": 35,
+        "pickedUpTick": 84,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 31,
+          "firstAuctionEligibleTick": 31,
+          "firstBidTick": 31,
+          "quorumBidTick": 31,
+          "proposalTick": 32,
+          "firstGrantTick": 32,
+          "certificateTick": 32
+        }
+      },
+      {
+        "id": "M-6",
+        "createdAt": 36,
+        "firstAssignedTick": 38,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-07",
+        "ownershipStages": {
+          "firstAnnouncementTick": 37,
+          "firstAuctionEligibleTick": 37,
+          "firstBidTick": 37,
+          "quorumBidTick": 37,
+          "proposalTick": 38,
+          "firstGrantTick": 38,
+          "certificateTick": 38
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-sameAisle-s700471",
+    "N": 8,
+    "regime": "recoverable",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-3",
+        "createdAt": 18,
+        "firstAssignedTick": 21,
+        "pickedUpTick": 182,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 19,
+          "firstAuctionEligibleTick": 19,
+          "firstBidTick": 19,
+          "quorumBidTick": 19,
+          "proposalTick": 20,
+          "firstGrantTick": 20,
+          "certificateTick": 20
+        }
+      },
+      {
+        "id": "M-4",
+        "createdAt": 24,
+        "firstAssignedTick": 27,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 25,
+          "firstAuctionEligibleTick": 25,
+          "firstBidTick": 25,
+          "quorumBidTick": 25,
+          "proposalTick": 26,
+          "firstGrantTick": 26,
+          "certificateTick": 26
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-sameAisle-s700511",
+    "N": 8,
+    "regime": "recoverable",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-2",
+        "createdAt": 12,
+        "firstAssignedTick": 14,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 13,
+          "firstAuctionEligibleTick": 13,
+          "firstBidTick": 13,
+          "quorumBidTick": 13,
+          "proposalTick": 14,
+          "firstGrantTick": 14,
+          "certificateTick": 14
+        }
+      },
+      {
+        "id": "M-4",
+        "createdAt": 24,
+        "firstAssignedTick": 26,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 25,
+          "firstAuctionEligibleTick": 25,
+          "firstBidTick": 25,
+          "quorumBidTick": 25,
+          "proposalTick": 26,
+          "firstGrantTick": 26,
+          "certificateTick": 26
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-sameAisle-s700561",
+    "N": 8,
+    "regime": "recoverable",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-2",
+        "createdAt": 12,
+        "firstAssignedTick": 14,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-07",
+        "ownershipStages": {
+          "firstAnnouncementTick": 13,
+          "firstAuctionEligibleTick": 13,
+          "firstBidTick": 13,
+          "quorumBidTick": 13,
+          "proposalTick": 14,
+          "firstGrantTick": 14,
+          "certificateTick": 14
+        }
+      },
+      {
+        "id": "M-3",
+        "createdAt": 18,
+        "firstAssignedTick": 20,
+        "pickedUpTick": 25,
+        "completedTick": null,
+        "finalOwner": "AMR-08",
+        "ownershipStages": {
+          "firstAnnouncementTick": 19,
+          "firstAuctionEligibleTick": 19,
+          "firstBidTick": 19,
+          "quorumBidTick": 19,
+          "proposalTick": 20,
+          "firstGrantTick": 20,
+          "certificateTick": 20
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-stock-n8-uniform-s700031",
+    "N": 8,
+    "regime": "low",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-4",
+        "createdAt": 24,
+        "firstAssignedTick": 27,
+        "pickedUpTick": 38,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 25,
+          "firstAuctionEligibleTick": 25,
+          "firstBidTick": 25,
+          "quorumBidTick": 25,
+          "proposalTick": 26,
+          "firstGrantTick": 26,
+          "certificateTick": 26
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n3-columnTransit-s702805",
+    "N": 3,
+    "regime": "severe",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-3",
+        "createdAt": 18,
+        "firstAssignedTick": 34,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 19,
+          "firstAuctionEligibleTick": 33,
+          "firstBidTick": 33,
+          "quorumBidTick": 33,
+          "proposalTick": 34,
+          "firstGrantTick": 34,
+          "certificateTick": 34
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n3-columnTransit-s702825",
+    "N": 3,
+    "regime": "low",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-11",
+        "createdAt": 66,
+        "firstAssignedTick": 95,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 67,
+          "firstAuctionEligibleTick": 93,
+          "firstBidTick": 93,
+          "quorumBidTick": 93,
+          "proposalTick": 95,
+          "firstGrantTick": 95,
+          "certificateTick": 95
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n3-mirroredCross-s702417",
+    "N": 3,
+    "regime": "low",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-11",
+        "createdAt": 66,
+        "firstAssignedTick": 149,
+        "pickedUpTick": 206,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 67,
+          "firstAuctionEligibleTick": 148,
+          "firstBidTick": 148,
+          "quorumBidTick": 148,
+          "proposalTick": 149,
+          "firstGrantTick": 149,
+          "certificateTick": 149
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n3-mirroredCross-s702490",
+    "N": 3,
+    "regime": "low",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 162,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 161,
+          "firstBidTick": 161,
+          "quorumBidTick": 161,
+          "proposalTick": 162,
+          "firstGrantTick": 162,
+          "certificateTick": 162
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n3-sameAisle-s702374",
+    "N": 3,
+    "regime": "recoverable",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-6",
+        "createdAt": 36,
+        "firstAssignedTick": 66,
+        "pickedUpTick": 71,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 37,
+          "firstAuctionEligibleTick": 64,
+          "firstBidTick": 64,
+          "quorumBidTick": 65,
+          "proposalTick": 66,
+          "firstGrantTick": 66,
+          "certificateTick": 66
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n5-columnTransit-s703030",
+    "N": 5,
+    "regime": "recoverable",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-9",
+        "createdAt": 54,
+        "firstAssignedTick": 67,
+        "pickedUpTick": 90,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 55,
+          "firstAuctionEligibleTick": 63,
+          "firstBidTick": 63,
+          "quorumBidTick": 63,
+          "proposalTick": 66,
+          "firstGrantTick": 66,
+          "certificateTick": 66
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n5-mirroredCross-s702407",
+    "N": 5,
+    "regime": "severe",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-3",
+        "createdAt": 18,
+        "firstAssignedTick": 24,
+        "pickedUpTick": 189,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 19,
+          "firstAuctionEligibleTick": 22,
+          "firstBidTick": 22,
+          "quorumBidTick": 22,
+          "proposalTick": 24,
+          "firstGrantTick": 24,
+          "certificateTick": 24
+        }
+      },
+      {
+        "id": "M-4",
+        "createdAt": 24,
+        "firstAssignedTick": 27,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 25,
+          "firstAuctionEligibleTick": 25,
+          "firstBidTick": 25,
+          "quorumBidTick": 26,
+          "proposalTick": 27,
+          "firstGrantTick": 27,
+          "certificateTick": 27
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n5-mirroredCross-s702460",
+    "N": 5,
+    "regime": "recoverable",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-4",
+        "createdAt": 24,
+        "firstAssignedTick": 32,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 25,
+          "firstAuctionEligibleTick": 30,
+          "firstBidTick": 30,
+          "quorumBidTick": 30,
+          "proposalTick": 32,
+          "firstGrantTick": 32,
+          "certificateTick": 32
+        }
+      },
+      {
+        "id": "M-7",
+        "createdAt": 42,
+        "firstAssignedTick": 46,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 43,
+          "firstAuctionEligibleTick": 43,
+          "firstBidTick": 43,
+          "quorumBidTick": 44,
+          "proposalTick": 45,
+          "firstGrantTick": 45,
+          "certificateTick": 45
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n5-mirroredCross-s702461",
+    "N": 5,
+    "regime": "recoverable",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-3",
+        "createdAt": 18,
+        "firstAssignedTick": 21,
+        "pickedUpTick": 216,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 19,
+          "firstAuctionEligibleTick": 19,
+          "firstBidTick": 19,
+          "quorumBidTick": 19,
+          "proposalTick": 20,
+          "firstGrantTick": 20,
+          "certificateTick": 20
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n5-mirroredCross-s702520",
+    "N": 5,
+    "regime": "low",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-7",
+        "createdAt": 42,
+        "firstAssignedTick": 51,
+        "pickedUpTick": 199,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 43,
+          "firstAuctionEligibleTick": 49,
+          "firstBidTick": 49,
+          "quorumBidTick": 49,
+          "proposalTick": 50,
+          "firstGrantTick": 50,
+          "certificateTick": 50
+        }
+      },
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 59,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 56,
+          "firstBidTick": 56,
+          "quorumBidTick": 56,
+          "proposalTick": 58,
+          "firstGrantTick": 58,
+          "certificateTick": 58
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n5-mirroredCross-s702591",
+    "N": 5,
+    "regime": "low",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-5",
+        "createdAt": 30,
+        "firstAssignedTick": 40,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 31,
+          "firstAuctionEligibleTick": 38,
+          "firstBidTick": 38,
+          "quorumBidTick": 39,
+          "proposalTick": 40,
+          "firstGrantTick": 40,
+          "certificateTick": 40
+        }
+      },
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 79,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-04",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 77,
+          "firstBidTick": 77,
+          "quorumBidTick": 78,
+          "proposalTick": 79,
+          "firstGrantTick": 79,
+          "certificateTick": 79
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n5-mirroredCross-s702676",
+    "N": 5,
+    "regime": "low",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-1",
+        "createdAt": 6,
+        "firstAssignedTick": 8,
+        "pickedUpTick": 64,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 7,
+          "firstAuctionEligibleTick": 7,
+          "firstBidTick": 7,
+          "quorumBidTick": 7,
+          "proposalTick": 8,
+          "firstGrantTick": 8,
+          "certificateTick": 8
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n5-sameAisle-s702279",
+    "N": 5,
+    "regime": "recoverable",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 51,
+        "pickedUpTick": 187,
+        "completedTick": null,
+        "finalOwner": "AMR-01",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 49,
+          "firstBidTick": 49,
+          "quorumBidTick": 49,
+          "proposalTick": 50,
+          "firstGrantTick": 50,
+          "certificateTick": 50
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n5-uniform-s701978",
+    "N": 5,
+    "regime": "recoverable",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-10",
+        "createdAt": 60,
+        "firstAssignedTick": 72,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 61,
+          "firstAuctionEligibleTick": 69,
+          "firstBidTick": 69,
+          "quorumBidTick": 69,
+          "proposalTick": 71,
+          "firstGrantTick": 71,
+          "certificateTick": 71
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n8-columnTransit-s702916",
+    "N": 8,
+    "regime": "recoverable",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 51,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-04",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 49,
+          "firstBidTick": 49,
+          "quorumBidTick": 49,
+          "proposalTick": 50,
+          "firstGrantTick": 50,
+          "certificateTick": 50
+        }
+      },
+      {
+        "id": "M-10",
+        "createdAt": 60,
+        "firstAssignedTick": 63,
+        "pickedUpTick": 71,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 61,
+          "firstAuctionEligibleTick": 61,
+          "firstBidTick": 61,
+          "quorumBidTick": 61,
+          "proposalTick": 62,
+          "firstGrantTick": 62,
+          "certificateTick": 62
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n8-mirroredCross-s702433",
+    "N": 8,
+    "regime": "severe",
+    "tasksCompleted": 8,
+    "unfinished": [
+      {
+        "id": "M-3",
+        "createdAt": 18,
+        "firstAssignedTick": 20,
+        "pickedUpTick": 27,
+        "completedTick": null,
+        "finalOwner": "AMR-06",
+        "ownershipStages": {
+          "firstAnnouncementTick": 19,
+          "firstAuctionEligibleTick": 19,
+          "firstBidTick": 19,
+          "quorumBidTick": 19,
+          "proposalTick": 20,
+          "firstGrantTick": 20,
+          "certificateTick": 20
+        }
+      },
+      {
+        "id": "M-4",
+        "createdAt": 24,
+        "firstAssignedTick": 26,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 25,
+          "firstAuctionEligibleTick": 25,
+          "firstBidTick": 25,
+          "quorumBidTick": 25,
+          "proposalTick": 26,
+          "firstGrantTick": 26,
+          "certificateTick": 26
+        }
+      },
+      {
+        "id": "M-10",
+        "createdAt": 60,
+        "firstAssignedTick": 63,
+        "pickedUpTick": 173,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 61,
+          "firstAuctionEligibleTick": 61,
+          "firstBidTick": 61,
+          "quorumBidTick": 61,
+          "proposalTick": 62,
+          "firstGrantTick": 62,
+          "certificateTick": 62
+        }
+      },
+      {
+        "id": "M-11",
+        "createdAt": 66,
+        "firstAssignedTick": 69,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 67,
+          "firstAuctionEligibleTick": 67,
+          "firstBidTick": 67,
+          "quorumBidTick": 67,
+          "proposalTick": 68,
+          "firstGrantTick": 68,
+          "certificateTick": 68
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n8-mirroredCross-s702448",
+    "N": 8,
+    "regime": "low",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-4",
+        "createdAt": 24,
+        "firstAssignedTick": 27,
+        "pickedUpTick": 53,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 25,
+          "firstAuctionEligibleTick": 25,
+          "firstBidTick": 25,
+          "quorumBidTick": 25,
+          "proposalTick": 26,
+          "firstGrantTick": 26,
+          "certificateTick": 26
+        }
+      },
+      {
+        "id": "M-8",
+        "createdAt": 48,
+        "firstAssignedTick": 50,
+        "pickedUpTick": 82,
+        "completedTick": null,
+        "finalOwner": "AMR-08",
+        "ownershipStages": {
+          "firstAnnouncementTick": 49,
+          "firstAuctionEligibleTick": 49,
+          "firstBidTick": 49,
+          "quorumBidTick": 49,
+          "proposalTick": 50,
+          "firstGrantTick": 50,
+          "certificateTick": 50
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n8-mirroredCross-s702450",
+    "N": 8,
+    "regime": "recoverable",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-3",
+        "createdAt": 18,
+        "firstAssignedTick": 21,
+        "pickedUpTick": 164,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 19,
+          "firstAuctionEligibleTick": 19,
+          "firstBidTick": 19,
+          "quorumBidTick": 19,
+          "proposalTick": 20,
+          "firstGrantTick": 20,
+          "certificateTick": 20
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n8-mirroredCross-s702456",
+    "N": 8,
+    "regime": "severe",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-3",
+        "createdAt": 18,
+        "firstAssignedTick": 20,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-05",
+        "ownershipStages": {
+          "firstAnnouncementTick": 19,
+          "firstAuctionEligibleTick": 19,
+          "firstBidTick": 19,
+          "quorumBidTick": 19,
+          "proposalTick": 20,
+          "firstGrantTick": 20,
+          "certificateTick": 20
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n8-mirroredCross-s702461",
+    "N": 8,
+    "regime": "recoverable",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-3",
+        "createdAt": 18,
+        "firstAssignedTick": 21,
+        "pickedUpTick": 200,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 19,
+          "firstAuctionEligibleTick": 19,
+          "firstBidTick": 19,
+          "quorumBidTick": 19,
+          "proposalTick": 20,
+          "firstGrantTick": 20,
+          "certificateTick": 20
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n8-mirroredCross-s702490",
+    "N": 8,
+    "regime": "low",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-4",
+        "createdAt": 24,
+        "firstAssignedTick": 26,
+        "pickedUpTick": 175,
+        "completedTick": null,
+        "finalOwner": "AMR-07",
+        "ownershipStages": {
+          "firstAnnouncementTick": 25,
+          "firstAuctionEligibleTick": 25,
+          "firstBidTick": 25,
+          "quorumBidTick": 25,
+          "proposalTick": 26,
+          "firstGrantTick": 26,
+          "certificateTick": 26
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n8-sameAisle-s702001",
+    "N": 8,
+    "regime": "severe",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-10",
+        "createdAt": 60,
+        "firstAssignedTick": 62,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-07",
+        "ownershipStages": {
+          "firstAnnouncementTick": 61,
+          "firstAuctionEligibleTick": 61,
+          "firstBidTick": 61,
+          "quorumBidTick": 61,
+          "proposalTick": 62,
+          "firstGrantTick": 62,
+          "certificateTick": 62
+        }
+      },
+      {
+        "id": "M-11",
+        "createdAt": 66,
+        "firstAssignedTick": 68,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-07",
+        "ownershipStages": {
+          "firstAnnouncementTick": 67,
+          "firstAuctionEligibleTick": 67,
+          "firstBidTick": 67,
+          "quorumBidTick": 67,
+          "proposalTick": 68,
+          "firstGrantTick": 68,
+          "certificateTick": 68
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n8-sameAisle-s702021",
+    "N": 8,
+    "regime": "low",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-5",
+        "createdAt": 30,
+        "firstAssignedTick": 32,
+        "pickedUpTick": 37,
+        "completedTick": null,
+        "finalOwner": "AMR-06",
+        "ownershipStages": {
+          "firstAnnouncementTick": 31,
+          "firstAuctionEligibleTick": 31,
+          "firstBidTick": 31,
+          "quorumBidTick": 31,
+          "proposalTick": 32,
+          "firstGrantTick": 32,
+          "certificateTick": 32
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n8-sameAisle-s702025",
+    "N": 8,
+    "regime": "low",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-1",
+        "createdAt": 6,
+        "firstAssignedTick": 9,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-03",
+        "ownershipStages": {
+          "firstAnnouncementTick": 7,
+          "firstAuctionEligibleTick": 7,
+          "firstBidTick": 7,
+          "quorumBidTick": 7,
+          "proposalTick": 8,
+          "firstGrantTick": 8,
+          "certificateTick": 8
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n8-sameAisle-s702034",
+    "N": 8,
+    "regime": "low",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-5",
+        "createdAt": 30,
+        "firstAssignedTick": 32,
+        "pickedUpTick": 37,
+        "completedTick": null,
+        "finalOwner": "AMR-08",
+        "ownershipStages": {
+          "firstAnnouncementTick": 31,
+          "firstAuctionEligibleTick": 31,
+          "firstBidTick": 31,
+          "quorumBidTick": 31,
+          "proposalTick": 32,
+          "firstGrantTick": 32,
+          "certificateTick": 32
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n8-sameAisle-s702092",
+    "N": 8,
+    "regime": "severe",
+    "tasksCompleted": 10,
+    "unfinished": [
+      {
+        "id": "M-2",
+        "createdAt": 12,
+        "firstAssignedTick": 14,
+        "pickedUpTick": 37,
+        "completedTick": null,
+        "finalOwner": "AMR-07",
+        "ownershipStages": {
+          "firstAnnouncementTick": 13,
+          "firstAuctionEligibleTick": 13,
+          "firstBidTick": 13,
+          "quorumBidTick": 13,
+          "proposalTick": 14,
+          "firstGrantTick": 14,
+          "certificateTick": 14
+        }
+      },
+      {
+        "id": "M-6",
+        "createdAt": 36,
+        "firstAssignedTick": 39,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-02",
+        "ownershipStages": {
+          "firstAnnouncementTick": 37,
+          "firstAuctionEligibleTick": 37,
+          "firstBidTick": 37,
+          "quorumBidTick": 37,
+          "proposalTick": 38,
+          "firstGrantTick": 38,
+          "certificateTick": 38
+        }
+      }
+    ]
+  },
+  {
+    "scenarioId": "development-wide-n8-uniform-s701913",
+    "N": 8,
+    "regime": "recoverable",
+    "tasksCompleted": 11,
+    "unfinished": [
+      {
+        "id": "M-3",
+        "createdAt": 18,
+        "firstAssignedTick": 20,
+        "pickedUpTick": null,
+        "completedTick": null,
+        "finalOwner": "AMR-07",
+        "ownershipStages": {
+          "firstAnnouncementTick": 19,
+          "firstAuctionEligibleTick": 19,
+          "firstBidTick": 19,
+          "quorumBidTick": 19,
+          "proposalTick": 20,
+          "firstGrantTick": 20,
+          "certificateTick": 20
+        }
+      }
+    ]
+  }
+]

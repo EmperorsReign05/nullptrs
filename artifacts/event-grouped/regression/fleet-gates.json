@@ -1,0 +1,37 @@
+[
+  {
+    "mode": "software",
+    "N": 1,
+    "exitCode": 0
+  },
+  {
+    "mode": "software",
+    "N": 3,
+    "exitCode": 0
+  },
+  {
+    "mode": "software",
+    "N": 5,
+    "exitCode": 0
+  },
+  {
+    "mode": "software",
+    "N": 8,
+    "exitCode": 0
+  },
+  {
+    "mode": "nav2",
+    "N": 3,
+    "exitCode": 0
+  },
+  {
+    "mode": "nav2",
+    "N": 5,
+    "exitCode": 0
+  },
+  {
+    "mode": "nav2",
+    "N": 8,
+    "exitCode": 0
+  }
+]

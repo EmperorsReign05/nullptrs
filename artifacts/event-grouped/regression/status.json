@@ -1,0 +1,63 @@
+{
+  "npmTest": {
+    "passed": 583,
+    "skipped": 20
+  },
+  "typescript": "passed",
+  "fleetBuild": "passed",
+  "productionBuild": "passed with webpack",
+  "ros2Tests": "passed",
+  "hostileConcurrency": {
+    "casesPerMode": 63,
+    "modes": [
+      "epoch",
+      "event-single"
+    ],
+    "passed": 126
+  },
+  "eventFaultScenarios": {
+    "passed": 30
+  },
+  "fleets": [
+    {
+      "mode": "software",
+      "N": 1,
+      "exitCode": 0
+    },
+    {
+      "mode": "software",
+      "N": 3,
+      "exitCode": 0
+    },
+    {
+      "mode": "software",
+      "N": 5,
+      "exitCode": 0
+    },
+    {
+      "mode": "software",
+      "N": 8,
+      "exitCode": 0
+    },
+    {
+      "mode": "nav2",
+      "N": 3,
+      "exitCode": 0
+    },
+    {
+      "mode": "nav2",
+      "N": 5,
+      "exitCode": 0
+    },
+    {
+      "mode": "nav2",
+      "N": 8,
+      "exitCode": 0
+    }
+  ],
+  "limitations": [
+    "fleet gates use default epoch mode",
+    "Turbopack cannot consume dependency symlink in isolated worktree",
+    "existing hostile suite does not certify joint bundle queue/energy constraints"
+  ]
+}

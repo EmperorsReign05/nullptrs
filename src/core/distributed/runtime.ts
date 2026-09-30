@@ -27,7 +27,7 @@ export class FleetRuntime {
   private dead = new Set<string>();
   running = true;
   aiEnabled = true;
-  constructor(world?: WorldState, private model: BidModel = frozen.model, options: { motionPolicy?: "stop-and-wait"; fleetSize?: number } = {}) {
+  constructor(world?: WorldState, private model: BidModel = frozen.model, options: { motionPolicy?: "stop-and-wait"; fleetSize?: number; allocationMode?: "epoch" | "event-single" } = {}) {
     this.world = structuredClone(world ?? createInitialWorld());
     if (!world) {
       this.world.tasks = [];
@@ -42,7 +42,7 @@ export class FleetRuntime {
     for (const r of this.world.robots) {
       this.charging.set(r.id, new DistributedCharging());
       const channel = new InMemoryTransport(r.id, bus); ids.filter(id => id !== r.id).forEach(id => channel.addPeer(id)); this.channels.set(r.id, channel);
-      this.peers.set(r.id, new OwnershipPeer(r.id, ids, channel, (task, tick) => this.bid(r.id, task, tick)));
+      this.peers.set(r.id, new OwnershipPeer(r.id, ids, channel, (task, tick) => this.bid(r.id, task, tick), options.allocationMode));
     }
     this.fleet = new DistributedFleet(this.world.map, this.world.robots, this.world.tasks, { commRange: 6, localCommit: true, motionPolicy: options.motionPolicy,
       goalOverride: r => this.charging.get(r.id)!.active ? this.charging.get(r.id)!.goal ?? null : undefined,

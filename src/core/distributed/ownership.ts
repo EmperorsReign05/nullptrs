@@ -29,6 +29,13 @@ export type OwnershipMessage = { from: string; tick: number } & (
 );
 const same = (a: Ownership, b: Ownership) => a.taskId === b.taskId && a.generation === b.generation && a.owner === b.owner && a.expires === b.expires;
 export class OwnershipPeer {
+  /** Passive first-observation timestamps in protocol tick coordinates. */
+  readonly latency = new Map<string, Partial<Record<"firstAnnouncementTick" | "firstAuctionEligibleTick" | "firstBidTick" | "quorumBidTick" | "proposalTick" | "firstGrantTick" | "certificateTick", number>>>();
+  private observe(taskId: string, stage: keyof NonNullable<ReturnType<typeof this.latency.get>>) {
+    const trace = this.latency.get(taskId) ?? {};
+    if (trace[stage] === undefined) trace[stage] = this.now;
+    this.latency.set(taskId, trace);
+  }
   readonly tasks = new Map<string, Task>();
   readonly heard = new Map<string, { tick: number; position: Position; path: Position[] }>();
   readonly metrics = { bids: 0, mlCorrections: 0, winnerChanges: 0, suppressed: 0, grants: 0, stale: 0 };
@@ -65,7 +72,8 @@ export class OwnershipPeer {
   readonly members: readonly string[];
   readonly quorum: number;
   constructor(readonly id: string, members: readonly string[], private transport: Transport<OwnershipMessage>,
-    private computeBid: (task: Task, tick: number) => LocalBidPacket) {
+    private computeBid: (task: Task, tick: number) => LocalBidPacket,
+    readonly allocationMode: "epoch" | "event-single" = "epoch") {
     this.members = [...new Set(members)].sort();
     if (this.members.length !== members.length || !this.members.includes(id)) throw new Error("Invalid membership");
     this.quorum = Math.floor(members.length / 2) + 1;
@@ -81,6 +89,8 @@ export class OwnershipPeer {
   private ackKey(lease: Ownership, phase: Marker["phase"]) { return `${this.key(lease.taskId, lease.generation)}:${lease.owner}:${phase}`; }
   private send(message: OwnershipMessage) {
     this.sentByKind[message.kind] = (this.sentByKind[message.kind] ?? 0) + 1;
+    if (message.kind === "announce") this.observe(message.task.id, "firstAnnouncementTick");
+    if (message.kind === "propose") this.observe(message.proposal.taskId, "proposalTick");
     this.transport.send(undefined, message);
     this.receive(message);
   }
@@ -129,15 +139,17 @@ export class OwnershipPeer {
     const generation = m.kind === "bid" ? m.generation : m.kind === "propose" ? m.proposal.generation : m.lease.generation;
     if (generation !== Math.floor(this.now / OWNERSHIP_EPOCH_TICKS)) { this.metrics.stale++; return; }
     if (m.kind === "bid") {
-      if (m.packet.robotId !== m.from || !this.tasks.has(m.packet.taskId) || m.tick % OWNERSHIP_EPOCH_TICKS >= BID_WINDOW) return;
+      if (m.packet.robotId !== m.from || !this.tasks.has(m.packet.taskId) || (this.allocationMode === "epoch" && m.tick % OWNERSHIP_EPOCH_TICKS >= BID_WINDOW)) return;
       const key = this.key(m.packet.taskId, generation);
       const bids = this.bids.get(key) ?? new Map();
       if (!bids.has(m.from)) bids.set(m.from, structuredClone(m.packet));
+      this.observe(m.packet.taskId, "firstBidTick");
+      if (bids.size >= this.quorum) this.observe(m.packet.taskId, "quorumBidTick");
       this.bids.set(key, bids); return;
     }
     if (m.kind === "propose") {
       const p = m.proposal, key = this.key(p.taskId, generation);
-      if (!this.validLease(p) || this.now % OWNERSHIP_EPOCH_TICKS < BID_WINDOW) return;
+      if (!this.validLease(p) || (this.allocationMode === "epoch" && this.now % OWNERSHIP_EPOCH_TICKS < BID_WINDOW)) return;
       const marker = this.markers.get(p.taskId);
       if (this.completed(p.taskId) || (marker && marker.owner !== p.owner)) return;
       const previous = this.votes.get(key);
@@ -152,6 +164,7 @@ export class OwnershipPeer {
       const prior = this.previousOwner(p.taskId);
       if (prior && this.isLive(prior)) { if (prior !== p.owner) return; }
       else if (decision.winner !== p.owner) return;
+      this.observe(p.taskId, "proposalTick");
       if (!previous) this.metrics.grants++;
       this.votes.set(key, { taskId: p.taskId, owner: p.owner, generation, expires: p.expires });
       this.send({ from: this.id, tick: this.now, kind: "grant", lease: this.votes.get(key)! });
@@ -161,7 +174,10 @@ export class OwnershipPeer {
     if (m.kind === "grant") {
       const key = this.key(m.lease.taskId, generation), grants = this.grants.get(key) ?? new Map();
       if (!grants.has(m.from)) grants.set(m.from, m.lease);
-      this.grants.set(key, grants); return;
+      this.observe(m.lease.taskId, "firstGrantTick");
+      this.grants.set(key, grants);
+      if (this.ownership(m.lease.taskId)) this.observe(m.lease.taskId, "certificateTick");
+      return;
     }
     const held = this.ownership(m.lease.taskId);
     if (!held || !same(held, m.lease)) return;
@@ -300,6 +316,7 @@ export class OwnershipPeer {
         this.send({ ...checkpoint, from: this.id, tick });
       }
       if (this.completed(task.id) || !this.previousOwner(task.id) && !candidates.has(task.id)) continue;
+      this.observe(task.id, "firstAuctionEligibleTick");
       const key = this.key(task.id, generation);
       const vote = this.votes.get(key);
       // Re-gossip our own grant only when it is new, or heal on the generation
@@ -309,11 +326,11 @@ export class OwnershipPeer {
         this.lastGrantSent.set(task.id, `${generation}:${vote.owner}:${vote.expires}`);
         this.send({ from: this.id, tick, kind: "grant", lease: vote });
       }
-      if (phase === BID_WINDOW - 1) {
+      if (this.allocationMode === "event-single" ? !this.bids.get(key)?.has(this.id) : phase === BID_WINDOW - 1) {
         let packet = this.bids.get(key)?.get(this.id);
         if (!packet) { packet = this.computeBid(task, tick); this.metrics.bids++; if (packet.bid && packet.mlCost !== null && packet.mlCost < packet.bid.totalCost) this.metrics.mlCorrections++; }
         this.send({ from: this.id, tick, kind: "bid", generation, packet });
-      } else if (phase >= BID_WINDOW && !this.ownership(task.id)) {
+      } else if ((this.allocationMode === "event-single" || phase >= BID_WINDOW) && !this.ownership(task.id)) {
         const bids = [...(this.bids.get(key)?.values() ?? [])].filter(b => this.isLive(b.robotId));
         if (bids.length < this.quorum) continue;
         const leader = bids.map(b => b.robotId).sort()[0];

@@ -1,0 +1,1010 @@
+{
+  "n0-all": {
+    "population": "all first-assigned tasks, including incomplete runs; stages are fleet-minimum first observations",
+    "certifiedTaskGenerationsPer100Ticks": 7.102281567328537,
+    "eligibilityToFirstCertificate": {
+      "count": 23757,
+      "mean": 18.994948857178937,
+      "median": 22,
+      "p95": 30
+    },
+    "releaseToOwnership": {
+      "count": 23757,
+      "mean": 81.71755693058888,
+      "median": 48,
+      "p95": 265
+    },
+    "releaseToEligibility": {
+      "count": 23757,
+      "mean": 62.313002483478556,
+      "median": 31,
+      "p95": 238
+    },
+    "eligibilityToFirstBid": {
+      "count": 23757,
+      "mean": 17.994948857178937,
+      "median": 21,
+      "p95": 29
+    },
+    "firstBidToQuorumBid": {
+      "count": 23757,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "quorumBidToProposal": {
+      "count": 23757,
+      "mean": 1.0,
+      "median": 1,
+      "p95": 1
+    },
+    "proposalToFirstCertificate": {
+      "count": 23757,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "firstCertificateToAssignment": {
+      "count": 23757,
+      "mean": 0.4096055899313886,
+      "median": 0,
+      "p95": 1
+    },
+    "broadcastsPerPeerTick": 4.616026835895665,
+    "messageDefinition": "send calls including heartbeats and checkpoint gossip; each broadcast can deliver to N-1 peers; excludes motion traffic",
+    "staleRejected": 16253,
+    "auctionedTaskGenerations": 41157,
+    "certifiedTaskGenerations": 41084,
+    "uncertifiedObservedTaskGenerations": 73,
+    "duplicateExecutableOwnerRobotTicks": 0,
+    "peakConcurrentCandidateTasks": 4,
+    "meanConcurrentCandidateTasks": 0.8252676926055644,
+    "bundleSize": 1,
+    "limitations": "Observed rounds include renewals. Uncertified rounds are not necessarily quorum failures. First-stage timing does not isolate retries or per-round latency."
+  },
+  "n0-low": {
+    "population": "all first-assigned tasks, including incomplete runs; stages are fleet-minimum first observations",
+    "certifiedTaskGenerationsPer100Ticks": 6.840512616490048,
+    "eligibilityToFirstCertificate": {
+      "count": 7200,
+      "mean": 19.399722222222223,
+      "median": 22,
+      "p95": 30
+    },
+    "releaseToOwnership": {
+      "count": 7200,
+      "mean": 81.73972222222223,
+      "median": 51,
+      "p95": 265
+    },
+    "releaseToEligibility": {
+      "count": 7200,
+      "mean": 61.93361111111111,
+      "median": 30,
+      "p95": 237
+    },
+    "eligibilityToFirstBid": {
+      "count": 7200,
+      "mean": 18.399722222222223,
+      "median": 21,
+      "p95": 29
+    },
+    "firstBidToQuorumBid": {
+      "count": 7200,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "quorumBidToProposal": {
+      "count": 7200,
+      "mean": 1.0,
+      "median": 1,
+      "p95": 1
+    },
+    "proposalToFirstCertificate": {
+      "count": 7200,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "firstCertificateToAssignment": {
+      "count": 7200,
+      "mean": 0.4063888888888889,
+      "median": 0,
+      "p95": 1
+    },
+    "broadcastsPerPeerTick": 4.776001701297239,
+    "messageDefinition": "send calls including heartbeats and checkpoint gossip; each broadcast can deliver to N-1 peers; excludes motion traffic",
+    "staleRejected": 4220,
+    "auctionedTaskGenerations": 11348,
+    "certifiedTaskGenerations": 11348,
+    "uncertifiedObservedTaskGenerations": 0,
+    "duplicateExecutableOwnerRobotTicks": 0,
+    "peakConcurrentCandidateTasks": 4,
+    "meanConcurrentCandidateTasks": 0.8853725873147914,
+    "bundleSize": 1,
+    "limitations": "Observed rounds include renewals. Uncertified rounds are not necessarily quorum failures. First-stage timing does not isolate retries or per-round latency."
+  },
+  "n0-recoverable": {
+    "population": "all first-assigned tasks, including incomplete runs; stages are fleet-minimum first observations",
+    "certifiedTaskGenerationsPer100Ticks": 7.1282929916035425,
+    "eligibilityToFirstCertificate": {
+      "count": 10798,
+      "mean": 18.816077051305797,
+      "median": 22,
+      "p95": 30
+    },
+    "releaseToOwnership": {
+      "count": 10798,
+      "mean": 81.70994628634932,
+      "median": 48,
+      "p95": 265
+    },
+    "releaseToEligibility": {
+      "count": 10798,
+      "mean": 62.4808297832932,
+      "median": 31,
+      "p95": 238
+    },
+    "eligibilityToFirstBid": {
+      "count": 10798,
+      "mean": 17.816077051305797,
+      "median": 21,
+      "p95": 29
+    },
+    "firstBidToQuorumBid": {
+      "count": 10798,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "quorumBidToProposal": {
+      "count": 10798,
+      "mean": 1.0,
+      "median": 1,
+      "p95": 1
+    },
+    "proposalToFirstCertificate": {
+      "count": 10798,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "firstCertificateToAssignment": {
+      "count": 10798,
+      "mean": 0.41303945175032414,
+      "median": 0,
+      "p95": 1
+    },
+    "broadcastsPerPeerTick": 4.547315357100743,
+    "messageDefinition": "send calls including heartbeats and checkpoint gossip; each broadcast can deliver to N-1 peers; excludes motion traffic",
+    "staleRejected": 8093,
+    "auctionedTaskGenerations": 19300,
+    "certifiedTaskGenerations": 19263,
+    "uncertifiedObservedTaskGenerations": 37,
+    "duplicateExecutableOwnerRobotTicks": 0,
+    "peakConcurrentCandidateTasks": 4,
+    "meanConcurrentCandidateTasks": 0.7962351008204032,
+    "bundleSize": 1,
+    "limitations": "Observed rounds include renewals. Uncertified rounds are not necessarily quorum failures. First-stage timing does not isolate retries or per-round latency."
+  },
+  "n0-severe": {
+    "population": "all first-assigned tasks, including incomplete runs; stages are fleet-minimum first observations",
+    "certifiedTaskGenerationsPer100Ticks": 7.357993466118664,
+    "eligibilityToFirstCertificate": {
+      "count": 5759,
+      "mean": 18.824275047751346,
+      "median": 22,
+      "p95": 30
+    },
+    "releaseToOwnership": {
+      "count": 5759,
+      "mean": 81.70411529779476,
+      "median": 48,
+      "p95": 265
+    },
+    "releaseToEligibility": {
+      "count": 5759,
+      "mean": 62.47265150199687,
+      "median": 31,
+      "p95": 239
+    },
+    "eligibilityToFirstBid": {
+      "count": 5759,
+      "mean": 17.824275047751346,
+      "median": 21,
+      "p95": 29
+    },
+    "firstBidToQuorumBid": {
+      "count": 5759,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "quorumBidToProposal": {
+      "count": 5759,
+      "mean": 1.0,
+      "median": 1,
+      "p95": 1
+    },
+    "proposalToFirstCertificate": {
+      "count": 5759,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "firstCertificateToAssignment": {
+      "count": 5759,
+      "mean": 0.4071887480465359,
+      "median": 0,
+      "p95": 1
+    },
+    "broadcastsPerPeerTick": 4.5633653398419085,
+    "messageDefinition": "send calls including heartbeats and checkpoint gossip; each broadcast can deliver to N-1 peers; excludes motion traffic",
+    "staleRejected": 3940,
+    "auctionedTaskGenerations": 10509,
+    "certifiedTaskGenerations": 10473,
+    "uncertifiedObservedTaskGenerations": 36,
+    "duplicateExecutableOwnerRobotTicks": 0,
+    "peakConcurrentCandidateTasks": 4,
+    "meanConcurrentCandidateTasks": 0.8103347735974988,
+    "bundleSize": 1,
+    "limitations": "Observed rounds include renewals. Uncertified rounds are not necessarily quorum failures. First-stage timing does not isolate retries or per-round latency."
+  },
+  "n3-all": {
+    "population": "all first-assigned tasks, including incomplete runs; stages are fleet-minimum first observations",
+    "certifiedTaskGenerationsPer100Ticks": 4.15319706397981,
+    "eligibilityToFirstCertificate": {
+      "count": 7917,
+      "mean": 20.307313376278895,
+      "median": 22,
+      "p95": 30
+    },
+    "releaseToOwnership": {
+      "count": 7917,
+      "mean": 148.30112416319312,
+      "median": 136,
+      "p95": 291
+    },
+    "releaseToEligibility": {
+      "count": 7917,
+      "mean": 127.64178350385247,
+      "median": 131,
+      "p95": 267
+    },
+    "eligibilityToFirstBid": {
+      "count": 7917,
+      "mean": 19.307313376278895,
+      "median": 21,
+      "p95": 29
+    },
+    "firstBidToQuorumBid": {
+      "count": 7917,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "quorumBidToProposal": {
+      "count": 7917,
+      "mean": 1.0,
+      "median": 1,
+      "p95": 1
+    },
+    "proposalToFirstCertificate": {
+      "count": 7917,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "firstCertificateToAssignment": {
+      "count": 7917,
+      "mean": 0.35202728306176584,
+      "median": 0,
+      "p95": 1
+    },
+    "broadcastsPerPeerTick": 3.5945132641069604,
+    "messageDefinition": "send calls including heartbeats and checkpoint gossip; each broadcast can deliver to N-1 peers; excludes motion traffic",
+    "staleRejected": 928,
+    "auctionedTaskGenerations": 10852,
+    "certifiedTaskGenerations": 10779,
+    "uncertifiedObservedTaskGenerations": 73,
+    "duplicateExecutableOwnerRobotTicks": 0,
+    "peakConcurrentCandidateTasks": 1,
+    "meanConcurrentCandidateTasks": 0.6590864430616294,
+    "bundleSize": 1,
+    "limitations": "Observed rounds include renewals. Uncertified rounds are not necessarily quorum failures. First-stage timing does not isolate retries or per-round latency."
+  },
+  "n3-low": {
+    "population": "all first-assigned tasks, including incomplete runs; stages are fleet-minimum first observations",
+    "certifiedTaskGenerationsPer100Ticks": 4.140231112963952,
+    "eligibilityToFirstCertificate": {
+      "count": 2400,
+      "mean": 20.77541666666667,
+      "median": 23,
+      "p95": 30
+    },
+    "releaseToOwnership": {
+      "count": 2400,
+      "mean": 148.34833333333333,
+      "median": 161,
+      "p95": 291
+    },
+    "releaseToEligibility": {
+      "count": 2400,
+      "mean": 127.22458333333333,
+      "median": 131,
+      "p95": 266
+    },
+    "eligibilityToFirstBid": {
+      "count": 2400,
+      "mean": 19.77541666666667,
+      "median": 22,
+      "p95": 29
+    },
+    "firstBidToQuorumBid": {
+      "count": 2400,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "quorumBidToProposal": {
+      "count": 2400,
+      "mean": 1.0,
+      "median": 1,
+      "p95": 1
+    },
+    "proposalToFirstCertificate": {
+      "count": 2400,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "firstCertificateToAssignment": {
+      "count": 2400,
+      "mean": 0.34833333333333333,
+      "median": 0,
+      "p95": 1
+    },
+    "broadcastsPerPeerTick": 3.6268233475336227,
+    "messageDefinition": "send calls including heartbeats and checkpoint gossip; each broadcast can deliver to N-1 peers; excludes motion traffic",
+    "staleRejected": 220,
+    "auctionedTaskGenerations": 3178,
+    "certifiedTaskGenerations": 3178,
+    "uncertifiedObservedTaskGenerations": 0,
+    "duplicateExecutableOwnerRobotTicks": 0,
+    "peakConcurrentCandidateTasks": 1,
+    "meanConcurrentCandidateTasks": 0.6808452429031123,
+    "bundleSize": 1,
+    "limitations": "Observed rounds include renewals. Uncertified rounds are not necessarily quorum failures. First-stage timing does not isolate retries or per-round latency."
+  },
+  "n3-recoverable": {
+    "population": "all first-assigned tasks, including incomplete runs; stages are fleet-minimum first observations",
+    "certifiedTaskGenerationsPer100Ticks": 4.107222236200924,
+    "eligibilityToFirstCertificate": {
+      "count": 3598,
+      "mean": 20.18621456364647,
+      "median": 22,
+      "p95": 30
+    },
+    "releaseToOwnership": {
+      "count": 3598,
+      "mean": 148.28738187882158,
+      "median": 136,
+      "p95": 291
+    },
+    "releaseToEligibility": {
+      "count": 3598,
+      "mean": 127.74152306837132,
+      "median": 131,
+      "p95": 267
+    },
+    "eligibilityToFirstBid": {
+      "count": 3598,
+      "mean": 19.18621456364647,
+      "median": 21,
+      "p95": 29
+    },
+    "firstBidToQuorumBid": {
+      "count": 3598,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "quorumBidToProposal": {
+      "count": 3598,
+      "mean": 1.0,
+      "median": 1,
+      "p95": 1
+    },
+    "proposalToFirstCertificate": {
+      "count": 3598,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "firstCertificateToAssignment": {
+      "count": 3598,
+      "mean": 0.3596442468037799,
+      "median": 0,
+      "p95": 1
+    },
+    "broadcastsPerPeerTick": 3.5786763287455234,
+    "messageDefinition": "send calls including heartbeats and checkpoint gossip; each broadcast can deliver to N-1 peers; excludes motion traffic",
+    "staleRejected": 441,
+    "auctionedTaskGenerations": 4934,
+    "certifiedTaskGenerations": 4897,
+    "uncertifiedObservedTaskGenerations": 37,
+    "duplicateExecutableOwnerRobotTicks": 0,
+    "peakConcurrentCandidateTasks": 1,
+    "meanConcurrentCandidateTasks": 0.6493638292697247,
+    "bundleSize": 1,
+    "limitations": "Observed rounds include renewals. Uncertified rounds are not necessarily quorum failures. First-stage timing does not isolate retries or per-round latency."
+  },
+  "n3-severe": {
+    "population": "all first-assigned tasks, including incomplete runs; stages are fleet-minimum first observations",
+    "certifiedTaskGenerationsPer100Ticks": 4.255118258926464,
+    "eligibilityToFirstCertificate": {
+      "count": 1919,
+      "mean": 19.94893173527879,
+      "median": 22,
+      "p95": 30
+    },
+    "releaseToOwnership": {
+      "count": 1919,
+      "mean": 148.26784783741533,
+      "median": 136,
+      "p95": 291
+    },
+    "releaseToEligibility": {
+      "count": 1919,
+      "mean": 127.9765502866076,
+      "median": 131,
+      "p95": 267
+    },
+    "eligibilityToFirstBid": {
+      "count": 1919,
+      "mean": 18.94893173527879,
+      "median": 21,
+      "p95": 29
+    },
+    "firstBidToQuorumBid": {
+      "count": 1919,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "quorumBidToProposal": {
+      "count": 1919,
+      "mean": 1.0,
+      "median": 1,
+      "p95": 1
+    },
+    "proposalToFirstCertificate": {
+      "count": 1919,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "firstCertificateToAssignment": {
+      "count": 1919,
+      "mean": 0.3423658155289213,
+      "median": 0,
+      "p95": 1
+    },
+    "broadcastsPerPeerTick": 3.5851994062137735,
+    "messageDefinition": "send calls including heartbeats and checkpoint gossip; each broadcast can deliver to N-1 peers; excludes motion traffic",
+    "staleRejected": 267,
+    "auctionedTaskGenerations": 2740,
+    "certifiedTaskGenerations": 2704,
+    "uncertifiedObservedTaskGenerations": 36,
+    "duplicateExecutableOwnerRobotTicks": 0,
+    "peakConcurrentCandidateTasks": 1,
+    "meanConcurrentCandidateTasks": 0.6510456827230239,
+    "bundleSize": 1,
+    "limitations": "Observed rounds include renewals. Uncertified rounds are not necessarily quorum failures. First-stage timing does not isolate retries or per-round latency."
+  },
+  "n5-all": {
+    "population": "all first-assigned tasks, including incomplete runs; stages are fleet-minimum first observations",
+    "certifiedTaskGenerationsPer100Ticks": 8.05783407129545,
+    "eligibilityToFirstCertificate": {
+      "count": 7920,
+      "mean": 18.741666666666667,
+      "median": 22,
+      "p95": 30
+    },
+    "releaseToOwnership": {
+      "count": 7920,
+      "mean": 68.38510101010101,
+      "median": 71,
+      "p95": 131
+    },
+    "releaseToEligibility": {
+      "count": 7920,
+      "mean": 49.25833333333333,
+      "median": 48,
+      "p95": 106
+    },
+    "eligibilityToFirstBid": {
+      "count": 7920,
+      "mean": 17.741666666666667,
+      "median": 21,
+      "p95": 29
+    },
+    "firstBidToQuorumBid": {
+      "count": 7920,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "quorumBidToProposal": {
+      "count": 7920,
+      "mean": 1.0,
+      "median": 1,
+      "p95": 1
+    },
+    "proposalToFirstCertificate": {
+      "count": 7920,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "firstCertificateToAssignment": {
+      "count": 7920,
+      "mean": 0.3851010101010101,
+      "median": 0,
+      "p95": 1
+    },
+    "broadcastsPerPeerTick": 4.735758122529409,
+    "messageDefinition": "send calls including heartbeats and checkpoint gossip; each broadcast can deliver to N-1 peers; excludes motion traffic",
+    "staleRejected": 3828,
+    "auctionedTaskGenerations": 13576,
+    "certifiedTaskGenerations": 13576,
+    "uncertifiedObservedTaskGenerations": 0,
+    "duplicateExecutableOwnerRobotTicks": 0,
+    "peakConcurrentCandidateTasks": 2,
+    "meanConcurrentCandidateTasks": 0.9280160491921986,
+    "bundleSize": 1,
+    "limitations": "Observed rounds include renewals. Uncertified rounds are not necessarily quorum failures. First-stage timing does not isolate retries or per-round latency."
+  },
+  "n5-low": {
+    "population": "all first-assigned tasks, including incomplete runs; stages are fleet-minimum first observations",
+    "certifiedTaskGenerationsPer100Ticks": 7.664256392089854,
+    "eligibilityToFirstCertificate": {
+      "count": 2400,
+      "mean": 19.159166666666668,
+      "median": 23,
+      "p95": 30
+    },
+    "releaseToOwnership": {
+      "count": 2400,
+      "mean": 68.37791666666666,
+      "median": 71,
+      "p95": 131
+    },
+    "releaseToEligibility": {
+      "count": 2400,
+      "mean": 48.840833333333336,
+      "median": 47,
+      "p95": 106
+    },
+    "eligibilityToFirstBid": {
+      "count": 2400,
+      "mean": 18.159166666666668,
+      "median": 22,
+      "p95": 29
+    },
+    "firstBidToQuorumBid": {
+      "count": 2400,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "quorumBidToProposal": {
+      "count": 2400,
+      "mean": 1.0,
+      "median": 1,
+      "p95": 1
+    },
+    "proposalToFirstCertificate": {
+      "count": 2400,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "firstCertificateToAssignment": {
+      "count": 2400,
+      "mean": 0.3779166666666667,
+      "median": 0,
+      "p95": 1
+    },
+    "broadcastsPerPeerTick": 4.88216466273521,
+    "messageDefinition": "send calls including heartbeats and checkpoint gossip; each broadcast can deliver to N-1 peers; excludes motion traffic",
+    "staleRejected": 1055,
+    "auctionedTaskGenerations": 3678,
+    "certifiedTaskGenerations": 3678,
+    "uncertifiedObservedTaskGenerations": 0,
+    "duplicateExecutableOwnerRobotTicks": 0,
+    "peakConcurrentCandidateTasks": 2,
+    "meanConcurrentCandidateTasks": 1.0081893767321677,
+    "bundleSize": 1,
+    "limitations": "Observed rounds include renewals. Uncertified rounds are not necessarily quorum failures. First-stage timing does not isolate retries or per-round latency."
+  },
+  "n5-recoverable": {
+    "population": "all first-assigned tasks, including incomplete runs; stages are fleet-minimum first observations",
+    "certifiedTaskGenerationsPer100Ticks": 8.281333020301746,
+    "eligibilityToFirstCertificate": {
+      "count": 3600,
+      "mean": 18.426944444444445,
+      "median": 22,
+      "p95": 30
+    },
+    "releaseToOwnership": {
+      "count": 3600,
+      "mean": 68.38944444444445,
+      "median": 71,
+      "p95": 131
+    },
+    "releaseToEligibility": {
+      "count": 3600,
+      "mean": 49.573055555555555,
+      "median": 49,
+      "p95": 106
+    },
+    "eligibilityToFirstBid": {
+      "count": 3600,
+      "mean": 17.426944444444445,
+      "median": 21,
+      "p95": 29
+    },
+    "firstBidToQuorumBid": {
+      "count": 3600,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "quorumBidToProposal": {
+      "count": 3600,
+      "mean": 1.0,
+      "median": 1,
+      "p95": 1
+    },
+    "proposalToFirstCertificate": {
+      "count": 3600,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "firstCertificateToAssignment": {
+      "count": 3600,
+      "mean": 0.3894444444444444,
+      "median": 0,
+      "p95": 1
+    },
+    "broadcastsPerPeerTick": 4.603635285250034,
+    "messageDefinition": "send calls including heartbeats and checkpoint gossip; each broadcast can deliver to N-1 peers; excludes motion traffic",
+    "staleRejected": 1876,
+    "auctionedTaskGenerations": 6702,
+    "certifiedTaskGenerations": 6702,
+    "uncertifiedObservedTaskGenerations": 0,
+    "duplicateExecutableOwnerRobotTicks": 0,
+    "peakConcurrentCandidateTasks": 2,
+    "meanConcurrentCandidateTasks": 0.8641772417798317,
+    "bundleSize": 1,
+    "limitations": "Observed rounds include renewals. Uncertified rounds are not necessarily quorum failures. First-stage timing does not isolate retries or per-round latency."
+  },
+  "n5-severe": {
+    "population": "all first-assigned tasks, including incomplete runs; stages are fleet-minimum first observations",
+    "certifiedTaskGenerationsPer100Ticks": 8.07805075320999,
+    "eligibilityToFirstCertificate": {
+      "count": 1920,
+      "mean": 18.809895833333332,
+      "median": 22,
+      "p95": 30
+    },
+    "releaseToOwnership": {
+      "count": 1920,
+      "mean": 68.3859375,
+      "median": 71,
+      "p95": 131
+    },
+    "releaseToEligibility": {
+      "count": 1920,
+      "mean": 49.190104166666664,
+      "median": 47,
+      "p95": 106
+    },
+    "eligibilityToFirstBid": {
+      "count": 1920,
+      "mean": 17.809895833333332,
+      "median": 21,
+      "p95": 29
+    },
+    "firstBidToQuorumBid": {
+      "count": 1920,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "quorumBidToProposal": {
+      "count": 1920,
+      "mean": 1.0,
+      "median": 1,
+      "p95": 1
+    },
+    "proposalToFirstCertificate": {
+      "count": 1920,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "firstCertificateToAssignment": {
+      "count": 1920,
+      "mean": 0.3859375,
+      "median": 0,
+      "p95": 1
+    },
+    "broadcastsPerPeerTick": 4.828434940855323,
+    "messageDefinition": "send calls including heartbeats and checkpoint gossip; each broadcast can deliver to N-1 peers; excludes motion traffic",
+    "staleRejected": 897,
+    "auctionedTaskGenerations": 3196,
+    "certifiedTaskGenerations": 3196,
+    "uncertifiedObservedTaskGenerations": 0,
+    "duplicateExecutableOwnerRobotTicks": 0,
+    "peakConcurrentCandidateTasks": 2,
+    "meanConcurrentCandidateTasks": 0.9613537559397431,
+    "bundleSize": 1,
+    "limitations": "Observed rounds include renewals. Uncertified rounds are not necessarily quorum failures. First-stage timing does not isolate retries or per-round latency."
+  },
+  "n8-all": {
+    "population": "all first-assigned tasks, including incomplete runs; stages are fleet-minimum first observations",
+    "certifiedTaskGenerationsPer100Ticks": 11.119678287746353,
+    "eligibilityToFirstCertificate": {
+      "count": 7920,
+      "mean": 17.936363636363637,
+      "median": 20,
+      "p95": 30
+    },
+    "releaseToOwnership": {
+      "count": 7920,
+      "mean": 28.491666666666667,
+      "median": 31,
+      "p95": 47
+    },
+    "releaseToEligibility": {
+      "count": 7920,
+      "mean": 10.063636363636364,
+      "median": 8,
+      "p95": 31
+    },
+    "eligibilityToFirstBid": {
+      "count": 7920,
+      "mean": 16.936363636363637,
+      "median": 19,
+      "p95": 29
+    },
+    "firstBidToQuorumBid": {
+      "count": 7920,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "quorumBidToProposal": {
+      "count": 7920,
+      "mean": 1.0,
+      "median": 1,
+      "p95": 1
+    },
+    "proposalToFirstCertificate": {
+      "count": 7920,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "firstCertificateToAssignment": {
+      "count": 7920,
+      "mean": 0.49166666666666664,
+      "median": 0,
+      "p95": 1
+    },
+    "broadcastsPerPeerTick": 5.193058925188607,
+    "messageDefinition": "send calls including heartbeats and checkpoint gossip; each broadcast can deliver to N-1 peers; excludes motion traffic",
+    "staleRejected": 11497,
+    "auctionedTaskGenerations": 16729,
+    "certifiedTaskGenerations": 16729,
+    "uncertifiedObservedTaskGenerations": 0,
+    "duplicateExecutableOwnerRobotTicks": 0,
+    "peakConcurrentCandidateTasks": 4,
+    "meanConcurrentCandidateTasks": 0.996882581674366,
+    "bundleSize": 1,
+    "limitations": "Observed rounds include renewals. Uncertified rounds are not necessarily quorum failures. First-stage timing does not isolate retries or per-round latency."
+  },
+  "n8-low": {
+    "population": "all first-assigned tasks, including incomplete runs; stages are fleet-minimum first observations",
+    "certifiedTaskGenerationsPer100Ticks": 10.917221601127691,
+    "eligibilityToFirstCertificate": {
+      "count": 2400,
+      "mean": 18.264583333333334,
+      "median": 20,
+      "p95": 30
+    },
+    "releaseToOwnership": {
+      "count": 2400,
+      "mean": 28.492916666666666,
+      "median": 31,
+      "p95": 47
+    },
+    "releaseToEligibility": {
+      "count": 2400,
+      "mean": 9.735416666666667,
+      "median": 8,
+      "p95": 30
+    },
+    "eligibilityToFirstBid": {
+      "count": 2400,
+      "mean": 17.264583333333334,
+      "median": 19,
+      "p95": 29
+    },
+    "firstBidToQuorumBid": {
+      "count": 2400,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "quorumBidToProposal": {
+      "count": 2400,
+      "mean": 1.0,
+      "median": 1,
+      "p95": 1
+    },
+    "proposalToFirstCertificate": {
+      "count": 2400,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "firstCertificateToAssignment": {
+      "count": 2400,
+      "mean": 0.49291666666666667,
+      "median": 0,
+      "p95": 1
+    },
+    "broadcastsPerPeerTick": 5.502548850435036,
+    "messageDefinition": "send calls including heartbeats and checkpoint gossip; each broadcast can deliver to N-1 peers; excludes motion traffic",
+    "staleRejected": 2945,
+    "auctionedTaskGenerations": 4492,
+    "certifiedTaskGenerations": 4492,
+    "uncertifiedObservedTaskGenerations": 0,
+    "duplicateExecutableOwnerRobotTicks": 0,
+    "peakConcurrentCandidateTasks": 4,
+    "meanConcurrentCandidateTasks": 1.1236815243280027,
+    "bundleSize": 1,
+    "limitations": "Observed rounds include renewals. Uncertified rounds are not necessarily quorum failures. First-stage timing does not isolate retries or per-round latency."
+  },
+  "n8-recoverable": {
+    "population": "all first-assigned tasks, including incomplete runs; stages are fleet-minimum first observations",
+    "certifiedTaskGenerationsPer100Ticks": 10.936853371387798,
+    "eligibilityToFirstCertificate": {
+      "count": 3600,
+      "mean": 17.835833333333333,
+      "median": 19,
+      "p95": 30
+    },
+    "releaseToOwnership": {
+      "count": 3600,
+      "mean": 28.49,
+      "median": 31,
+      "p95": 47
+    },
+    "releaseToEligibility": {
+      "count": 3600,
+      "mean": 10.164166666666667,
+      "median": 8,
+      "p95": 31
+    },
+    "eligibilityToFirstBid": {
+      "count": 3600,
+      "mean": 16.835833333333333,
+      "median": 18,
+      "p95": 29
+    },
+    "firstBidToQuorumBid": {
+      "count": 3600,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "quorumBidToProposal": {
+      "count": 3600,
+      "mean": 1.0,
+      "median": 1,
+      "p95": 1
+    },
+    "proposalToFirstCertificate": {
+      "count": 3600,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "firstCertificateToAssignment": {
+      "count": 3600,
+      "mean": 0.49,
+      "median": 0,
+      "p95": 1
+    },
+    "broadcastsPerPeerTick": 5.124696753478416,
+    "messageDefinition": "send calls including heartbeats and checkpoint gossip; each broadcast can deliver to N-1 peers; excludes motion traffic",
+    "staleRejected": 5776,
+    "auctionedTaskGenerations": 7664,
+    "certifiedTaskGenerations": 7664,
+    "uncertifiedObservedTaskGenerations": 0,
+    "duplicateExecutableOwnerRobotTicks": 0,
+    "peakConcurrentCandidateTasks": 4,
+    "meanConcurrentCandidateTasks": 0.967663217980735,
+    "bundleSize": 1,
+    "limitations": "Observed rounds include renewals. Uncertified rounds are not necessarily quorum failures. First-stage timing does not isolate retries or per-round latency."
+  },
+  "n8-severe": {
+    "population": "all first-assigned tasks, including incomplete runs; stages are fleet-minimum first observations",
+    "certifiedTaskGenerationsPer100Ticks": 11.65867836018764,
+    "eligibilityToFirstCertificate": {
+      "count": 1920,
+      "mean": 17.714583333333334,
+      "median": 19,
+      "p95": 30
+    },
+    "releaseToOwnership": {
+      "count": 1920,
+      "mean": 28.493229166666666,
+      "median": 31,
+      "p95": 47
+    },
+    "releaseToEligibility": {
+      "count": 1920,
+      "mean": 10.285416666666666,
+      "median": 8,
+      "p95": 31
+    },
+    "eligibilityToFirstBid": {
+      "count": 1920,
+      "mean": 16.714583333333334,
+      "median": 18,
+      "p95": 29
+    },
+    "firstBidToQuorumBid": {
+      "count": 1920,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "quorumBidToProposal": {
+      "count": 1920,
+      "mean": 1.0,
+      "median": 1,
+      "p95": 1
+    },
+    "proposalToFirstCertificate": {
+      "count": 1920,
+      "mean": 0.0,
+      "median": 0,
+      "p95": 0
+    },
+    "firstCertificateToAssignment": {
+      "count": 1920,
+      "mean": 0.49322916666666666,
+      "median": 0,
+      "p95": 1
+    },
+    "broadcastsPerPeerTick": 4.990535131552111,
+    "messageDefinition": "send calls including heartbeats and checkpoint gossip; each broadcast can deliver to N-1 peers; excludes motion traffic",
+    "staleRejected": 2776,
+    "auctionedTaskGenerations": 4573,
+    "certifiedTaskGenerations": 4573,
+    "uncertifiedObservedTaskGenerations": 0,
+    "duplicateExecutableOwnerRobotTicks": 0,
+    "peakConcurrentCandidateTasks": 4,
+    "meanConcurrentCandidateTasks": 0.9160717927799307,
+    "bundleSize": 1,
+    "limitations": "Observed rounds include renewals. Uncertified rounds are not necessarily quorum failures. First-stage timing does not isolate retries or per-round latency."
+  }
+}
