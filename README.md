@@ -1,4 +1,4 @@
-# Team Rocket · Decentralized AMR Fleet Coordination
+# Decentralized AMR Fleet Coordination
 
 **Robots coordinate work with each other. The dashboard lets people see what is happening.**
 
