@@ -82,12 +82,10 @@ function start(config: Config): Holder {
   const orderBook = new OrderBook(runtime);
   orderBook.setEnabled(config.orderStream);
   orderBook.releaseDue();
-  const timer = setInterval(() => {
-    orderBook.releaseDue();
-    runtime.step();
-  }, TICK_MS);
+  const timer = setInterval(() => advanceIfDue(current), TICK_MS);
+  const current: Holder = { runtime, orderBook, config, lastStepAt: Date.now(), timer };
   timer.unref();
-  return { runtime, orderBook, timer, config, lastStepAt: Date.now() };
+  return current;
 }
 
 function holder(): Holder {
@@ -108,14 +106,16 @@ export function fleetService(): FleetRuntime { return holder().runtime; }
  * at it, which is the difference between a demo that is merely choppy and one
  * that is permanently stuck on tick 0.
  */
-export function stepIfDue(): void {
-  const current = holder();
+function advanceIfDue(current: Holder): void {
   const now = Date.now();
   if (now - current.lastStepAt < TICK_MS) return;
   current.lastStepAt = now;
   current.orderBook.releaseDue();
   current.runtime.step();
 }
+
+export function stepIfDue(): void { advanceIfDue(holder()); }
+
 export function fleetOrderBook(): OrderBook { return holder().orderBook; }
 export function fleetConfig(): Config { return { ...holder().config }; }
 

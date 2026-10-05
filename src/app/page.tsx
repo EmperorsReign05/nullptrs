@@ -41,6 +41,8 @@ import {
 } from '@/components/dashboard';
 
 type FleetSnapshot = {
+  runtimeId?: string;
+  motionHistory?: import("@/components/dashboard/useSmoothRobots").MotionFrame[];
   world: WorldState;
   running: boolean;
   aiEnabled: boolean;
@@ -441,7 +443,7 @@ export default function Dashboard() {
    * empty list and a sentinel tick are passed; the hook simply has nothing to
    * animate and idles.
    */
-  const pose = useSmoothRobots(snapshot?.world.robots ?? [], snapshot?.world.tick ?? -1);
+  const pose = useSmoothRobots(snapshot?.world.robots ?? [], snapshot?.world.tick ?? -1, snapshot?.motionHistory, snapshot?.runtimeId);
 
   // ---- connection chrome ----
   //

@@ -20,13 +20,16 @@ export type MapTooltip = {
 /** Robot colour is derived from the robot id, never from its position in a list.
  * Index-based colouring collides once the fleet is larger than the palette and
  * silently changes a robot's colour when an earlier robot fails or is filtered
- * out. Hashing the id keeps identity stable and the palette unbounded. */
+ * out. Deriving the hue from the id keeps identity stable as the fleet grows. */
 export function getRobotColor(id: string): string {
   let hash = 0;
   for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
-  // Spread hues away from the muddy yellow-green band and keep saturation and
-  // lightness fixed so every robot reads equally well on the dark map.
-  const hue = (hash % 320 + 200) % 360;
+  // Keep saturation and lightness fixed for visibility on the dark map.
+  // Sequential AMR ids differ by one in the hash. Use the golden angle to
+  // separate neighbouring identities instead of giving them adjacent hues.
+  const ordinal = /^AMR-(\d+)$/.exec(id);
+  const seed = ordinal ? Number(ordinal[1]) - 1 : hash;
+  const hue = Math.round((200 + seed * 137.508) % 360);
   return `hsl(${hue} 78% 62%)`;
 }
 
