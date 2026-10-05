@@ -262,7 +262,7 @@ export function JudgeTutorial({ isOpen, onClose }: JudgeTutorialProps) {
   if (!isOpen || !step) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] overflow-hidden pointer-events-auto">
+    <div className="fixed inset-0 z-[9999] overflow-hidden pointer-events-none">
       <svg className="absolute inset-0 w-full h-full pointer-events-none">
         <defs>
           <mask id="spotlight-hole-mask">
@@ -297,8 +297,7 @@ export function JudgeTutorial({ isOpen, onClose }: JudgeTutorialProps) {
           height="100%"
           fill="rgba(0, 0, 0, 0.82)"
           mask="url(#spotlight-hole-mask)"
-          className="backdrop-blur-sm pointer-events-auto cursor-pointer"
-          onClick={handleNext}
+          className="backdrop-blur-sm"
         />
 
         {targetRect && (
@@ -313,6 +312,18 @@ export function JudgeTutorial({ isOpen, onClose }: JudgeTutorialProps) {
           />
         )}
       </svg>
+
+      {/* SVG masking only hides pixels; it does not create a clickable hole.
+          Block the four regions outside the spotlight so the highlighted
+          warehouse control receives the actual click. */}
+      {(targetRect ? [
+        { top: 0, left: 0, right: 0, height: targetRect.y },
+        { top: targetRect.y + targetRect.height, left: 0, right: 0, bottom: 0 },
+        { top: targetRect.y, left: 0, width: targetRect.x, height: targetRect.height },
+        { top: targetRect.y, left: targetRect.x + targetRect.width, right: 0, height: targetRect.height },
+      ] : [{ top: 0, left: 0, right: 0, bottom: 0 }]).map((style, i) => (
+        <div key={i} aria-hidden className="absolute pointer-events-auto cursor-pointer" style={style} onClick={handleNext} />
+      ))}
 
       {targetRect && (
         <div
@@ -330,7 +341,7 @@ export function JudgeTutorial({ isOpen, onClose }: JudgeTutorialProps) {
 
       <div
         ref={popoverRef}
-        className="absolute z-[10000] w-[360px] max-w-[calc(100vw-32px)] bg-black/95 text-white rounded-2xl border-2 border-white/80 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.9),0_0_30px_rgba(255,255,255,0.2)] backdrop-blur-2xl transition-all duration-300 ease-out"
+        className="absolute pointer-events-auto z-[10000] w-[360px] max-w-[calc(100vw-32px)] bg-black/95 text-white rounded-2xl border-2 border-white/80 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.9),0_0_30px_rgba(255,255,255,0.2)] backdrop-blur-2xl transition-all duration-300 ease-out"
         style={{
           top: popoverPos.y,
           left: popoverPos.x,

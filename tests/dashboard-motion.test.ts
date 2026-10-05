@@ -54,6 +54,53 @@ describe('dashboard robot identity and movement', () => {
     expect(sampleSmooth(advanceSmooth(s, robots(2, 1), 1, 1, 100), 225)['AMR-01'].x).toBe(1.5);
   });
 
+  it('does not snap when normal WAN polling leaves more than one second queued', () => {
+    const first = advanceSmooth(initialSmooth(robots(0, 0), 0), robots(3, 0), 3, 0, 0,
+      [1, 2, 3].map(tick => ({ tick, positions: positions(tick, 0) })));
+    const next = advanceSmooth(first, robots(7, 0), 7, 3, 640,
+      [4, 5, 6, 7].map(tick => ({ tick, positions: positions(tick, 0) })));
+    expect(sampleSmooth(next, 640)).toEqual(sampleSmooth(first, 640));
+    expect(next.durationMs).toBeGreaterThan(1000);
+    expect(sampleSmooth(next, 890)['AMR-01'].x - sampleSmooth(next, 640)['AMR-01'].x).toBeCloseTo(1);
+  });
+
+  it('replays a five-tick WAN gap when the committed history is present', () => {
+    const s = advanceSmooth(initialSmooth(robots(0, 0), 0), robots(5, 0), 5, 0, 900,
+      [1, 2, 3, 4, 5].map(tick => ({ tick, positions: positions(tick, 0) })));
+    expect(sampleSmooth(s, 900)['AMR-01'].x).toBe(0);
+    expect(sampleSmooth(s, 1025)['AMR-01'].x).toBeCloseTo(0.5);
+  });
+
+  it('stays continuous over realistic WAN arrival times, including turns', () => {
+    const arrivals = [400, 1068, 1732, 2395, 3050, 3824, 4467, 5220, 6154, 6789, 7476, 8187];
+    const path = Array.from({ length: 40 }, (_, tick) => {
+      const leg = Math.floor(tick / 10), offset = tick % 10;
+      return leg === 0 ? positions(offset, 0) : leg === 1 ? positions(10, offset) : leg === 2 ? positions(10 - offset, 10) : positions(0, 10 - offset);
+    });
+    let state = initialSmooth(robots(0, 0), 0), previous = 0;
+    for (const now of arrivals) {
+      const tick = Math.floor(now / TICK_MS);
+      const target = path[tick]['AMR-01'];
+      const painted = sampleSmooth(state, now);
+      state = advanceSmooth(state, robots(target.x, target.y), tick, previous, now,
+        path.slice(Math.max(0, tick - 8), tick + 1).map((positions, i) => ({ tick: Math.max(0, tick - 8) + i, positions })));
+      expect(sampleSmooth(state, now)).toEqual(painted);
+      previous = tick;
+      let last = sampleSmooth(state, now)['AMR-01'];
+      for (let t = now + 16; t < now + 600; t += 16) {
+        const next = sampleSmooth(state, t)['AMR-01'];
+        expect(Math.abs(next.x - last.x) + Math.abs(next.y - last.y)).toBeLessThanOrEqual(16 / TICK_MS + 1e-6);
+        last = next;
+      }
+    }
+  });
+
+  it('does not schedule an animation for an idle fleet on every tick', () => {
+    const s = initialSmooth(robots(1, 1), 0);
+    expect(advanceSmooth(s, robots(1, 1), 3, 0, 800,
+      [1, 2, 3].map(tick => ({ tick, positions: positions(1, 1) })))).toBe(s);
+  });
+
   it('reports bounded, immutable motion history and a new identity on restart', () => {
     const rt = new FleetRuntime();
     const first = rt.snapshot();

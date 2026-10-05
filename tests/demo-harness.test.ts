@@ -13,7 +13,7 @@
 //     pulling it silently stopped all work;
 //   * the robot-count slider and reset did nothing at all beyond logging.
 
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { OrderBook, RELEASE_INTERVAL_TICKS } from "../src/server/order-book";
 import { layoutWithShelfColumns, clampShelfColumns, MIN_SHELF_COLUMNS, MAX_SHELF_COLUMNS, passingCapacity } from "../src/server/layout";
 import { FleetRuntime } from "../src/core/distributed/runtime";
@@ -195,6 +195,39 @@ describe("the /api/fleet adapter", () => {
     const served = await (await GET()).json() as { world: { map: { cells: { position: { x: number; y: number }; blocked: boolean }[] } } };
     const cell = served.world.map.cells.find((c) => c.position.x === 9 && c.position.y === 5);
     expect(cell?.blocked).toBe(true);
+  });
+
+  it("Reset rebuilds a world even when the requested fleet size is unchanged", async () => {
+    const { GET, POST } = await import("../src/app/api/fleet/route");
+    const before = await (await GET()).json();
+    const response = await POST(new Request("http://local/api/fleet", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ kind: "reconfigure", robots: before.world.robots.length }),
+    }));
+    expect(response.status).toBe(200);
+    const reset = await response.json();
+    expect(reset.runtimeId).not.toBe(before.runtimeId);
+    expect(reset.world.tick).toBe(0);
+    expect(reset.world.robots.every((r: RobotState) => r.battery === 100)).toBe(true);
+  });
+
+  it("an external outage never switches commands or telemetry to a different fleet", async () => {
+    const { GET, POST } = await import("../src/app/api/fleet/route");
+    process.env.FLEET_URL = "http://unreachable-fleet.invalid";
+    const fetch = vi.fn().mockRejectedValue(new Error("offline"));
+    vi.stubGlobal("fetch", fetch);
+    try {
+      const state = await GET();
+      expect(state.status).toBe(503);
+      expect(await state.json()).toEqual({ error: "Configured fleet runtime unreachable" });
+      const command = await POST(new Request("http://local/api/fleet", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ kind: "run" }),
+      }));
+      expect(command.status).toBe(503);
+      expect(fetch).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 
   it("rejects a malformed reconfigure instead of building an impossible world", async () => {

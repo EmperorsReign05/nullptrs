@@ -36,8 +36,7 @@ import {
   ActiveTasks,
   EventLog,
   type LogEntry,
-  type MapTooltip,
-  useSmoothRobots
+  type MapTooltip
 } from '@/components/dashboard';
 
 type FleetSnapshot = {
@@ -119,6 +118,9 @@ export default function Dashboard() {
   const [robotCount, setRobotCount] = useState(0);
 
   const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+  const [simulationPending, setSimulationPending] = useState(false);
+  const simulationCommand = useRef(false);
+  const controlRevision = useRef(0);
   /** True once a poll has actually failed. Derived once, here, so every
    *  consumer below reads the same value and none of them recomputes it. */
   const disconnected = status === 'error';
@@ -183,8 +185,10 @@ export default function Dashboard() {
     const abort = new AbortController();
 
     const poll = async () => {
+      const startedAt = performance.now();
+      const revision = controlRevision.current;
       try {
-        const response = await fetch('/api/fleet', { cache: 'no-store', signal: abort.signal });
+        const response = await fetch('/api/fleet', { cache: 'no-store', signal: AbortSignal.any([abort.signal, AbortSignal.timeout(10_000)]) });
         if (!response.ok) {
           const body = await response.json().catch(() => null);
           if (!disposed) {
@@ -194,7 +198,7 @@ export default function Dashboard() {
           }
         } else {
           const next = (await response.json()) as FleetSnapshot;
-          if (!disposed) {
+          if (!disposed && revision === controlRevision.current) {
             // Detect the yield transitions between the two snapshots we have
             // seen and point a tooltip at the robot that actually yielded.
             // Done here, at the moment the snapshot lands, rather than in an
@@ -225,7 +229,7 @@ export default function Dashboard() {
           setStatus('error');
         }
       }
-      if (!disposed) timer = setTimeout(poll, POLL_MS);
+      if (!disposed) timer = setTimeout(poll, Math.max(0, POLL_MS - (performance.now() - startedAt)));
     };
 
     // No `setStatus('connecting')` here on purpose. The state already starts as
@@ -258,11 +262,26 @@ export default function Dashboard() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(command),
+        signal: AbortSignal.timeout(10_000),
       });
       if (!response.ok) {
         const body = await response.json().catch(() => null);
         describe(false, body?.error ?? `command rejected (${response.status})`);
         return;
+      }
+      const confirmed = await response.json() as FleetSnapshot;
+      const kind = (command as { kind?: string }).kind;
+      if (kind === 'reconfigure') {
+        controlRevision.current++;
+        worldRef.current = confirmed.world;
+        setSnapshot(confirmed);
+        setRobotCount(confirmed.world.robots.length);
+        setLastUpdateAt(Date.now());
+      }
+      if ((kind === 'run' || kind === 'pause') && typeof confirmed.running === 'boolean') {
+        // A GET started before this acknowledgement must not overwrite it.
+        controlRevision.current++;
+        setSnapshot(previous => previous ? { ...previous, running: confirmed.running } : confirmed);
       }
       describe(true);
     } catch {
@@ -271,8 +290,13 @@ export default function Dashboard() {
   }, []);
 
   const handleToggleSimulation = () => {
+    if (simulationCommand.current) return;
+    simulationCommand.current = true;
+    setSimulationPending(true);
     const next = !(snapshot?.running ?? false);
     void send({ kind: next ? 'run' : 'pause' }, (ok, detail) => {
+      simulationCommand.current = false;
+      setSimulationPending(false);
       if (!ok) { addLog(`could not ${next ? 'start' : 'pause'} the fleet: ${detail}`, 'error'); return; }
       addLog(next ? 'fleet running — peer controllers stepping' : 'fleet paused', next ? 'info' : 'warning');
     });
@@ -414,7 +438,17 @@ export default function Dashboard() {
     });
   };
 
-  const handleReset = () => reconfigure({ robots: robotCount || 3 }, 'world rebuilt from scratch');
+  const handleReset = () => {
+    void send({ kind: 'reconfigure', robots: robotCount || 3 }, (ok, detail) => {
+      if (!ok) { addLog(`could not reset the fleet: ${detail}`, 'error'); return; }
+      setSelectedRobotId(null);
+      setAisleBlocked(false);
+      setSevered(false);
+      setConflictTooltips([]);
+      setJustAnnounced([]);
+      addLog('fleet restarted — world rebuilt from scratch', 'warning');
+    });
+  };
 
   const handleRobotCountChange = (count: number) => {
     setRobotCount(count);
@@ -432,18 +466,6 @@ export default function Dashboard() {
     () => (snapshot?.events ?? []).slice(-8).map((e) => ({ time: `tick ${e.tick}`, text: e.text, type: 'info' as const })),
     [snapshot]
   );
-
-  /**
-   * Robot motion, reconstructed on a real clock from the tick difference between
-   * two snapshots so it runs at a constant speed instead of at the mercy of poll
-   * jitter. See useSmoothRobots for the defect this replaces.
-   *
-   * Called unconditionally and ABOVE every early return, because a hook may not
-   * be called conditionally. Before the first snapshot there are no robots, so an
-   * empty list and a sentinel tick are passed; the hook simply has nothing to
-   * animate and idles.
-   */
-  const pose = useSmoothRobots(snapshot?.world.robots ?? [], snapshot?.world.tick ?? -1, snapshot?.motionHistory, snapshot?.runtimeId);
 
   // ---- connection chrome ----
   //
@@ -591,12 +613,15 @@ export default function Dashboard() {
               shelfColCount={shelfColCount}
               map={world.map}
               tooltips={conflictTooltips}
-              pose={pose}
+              tick={world.tick}
+              motionHistory={snapshot.motionHistory}
+              runtimeId={snapshot.runtimeId}
             />
 
             <div className="shrink-0 flex flex-col gap-4">
               <ControlPanel
                 isSimulating={snapshot.running}
+                simulationPending={simulationPending}
                 robotCount={robotCount}
                 shelfColCount={shelfColCount}
                 aisleBlocked={aisleBlocked}

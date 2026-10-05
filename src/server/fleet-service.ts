@@ -132,9 +132,8 @@ export function reconfigureFleet(next: Partial<Config>): Config {
     shelfColumns: next.shelfColumns ?? current.config.shelfColumns,
     orderStream: next.orderStream ?? current.config.orderStream,
   };
-  if (merged.robots === current.config.robots && merged.shelfColumns === current.config.shelfColumns) {
-    return merged;
-  }
+  // Reconfiguration is an explicit restart. In particular, Reset sends the
+  // current fleet size; treating that as a no-op left the old world running.
   clearInterval(current.timer);
   const root = globalThis as typeof globalThis & { [key]?: Holder };
   root[key] = start(merged);
