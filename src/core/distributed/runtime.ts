@@ -3,7 +3,7 @@ import { groupBid, groupIdentity, bundleExecutionAllowed, type GroupBid } from "
 import { executionActiveTaskAllowed, executionIdleMoveAllowed } from "./execution-energy";
 import { DistributedCharging } from "./charging";
 import { createInitialWorld } from "../simulation/state";
-import { BATTERY_PERCENT_PER_CELL } from "../simulation/robotModels";
+import { BATTERY_PERCENT_PER_CELL, RECHARGE_TARGET_PERCENT } from "../simulation/robotModels";
 import { type LocalBidInput } from "../ml/bidfeatures";
 import { makeLocalBid, type BidModel, type LocalBidPacket } from "../ml/bidmodel";
 import frozen from "../../../artifacts/bid-energy-v4/model.json";
@@ -34,6 +34,7 @@ export class FleetRuntime {
   private channels = new Map<string, InMemoryTransport<OwnershipMessage>>();
   private groupCache = new Map<string,{state:string;bid:GroupBid}>();
   private groupedEnergyBlocked = new Set<string>();
+  private bidRechargeTargets = new Map<string, number>();
   private dead = new Set<string>();
   running = true;
   aiEnabled = true;
@@ -116,6 +117,15 @@ export class FleetRuntime {
     } catch {
       this.metrics.failedModelFallbacks++;
       packet = makeLocalBid(input, frozen.model, 0);
+    }
+    // Idle bidders can reject the head job for energy while still above the
+    // hard low-battery floor. Without this signal, they never go to charge and
+    // the same job blocks admission indefinitely. Keep ownership untouched;
+    // recharge only a robot with no active or queued commitments.
+    const robot = this.world.robots.find(r => r.id === id)!;
+    if (!robot.currentTaskId && !robot.queuedTaskIds?.length && packet.energy.reason === "insufficient-energy" &&
+        Number.isFinite(packet.energy.requiredEnergy) && packet.energy.requiredEnergy <= 100) {
+      this.bidRechargeTargets.set(id, Math.max(RECHARGE_TARGET_PERCENT, packet.energy.requiredEnergy));
     }
     return packet;
   }
@@ -205,9 +215,12 @@ export class FleetRuntime {
       // when the cheaper static active-task estimate still says "ready".
       // The full commitment guard remains enforced and custody stays sticky.
       const queueRecharge = this.options.groupedQueueRecharge && peer.allocationMode === "event-grouped" && active && active.status !== "in_progress";
-      const commitmentsAffordable = !queueRecharge || !this.groupedEnergyBlocked.has(r.id) && bundleExecutionAllowed(r,r.position,this.world);
+      const bidRechargeTarget = !active && !r.queuedTaskIds.length ? this.bidRechargeTargets.get(r.id) : undefined;
+      const commitmentsAffordable = (!queueRecharge || !this.groupedEnergyBlocked.has(r.id) && bundleExecutionAllowed(r,r.position,this.world)) &&
+        (bidRechargeTarget === undefined || r.battery >= bidRechargeTarget);
       this.groupedEnergyBlocked.delete(r.id);
       const charge = this.charging.get(r.id)!.prepare(r, this.world, tick, commitmentsAffordable);
+      if (bidRechargeTarget !== undefined && charge.mode === "work") this.bidRechargeTargets.delete(r.id);
       this.fleet.setInactive(r.id, charge.hold || r.battery <= 0 || charge.mode === "work" && !!active && !peer.mayExecute(active.id));
       if (active && active.status === "in_progress" && !peer.acknowledged(active.id, "custody")) peer.mark(active.id, "custody");
     }
