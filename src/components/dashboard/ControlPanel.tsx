@@ -6,6 +6,8 @@ import { Plus, Play, Pause, AlertTriangle, XOctagon, AlertCircle, RefreshCw } fr
 interface ControlPanelProps {
   isSimulating: boolean;
   simulationPending?: boolean;
+  amrFailed?: boolean;
+  failurePending?: boolean;
   robotCount: number;
   shelfColCount: number;
   aisleBlocked: boolean;
@@ -39,6 +41,8 @@ const DISABLED =
 export function ControlPanel({
   isSimulating,
   simulationPending = false,
+  amrFailed = false,
+  failurePending = false,
   robotCount,
   shelfColCount,
   aisleBlocked,
@@ -106,9 +110,10 @@ export function ControlPanel({
           </button>
           <button 
             onClick={onFailAMR} 
+            disabled={failurePending}
             className="bg-[#C9F27D]/10 border border-[#C9F27D]/40 text-[#C9F27D] hover:bg-[#C9F27D] hover:text-[#090C11] hover:border-[#C9F27D] hover:shadow-[0_0_15px_rgba(201,242,125,0.35)] px-3.5 py-2 rounded-md text-[12px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-150 hover:-translate-y-0.5 active:scale-95 whitespace-nowrap cursor-pointer"
           >
-            <AlertCircle size={15} strokeWidth={2.5} /> fail amr-02
+            <AlertCircle size={15} strokeWidth={2.5} /> {failurePending ? (amrFailed ? 'recovering…' : 'failing…') : (amrFailed ? 'recover amr-02' : 'fail amr-02')}
           </button>
           <button 
             onClick={onBlockAisle}

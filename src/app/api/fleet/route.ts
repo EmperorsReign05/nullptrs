@@ -76,7 +76,7 @@ async function proxy(method: "GET" | "POST", body?: string): Promise<Response> {
   // through fleet-http an unknown kind is rejected by the allow-list there, but
   // the in-process path had no such gate and answered 200 to garbage. The two
   // topologies must reject the same things.
-  const RUNTIME_KINDS = ["run", "pause", "ai-on", "ai-off", "heal", "fail", "link", "block", "task"];
+  const RUNTIME_KINDS = ["run", "pause", "ai-on", "ai-off", "heal", "fail", "recover", "link", "block", "task"];
   const HARNESS_KINDS = ["order-stream", "reconfigure"];
   if (![...RUNTIME_KINDS, ...HARNESS_KINDS].includes(payload.kind)) {
     return Response.json({ error: `Unknown command: ${payload.kind}` }, { status: 400 });

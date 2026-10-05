@@ -22,6 +22,31 @@ function until(runtime: FleetRuntime, condition: () => boolean, budget = 300) {
   expect(condition(), JSON.stringify(runtime.snapshot())).toBe(true);
 }
 describe("integrated fleet demo", () => {
+  it("recovers a failed custodian without relocating it or reauctioning its cargo", () => {
+    const r = new FleetRuntime(setup());
+    r.command({ kind: "task", task: task("RECOVER-CARGO") });
+    const job = r.world.tasks[0];
+    until(r, () => job.status === "in_progress");
+    const owner = job.assignedRobotId!;
+    const robot = r.world.robots.find(x => x.id === owner)!;
+    r.command({ kind: "fail", robotId: owner });
+    const held = { ...robot.position };
+    for (let i = 0; i < 80; i++) {
+      r.step();
+      expect(robot.position).toEqual(held);
+      expect(job.status).toBe("in_progress");
+      expect(job.assignedRobotId === undefined || job.assignedRobotId === owner).toBe(true);
+    }
+    const runtimeId = r.runtimeId;
+    r.command({ kind: "recover", robotId: owner });
+    expect(robot.position).toEqual(held);
+    expect(r.runtimeId).toBe(runtimeId);
+    until(r, () => job.status === "completed", 400);
+    expect(job.assignedRobotId).toBe(owner);
+    expect(Object.values(r.safety).every(x => x === 0)).toBe(true);
+    expect(() => r.command({ kind: "recover", robotId: "missing" })).toThrow("Unknown robot");
+    expect(() => r.command({ kind: "recover", robotId: owner })).toThrow("not failed");
+  });
   it("three local bidders, AI and fallback, blocked route, owner failure, partition, recovery and telemetry", () => {
     const r = new FleetRuntime(setup()); r.command({ kind: "task", task: task("E2E-1") });
     const job = r.world.tasks[0];

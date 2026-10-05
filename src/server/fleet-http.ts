@@ -26,7 +26,7 @@ const port = Number(process.env.PORT || process.env.FLEET_PORT || 4010);
 // restart, because that is exactly what it is.
 type Reconfigure = { kind: "reconfigure"; robots?: number; shelfColumns?: number; orderStream?: boolean };
 
-const RUNTIME_KINDS = ["run", "pause", "ai-on", "ai-off", "heal", "fail", "link", "block", "task"];
+const RUNTIME_KINDS = ["run", "pause", "ai-on", "ai-off", "heal", "fail", "recover", "link", "block", "task"];
 const HARNESS_KINDS = ["order-stream", "reconfigure"];
 
 const state = () => ({ ...fleetService().snapshot(), orderStream: fleetOrderBook().stats() });

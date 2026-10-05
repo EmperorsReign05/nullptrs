@@ -176,6 +176,17 @@ export class DistributedFleet {
       this.gateMove(agent);
       agent.tick(tick);
     }
+    // A healthy peer that is charging or fenced by an ownership lease still
+    // has a live motion controller. Publish its stationary decision so nearby
+    // peers can confirm empty adjacent cells. Failed bodies stay silent and
+    // remain physical obstacles in the sensor feed.
+    for (const robot of this.robots) {
+      if (!this.inactive.has(robot.id) || robot.status === "failed") continue;
+      const agent = this.agents.get(robot.id)!;
+      const from = agent.getLocal().position;
+      agent.overrideDecision({ from, to: from, reason: "no-move" });
+      agent.tick(tick);
+    }
     // Deliver this tick's broadcasts.
     for (const t of this.transports.values()) t.advanceClock();
 

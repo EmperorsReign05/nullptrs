@@ -451,7 +451,7 @@ export class Agent {
         // Reuse the existing two-observation planning hint so the external
         // controller can route around a crashed body's safety envelope.
         // This changes planning only; the unknown-contender veto remains.
-        if (this.priorityYield) this.noteBlocker(decision.to, scanNow, currentTick);
+        this.noteBlocker(decision.to, scanNow, currentTick);
         return hold();
       }
       if (peer.intent && positionsEqual(peer.intent, decision.to) && !this.winsAgainst({ id: this.id, priority: this.local.priority }, peer)) return hold();
