@@ -4,7 +4,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Position, RobotState } from '@/core/types';
 
 export const TICK_MS = 250;
-export const MAX_STEP_MS = TICK_MS * 4;
+// The runtime retains eight complete movement intervals.
+export const MAX_STEP_MS = TICK_MS * 8;
 export type Pose = Record<string, Position>;
 export type MotionFrame = { tick: number; positions: Pose };
 export type SmoothState = {
@@ -42,7 +43,6 @@ export function advanceSmooth(
       Object.keys(next).some(id => !state.to[id]) ||
       Object.keys(next).length !== Object.keys(state.to).length) return initialSmooth(robots, now);
   const steps = tick - previousTick;
-  if (steps > MAX_STEP_MS / TICK_MS) return initialSmooth(robots, now);
   if (samePose(state.to, next) && !history) return state;
 
   const committed = history?.filter(f => f.tick > previousTick && f.tick <= tick);
@@ -59,6 +59,8 @@ export function advanceSmooth(
     targets = [next];
   }
   if (!targets.length) return state;
+  // An idle fleet has nothing to animate, even though ticks keep arriving.
+  if (samePose(state.to, next) && targets.every(pose => samePose(state.to, pose))) return state;
   // Finish the current segment before appending new steps. Restarting a line
   // from the painted position to a new endpoint used to cut every corner.
   const from = sampleSmooth(state, now);
@@ -73,8 +75,6 @@ export function advanceSmooth(
     frames.push({ at, pose });
     last = pose;
   }
-  // Recover from a suspended tab without accelerating old moves across the map.
-  if (at - now > MAX_STEP_MS) return initialSmooth(robots, now);
   return { from, to: next, startedAt: now, durationMs: at - now, frames };
 }
 
@@ -116,7 +116,8 @@ export function useSmoothRobots(robots: readonly RobotState[], tick: number, his
       pending.current = false;
     }
     if (!smooth.current) return;
-    setPose(sampleSmooth(smooth.current, now));
+    const painted = sampleSmooth(smooth.current, now);
+    setPose(previous => samePose(previous, painted) ? previous : painted);
     if (now < smooth.current.startedAt + smooth.current.durationMs) frame.current = requestAnimationFrame(step);
   }, []);
 

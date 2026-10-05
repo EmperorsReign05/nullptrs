@@ -9,20 +9,10 @@
 //   in-process   No external runtime. The same FleetRuntime is hosted inside this
 //                Next server and stepped from here.
 //
-// WHY THE FALLBACK EXISTS. The previous version of this file proxied to
-// FLEET_URL (default http://127.0.0.1:4010) and returned 503 when it did not
-// answer. That is correct on a laptop and fatal on a single-deploy host: Vercel
-// runs each route as an isolated function, there is no long-lived process on
-// 127.0.0.1 to answer, and nothing can be started in a second terminal. So a
-// Vercel deployment could NEVER show a live fleet — it could only ever show
-// "Fleet runtime not connected", and the demo would be dead on arrival for
-// exactly the audience it was built for.
-//
-// With the fallback there is always a runtime, so the failure mode "the dashboard
-// has nothing behind it" no longer exists. What DOES still vary is the topology,
-// so the snapshot says which one is live and the dashboard displays it. Claiming
-// one-process-per-robot while serving a single in-process fleet would be a lie
-// told to a judge, and it is the one thing this adapter must not do.
+// The in-process runtime is available when no external service is configured.
+// Once FLEET_URL selects an external fleet, an outage must freeze its last
+// telemetry and report the failure. Switching to a fresh local world would
+// discard command state and make robot markers jump to unrelated positions.
 //
 // The runtime URL is server configuration, never client input.
 import { reconfigureFleet, fleetOrderBook, fleetService, stepIfDue } from "@/server/fleet-service";
@@ -67,7 +57,9 @@ async function proxy(method: "GET" | "POST", body?: string): Promise<Response> {
         headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
       });
     } catch {
-      // Unreachable. Fall through to the in-process runtime rather than 503.
+      return Response.json({ error: "Configured fleet runtime unreachable" }, {
+        status: 503, headers: { "Cache-Control": "no-store" },
+      });
     }
   }
   // In-process runtime.

@@ -5,6 +5,7 @@ import { Plus, Play, Pause, AlertTriangle, XOctagon, AlertCircle, RefreshCw } fr
 
 interface ControlPanelProps {
   isSimulating: boolean;
+  simulationPending?: boolean;
   robotCount: number;
   shelfColCount: number;
   aisleBlocked: boolean;
@@ -37,6 +38,7 @@ const DISABLED =
 
 export function ControlPanel({
   isSimulating,
+  simulationPending = false,
   robotCount,
   shelfColCount,
   aisleBlocked,
@@ -70,6 +72,8 @@ export function ControlPanel({
         </button>
         <button 
           id="tour-start-sim"
+          disabled={simulationPending}
+          aria-busy={simulationPending}
           onClick={onToggleSimulation} 
           className={`border px-3.5 py-2 rounded-md text-[12px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-150 hover:-translate-y-0.5 active:scale-95 whitespace-nowrap cursor-pointer ${
             isSimulating 
@@ -78,7 +82,7 @@ export function ControlPanel({
           }`}
         >
           {isSimulating ? <Pause size={15} strokeWidth={2.5} /> : <Play size={15} strokeWidth={2.5} />}
-          {isSimulating ? 'pause sim' : 'start sim'}
+          {simulationPending ? (isSimulating ? 'pausing…' : 'starting…') : (isSimulating ? 'pause sim' : 'start sim')}
         </button>
         <button
           id="tour-sim-conflict"
