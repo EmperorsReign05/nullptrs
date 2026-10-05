@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { groupBid, groupIdentity, bundleExecutionAllowed, type GroupBid } from "../auction/grouped";
 import { executionActiveTaskAllowed, executionIdleMoveAllowed } from "./execution-energy";
 import { DistributedCharging } from "./charging";
@@ -18,6 +19,12 @@ export type RuntimeCommand = { kind: "run" | "pause" | "ai-on" | "ai-off" | "hea
   | { kind: "task"; task: Task };
 export class FleetRuntime {
   readonly world: WorldState;
+  readonly runtimeId = randomUUID();
+  private motionHistory: { tick: number; positions: Record<string, Position> }[] = [];
+  private recordMotion() {
+    this.motionHistory.push({ tick: this.world.tick, positions: Object.fromEntries(this.world.robots.map(r => [r.id, { ...r.position }])) });
+    if (this.motionHistory.length > 9) this.motionHistory.shift();
+  }
   readonly peers = new Map<string, OwnershipPeer>();
   readonly charging = new Map<string, DistributedCharging>();
   readonly fleet: DistributedFleet;
@@ -41,6 +48,7 @@ export class FleetRuntime {
       if (fleetSize < this.world.robots.length) this.world.robots = this.world.robots.slice(0, fleetSize);
     }
     this.world.robots.forEach(r => { r.currentTaskId = undefined; r.queuedTaskIds = []; r.path = []; r.status = "idle"; });
+    this.recordMotion();
     const ids = this.world.robots.map(r => r.id), bus = new InMemoryBus<OwnershipMessage>();
     for (const r of this.world.robots) {
       this.charging.set(r.id, new DistributedCharging());
@@ -221,9 +229,10 @@ export class FleetRuntime {
     });
     this.safety.overlaps += this.world.robots.length - new Set(this.world.robots.map(r => `${r.position.x},${r.position.y}`)).size;
     this.world.tick++;
+    this.recordMotion();
   }
   snapshot() {
-    return structuredClone({ world: this.world, running: this.running, aiEnabled: this.aiEnabled, events: this.events, safety: this.safety, metrics: this.metrics,
+    return structuredClone({ runtimeId: this.runtimeId, motionHistory: this.motionHistory, world: this.world, running: this.running, aiEnabled: this.aiEnabled, events: this.events, safety: this.safety, metrics: this.metrics,
       charging: [...this.charging].map(([id, c]) => ({ id, ...c.state })),
       deployment: "Node-hosted distributed-peer simulation; synchronous local commit; simulated sensors; no ROS2/hardware",
       ownership: [...this.peers].map(([id, p]) => ({ id, metrics: p.metrics, tasks: [...p.tasks.keys()].map(taskId => ({ taskId, lease: (p.ownership(taskId)?.expires ?? 0) > this.world.tick ? p.ownership(taskId) : undefined, recoveryRequired: p.recoveryRequired(taskId), completed: p.completed(taskId) })) })) });

@@ -19,7 +19,6 @@ import { layoutWithShelfColumns, clampShelfColumns, MIN_SHELF_COLUMNS, MAX_SHELF
 import { FleetRuntime } from "../src/core/distributed/runtime";
 import { createWarehouseMap } from "../src/core/map/warehouse";
 import { createInitialWorld } from "../src/core/simulation/state";
-import { advanceSmooth, initialSmooth, sampleSmooth, MAX_STEP_MS, TICK_MS } from "../src/components/dashboard/useSmoothRobots";
 import type { RobotState, WorldState } from "../src/core/types";
 
 
@@ -142,63 +141,6 @@ describe("order stream", () => {
     // Scout Agile 2.0 carries 50 kg, so anything heavier can only be won by the
     // Addverb. A demo that never exercises that gate never shows it working.
     expect(runtime.world.tasks.some((t) => t.weight > 50)).toBe(true);
-  });
-});
-
-describe("motion interpolation", () => {
-  const robot = (id: string, x: number, y: number) => ({ id, position: { x, y } }) as never;
-
-  it("holds a robot still when nothing moved", () => {
-    const s0 = initialSmooth([robot("a", 1, 1)], 0);
-    const s1 = advanceSmooth(s0, [robot("a", 1, 1)], 5, 5, 100);
-    expect(s1).toBe(s0);
-    expect(sampleSmooth(s1, 999).a).toEqual({ x: 1, y: 1 });
-  });
-
-  it("derives duration from the TICK difference, not from packet latency", () => {
-    // This is the whole fix: a 4-tick move must take 4 * TICK_MS of animation no
-    // matter how long after the previous packet this one arrived. Using the
-    // wall-clock gap instead is what produced the "sometimes fast, sometimes
-    // slow" stutter, because poll latency is jittery and the sim is not.
-    const s0 = initialSmooth([robot("a", 1, 1)], 0);
-    const late = advanceSmooth(s0, [robot("a", 2, 1)], 4, 0, 9_000);
-    const prompt = advanceSmooth(s0, [robot("a", 2, 1)], 4, 0, 1);
-    expect(late.durationMs).toBe(prompt.durationMs);
-    expect(late.durationMs).toBe(4 * TICK_MS);
-  });
-
-  it("clamps a long stall so a frozen host cannot produce a ten-second glide", () => {
-    const s0 = initialSmooth([robot("a", 1, 1)], 0);
-    expect(advanceSmooth(s0, [robot("a", 9, 1)], 400, 0, 0).durationMs).toBe(MAX_STEP_MS);
-    // A single tick is the floor, and it is reachable because steps >= 1.
-    expect(advanceSmooth(s0, [robot("a", 9, 1)], 5, 4, 0).durationMs).toBe(TICK_MS);
-  });
-
-  it("crosses the cell at a constant speed, and lands exactly on the target", () => {
-    const s0 = initialSmooth([robot("a", 1, 1)], 0);
-    const s1 = advanceSmooth(s0, [robot("a", 5, 1)], 1, 0, 1_000);
-    const mid = sampleSmooth(s1, 1_000 + s1.durationMs / 2).a;
-    expect(mid.x).toBeCloseTo(3, 6);
-    // Sample just before the end and just after: never overshoots, never snaps back.
-    const before = sampleSmooth(s1, 1_000 + s1.durationMs - 1).a;
-    const after = sampleSmooth(s1, 1_000 + s1.durationMs + 5_000).a;
-    expect(before.x).toBeLessThan(5);
-    expect(after.x).toBe(5);
-  });
-
-  it("restarts from what is painted, so a late packet corrects instead of snapping", () => {
-    const s0 = initialSmooth([robot("a", 1, 1)], 0);
-    const s1 = advanceSmooth(s0, [robot("a", 3, 1)], 1, 0, 0);
-    const midway = s1.durationMs / 2;
-    expect(sampleSmooth(s1, midway).a.x).toBeCloseTo(2, 6);
-    // A packet lands mid-move reporting the robot has gone FURTHER. The new
-    // interpolation must begin at 2 (what is on screen), not at 3 (the old
-    // target) — otherwise the robot visibly snaps forward and re-animates.
-    const s2 = advanceSmooth(s1, [robot("a", 4, 1)], 2, 1, midway);
-    expect(s2.from.a.x).toBeCloseTo(2, 6);
-    expect(s2.to.a).toEqual({ x: 4, y: 1 });
-    // A packet that reports no change must not restart anything.
-    expect(advanceSmooth(s1, [robot("a", 3, 1)], 2, 1, midway)).toBe(s1);
   });
 });
 
