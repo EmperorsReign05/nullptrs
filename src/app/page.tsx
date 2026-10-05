@@ -89,6 +89,7 @@ function findYieldingRobots(prev: WorldState, next: WorldState): { robotId: stri
 
 export default function Dashboard() {
   const [snapshot, setSnapshot] = useState<FleetSnapshot | null>(null);
+  const [failurePending, setFailurePending] = useState(false);
   /**
    * `connecting` = no answer yet, so there is nothing to report. `live` = the
    * last poll succeeded. `error` = the last poll actually failed. Kept apart
@@ -271,7 +272,7 @@ export default function Dashboard() {
       }
       const confirmed = await response.json() as FleetSnapshot;
       const kind = (command as { kind?: string }).kind;
-      if (kind === 'reconfigure') {
+      if (kind === 'reconfigure' || kind === 'fail' || kind === 'recover') {
         controlRevision.current++;
         worldRef.current = confirmed.world;
         setSnapshot(confirmed);
@@ -371,12 +372,16 @@ export default function Dashboard() {
   };
 
   const handleFailAMR = () => {
+    if (failurePending) return;
     const target = snapshot?.world.robots.find((r) => r.id === 'AMR-02') ?? snapshot?.world.robots[0];
     if (!target) return;
-    void send({ kind: 'fail', robotId: target.id }, (ok, detail) => {
-      if (!ok) { addLog(`failure injection rejected: ${detail}`, 'error'); return; }
-      addLog(`${target.id.toLowerCase()} failure injected — surviving peers must recover its work`, 'error');
-    });
+    const recovering = target.status === 'failed';
+    setFailurePending(true);
+    void send({ kind: recovering ? 'recover' : 'fail', robotId: target.id }, (ok, detail) => {
+      if (!ok) { addLog(`${recovering ? 'recovery' : 'failure injection'} rejected: ${detail}`, 'error'); return; }
+      addLog(recovering ? `${target.id.toLowerCase()} recovered — peer rejoins without resetting fleet work`
+        : `${target.id.toLowerCase()} failure injected — recover it to clear any inaccessible delivery target`, recovering ? 'info' : 'error');
+    }).finally(() => setFailurePending(false));
   };
 
   const handleToggleLink = () => {
@@ -630,6 +635,8 @@ export default function Dashboard() {
                 onSimulateConflict={notOnFleet('sim conflict')}
                 onSimulateDeadlock={notOnFleet('sim deadlock')}
                 onFailAMR={handleFailAMR}
+                amrFailed={(snapshot.world.robots.find(r => r.id === 'AMR-02') ?? snapshot.world.robots[0])?.status === 'failed'}
+                failurePending={failurePending}
                 onBlockAisle={handleBlockAisle}
                 onReset={handleReset}
                 onRobotCountChange={handleRobotCountChange}

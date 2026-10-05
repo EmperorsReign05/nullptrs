@@ -14,6 +14,7 @@ import type { Position, Task, WorldState } from "../types";
 
 export type RuntimeCommand = { kind: "run" | "pause" | "ai-on" | "ai-off" | "heal" }
   | { kind: "fail"; robotId: string }
+  | { kind: "recover"; robotId: string }
   | { kind: "link"; a: string; b: string; reachable: boolean }
   | { kind: "block"; position: Position; blocked: boolean }
   | { kind: "task"; task: Task };
@@ -142,6 +143,17 @@ export class FleetRuntime {
       // an active execution on the failed body. Lease expiry governs reassignment.
       if (this.world.tasks.find(t => t.id === r.currentTaskId)?.status !== "in_progress") r.currentTaskId = undefined;
       r.queuedTaskIds = []; this.fleet.setInactive(r.id, true);
+    }
+    if (command.kind === "recover") {
+      const r = this.world.robots.find(r => r.id === command.robotId);
+      if (!r) throw new Error("Unknown robot");
+      if (!this.dead.has(r.id)) throw new Error("Robot is not failed");
+      // Resume this peer; its retained ownership/custody record must decide
+      // what it may execute. Recovery never relocates the physical body or
+      // turns a carried delivery into a new auction candidate.
+      this.dead.delete(r.id);
+      r.status = r.currentTaskId ? "waiting" : "idle";
+      this.fleet.setInactive(r.id, false);
     }
     if (command.kind === "link") {
       if (typeof command.reachable !== "boolean") throw new Error("Invalid link state");
