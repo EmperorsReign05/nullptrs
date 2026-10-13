@@ -69,6 +69,64 @@ const UNREACHABLE: PathResult = {
  */
 export function planPath(start: Position, goal: Position, world: WorldState): PathResult {
   const map = world.map;
+  const cells = encodeCells(map);
+  const key = `${hashCells(cells, map.width, map.height)}|${start.x},${start.y}|${goal.x},${goal.y}`;
+  const hit = pathCache.get(key);
+  let result: PathResult;
+  if (hit && hit.width === map.width && sameCells(hit.cells, cells)) {
+    result = hit.result;
+  } else {
+    result = search(start, goal, map);
+    if (pathCache.size >= PATH_CACHE_LIMIT) pathCache.clear();
+    pathCache.set(key, { width: map.width, cells, result });
+  }
+  // Callers own what they receive: a cached path must never be aliased.
+  return { ...result, path: result.path.map(p => ({ x: p.x, y: p.y })) };
+}
+
+/**
+ * Memo of exact A* results.
+ *
+ * planPath reads the map only by cell index (y * width + x): each cell's
+ * `blocked` flag and `congestion`. So width, height and those two values per
+ * index fully determine the result. The cache is keyed by a hash of exactly
+ * that, and a hit is accepted only after comparing every cell, so it is
+ * bit-identical to a fresh search and the planner's behaviour does not change.
+ * Object identity is never trusted: the block-aisle command mutates a map in
+ * place, and each bid builds a fresh map object with the same contents.
+ *
+ * Why it matters: at twenty robots every peer bids on every candidate job in the
+ * same tick, and one bid plans the same two legs (robot->pickup and
+ * pickup->dropoff) up to three times (cost, features, energy). Peers that see the
+ * same robot positions also build identical congestion maps. Those duplicate
+ * searches were the largest part of a ~430 ms tick once every 32.
+ */
+const PATH_CACHE_LIMIT = 4096;
+const pathCache = new Map<string, { width: number; cells: Float64Array; result: PathResult }>();
+
+/** Blocked cells encode as -1, open cells as their congestion. */
+function encodeCells(map: WorldState["map"]): Float64Array {
+  const out = new Float64Array(map.cells.length);
+  for (let i = 0; i < map.cells.length; i++) {
+    const cell = map.cells[i];
+    out[i] = cell.blocked ? -1 : cell.congestion ?? 0;
+  }
+  return out;
+}
+
+function hashCells(cells: Float64Array, width: number, height: number): number {
+  let h = (Math.imul(width, 73856093) ^ Math.imul(height, 19349663)) >>> 0;
+  for (let i = 0; i < cells.length; i++) h = (Math.imul(h ^ Math.round(cells[i] * 1024 + 7), 16777619) + i) >>> 0;
+  return h;
+}
+
+function sameCells(a: Float64Array, b: Float64Array): boolean {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+  return true;
+}
+
+function search(start: Position, goal: Position, map: WorldState["map"]): PathResult {
 
   if (positionsEqual(start, goal)) {
     return { found: true, path: [start], distance: 0, congestionCost: 0, totalCost: 0, eta: 0 };

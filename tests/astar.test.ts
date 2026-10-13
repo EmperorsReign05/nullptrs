@@ -135,3 +135,32 @@ describe("planPath (A*)", () => {
     expect(result.distance).toBe(bfs);
   });
 });
+
+describe("planPath result cache", () => {
+  it("never hands two callers the same path, so mutating one cannot corrupt the next", () => {
+    const world = makeWorld(makeMap(4, 1));
+    const first = planPath({ x: 0, y: 0 }, { x: 3, y: 0 }, world);
+    first.path.reverse();
+    first.path[0].x = 99;
+    const second = planPath({ x: 0, y: 0 }, { x: 3, y: 0 }, world);
+    expect(second.path).toEqual([{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 3, y: 0 }]);
+  });
+
+  it("follows a map mutated in place, as the block-aisle command does", () => {
+    const map = makeMap(3, 2);
+    const world = makeWorld(map);
+    expect(planPath({ x: 0, y: 0 }, { x: 2, y: 0 }, world).distance).toBe(2);
+    map.cells.find((c) => c.position.x === 1 && c.position.y === 0)!.blocked = true;
+    const detour = planPath({ x: 0, y: 0 }, { x: 2, y: 0 }, world);
+    expect(detour.distance).toBe(4);
+    expect(detour.path.some((p) => p.x === 1 && p.y === 0)).toBe(false);
+  });
+
+  it("follows congestion changes rather than object identity", () => {
+    const base = makeMap(3, 3);
+    const open = planPath({ x: 0, y: 1 }, { x: 2, y: 1 }, makeWorld(base));
+    expect(open.path).toContainEqual({ x: 1, y: 1 });
+    const jammed = planPath({ x: 0, y: 1 }, { x: 2, y: 1 }, makeWorld(withCongestion(base, { "1,1": 50 })));
+    expect(jammed.path).not.toContainEqual({ x: 1, y: 1 });
+  });
+});

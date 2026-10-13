@@ -32,6 +32,14 @@ export type OwnershipMessage = { from: string; tick: number } & (
   | { kind: "checkpoint"; taskId: string; generation: number; owner: string; phase: Marker["phase"]; witnesses: string[] }
 );
 const same = (a: Ownership, b: Ownership) => a.taskId === b.taskId && a.generation === b.generation && a.owner === b.owner && a.expires === b.expires && a.bundleId === b.bundleId;
+/** Deep-freeze a freshly built bid packet so receivers can share it instead of cloning it. */
+const freeze = <T>(value: T): T => {
+  if (value && typeof value === "object" && !Object.isFrozen(value)) {
+    Object.freeze(value);
+    for (const v of Object.values(value)) freeze(v);
+  }
+  return value;
+};
 export class OwnershipPeer {
   /** Passive first-observation timestamps in protocol tick coordinates. */
   readonly latency = new Map<string, Partial<Record<"firstAnnouncementTick" | "firstAuctionEligibleTick" | "firstBidTick" | "quorumBidTick" | "proposalTick" | "firstGrantTick" | "certificateTick", number>>>();
@@ -165,7 +173,10 @@ export class OwnershipPeer {
       if (m.packet.robotId !== m.from || !this.tasks.has(m.packet.taskId) || (this.allocationMode === "epoch" && m.tick % OWNERSHIP_EPOCH_TICKS >= BID_WINDOW)) return;
       const key = this.key(m.packet.taskId, generation);
       const bids = this.bids.get(key) ?? new Map();
-      if (!bids.has(m.from)) bids.set(m.from, structuredClone(m.packet));
+      // A frozen packet cannot be altered by anyone, so sharing it is as safe as
+      // a copy. Packets from a real network transport arrive unfrozen and are
+      // still copied.
+      if (!bids.has(m.from)) bids.set(m.from, Object.isFrozen(m.packet) ? m.packet : structuredClone(m.packet));
       this.observe(m.packet.taskId, "firstBidTick");
       if (bids.size >= this.quorum) this.observe(m.packet.taskId, "quorumBidTick");
       this.bids.set(key, bids); return;
@@ -477,7 +488,7 @@ export class OwnershipPeer {
       }
       if (this.allocationMode !== "epoch" ? !this.bids.get(key)?.has(this.id) : phase === BID_WINDOW - 1) {
         let packet = this.bids.get(key)?.get(this.id);
-        if (!packet) { packet = this.computeBid(task, tick); this.metrics.bids++; if (packet.bid && packet.mlCost !== null && packet.mlCost < packet.bid.totalCost) this.metrics.mlCorrections++; }
+        if (!packet) { packet = freeze(this.computeBid(task, tick)); this.metrics.bids++; if (packet.bid && packet.mlCost !== null && packet.mlCost < packet.bid.totalCost) this.metrics.mlCorrections++; }
         this.send({ from: this.id, tick, kind: "bid", generation, packet });
       } else if ((this.allocationMode !== "epoch" || phase >= BID_WINDOW) && !this.ownership(task.id)) {
         const bids = [...(this.bids.get(key)?.values() ?? [])].filter(b => this.isLive(b.robotId));
