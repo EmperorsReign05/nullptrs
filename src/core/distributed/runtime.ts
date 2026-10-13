@@ -18,13 +18,16 @@ export type RuntimeCommand = { kind: "run" | "pause" | "ai-on" | "ai-off" | "hea
   | { kind: "link"; a: string; b: string; reachable: boolean }
   | { kind: "block"; position: Position; blocked: boolean }
   | { kind: "task"; task: Task };
+export const MOTION_HISTORY_TICKS = 24;
 export class FleetRuntime {
   readonly world: WorldState;
   readonly runtimeId = randomUUID();
+  /** Committed positions for the last MOTION_HISTORY_TICKS ticks (plus the current one), so a
+   *  viewer that missed several seconds of polls still replays every cell instead of jumping. */
   private motionHistory: { tick: number; positions: Record<string, Position> }[] = [];
   private recordMotion() {
     this.motionHistory.push({ tick: this.world.tick, positions: Object.fromEntries(this.world.robots.map(r => [r.id, { ...r.position }])) });
-    if (this.motionHistory.length > 9) this.motionHistory.shift();
+    if (this.motionHistory.length > MOTION_HISTORY_TICKS + 1) this.motionHistory.shift();
   }
   readonly peers = new Map<string, OwnershipPeer>();
   readonly charging = new Map<string, DistributedCharging>();

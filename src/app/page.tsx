@@ -36,12 +36,14 @@ import {
   ActiveTasks,
   EventLog,
   type LogEntry,
-  type MapTooltip
+  type MapTooltip,
+  RollingText,
+  type MotionFrame
 } from '@/components/dashboard';
 
 type FleetSnapshot = {
   runtimeId?: string;
-  motionHistory?: import("@/components/dashboard/useSmoothRobots").MotionFrame[];
+  motionHistory?: MotionFrame[];
   world: WorldState;
   running: boolean;
   aiEnabled: boolean;
@@ -52,7 +54,11 @@ type FleetSnapshot = {
     failedModelFallbacks: number; moves: number; reroutes: number; energyHolds: number;
   };
   /** Harness-level demand. Present only on the fleet runtime, not the simulator. */
-  orderStream?: { announced: number; enabled: boolean; intervalTicks: number };
+  orderStream?: { announced: number; enabled: boolean; intervalTicks: number; held?: number };
+  /** Exact task counts; `world.tasks` itself is trimmed to open and recent work. */
+  taskTotals?: { total: number; completed: number };
+  /** The shape the served runtime was built with, so the sliders show the truth. */
+  layout?: { robots: number; shelfColumns: number; maxRobots: number };
   /**
    * Which runtime is actually serving this frame. Displayed, because claiming
    * one-process-per-robot while serving a single in-process fleet would be a lie
@@ -71,6 +77,25 @@ const AISLE_BLOCK_CELLS: Position[] = [
 
 const TOOLTIP_LIFETIME_MS = 2200;
 const POLL_MS = 250;
+/**
+ * The last good frame, kept so a reload or a cold-starting runtime paints the
+ * warehouse immediately instead of a blank "connecting" card. It is always
+ * labelled as not live, and robots hold still until real telemetry arrives.
+ */
+const CACHE_KEY = 'amr_last_snapshot_v1';
+const CACHE_MAX_AGE_MS = 30 * 60_000;
+const CACHE_WRITE_MS = 2000;
+
+function readCachedSnapshot(): FleetSnapshot | null {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const { at, snapshot } = JSON.parse(raw) as { at: number; snapshot: FleetSnapshot };
+    return Date.now() - at < CACHE_MAX_AGE_MS && snapshot?.world?.robots ? snapshot : null;
+  } catch {
+    return null;
+  }
+}
 
 // Which robot to point a yield tooltip at — derived from a real state
 // transition the runtime just made (a robot that only just became "waiting"),
@@ -102,8 +127,9 @@ export default function Dashboard() {
   const [lastUpdateAt, setLastUpdateAt] = useState<number | null>(null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [selectedRobotId, setSelectedRobotId] = useState<string | null>(null);
-  const [aisleBlocked, setAisleBlocked] = useState(false);
-  const [severed, setSevered] = useState(false);
+  /** Severed link, remembered per runtime: a restart heals every link. */
+  const [severedIn, setSeveredIn] = useState<string | null>(null);
+  const [aislePending, setAislePending] = useState(false);
   const [conflictTooltips, setConflictTooltips] = useState<MapTooltip[]>([]);
   /**
    * Task ids the operator just injected, so the ActiveTasks panel can show them
@@ -112,11 +138,14 @@ export default function Dashboard() {
    * click has literally no visible effect for ~30 seconds.
    */
   const [justAnnounced, setJustAnnounced] = useState<string[]>([]);
-  // The fleet size and shelf layout belong to the runtime, not the view, so
-  // these are reported from telemetry rather than owned here. Kept as state
-  // only so the ControlPanel sliders can render a truthful value.
-  const [shelfColCount, setShelfColCount] = useState(6);
-  const [robotCount, setRobotCount] = useState(0);
+  // The fleet size and shelf layout belong to the runtime, so the sliders read
+  // them from telemetry. The only local state is a value that was just
+  // committed and has not been confirmed yet, so the slider does not jump back
+  // for the length of one round trip.
+  const [pendingLayout, setPendingLayout] = useState<{ robots?: number; shelfColumns?: number } | null>(null);
+  const reconfigureSeq = useRef(0);
+  const manualTaskSeq = useRef({ runtimeId: '', next: 0 });
+  const cacheWrittenAt = useRef(0);
 
   const [isTutorialOpen, setIsTutorialOpen] = useState(false);
   const [simulationPending, setSimulationPending] = useState(false);
@@ -134,6 +163,7 @@ export default function Dashboard() {
    */
   const [frozenFor, setFrozenFor] = useState<number | null>(null);
   const worldRef = useRef<WorldState | null>(null);
+  const runtimeRef = useRef<string | undefined>(undefined);
 
   // Judge tour. Same storage key and same ?tour / ?tutorial overrides as the
   // simulator page, so the onboarding behaves identically on both routes and a
@@ -180,6 +210,36 @@ export default function Dashboard() {
   // through a ref, so the loop is created exactly once.
   const errorRef = useRef<string | null>(null);
 
+  /**
+   * The one way a snapshot enters the page. A command response and a poll can
+   * cross on the wire; an older frame of the same runtime arriving second must
+   * not rewind the world (the motion player would read it as a restart).
+   */
+  const accept = useCallback((next: FleetSnapshot): boolean => {
+    const prev = worldRef.current;
+    const prevRuntime = runtimeRef.current;
+    if (prev && prevRuntime === next.runtimeId && next.world.tick < prev.tick) return false;
+    worldRef.current = next.world;
+    runtimeRef.current = next.runtimeId;
+    if (prev && prevRuntime === next.runtimeId && next.world.metrics.conflictCount > prev.metrics.conflictCount) {
+      // Detect the yield transitions between the two snapshots we have seen and
+      // point a tooltip at the robot that actually yielded, exactly once per
+      // real transition.
+      for (const { robotId, position } of findYieldingRobots(prev, next.world)) {
+        const id = `${robotId}-${next.world.tick}`;
+        setConflictTooltips((t) => [...t, { id, robotId, text: `${robotId} yields — priority inherited`, position }]);
+        setTimeout(() => setConflictTooltips((t) => t.filter((x) => x.id !== id)), TOOLTIP_LIFETIME_MS);
+      }
+    }
+    setSnapshot(next);
+    setLastUpdateAt(Date.now());
+    if (Date.now() - cacheWrittenAt.current > CACHE_WRITE_MS) {
+      cacheWrittenAt.current = Date.now();
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ at: Date.now(), snapshot: next })); } catch { /* quota or privacy mode */ }
+    }
+    return true;
+  }, []);
+
   useEffect(() => {
     let disposed = false;
     let timer: ReturnType<typeof setTimeout> | null = null;
@@ -200,23 +260,8 @@ export default function Dashboard() {
         } else {
           const next = (await response.json()) as FleetSnapshot;
           if (!disposed && revision === controlRevision.current) {
-            // Detect the yield transitions between the two snapshots we have
-            // seen and point a tooltip at the robot that actually yielded.
-            // Done here, at the moment the snapshot lands, rather than in an
-            // effect, so it fires exactly once per real poll.
-            const prev = worldRef.current;
-            worldRef.current = next.world;
-            if (prev && next.world.metrics.conflictCount > prev.metrics.conflictCount) {
-              for (const { robotId, position } of findYieldingRobots(prev, next.world)) {
-                const id = `${robotId}-${next.world.tick}`;
-                setConflictTooltips((t) => [...t, { id, robotId, text: `${robotId} yields — priority inherited`, position }]);
-                setTimeout(() => setConflictTooltips((t) => t.filter((x) => x.id !== id)), TOOLTIP_LIFETIME_MS);
-              }
-            }
+            accept(next);
             errorRef.current = null;
-            setSnapshot(next);
-            setRobotCount(next.world.robots.length);
-            setLastUpdateAt(Date.now());
             setError(null);
             setStatus('live');
           }
@@ -239,9 +284,21 @@ export default function Dashboard() {
     // body would be a pure cascading re-render, which is precisely what
     // `react-hooks/set-state-in-effect` flags (the same trap the judge-tour effect
     // above documents and works around with a deferred callback).
+    // Paint the last known frame while the first poll is in flight (a cold
+    // start can take seconds). It is shown as connecting, never as live.
+    // Deferred for the same reason as the judge tour above: no setState in the
+    // effect body. A poll that has already landed always wins.
+    const restore = setTimeout(() => {
+      const cached = readCachedSnapshot();
+      if (cached && !disposed && !worldRef.current) {
+        worldRef.current = cached.world;
+        runtimeRef.current = cached.runtimeId;
+        setSnapshot(cached);
+      }
+    }, 0);
     void poll();
-    return () => { disposed = true; abort.abort(); if (timer) clearTimeout(timer); };
-  }, []);
+    return () => { disposed = true; abort.abort(); clearTimeout(restore); if (timer) clearTimeout(timer); };
+  }, [accept]);
 
   // 1 Hz staleness clock. Declared before the early returns so its effect is not
   // conditionally registered, and it contains no synchronous setState so it does
@@ -258,6 +315,8 @@ export default function Dashboard() {
 
   // ---- commands ----
   const send = useCallback(async (command: unknown, describe: (ok: boolean, detail?: string) => void) => {
+    const kind = (command as { kind?: string }).kind;
+    const seq = kind === 'reconfigure' ? ++reconfigureSeq.current : 0;
     try {
       const response = await fetch('/api/fleet', {
         method: 'POST',
@@ -271,24 +330,18 @@ export default function Dashboard() {
         return;
       }
       const confirmed = await response.json() as FleetSnapshot;
-      const kind = (command as { kind?: string }).kind;
-      if (kind === 'reconfigure' || kind === 'fail' || kind === 'recover') {
+      // Every acknowledgement carries the state after the command, so it is
+      // applied at once and any GET started before it is discarded. A superseded
+      // reconfigure is not: its world was already replaced by a later one.
+      if (kind !== 'reconfigure' || seq === reconfigureSeq.current) {
         controlRevision.current++;
-        worldRef.current = confirmed.world;
-        setSnapshot(confirmed);
-        setRobotCount(confirmed.world.robots.length);
-        setLastUpdateAt(Date.now());
-      }
-      if ((kind === 'run' || kind === 'pause') && typeof confirmed.running === 'boolean') {
-        // A GET started before this acknowledgement must not overwrite it.
-        controlRevision.current++;
-        setSnapshot(previous => previous ? { ...previous, running: confirmed.running } : confirmed);
+        accept(confirmed);
       }
       describe(true);
     } catch {
       describe(false, 'fleet runtime unreachable');
     }
-  }, []);
+  }, [accept]);
 
   const handleToggleSimulation = () => {
     if (simulationCommand.current) return;
@@ -317,7 +370,16 @@ export default function Dashboard() {
   // gate is visible), and the log states what is actually true at that instant:
   // announced, awaiting an ownership round.
   const handleCreateTask = () => {
-    const n = snapshot?.world.tasks.length ?? 0;
+    // The id comes from a counter, not from the last snapshot's task count: two
+    // clicks inside one poll used to reuse the id and the second was rejected as
+    // a duplicate. Seeding from the runtime's total keeps ids unique across a
+    // page reload against the same runtime.
+    const seqState = manualTaskSeq.current;
+    if (seqState.runtimeId !== (snapshot?.runtimeId ?? '')) {
+      manualTaskSeq.current = { runtimeId: snapshot?.runtimeId ?? '', next: 0 };
+    }
+    const n = Math.max(manualTaskSeq.current.next, snapshot?.taskTotals?.total ?? snapshot?.world.tasks.length ?? 0);
+    manualTaskSeq.current.next = n + 1;
     const taskId = `M-${String(n).padStart(3, '0')}`;
     const pickups: Position[] = [{ x: 1, y: 0 }, { x: 14, y: 0 }, { x: 3, y: 9 }, { x: 9, y: 9 }];
     const dropoffs: Position[] = [{ x: 6, y: 12 }, { x: 17, y: 12 }, { x: 9, y: 1 }, { x: 13, y: 1 }];
@@ -356,24 +418,38 @@ export default function Dashboard() {
     });
   };
 
+  // Read from the served map, not remembered: a resize rebuilds the world and
+  // drops every block, and a robot standing in the aisle refuses its cell.
+  const aisleBlocked = !!snapshot && AISLE_BLOCK_CELLS.some((p) =>
+    snapshot.world.map.cells.some((c) => c.blocked && c.position.x === p.x && c.position.y === p.y));
+
   const handleBlockAisle = () => {
+    if (aislePending) return;
     const next = !aisleBlocked;
-    setAisleBlocked(next);
-    for (const position of AISLE_BLOCK_CELLS) {
-      void send({ kind: 'block', position, blocked: next }, (ok, detail) => {
-        if (!ok) addLog(`block failed: ${detail}`, 'error');
-      });
-    }
-    addLog(
-      next ? 'aisle blocked at x=9 (rows 5-7) — routed traffic must replan around it'
-           : 'aisle cleared at x=9',
-      next ? 'warning' : 'info'
-    );
+    setAislePending(true);
+    const failures: string[] = [];
+    void Promise.all(AISLE_BLOCK_CELLS.map((position) =>
+      send({ kind: 'block', position, blocked: next }, (ok, detail) => {
+        if (!ok) failures.push(`(${position.x},${position.y}) ${detail}`);
+      }))).then(() => {
+      setAislePending(false);
+      if (failures.length === AISLE_BLOCK_CELLS.length) {
+        addLog(`could not ${next ? 'block' : 'clear'} the aisle: ${failures[0]}`, 'error');
+        return;
+      }
+      addLog(
+        next ? `aisle blocked at x=9 (rows 5-7) — routed traffic must replan around it${failures.length ? ` (skipped occupied ${failures.map(f => f.split(' ')[0]).join(', ')})` : ''}`
+             : 'aisle cleared at x=9',
+        next ? 'warning' : 'info'
+      );
+    });
   };
+
+  const failTarget = snapshot?.world.robots.find((r) => r.id === 'AMR-02') ?? snapshot?.world.robots[0];
 
   const handleFailAMR = () => {
     if (failurePending) return;
-    const target = snapshot?.world.robots.find((r) => r.id === 'AMR-02') ?? snapshot?.world.robots[0];
+    const target = failTarget;
     if (!target) return;
     const recovering = target.status === 'failed';
     setFailurePending(true);
@@ -384,13 +460,16 @@ export default function Dashboard() {
     }).finally(() => setFailurePending(false));
   };
 
+  const severed = !!snapshot?.runtimeId && severedIn === snapshot.runtimeId;
+
   const handleToggleLink = () => {
     const [a, b] = snapshot?.world.robots.slice(0, 2).map((r) => r.id) ?? [];
     if (!a || !b) return;
     const reachable = severed;
-    setSevered(!reachable);
+    const runtimeId = snapshot?.runtimeId ?? null;
     void send({ kind: 'link', a, b, reachable }, (ok, detail) => {
       if (!ok) { addLog(`link change rejected: ${detail}`, 'error'); return; }
+      setSeveredIn(reachable ? null : runtimeId);
       addLog(
         reachable ? `link ${a.toLowerCase()}<->${b.toLowerCase()} healed` : `link ${a.toLowerCase()}<->${b.toLowerCase()} SEVERED — they can no longer hear each other`,
         reachable ? 'info' : 'warning'
@@ -436,8 +515,16 @@ export default function Dashboard() {
    * message saying the dashboard could not do it. The server can now, so these
    * do the real thing and say plainly that the fleet restarted.
    */
+  const robotCount = pendingLayout?.robots ?? snapshot?.layout?.robots ?? snapshot?.world.robots.length ?? 0;
+  const shelfColCount = pendingLayout?.shelfColumns ?? snapshot?.layout?.shelfColumns ?? 6;
+  const maxRobots = snapshot?.layout?.maxRobots ?? 10;
+
+  // Sliders commit once, on release (see ControlPanel). Each commit is a full
+  // restart, and a superseded one is ignored by `send`.
   const reconfigure = (change: { robots?: number; shelfColumns?: number }, describe: string) => {
+    setPendingLayout(change);
     void send({ kind: 'reconfigure', ...change }, (ok, detail) => {
+      setPendingLayout((current) => (current === change ? null : current));
       if (!ok) { addLog(`could not ${describe}: ${detail}`, 'error'); return; }
       addLog(`fleet restarted — ${describe}`, 'warning');
     });
@@ -447,8 +534,6 @@ export default function Dashboard() {
     void send({ kind: 'reconfigure', robots: robotCount || 3 }, (ok, detail) => {
       if (!ok) { addLog(`could not reset the fleet: ${detail}`, 'error'); return; }
       setSelectedRobotId(null);
-      setAisleBlocked(false);
-      setSevered(false);
       setConflictTooltips([]);
       setJustAnnounced([]);
       addLog('fleet restarted — world rebuilt from scratch', 'warning');
@@ -456,21 +541,21 @@ export default function Dashboard() {
   };
 
   const handleRobotCountChange = (count: number) => {
-    setRobotCount(count);
     reconfigure({ robots: count }, `fleet resized to ${count} ${count === 1 ? 'robot' : 'robots'}`);
   };
 
   const handleShelfColCountChange = (count: number) => {
-    setShelfColCount(count);
     reconfigure({ shelfColumns: count }, `warehouse rebuilt with ${count} shelf ${count === 1 ? 'column' : 'columns'}`);
   };
 
   // The runtime owns the authoritative event log, so the feed is derived from
   // it rather than mirrored into state — no chance of the two drifting.
+  const events = snapshot?.events;
   const eventFeed = React.useMemo<LogEntry[]>(
-    () => (snapshot?.events ?? []).slice(-8).map((e) => ({ time: `tick ${e.tick}`, text: e.text, type: 'info' as const })),
-    [snapshot]
+    () => (events ?? []).slice(-8).map((e) => ({ time: `tick ${e.tick}`, text: e.text, type: 'info' as const })),
+    [events]
   );
+  const feed = React.useMemo(() => [...eventFeed, ...logs], [eventFeed, logs]);
 
   // ---- connection chrome ----
   //
@@ -480,7 +565,7 @@ export default function Dashboard() {
   // indistinguishable from a working one. In front of a jury that is the worst
   // failure mode available: it does not look like a bug, it looks like a system
   // that has stalled. So disconnection is stated, with the age of the data.
-  if (status === 'connecting' || (disconnected && !snapshot)) {
+  if ((status === 'connecting' && !snapshot) || (disconnected && !snapshot)) {
     const connecting = status === 'connecting';
     return (
       <div className="min-h-screen bg-[#09090b] text-[#fafafa] bg-[url('/bg.png')] bg-cover bg-fixed bg-center font-sans py-6 px-4 md:px-8 lg:px-12 flex justify-center items-start">
@@ -510,7 +595,9 @@ export default function Dashboard() {
               </p>
               <pre className="font-mono text-[13px] text-emerald-300 bg-black/50 rounded p-3 mb-4 inline-block">npm run fleet</pre>
               <p className="text-zinc-500 text-xs">
-                Then run <span className="text-zinc-300">npm run dev</span> for this page.
+                Then run <span className="text-zinc-300">npm run dev</span> for this page. For a demo, use a
+                production build (<span className="text-zinc-300">npm run build &amp;&amp; npm start</span>): development
+                mode spends ~65 ms re-rendering on every poll and the motion visibly stutters.
               </p>
             </div>
           </div>
@@ -561,7 +648,12 @@ export default function Dashboard() {
               : 'node-hosted distributed peers'}
           </span>
 
-          {disconnected ? (
+          {status === 'connecting' ? (
+            <span className="flex items-center gap-1.5 text-amber-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+              connecting — showing last known frame
+            </span>
+          ) : disconnected ? (
             // A dead runtime must not be rendered as a running one. The dot stops
             // pulsing, the word changes, and the age of the frozen frame is given
             // so nobody has to guess whether the tick counter is moving.
@@ -572,17 +664,17 @@ export default function Dashboard() {
           ) : (
             <span className="flex items-center gap-1.5 text-zinc-200">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse" />
-              {snapshot.running ? 'running' : 'paused'}
+              <RollingText value={snapshot.running ? 'running' : 'paused'} />
             </span>
           )}
           <span className="text-zinc-400 tabular-nums">
-            tick {world.tick.toLocaleString()}
+            tick <RollingText value={world.tick.toLocaleString()} pace="sampled" />
             {disconnected && frozenFor !== null && (
-              <span className="text-amber-300"> · frozen for {frozenFor}s</span>
+              <span className="text-amber-300"> · frozen for <RollingText value={`${frozenFor}s`} /></span>
             )}
           </span>
           <span className="text-zinc-400">
-            swaps <span className={safety.swaps > 0 ? 'text-amber-300' : 'text-zinc-300'}>{safety.swaps}</span>
+            swaps <RollingText className={safety.swaps > 0 ? 'text-amber-300' : 'text-zinc-300'} value={safety.swaps} />
           </span>
 
           <div
@@ -594,14 +686,14 @@ export default function Dashboard() {
           >
             {safety.overlaps > 0 ? (
               <>
-                <span className="text-red-300">{safety.overlaps} collisions</span>
+                <span className="text-red-300"><RollingText value={safety.overlaps} /> collisions</span>
                 <span className="text-red-300/80">safety invariant broken</span>
               </>
             ) : (
               <>
                 <span className="text-emerald-200">0 collisions</span>
                 <span className="text-emerald-300 tabular-nums">
-                  across {world.tick.toLocaleString()} ticks
+                  across <RollingText value={world.tick.toLocaleString()} pace="sampled" /> ticks
                 </span>
                 {severed && <span className="text-amber-300">· network partitioned</span>}
               </>
@@ -621,6 +713,7 @@ export default function Dashboard() {
               tick={world.tick}
               motionHistory={snapshot.motionHistory}
               runtimeId={snapshot.runtimeId}
+              running={snapshot.running && status === 'live'}
             />
 
             <div className="shrink-0 flex flex-col gap-4">
@@ -628,14 +721,17 @@ export default function Dashboard() {
                 isSimulating={snapshot.running}
                 simulationPending={simulationPending}
                 robotCount={robotCount}
+                maxRobots={maxRobots}
                 shelfColCount={shelfColCount}
                 aisleBlocked={aisleBlocked}
+                aislePending={aislePending}
                 onCreateTask={handleCreateTask}
                 onToggleSimulation={handleToggleSimulation}
                 onSimulateConflict={notOnFleet('sim conflict')}
                 onSimulateDeadlock={notOnFleet('sim deadlock')}
                 onFailAMR={handleFailAMR}
-                amrFailed={(snapshot.world.robots.find(r => r.id === 'AMR-02') ?? snapshot.world.robots[0])?.status === 'failed'}
+                amrFailed={failTarget?.status === 'failed'}
+                failTargetId={failTarget?.id}
                 failurePending={failurePending}
                 onBlockAisle={handleBlockAisle}
                 onReset={handleReset}
@@ -672,17 +768,17 @@ export default function Dashboard() {
                   {snapshot.aiEnabled ? 'Disable learned bids' : 'Enable learned bids'}
                 </button>
                 <span className="text-[11px] font-mono text-zinc-400">
-                  bids with AI: {metrics.aiBidAttempts} · nonzero corrections: {metrics.nonzeroCorrections} ·
-                  deterministic fallbacks: {metrics.disabledFallbacks + metrics.failedModelFallbacks} ·
-                  energy holds: {metrics.energyHolds}
+                  bids with AI: <RollingText value={metrics.aiBidAttempts} pace="sampled" /> · nonzero corrections: <RollingText value={metrics.nonzeroCorrections} pace="sampled" /> ·
+                  deterministic fallbacks: <RollingText value={metrics.disabledFallbacks + metrics.failedModelFallbacks} pace="sampled" /> ·
+                  energy holds: <RollingText value={metrics.energyHolds} pace="sampled" />
                 </span>
               </div>
 
-              <MetricsBar tasks={world.tasks} robots={world.robots} metrics={world.metrics} />
+              <MetricsBar tasks={world.tasks} robots={world.robots} metrics={world.metrics} totals={snapshot.taskTotals} />
 
               <div id="tour-tasks-and-logs" className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <ActiveTasks tasks={world.tasks} robots={world.robots} awaitingAuction={justAnnounced} />
-                <EventLog logs={[...eventFeed, ...logs]} />
+                <EventLog logs={feed} />
               </div>
             </div>
           </div>

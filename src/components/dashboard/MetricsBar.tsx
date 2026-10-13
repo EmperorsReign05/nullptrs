@@ -3,15 +3,19 @@
 import React from 'react';
 import { ListTodo, CheckCircle2, AlertTriangle, Clock, TrendingUp, BatteryMedium } from 'lucide-react';
 import type { Task, RobotState, PathfindingMetrics } from '@/core/types';
+import { RollingText } from './RollingText';
 
 interface MetricsBarProps {
   tasks: Task[];
   robots: RobotState[];
   metrics: PathfindingMetrics;
+  /** Exact counts when `tasks` is a trimmed view (open work plus recent completions). */
+  totals?: { total: number; completed: number };
 }
 
-export function MetricsBar({ tasks, robots, metrics }: MetricsBarProps) {
-  const completedCount = tasks.filter(t => t.status === 'completed').length;
+export function MetricsBar({ tasks, robots, metrics, totals }: MetricsBarProps) {
+  const completedCount = totals?.completed ?? tasks.filter(t => t.status === 'completed').length;
+  const totalCount = totals?.total ?? tasks.length;
   const activeCount = robots.filter(r => r.status === 'moving' || r.status === 'assigned' || r.status === 'waiting').length;
   const fleetUtil = robots.length > 0 ? `${Math.round((activeCount / robots.length) * 100)}%` : '0%';
   const avgBatteryVal = robots.length > 0 ? Math.round(robots.reduce((sum, r) => sum + r.battery, 0) / robots.length) : 0;
@@ -29,7 +33,7 @@ export function MetricsBar({ tasks, robots, metrics }: MetricsBarProps) {
             <ListTodo size={12} strokeWidth={2} />
           </div>
         </div>
-        <div className="text-2xl font-mono font-bold text-zinc-100 mt-1">{tasks.length}</div>
+        <div className="text-2xl font-mono font-bold text-zinc-100 mt-1"><RollingText value={totalCount} /></div>
       </div>
 
       <div className="flex-1 p-3 flex flex-col justify-center gap-1 transition-all">
@@ -39,7 +43,7 @@ export function MetricsBar({ tasks, robots, metrics }: MetricsBarProps) {
             <CheckCircle2 size={12} strokeWidth={2} />
           </div>
         </div>
-        <div className="text-2xl font-mono font-bold text-[#C9F27D] mt-1">{completedCount}</div>
+        <div className="text-2xl font-mono font-bold text-[#C9F27D] mt-1"><RollingText value={completedCount} /></div>
       </div>
 
       <div className="flex-1 p-3 flex flex-col justify-center gap-1 transition-all">
@@ -49,7 +53,7 @@ export function MetricsBar({ tasks, robots, metrics }: MetricsBarProps) {
             <AlertTriangle size={12} strokeWidth={2} />
           </div>
         </div>
-        <div className="text-2xl font-mono font-bold text-red-400 mt-1">{metrics.conflictCount}</div>
+        <div className="text-2xl font-mono font-bold text-red-400 mt-1"><RollingText value={metrics.conflictCount} /></div>
       </div>
 
       <div className="flex-1 p-3 flex flex-col justify-center gap-1">
@@ -59,7 +63,7 @@ export function MetricsBar({ tasks, robots, metrics }: MetricsBarProps) {
             <Clock size={12} strokeWidth={2} />
           </div>
         </div>
-        <div className="text-2xl font-mono font-bold text-amber-400 mt-1">{metrics.replans}</div>
+        <div className="text-2xl font-mono font-bold text-amber-400 mt-1"><RollingText value={metrics.replans} pace="sampled" /></div>
       </div>
 
       <div className="flex-1 p-3 flex flex-col justify-center gap-1">
@@ -69,7 +73,7 @@ export function MetricsBar({ tasks, robots, metrics }: MetricsBarProps) {
             <TrendingUp size={12} strokeWidth={2} />
           </div>
         </div>
-        <div className="text-2xl font-mono font-bold text-zinc-100 mt-1">{fleetUtil}</div>
+        <div className="text-2xl font-mono font-bold text-zinc-100 mt-1"><RollingText value={fleetUtil} /></div>
       </div>
 
       <div className="flex-1 p-3 flex flex-col justify-center gap-1">
@@ -79,7 +83,7 @@ export function MetricsBar({ tasks, robots, metrics }: MetricsBarProps) {
             <BatteryMedium size={12} strokeWidth={2} />
           </div>
         </div>
-        <div className={`text-2xl font-mono font-bold mt-1 ${batteryStatusColor}`}>{avgBattery}</div>
+        <div className={`text-2xl font-mono font-bold mt-1 ${batteryStatusColor}`}><RollingText value={avgBattery} /></div>
       </div>
     </div>
   );

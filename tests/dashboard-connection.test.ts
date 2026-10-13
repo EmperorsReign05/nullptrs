@@ -22,7 +22,10 @@ describe("dashboard connection states", () => {
     // The exact anti-pattern that caused the flash.
     expect(source).not.toMatch(/if\s*\(\s*!snapshot\s*\)\s*\{/);
     // A connection error is only ever shown after a poll actually failed.
-    expect(source).toMatch(/status === 'connecting' \|\| \(disconnected && !snapshot\)/);
+    // The full-page card only appears when there is nothing at all to draw: a
+    // cached last frame is drawn instead, labelled as connecting.
+    expect(source).toMatch(/\(status === 'connecting' && !snapshot\) \|\| \(disconnected && !snapshot\)/);
+    expect(source).toContain('connecting — showing last known frame');
   });
 
   it("has a distinct, neutral connecting state", () => {
@@ -53,7 +56,7 @@ describe("dashboard connection states", () => {
     // tore down and rebuilt the loop, and the effect body was the only thing
     // scheduling the next poll — so each teardown left a window with no poll in
     // flight. Empty deps plus a ref for the error.
-    expect(source).toMatch(/\}, \[\]\);/);
+    expect(source).toMatch(/\}, \[accept\]\);/);
     expect(source).toContain('errorRef');
     expect(source).not.toMatch(/\}, \[error\]\);/);
   });

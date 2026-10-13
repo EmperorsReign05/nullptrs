@@ -7,4 +7,5 @@ export * from './FleetStatus';
 export * from './ActiveTasks';
 export * from './EventLog';
 export * from './JudgeTutorial';
-export { useSmoothRobots, TICK_MS } from './useSmoothRobots';
+export { MotionPlayer, NOMINAL_TICK_MS, type MotionFrame } from './motion';
+export * from './RollingText';

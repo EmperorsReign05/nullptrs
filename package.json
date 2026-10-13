@@ -19,6 +19,7 @@
     "fleet:n:nav2": "npm run fleet:build && node scripts/fleet-n.mjs --nav2"
   },
   "dependencies": {
+    "@scritto/react": "^0.1.0",
     "lucide-react": "^1.42.0",
     "next": "16.3.4",
     "react": "19.2.8",

@@ -56,9 +56,15 @@ export class OrderBook {
   private next = 0;
   private released = new Set<string>();
   private stopped = false;
+  private held = 0;
   enabled = true;
 
-  constructor(private runtime: FleetRuntime, seed = 0x5EED) {
+  /**
+   * `maxOutstanding` bounds released-but-unfinished jobs. A release slot that
+   * falls while the bound is reached is skipped, not deferred, so a backlog never
+   * arrives as a burst. Unset keeps the original unbounded stream.
+   */
+  constructor(private runtime: FleetRuntime, seed = 0x5EED, private options: { maxOutstanding?: number } = {}) {
     this.random = lcg(seed);
   }
 
@@ -69,7 +75,7 @@ export class OrderBook {
 
   /** Jobs announced so far, and jobs still to come. Surfaced in the dashboard. */
   stats() {
-    return { announced: this.released.size, enabled: this.enabled, intervalTicks: RELEASE_INTERVAL_TICKS };
+    return { announced: this.released.size, enabled: this.enabled, intervalTicks: RELEASE_INTERVAL_TICKS, held: this.held };
   }
 
   /**
@@ -81,13 +87,21 @@ export class OrderBook {
   releaseDue(): void {
     if (this.stopped) return;
     const now = this.runtime.world.tick;
+    const cap = this.options.maxOutstanding;
+    let outstanding = cap === undefined ? 0 : this.runtime.world.tasks.filter((t) => t.status !== "completed").length;
     while (this.next * RELEASE_INTERVAL_TICKS <= now) {
       const createdAt = this.next * RELEASE_INTERVAL_TICKS;
+      if (cap !== undefined && outstanding >= cap) {
+        this.held++;
+        this.next++;
+        continue;
+      }
       const task = this.build(createdAt);
       if (task) {
         try {
           this.runtime.command({ kind: "task", task });
           this.released.add(task.id);
+          outstanding++;
         } catch {
           // A rejected job must not stall the stream. The runtime's own
           // validation is the authority on what a legal task is; if it says no,

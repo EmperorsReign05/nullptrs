@@ -1,11 +1,49 @@
 import { describe, it, expect, vi } from 'vitest';
-import { advanceSmooth, initialSmooth, sampleSmooth, TICK_MS } from '../src/components/dashboard/useSmoothRobots';
+import { MotionPlayer, NOMINAL_TICK_MS as TICK_MS, type MotionFrame } from '../src/components/dashboard/motion';
 import { getRobotColor } from '../src/components/dashboard/types';
 import { FleetRuntime } from '../src/core/distributed/runtime';
-import type { RobotState } from '../src/core/types';
+import type { Position, RobotState } from '../src/core/types';
 
-const robots = (x: number, y: number): RobotState[] => [{ id: 'AMR-01', position: { x, y } } as RobotState];
-const positions = (x: number, y: number) => ({ 'AMR-01': { x, y } });
+const robot = (id: string, x: number, y: number, path: Position[] = []): RobotState =>
+  ({ id, position: { x, y }, path, status: 'moving' } as unknown as RobotState);
+
+/** A robot driving a 40-cell loop at one cell per tick, with turns at every corner. */
+const loop = (t: number): Position => {
+  const s = ((t % 40) + 40) % 40, leg = Math.floor(s / 10), o = s % 10;
+  return leg === 0 ? { x: o, y: 0 } : leg === 1 ? { x: 10, y: o } : leg === 2 ? { x: 10 - o, y: 10 } : { x: 0, y: 10 - o };
+};
+const history = (tick: number, at: (t: number) => Position): MotionFrame[] =>
+  Array.from({ length: 9 }, (_, i) => tick - 8 + i).filter(t => t >= 0).map(t => ({ tick: t, positions: { A: at(t) } }));
+
+/**
+ * Drives a player with a server ticking every `periodMs` and a poller every
+ * 250 ms with the given round-trip times, painting at 120 Hz. Returns the
+ * painted positions after a warm-up.
+ */
+function play(periodMs: number, rtt: (i: number) => number, seconds = 30) {
+  const p = new MotionPlayer();
+  const arrivals: { at: number; tick: number }[] = [];
+  for (let t = 0, i = 0; t < seconds * 1000; i++) {
+    const r = rtt(i);
+    arrivals.push({ at: t + r, tick: Math.floor((t + r / 2) / periodMs) });
+    t += Math.max(250, r);
+  }
+  arrivals.sort((a, b) => a.at - b.at);
+  const painted: { now: number; at: Position }[] = [];
+  let next = 0;
+  for (let now = 0; now < seconds * 1000; now += 1000 / 120) {
+    while (next < arrivals.length && arrivals[next].at <= now) {
+      const { tick } = arrivals[next++];
+      const at = loop(tick);
+      p.ingest({ robots: [robot('A', at.x, at.y, [at, loop(tick + 1), loop(tick + 2)])], tick, history: history(tick, loop), runtimeId: 'r' }, now);
+    }
+    painted.push({ now, at: { ...p.sample(now).A } });
+  }
+  return { player: p, painted: painted.filter(f => f.now > 4000) };
+}
+
+const stepsOf = (painted: { at: Position }[]) =>
+  painted.slice(1).map((f, i) => Math.abs(f.at.x - painted[i].at.x) + Math.abs(f.at.y - painted[i].at.y));
 
 describe('dashboard robot identity and movement', () => {
   it('spreads adjacent AMR ids across distinct hues and keeps identity stable', () => {
@@ -18,96 +56,97 @@ describe('dashboard robot identity and movement', () => {
     expect(getRobotColor('AMR-01')).toBe(getRobotColor('AMR-01'));
   });
 
-  it('follows committed turns and waits across skipped polls', () => {
-    const s = advanceSmooth(initialSmooth(robots(1, 1), 0), robots(2, 2), 3, 0, 100, [
-      { tick: 1, positions: positions(2, 1) },
-      { tick: 2, positions: positions(2, 1) },
-      { tick: 3, positions: positions(2, 2) },
-    ]);
-    expect(s.durationMs).toBe(3 * TICK_MS);
-    expect(sampleSmooth(s, 225)['AMR-01']).toEqual({ x: 1.5, y: 1 });
-    expect(sampleSmooth(s, 475)['AMR-01']).toEqual({ x: 2, y: 1 });
-    expect(sampleSmooth(s, 725)['AMR-01']).toEqual({ x: 2, y: 1.5 });
-    expect(sampleSmooth(s, 1000)['AMR-01']).toEqual({ x: 2, y: 2 });
-  });
-
-  it('finishes an in-flight segment before turning on a new snapshot', () => {
-    const s = advanceSmooth(initialSmooth(robots(1, 1), 0), robots(2, 1), 1, 0, 0);
-    const next = advanceSmooth(s, robots(2, 2), 2, 1, 125, [{ tick: 2, positions: positions(2, 2) }]);
-    expect(sampleSmooth(next, 125)['AMR-01']).toEqual({ x: 1.5, y: 1 });
-    expect(sampleSmooth(next, 200)['AMR-01'].y).toBe(1);
-    expect(sampleSmooth(next, 375)['AMR-01']).toEqual({ x: 2, y: 1.5 });
-  });
-
-  it('resynchronizes resets, long stalls and missing routes without flying', () => {
-    const s = initialSmooth(robots(18, 12), 0);
-    for (const [tick, prev] of [[0, 40], [400, 0], [1, 0]]) {
-      const next = advanceSmooth(s, robots(1, 0), tick, prev, 10);
-      expect(sampleSmooth(next, 10)['AMR-01']).toEqual({ x: 1, y: 0 });
-      expect(next.durationMs).toBe(0);
+  it('never stops between cells when the server ticks slower than nominal', () => {
+    // The old player animated each cell in exactly 250 ms and then waited. The
+    // server was measured at ~260 ms, which froze the robot ~2.7 times a second.
+    for (const period of [250, 263, 300]) {
+      const { player, painted } = play(period, () => 15);
+      const steps = stepsOf(painted);
+      expect(steps.filter(d => d < 1e-6)).toHaveLength(0);
+      expect(player.tickPeriodMs).toBeGreaterThan(period * 0.97);
+      expect(player.tickPeriodMs).toBeLessThan(period * 1.03);
+      // Constant speed: no frame moves more than 1.5x the ideal per-frame step.
+      expect(Math.max(...steps)).toBeLessThan(1.5 * (1000 / 120) / period);
     }
   });
 
-  it('holds duplicate packets and incorporates a changed pose at the same tick', () => {
-    const s = initialSmooth(robots(1, 1), 0);
-    expect(advanceSmooth(s, robots(1, 1), 1, 1, 100)).toBe(s);
-    expect(sampleSmooth(advanceSmooth(s, robots(2, 1), 1, 1, 100), 225)['AMR-01'].x).toBe(1.5);
+  it('absorbs WAN jitter without freezing or jumping', () => {
+    let seed = 1;
+    const rnd = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 2 ** 32);
+    const { painted } = play(TICK_MS, () => 150 + (rnd() * 2 - 1) * 100);
+    const steps = stepsOf(painted);
+    expect(steps.filter(d => d < 1e-6)).toHaveLength(0);
+    expect(Math.max(...steps)).toBeLessThan(0.06);
   });
 
-  it('does not snap when normal WAN polling leaves more than one second queued', () => {
-    const first = advanceSmooth(initialSmooth(robots(0, 0), 0), robots(3, 0), 3, 0, 0,
-      [1, 2, 3].map(tick => ({ tick, positions: positions(tick, 0) })));
-    const next = advanceSmooth(first, robots(7, 0), 7, 3, 640,
-      [4, 5, 6, 7].map(tick => ({ tick, positions: positions(tick, 0) })));
-    expect(sampleSmooth(next, 640)).toEqual(sampleSmooth(first, 640));
-    expect(next.durationMs).toBeGreaterThan(1000);
-    expect(sampleSmooth(next, 890)['AMR-01'].x - sampleSmooth(next, 640)['AMR-01'].x).toBeCloseTo(1);
+  it('eases to a stop through a multi-second stall and replays it without a jump', () => {
+    // Two consecutive 2 s round trips: a 4 s hole, 16 ticks, inside the server's
+    // 24-tick history. The robot eases to a stop, then fast-forwards every cell.
+    const { painted } = play(TICK_MS, i => (i >= 100 && i < 102 ? 2000 : 30), 40);
+    expect(Math.max(...stepsOf(painted))).toBeLessThan(0.12);
   });
 
-  it('replays a five-tick WAN gap when the committed history is present', () => {
-    const s = advanceSmooth(initialSmooth(robots(0, 0), 0), robots(5, 0), 5, 0, 900,
-      [1, 2, 3, 4, 5].map(tick => ({ tick, positions: positions(tick, 0) })));
-    expect(sampleSmooth(s, 900)['AMR-01'].x).toBe(0);
-    expect(sampleSmooth(s, 1025)['AMR-01'].x).toBeCloseTo(0.5);
-  });
-
-  it('stays continuous over realistic WAN arrival times, including turns', () => {
-    const arrivals = [400, 1068, 1732, 2395, 3050, 3824, 4467, 5220, 6154, 6789, 7476, 8187];
-    const path = Array.from({ length: 40 }, (_, tick) => {
-      const leg = Math.floor(tick / 10), offset = tick % 10;
-      return leg === 0 ? positions(offset, 0) : leg === 1 ? positions(10, offset) : leg === 2 ? positions(10 - offset, 10) : positions(0, 10 - offset);
-    });
-    let state = initialSmooth(robots(0, 0), 0), previous = 0;
-    for (const now of arrivals) {
-      const tick = Math.floor(now / TICK_MS);
-      const target = path[tick]['AMR-01'];
-      const painted = sampleSmooth(state, now);
-      state = advanceSmooth(state, robots(target.x, target.y), tick, previous, now,
-        path.slice(Math.max(0, tick - 8), tick + 1).map((positions, i) => ({ tick: Math.max(0, tick - 8) + i, positions })));
-      expect(sampleSmooth(state, now)).toEqual(painted);
-      previous = tick;
-      let last = sampleSmooth(state, now)['AMR-01'];
-      for (let t = now + 16; t < now + 600; t += 16) {
-        const next = sampleSmooth(state, t)['AMR-01'];
-        expect(Math.abs(next.x - last.x) + Math.abs(next.y - last.y)).toBeLessThanOrEqual(16 / TICK_MS + 1e-6);
-        last = next;
-      }
+  it('follows committed turns instead of cutting across racks', () => {
+    // An L-shaped committed route: the painted robot must stay near the two
+    // legs, never on the diagonal between (0,0) and (1,1).
+    const at = (t: number) => (t <= 1 ? { x: t, y: 0 } : { x: 1, y: Math.min(t - 1, 1) });
+    const p = new MotionPlayer();
+    p.ingest({ robots: [robot('A', 0, 0)], tick: 0, runtimeId: 'r' }, 0);
+    p.ingest({ robots: [robot('A', 1, 1)], tick: 2, history: history(2, at), runtimeId: 'r' }, 500);
+    for (let now = 500; now < 2500; now += 8) {
+      const q = p.sample(now).A;
+      // The follower rounds the corner by a fraction of a cell, inside the turn cell.
+      expect(Math.min(Math.abs(q.y), Math.abs(q.x - 1))).toBeLessThan(0.25);
     }
+    expect(p.sample(2600).A).toEqual({ x: 1, y: 1 });
   });
 
-  it('does not schedule an animation for an idle fleet on every tick', () => {
-    const s = initialSmooth(robots(1, 1), 0);
-    expect(advanceSmooth(s, robots(1, 1), 3, 0, 800,
-      [1, 2, 3].map(tick => ({ tick, positions: positions(1, 1) })))).toBe(s);
+  it('cuts to a new world instead of flying, and ignores stale frames', () => {
+    const p = new MotionPlayer();
+    p.ingest({ robots: [robot('A', 18, 12)], tick: 400, runtimeId: 'old' }, 0);
+    p.sample(0);
+    p.ingest({ robots: [robot('A', 1, 0)], tick: 0, runtimeId: 'new' }, 10);
+    expect(p.sample(26).A).toEqual({ x: 1, y: 0 });
+    expect(p.resets).toBe(1);
+    // An older answer of the same runtime arriving late must not rewind it.
+    p.ingest({ robots: [robot('A', 2, 0)], tick: 5, runtimeId: 'new' }, 1300);
+    p.ingest({ robots: [robot('A', 1, 0)], tick: 3, runtimeId: 'new' }, 1310);
+    expect(p.resets).toBe(1);
+    for (let now = 1310; now < 4000; now += 16) p.sample(now);
+    expect(p.sample(4000).A).toEqual({ x: 2, y: 0 });
+  });
+
+  it('predicts briefly along a free route, never into an occupied or blocked cell', () => {
+    const p = new MotionPlayer();
+    const world = (tick: number) => [
+      robot('A', 2, 0, [{ x: 2, y: 0 }, { x: 3, y: 0 }]),   // free cell ahead
+      robot('B', 5, 0, [{ x: 5, y: 0 }, { x: 6, y: 0 }]),   // ahead is occupied by C
+      robot('C', 6, 0, []),
+      robot('D', 8, 0, [{ x: 8, y: 0 }, { x: 8, y: 1 }]),   // ahead is blocked
+    ].map(r => ({ ...r, tick }));
+    p.ingest({ robots: world(0), tick: 0, runtimeId: 'r', blocked: new Set(['8,1']) }, 0);
+    for (let now = 0; now <= 3000; now += 16) p.sample(now);
+    const at = p.sample(3016);
+    expect(at.A.x).toBeGreaterThan(2.3);
+    expect(at.A.x).toBeLessThan(2.6);
+    expect(at.B).toEqual({ x: 5, y: 0 });
+    expect(at.D).toEqual({ x: 8, y: 0 });
+  });
+
+  it('does not predict while paused or disconnected', () => {
+    const p = new MotionPlayer();
+    p.ingest({ robots: [robot('A', 2, 0, [{ x: 2, y: 0 }, { x: 3, y: 0 }])], tick: 7, runtimeId: 'r', running: false }, 0);
+    for (let now = 0; now <= 2000; now += 16) p.sample(now);
+    expect(p.sample(2016).A).toEqual({ x: 2, y: 0 });
   });
 
   it('reports bounded, immutable motion history and a new identity on restart', () => {
     const rt = new FleetRuntime();
     const first = rt.snapshot();
-    for (let i = 0; i < 12; i++) rt.step();
+    for (let i = 0; i < 40; i++) rt.step();
     const next = rt.snapshot();
     expect(first.motionHistory).toHaveLength(1);
-    expect(next.motionHistory).toHaveLength(9);
+    expect(next.motionHistory).toHaveLength(25);
     expect(next.motionHistory.at(-1)?.tick).toBe(next.world.tick);
     expect(next.motionHistory.at(-1)?.positions).toEqual(Object.fromEntries(next.world.robots.map(r => [r.id, r.position])));
     expect(new FleetRuntime().runtimeId).not.toBe(rt.runtimeId);
@@ -128,6 +167,28 @@ describe('dashboard robot identity and movement', () => {
       await vi.advanceTimersByTimeAsync(150);
       stepIfDue();
       expect(rt.world.tick).toBe(initial + 2);
+    } finally {
+      vi.clearAllTimers();
+      vi.useRealTimers();
+    }
+  });
+
+  it('keeps an exact 250 ms schedule and catches up a suspended host within the history window', async () => {
+    vi.useFakeTimers();
+    const { fleetService, reconfigureFleet, stepIfDue } = await import('../src/server/fleet-service');
+    // A fresh runtime, so its interval is created under fake timers.
+    reconfigureFleet({ robots: 3 });
+    const rt = fleetService();
+    try {
+      const start = rt.world.tick;
+      await vi.advanceTimersByTimeAsync(TICK_MS * 40);
+      expect(rt.world.tick - start).toBe(40);
+      // A frozen serverless instance: no timers ran for ten seconds.
+      vi.setSystemTime(Date.now() + 10_000);
+      const before = rt.world.tick;
+      stepIfDue();
+      expect(rt.world.tick - before).toBe(24);
+      expect(rt.snapshot().motionHistory).toHaveLength(25);
     } finally {
       vi.clearAllTimers();
       vi.useRealTimers();
