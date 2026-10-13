@@ -24,15 +24,15 @@
 // is fixed separately.
 
 import type { Task } from "../core/types";
-import { isTraversable } from "../core/map/warehouse";
+import { CHARGING_STATIONS, isTraversable } from "../core/map/warehouse";
 import type { FleetRuntime } from "../core/distributed/runtime";
 
 /** Real, traversable cells that read as a warehouse on screen. */
 const PICKUP_ZONES: [number, number][] = [
-  [1, 0], [14, 0], [3, 9], [9, 9], [12, 8], [6, 4], [17, 4], [9, 0],
+  [1, 0], [14, 0], [3, 9], [9, 9], [12, 8], [6, 4], [17, 4], [11, 0],
 ];
 const DROPOFF_ZONES: [number, number][] = [
-  [6, 12], [17, 12], [9, 1], [13, 1], [3, 12], [12, 12], [0, 8], [19, 0],
+  [6, 12], [17, 12], [9, 1], [13, 1], [3, 12], [12, 12], [0, 8], [16, 4],
 ];
 
 /**
@@ -127,8 +127,21 @@ export class OrderBook {
     // job was rejected as invalid, so pulling the shelf slider stopped the order
     // stream dead with nothing on screen to say why. If the preferred zones are
     // all blocked, fall back to whatever is open rather than stalling.
-    const walkable = (c: [number, number]) => isTraversable({ x: c[0], y: c[1] }, map);
-    const pool = (preferred: [number, number][]) => (preferred.length ? preferred : openCells);
+    //
+    // A job end must also have a way past it. A dead-end cell (one open
+    // neighbour) admits one robot at a time and has no room to pass: the list
+    // used to include the corner (19,0), and two robots meeting in its approach
+    // lane, one leaving and one arriving, blocked each other for good. Every
+    // later job bound there queued behind them, and after a few minutes most of
+    // the fleet was parked in that corner holding cargo. Jobs never end in one,
+    // nor on a charger: (9,0) was both, and robots fetching from it and robots
+    // queueing to charge on it boxed in whoever was charging there.
+    const open = (x: number, y: number) => isTraversable({ x, y }, map);
+    const charger = (c: [number, number]) => CHARGING_STATIONS.some((s) => s.position.x === c[0] && s.position.y === c[1]);
+    const walkable = (c: [number, number]) => open(c[0], c[1]) && !charger(c) &&
+      [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([dx, dy]) => open(c[0] + dx, c[1] + dy)).length >= 2;
+    const passable = openCells.filter(walkable);
+    const pool = (preferred: [number, number][]) => (preferred.length ? preferred : passable.length ? passable : openCells);
     const choose = (list: [number, number][]) => list[Math.floor(this.random() * list.length)];
     const p = choose(pool(PICKUP_ZONES.filter(walkable)));
     const d = choose(pool(DROPOFF_ZONES.filter(walkable)));

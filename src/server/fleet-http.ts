@@ -1,5 +1,5 @@
 import { createServer } from "node:http";
-import { reconfigureFleet, fleetLayout, fleetOrderBook, fleetService, MAX_FLEET_ROBOTS } from "./fleet-service";
+import { reconfigureFleet, fleetLayout, fleetOrderBook, fleetService, wrongWorld, MAX_FLEET_ROBOTS } from "./fleet-service";
 import { dashboardView } from "./dashboard-view";
 import type { RuntimeCommand } from "../core/distributed/runtime";
 
@@ -49,6 +49,11 @@ createServer(async (request, response) => {
       const command = JSON.parse(body) as ({ kind: string } & Record<string, unknown> & Partial<Omit<RuntimeCommand, "kind">>);
       if (!command || typeof command.kind !== "string") throw new Error("Unknown command");
       if (![...RUNTIME_KINDS, ...HARNESS_KINDS].includes(command.kind)) throw new Error("Unknown command");
+      const mismatch = wrongWorld(command);
+      if (mismatch) {
+        response.statusCode = 409;
+        response.end(JSON.stringify({ error: mismatch, runtimeId: fleetService().runtimeId })); return;
+      }
 
       if (command.kind === "order-stream") {
         if (typeof command.on !== "boolean") throw new Error("order-stream requires a boolean `on`");

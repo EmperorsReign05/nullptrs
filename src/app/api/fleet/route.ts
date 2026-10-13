@@ -15,7 +15,7 @@
 // discard command state and make robot markers jump to unrelated positions.
 //
 // The runtime URL is server configuration, never client input.
-import { reconfigureFleet, fleetLayout, fleetOrderBook, fleetService, stepIfDue, MAX_FLEET_ROBOTS } from "@/server/fleet-service";
+import { reconfigureFleet, fleetLayout, fleetOrderBook, fleetService, stepIfDue, wrongWorld, MAX_FLEET_ROBOTS } from "@/server/fleet-service";
 import { dashboardView } from "@/server/dashboard-view";
 import type { RuntimeCommand } from "@/core/distributed/runtime";
 
@@ -82,6 +82,10 @@ async function proxy(method: "GET" | "POST", body?: string): Promise<Response> {
   const HARNESS_KINDS = ["order-stream", "reconfigure"];
   if (![...RUNTIME_KINDS, ...HARNESS_KINDS].includes(payload.kind)) {
     return Response.json({ error: `Unknown command: ${payload.kind}` }, { status: 400 });
+  }
+  const mismatch = wrongWorld(payload);
+  if (mismatch) {
+    return Response.json({ error: mismatch, runtimeId: fleetService().runtimeId }, { status: 409, headers: { "Cache-Control": "no-store" } });
   }
   try {
     if (payload.kind === "order-stream") {

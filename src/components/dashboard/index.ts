@@ -9,3 +9,4 @@ export * from './EventLog';
 export * from './JudgeTutorial';
 export { MotionPlayer, NOMINAL_TICK_MS, type MotionFrame } from './motion';
 export * from './RollingText';
+export * from './StartupScreen';
