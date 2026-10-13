@@ -18,7 +18,8 @@ import { OrderBook, RELEASE_INTERVAL_TICKS } from "../src/server/order-book";
 import { layoutWithShelfColumns, clampShelfColumns, MIN_SHELF_COLUMNS, MAX_SHELF_COLUMNS, passingCapacity } from "../src/server/layout";
 import { FleetRuntime } from "../src/core/distributed/runtime";
 import { createWarehouseMap } from "../src/core/map/warehouse";
-import { createInitialWorld } from "../src/core/simulation/state";
+import { createFleetRoster, createInitialWorld } from "../src/core/simulation/state";
+import { CHARGING_STATIONS, DROPOFF_STATIONS, PICKUP_STATIONS } from "../src/core/map/warehouse";
 import type { RobotState, WorldState } from "../src/core/types";
 
 
@@ -81,6 +82,33 @@ describe("warehouse layout control", () => {
       }
     }
     expect(clampShelfColumns(3.7)).toBe(3);
+  });
+});
+
+describe("fleet roster", () => {
+  it("offers twenty distinct robots, both models, without changing the seeded ten", () => {
+    const roster = createFleetRoster();
+    expect(roster).toHaveLength(20);
+    expect(new Set(roster.map((r) => r.id)).size).toBe(20);
+    expect(roster.slice(0, 10)).toEqual(createInitialWorld().robots);
+    const models = roster.map((r) => r.model.model);
+    expect(models.filter((m) => m === roster[0].model.model)).toHaveLength(10);
+    expect(new Set(models).size).toBe(2);
+  });
+
+  it("starts every robot on its own open cell in every shelf layout, off stations", () => {
+    const roster = createFleetRoster();
+    expect(new Set(roster.map((r) => `${r.position.x},${r.position.y}`)).size).toBe(20);
+    const stations = new Set([...PICKUP_STATIONS, ...DROPOFF_STATIONS, ...CHARGING_STATIONS]
+      .map((s) => `${s.position.x},${s.position.y}`));
+    for (let columns = MIN_SHELF_COLUMNS; columns <= MAX_SHELF_COLUMNS; columns++) {
+      const map = layoutWithShelfColumns(createWarehouseMap(), columns);
+      for (const r of roster) {
+        expect(map.cells.find((c) => c.position.x === r.position.x && c.position.y === r.position.y)!.blocked).toBe(false);
+      }
+    }
+    // The ten new starts stay clear of every station (AMR-01 has always sat on P1).
+    for (const r of roster.slice(10)) expect(stations.has(`${r.position.x},${r.position.y}`)).toBe(false);
   });
 });
 
@@ -195,6 +223,8 @@ describe("the /api/fleet adapter", () => {
     }));
 
     const before = (await (await GET()).json() as { world: { robots: unknown[]; tick: number } }).world;
+    const full = await post({ kind: "reconfigure", robots: 20 });
+    expect((await full.json() as { world: { robots: unknown[] } }).world.robots).toHaveLength(20);
     const resized = await post({ kind: "reconfigure", robots: 7 });
     expect(resized.status).toBe(200);
     const after = (await resized.json() as { world: { robots: unknown[]; tick: number } }).world;
@@ -221,7 +251,7 @@ describe("the /api/fleet adapter", () => {
     expect(body.charging).toBeUndefined();
     expect(body.events.length).toBeLessThanOrEqual(20);
     expect(body.taskTotals.total).toBeGreaterThanOrEqual(body.world.tasks.length);
-    expect(body.layout).toEqual({ robots: 4, shelfColumns: 3, maxRobots: createInitialWorld().robots.length });
+    expect(body.layout).toEqual({ robots: 4, shelfColumns: 3, maxRobots: createFleetRoster().length });
     expect(body.motionHistory.length).toBeGreaterThan(0);
   });
 
@@ -264,8 +294,8 @@ describe("the /api/fleet adapter", () => {
     // The runtime's own `command` silently ignores an unrecognised kind, so the
     // in-process path used to answer 200 to garbage while the proxied path
     // answered 400. Both topologies must reject the same things.
-    // 11..20 used to be accepted and silently built a ten-robot fleet.
-    for (const bad of [{ kind: "reconfigure", robots: 0 }, { kind: "reconfigure", robots: 11 }, { kind: "reconfigure", robots: 99 }, { kind: "reconfigure", shelfColumns: 12 }, { kind: "nonsense" }, {}]) {
+    // Sizes beyond the roster used to be accepted and silently truncated.
+    for (const bad of [{ kind: "reconfigure", robots: 0 }, { kind: "reconfigure", robots: 21 }, { kind: "reconfigure", robots: 99 }, { kind: "reconfigure", shelfColumns: 12 }, { kind: "nonsense" }, {}]) {
       const response = await POST(new Request("http://local/api/fleet", {
         method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(bad),
       }));

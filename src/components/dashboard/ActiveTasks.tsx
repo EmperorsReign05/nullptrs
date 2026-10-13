@@ -42,59 +42,10 @@ export function ActiveTasks({ tasks, robots, awaitingAuction }: ActiveTasksProps
         </span>
       </div>
       <div className="p-2 flex flex-col max-h-[220px] overflow-y-auto divide-y divide-white/[0.06]">
-        {shown.map((t) => {
-          const robotColor = t.assignedRobotId
-            ? getRobotColor(t.assignedRobotId)
-            : '#545C6B';
-
-          return (
-            <div 
-              key={t.id} 
-              className={`px-4 py-3 flex justify-between items-center hover:bg-white/[0.06] transition-colors duration-150 ${
-                t.status === 'pending' ? 'opacity-60' : ''
-              }`}
-            >
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-3">
-                  <span className="font-mono font-bold text-sm text-[#E6E9EF] tracking-wide">{t.id}</span>
-                  <span className="text-[12px] text-[#A8B2C4]">({t.pickup.x},{t.pickup.y}) → ({t.dropoff.x},{t.dropoff.y})</span>
-                </div>
-                <div className="text-[12px] font-bold tracking-wider" style={{ color: robotColor }}>
-                  <RollingText value={t.assignedRobotId ?? (awaiting.has(t.id) ? 'awaiting auction' : 'unassigned')} />
-                </div>
-              </div>
-              
-              {t.status === 'pending' && awaiting.has(t.id) && (
-                <span className="bg-white/[0.06] border border-white/10 text-[#E6E9EF] text-[9px] font-sans font-bold px-2.5 py-1 rounded-full tracking-wider flex items-center gap-1.5 shadow-sm">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#A8B2C4] animate-pulse"></span>
-                  announced
-                </span>
-              )}
-
-              {t.status === 'in_progress' && (
-                <span className="bg-white/[0.06] border border-white/10 text-[#E6E9EF] text-[9px] font-sans font-bold px-2.5 py-1 rounded-full tracking-wider flex items-center gap-1.5 shadow-sm">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse"></span>
-                  in progress
-                </span>
-              )}
-              {t.status === 'assigned' && (
-                <span className="bg-white/[0.06] border border-white/10 text-[#8A93A3] text-[9px] font-sans font-bold px-2.5 py-1 rounded-full tracking-wider">
-                  assigned
-                </span>
-              )}
-              {t.status === 'pending' && (
-                <span className="bg-white/[0.06] border border-white/10 text-[#545C6B] text-[9px] font-sans font-bold px-2.5 py-1 rounded-full tracking-wider">
-                  pending
-                </span>
-              )}
-              {t.status === 'completed' && (
-                <span className="bg-[#34D399]/15 border border-[#34D399]/30 text-[#34D399] text-[9px] font-sans font-bold px-2.5 py-1 rounded-full tracking-wider">
-                  completed
-                </span>
-              )}
-            </div>
-          );
-        })}
+        {shown.map((t) => (
+          <TaskRow key={t.id} id={t.id} status={t.status} assignedRobotId={t.assignedRobotId}
+            px={t.pickup.x} py={t.pickup.y} dx={t.dropoff.x} dy={t.dropoff.y} awaitingAuction={awaiting.has(t.id)} />
+        ))}
         {ordered.length > shown.length && (
           <div className="px-4 py-2 text-[11px] font-mono text-zinc-400">
             <RollingText value={`+${ordered.length - shown.length} more queued`} />
@@ -104,3 +55,60 @@ export function ActiveTasks({ tasks, robots, awaitingAuction }: ActiveTasksProps
     </div>
   );
 }
+
+/** One task row, memoized on what it shows, for the same reason as FleetStatus rows. */
+const TaskRow = React.memo(function TaskRow({ id, status, assignedRobotId, px, py, dx, dy, awaitingAuction }: {
+  id: string; status: Task['status']; assignedRobotId?: string; px: number; py: number; dx: number; dy: number; awaitingAuction: boolean;
+}) {
+  const t = { id, status, assignedRobotId, pickup: { x: px, y: py }, dropoff: { x: dx, y: dy } };
+  const robotColor = t.assignedRobotId
+    ? getRobotColor(t.assignedRobotId)
+    : '#545C6B';
+
+  return (
+    <div 
+      className={`px-4 py-3 flex justify-between items-center hover:bg-white/[0.06] transition-colors duration-150 ${
+        t.status === 'pending' ? 'opacity-60' : ''
+      }`}
+    >
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center gap-3">
+          <span className="font-mono font-bold text-sm text-[#E6E9EF] tracking-wide">{t.id}</span>
+          <span className="text-[12px] text-[#A8B2C4]">({t.pickup.x},{t.pickup.y}) → ({t.dropoff.x},{t.dropoff.y})</span>
+        </div>
+        <div className="text-[12px] font-bold tracking-wider" style={{ color: robotColor }}>
+          <RollingText value={t.assignedRobotId ?? (awaitingAuction ? 'awaiting auction' : 'unassigned')} />
+        </div>
+      </div>
+      
+      {t.status === 'pending' && awaitingAuction && (
+        <span className="bg-white/[0.06] border border-white/10 text-[#E6E9EF] text-[9px] font-sans font-bold px-2.5 py-1 rounded-full tracking-wider flex items-center gap-1.5 shadow-sm">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#A8B2C4] animate-pulse"></span>
+          announced
+        </span>
+      )}
+
+      {t.status === 'in_progress' && (
+        <span className="bg-white/[0.06] border border-white/10 text-[#E6E9EF] text-[9px] font-sans font-bold px-2.5 py-1 rounded-full tracking-wider flex items-center gap-1.5 shadow-sm">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse"></span>
+          in progress
+        </span>
+      )}
+      {t.status === 'assigned' && (
+        <span className="bg-white/[0.06] border border-white/10 text-[#8A93A3] text-[9px] font-sans font-bold px-2.5 py-1 rounded-full tracking-wider">
+          assigned
+        </span>
+      )}
+      {t.status === 'pending' && (
+        <span className="bg-white/[0.06] border border-white/10 text-[#545C6B] text-[9px] font-sans font-bold px-2.5 py-1 rounded-full tracking-wider">
+          pending
+        </span>
+      )}
+      {t.status === 'completed' && (
+        <span className="bg-[#34D399]/15 border border-[#34D399]/30 text-[#34D399] text-[9px] font-sans font-bold px-2.5 py-1 rounded-full tracking-wider">
+          completed
+        </span>
+      )}
+    </div>
+  );
+});

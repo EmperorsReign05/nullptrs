@@ -120,6 +120,41 @@ function createInitialRobots(): RobotState[] {
   ];
 }
 
+/**
+ * AMR-11..20, for fleets larger than the seeded ten.
+ *
+ * Kept out of createInitialWorld on purpose: the central simulator, the SIH
+ * benchmark scenario and dozens of measured tests are defined against the
+ * seeded ten, and growing that world would silently change their results.
+ * Only the dashboard fleet harness, which lets an operator pick 1..20, uses the
+ * full roster.
+ *
+ * Starts are spread over areas the first ten leave empty (the left column, the
+ * right-hand aisles, the middle and bottom rows). None is a station, an
+ * order-book pickup or dropoff, or a block-aisle cell, and every one is open in
+ * the stock layout, so it stays open in every shelf layout (removing racks only
+ * unblocks cells). Models alternate, giving ten of each across the twenty.
+ */
+function createAdditionalRobots(): RobotState[] {
+  return [
+    { id: "AMR-11", position: { x: 0, y: 2 }, home: { x: 0, y: 2 }, battery: 93, status: "idle", model: SCOUT_AGILE_2, path: [], priority: BASE_PRIORITY },
+    { id: "AMR-12", position: { x: 17, y: 2 }, home: { x: 17, y: 2 }, battery: 81, status: "idle", model: ADDVERB_DYNAMO_100, path: [], priority: BASE_PRIORITY },
+    { id: "AMR-13", position: { x: 14, y: 6 }, home: { x: 14, y: 6 }, battery: 99, status: "idle", model: SCOUT_AGILE_2, path: [], priority: BASE_PRIORITY },
+    { id: "AMR-14", position: { x: 2, y: 6 }, home: { x: 2, y: 6 }, battery: 86, status: "idle", model: ADDVERB_DYNAMO_100, path: [], priority: BASE_PRIORITY },
+    { id: "AMR-15", position: { x: 6, y: 11 }, home: { x: 6, y: 11 }, battery: 90, status: "idle", model: SCOUT_AGILE_2, path: [], priority: BASE_PRIORITY },
+    { id: "AMR-16", position: { x: 17, y: 10 }, home: { x: 17, y: 10 }, battery: 77, status: "idle", model: ADDVERB_DYNAMO_100, path: [], priority: BASE_PRIORITY },
+    { id: "AMR-17", position: { x: 15, y: 8 }, home: { x: 15, y: 8 }, battery: 96, status: "idle", model: SCOUT_AGILE_2, path: [], priority: BASE_PRIORITY },
+    { id: "AMR-18", position: { x: 4, y: 4 }, home: { x: 4, y: 4 }, battery: 88, status: "idle", model: ADDVERB_DYNAMO_100, path: [], priority: BASE_PRIORITY },
+    { id: "AMR-19", position: { x: 14, y: 12 }, home: { x: 14, y: 12 }, battery: 83, status: "idle", model: SCOUT_AGILE_2, path: [], priority: BASE_PRIORITY },
+    { id: "AMR-20", position: { x: 19, y: 4 }, home: { x: 19, y: 4 }, battery: 94, status: "idle", model: ADDVERB_DYNAMO_100, path: [], priority: BASE_PRIORITY },
+  ];
+}
+
+/** The full twenty-robot roster: the seeded ten, then AMR-11..20. */
+export function createFleetRoster(): RobotState[] {
+  return [...createInitialRobots(), ...createAdditionalRobots()];
+}
+
 function createInitialTasks(): Task[] {
   return [
     {

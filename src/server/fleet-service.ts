@@ -1,7 +1,7 @@
 import { FleetRuntime, MOTION_HISTORY_TICKS } from "../core/distributed/runtime";
 import { loadFleetConfig } from "../core/fleet/config";
 import { createWarehouseMap } from "../core/map/warehouse";
-import { createInitialWorld } from "../core/simulation/state";
+import { createFleetRoster } from "../core/simulation/state";
 import { OrderBook } from "./order-book";
 import { layoutWithShelfColumns } from "./layout";
 import type { RobotState, WarehouseMap, WorldState } from "../core/types";
@@ -46,9 +46,9 @@ const MAX_CATCH_UP_TICKS = MOTION_HISTORY_TICKS;
 /**
  * Fleet size is bounded by the robot templates that exist. The slider used to
  * allow 20 while only 10 templates existed, so 11..20 silently built 10 robots
- * and the next poll yanked the slider back.
+ * and the next poll yanked the slider back. The roster now has twenty.
  */
-export const MAX_FLEET_ROBOTS = createInitialWorld().robots.length;
+export const MAX_FLEET_ROBOTS = createFleetRoster().length;
 /** Released-but-unfinished jobs per robot before the order stream holds back. */
 const OUTSTANDING_JOBS_PER_ROBOT = 2;
 
@@ -75,7 +75,7 @@ function build(config: Config): { runtime: FleetRuntime; map: WarehouseMap } {
   // operator just picked on a slider: passing an empty robot list produced a
   // zero-robot runtime that stepped forever, could never own a task, and left the
   // dashboard showing an empty warehouse with a live tick counter.
-  const templates = createInitialWorld().robots;
+  const templates = createFleetRoster();
   const robots: RobotState[] = templates.slice(0, config.robots).map((t) => ({
     ...t,
     position: { ...t.position },
