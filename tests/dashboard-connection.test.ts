@@ -16,29 +16,30 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 
 const source = readFileSync("src/app/page.tsx", "utf8");
+const startup = readFileSync("src/components/dashboard/StartupScreen.tsx", "utf8");
 
 describe("dashboard connection states", () => {
-  it("does not gate the error card on a null snapshot", () => {
-    // The exact anti-pattern that caused the flash.
-    expect(source).not.toMatch(/if\s*\(\s*!snapshot\s*\)\s*\{/);
-    // A connection error is only ever shown after a poll actually failed.
-    // The full-page card only appears when there is nothing at all to draw: a
-    // cached last frame is drawn instead, labelled as connecting.
-    expect(source).toMatch(/\(status === 'connecting' && !snapshot\) \|\| \(disconnected && !snapshot\)/);
-    expect(source).toContain('connecting — showing last known frame');
+  it("does not show an error card for a null snapshot", () => {
+    // With nothing to draw yet the page shows the start-up screen, never an
+    // error card: a slow first answer is a cold start, not an outage. A cached
+    // last frame is drawn instead when there is one, labelled as such.
+    expect(source).toMatch(/if \(!snapshot\) \{\s*return \(/);
+    expect(source).toContain('<StartupScreen waitedS={waitedS} failed={disconnected}');
+    expect(source).not.toContain("'Fleet runtime not connected.'");
+    expect(source).toContain('showing last known frame');
   });
 
-  it("has a distinct, neutral connecting state", () => {
+  it("presents a slow or failed first answer as start-up, with progress", () => {
     expect(source).toMatch(/'connecting' \| 'live' \| 'error'/);
-    expect(source).toContain('Connecting to the fleet runtime');
-    // Connecting must be styled as neutral progress (zinc) and only a real
-    // failure may be styled as a fault (amber). One ternary, both tones, so the
-    // connecting state can never inherit the error colour.
-    expect(source).toMatch(
-      /connecting \? 'text-zinc-200 text-base mb-2' : 'text-amber-300 text-base mb-2'/,
-    );
-    // ...and the connecting state must show progress, not a static dot.
-    expect(source).toMatch(/animate-spin/);
+    expect(startup).toContain('Connecting to the fleet');
+    expect(startup).toContain('Waking up the fleet server');
+    // Only a wait far past a normal cold start is called a problem, and even
+    // then it is amber, not red, and offers a retry while polling continues.
+    expect(startup).toMatch(/const stalled = waitedS >= GIVE_UP_AFTER_S/);
+    expect(startup).toContain('Retry now');
+    expect(startup).toMatch(/animate-spin/);
+    // Local setup instructions are for developers, behind a disclosure.
+    expect(startup).toMatch(/<details[\s\S]*npm run fleet/);
   });
 
   it("never shows a stale frame as if it were live", () => {
@@ -55,9 +56,8 @@ describe("dashboard connection states", () => {
     // The effect used to depend on `error`, so every failure and every recovery
     // tore down and rebuilt the loop, and the effect body was the only thing
     // scheduling the next poll — so each teardown left a window with no poll in
-    // flight. Empty deps plus a ref for the error.
+    // flight. The loop's only dependency is the stable accept callback.
     expect(source).toMatch(/\}, \[accept\]\);/);
-    expect(source).toContain('errorRef');
     expect(source).not.toMatch(/\}, \[error\]\);/);
   });
 

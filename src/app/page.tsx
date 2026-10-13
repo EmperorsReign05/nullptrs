@@ -38,6 +38,7 @@ import {
   type LogEntry,
   type MapTooltip,
   RollingText,
+  StartupScreen,
   type MotionFrame
 } from '@/components/dashboard';
 
@@ -85,6 +86,10 @@ const POLL_MS = 250;
 const CACHE_KEY = 'amr_last_snapshot_v1';
 const CACHE_MAX_AGE_MS = 30 * 60_000;
 const CACHE_WRITE_MS = 2000;
+/** Polls in a row from another runtime before the page accepts it as the world (~2 s). */
+const ADOPT_AFTER_FRAMES = 8;
+/** Retries for a command an instance refused as meant for another world. */
+const WRONG_WORLD_RETRIES = 4;
 
 function readCachedSnapshot(): FleetSnapshot | null {
   try {
@@ -122,7 +127,6 @@ export default function Dashboard() {
    * the third is what flashed a connection error at a healthy runtime.
    */
   const [status, setStatus] = useState<'connecting' | 'live' | 'error'>('connecting');
-  const [error, setError] = useState<string | null>(null);
   /** Wall clock of the last snapshot that actually arrived, for the stale banner. */
   const [lastUpdateAt, setLastUpdateAt] = useState<number | null>(null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
@@ -206,19 +210,38 @@ export default function Dashboard() {
   // The effect also used to depend on `error`, so every error transition and
   // every recovery tore the poll loop down and rebuilt it — and because the
   // effect body was the only thing scheduling the next poll, each teardown also
-  // silently opened a window with no poll in flight. The error is now read
-  // through a ref, so the loop is created exactly once.
-  const errorRef = useRef<string | null>(null);
+  // silently opened a window with no poll in flight. The loop is now created
+  // exactly once. A failure before the first frame is shown as start-up (see
+  // StartupScreen), because on the deployed site it nearly always is one.
+
+  /** The runtime the network (not the cache) last confirmed this page is showing. */
+  const liveRuntimeRef = useRef<string | undefined>(undefined);
+  /** Consecutive frames from some other runtime than the one being shown. */
+  const strayRef = useRef<{ id?: string; frames: number }>({ frames: 0 });
 
   /**
    * The one way a snapshot enters the page. A command response and a poll can
    * cross on the wire; an older frame of the same runtime arriving second must
    * not rewind the world (the motion player would read it as a restart).
+   *
+   * Nor may a frame from a different runtime replace a live one at once. On a
+   * serverless host each instance runs its own world, and polls are spread
+   * across them: the map cut between unrelated fleets every few hundred
+   * milliseconds. A different world is adopted only when it persists for
+   * ADOPT_AFTER_FRAMES polls in a row (a real restart or redeploy), or when a
+   * command explicitly produced it (`adopt`, a reconfigure).
    */
-  const accept = useCallback((next: FleetSnapshot): boolean => {
+  const accept = useCallback((next: FleetSnapshot, adopt = false): boolean => {
     const prev = worldRef.current;
     const prevRuntime = runtimeRef.current;
     if (prev && prevRuntime === next.runtimeId && next.world.tick < prev.tick) return false;
+    if (!adopt && prev && next.runtimeId && prevRuntime !== next.runtimeId && liveRuntimeRef.current === prevRuntime) {
+      const stray = strayRef.current;
+      strayRef.current = stray.id === next.runtimeId ? { id: stray.id, frames: stray.frames + 1 } : { id: next.runtimeId, frames: 1 };
+      if (strayRef.current.frames < ADOPT_AFTER_FRAMES) return false;
+    }
+    strayRef.current = { frames: 0 };
+    liveRuntimeRef.current = next.runtimeId;
     worldRef.current = next.world;
     runtimeRef.current = next.runtimeId;
     if (prev && prevRuntime === next.runtimeId && next.world.metrics.conflictCount > prev.metrics.conflictCount) {
@@ -251,29 +274,18 @@ export default function Dashboard() {
       try {
         const response = await fetch('/api/fleet', { cache: 'no-store', signal: AbortSignal.any([abort.signal, AbortSignal.timeout(10_000)]) });
         if (!response.ok) {
-          const body = await response.json().catch(() => null);
-          if (!disposed) {
-            errorRef.current = body?.error ?? `Fleet runtime returned ${response.status}`;
-            setStatus('error');
-            setError(errorRef.current);
-          }
+          if (!disposed) setStatus('error');
         } else {
           const next = (await response.json()) as FleetSnapshot;
           if (!disposed && revision === controlRevision.current) {
             accept(next);
-            errorRef.current = null;
-            setError(null);
             setStatus('live');
           }
         }
       } catch (caught) {
         // An abort on unmount is not a failure and must not paint the page red.
         if (disposed || (caught as Error)?.name === 'AbortError') return;
-        if (!disposed) {
-          errorRef.current = 'Fleet runtime unreachable. Start it with: npm run fleet';
-          setError(errorRef.current);
-          setStatus('error');
-        }
+        if (!disposed) setStatus('error');
       }
       if (!disposed) timer = setTimeout(poll, Math.max(0, POLL_MS - (performance.now() - startedAt)));
     };
@@ -313,17 +325,41 @@ export default function Dashboard() {
     return () => clearInterval(id);
   }, [disconnected, lastUpdateAt]);
 
+  // Seconds spent waiting for the first frame, for the start-up screen. Same
+  // 1 Hz pattern: no clock reads in render, no synchronous setState here.
+  const [waitedS, setWaitedS] = useState(0);
+  const hasSnapshot = snapshot !== null;
+  useEffect(() => {
+    if (hasSnapshot) return;
+    const start = Date.now();
+    const id = setInterval(() => setWaitedS(Math.floor((Date.now() - start) / 1000)), 1000);
+    return () => clearInterval(id);
+  }, [hasSnapshot]);
+
   // ---- commands ----
   const send = useCallback(async (command: unknown, describe: (ok: boolean, detail?: string) => void) => {
     const kind = (command as { kind?: string }).kind;
     const seq = kind === 'reconfigure' ? ++reconfigureSeq.current : 0;
     try {
-      const response = await fetch('/api/fleet', {
+      // Every command names the world it was issued against. An instance running
+      // a different world refuses it with 409 instead of applying it somewhere
+      // nobody is looking, and it is retried, which on a multi-instance host
+      // lands it on the instance that owns this world.
+      const post = () => fetch('/api/fleet', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(command),
+        body: JSON.stringify({ ...(command as object), expectRuntime: liveRuntimeRef.current }),
         signal: AbortSignal.timeout(10_000),
       });
+      let response = await post();
+      for (let attempt = 0; response.status === 409 && attempt < WRONG_WORLD_RETRIES; attempt++) {
+        await new Promise((resolve) => setTimeout(resolve, 120 * (attempt + 1)));
+        response = await post();
+      }
+      if (response.status === 409) {
+        describe(false, 'the fleet server restarted; the page is switching to the new fleet, try again in a moment');
+        return;
+      }
       if (!response.ok) {
         const body = await response.json().catch(() => null);
         describe(false, body?.error ?? `command rejected (${response.status})`);
@@ -335,7 +371,7 @@ export default function Dashboard() {
       // reconfigure is not: its world was already replaced by a later one.
       if (kind !== 'reconfigure' || seq === reconfigureSeq.current) {
         controlRevision.current++;
-        accept(confirmed);
+        accept(confirmed, kind === 'reconfigure');
       }
       describe(true);
     } catch {
@@ -565,51 +601,16 @@ export default function Dashboard() {
   // indistinguishable from a working one. In front of a jury that is the worst
   // failure mode available: it does not look like a bug, it looks like a system
   // that has stalled. So disconnection is stated, with the age of the data.
-  if ((status === 'connecting' && !snapshot) || (disconnected && !snapshot)) {
-    const connecting = status === 'connecting';
+  if (!snapshot) {
     return (
       <div className="min-h-screen bg-[#09090b] text-[#fafafa] bg-[url('/bg.png')] bg-cover bg-fixed bg-center font-sans py-6 px-4 md:px-8 lg:px-12 flex justify-center items-start">
         <div className="w-full max-w-[1520px] bg-black/40 backdrop-blur-2xl rounded-2xl border border-zinc-800/80 shadow-[0_25px_70_-15px_rgba(0,0,0,0.85)] p-10">
           <Header onOpenTutorial={() => setIsTutorialOpen(true)} />
-          <div className="mt-8 flex items-start gap-4">
-            {connecting && (
-              <span
-                aria-hidden
-                className="mt-1 h-3 w-3 shrink-0 rounded-full border-2 border-zinc-600 border-t-[#C9F27D] animate-spin"
-                style={{ animationDuration: '900ms' }}
-              />
-            )}
-            <div className="min-w-0">
-              <p className={connecting ? 'text-zinc-200 text-base mb-2' : 'text-amber-300 text-base mb-2'}>
-                {connecting ? 'Connecting to the fleet runtime…' : 'Fleet runtime not connected.'}
-              </p>
-              <p className="text-zinc-400 mb-4 max-w-[68ch] leading-relaxed">
-                {connecting
-                  ? 'Opening a control channel to the distributed peer processes. The map renders as soon as the first telemetry frame lands.'
-                  : error ?? 'The fleet runtime is not answering.'}
-              </p>
-              <p className="text-zinc-400 mb-4 max-w-[68ch] leading-relaxed">
-                This dashboard is driven by the distributed fleet runtime, which runs as its own
-                Node process — the same one-process-per-robot topology as the real deployment.
-                Start it in a second terminal:
-              </p>
-              <pre className="font-mono text-[13px] text-emerald-300 bg-black/50 rounded p-3 mb-4 inline-block">npm run fleet</pre>
-              <p className="text-zinc-500 text-xs">
-                Then run <span className="text-zinc-300">npm run dev</span> for this page. For a demo, use a
-                production build (<span className="text-zinc-300">npm run build &amp;&amp; npm start</span>): development
-                mode spends ~65 ms re-rendering on every poll and the motion visibly stutters.
-              </p>
-            </div>
-          </div>
+          <StartupScreen waitedS={waitedS} failed={disconnected} onRetry={() => window.location.reload()} />
         </div>
       </div>
     );
   }
-
-  // Unreachable in practice — the branch above returns for `connecting` and for an
-  // error with no snapshot — but the type system cannot see that, and the honest
-  // narrowing is better than a non-null assertion scattered through the JSX.
-  if (!snapshot) return null;
 
   const { world, safety, metrics } = snapshot;
 
@@ -651,7 +652,7 @@ export default function Dashboard() {
           {status === 'connecting' ? (
             <span className="flex items-center gap-1.5 text-amber-300">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-              connecting — showing last known frame
+              waking the fleet server — showing last known frame
             </span>
           ) : disconnected ? (
             // A dead runtime must not be rendered as a running one. The dot stops

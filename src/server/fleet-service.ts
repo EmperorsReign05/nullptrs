@@ -1,4 +1,4 @@
-import { FleetRuntime, MOTION_HISTORY_TICKS } from "../core/distributed/runtime";
+import { FleetRuntime, MOTION_HISTORY_TICKS, type FleetTraffic } from "../core/distributed/runtime";
 import { loadFleetConfig } from "../core/fleet/config";
 import { createWarehouseMap } from "../core/map/warehouse";
 import { createFleetRoster } from "../core/simulation/state";
@@ -51,6 +51,26 @@ const MAX_CATCH_UP_TICKS = MOTION_HISTORY_TICKS;
 export const MAX_FLEET_ROBOTS = createFleetRoster().length;
 /** Released-but-unfinished jobs per robot before the order stream holds back. */
 const OUTSTANDING_JOBS_PER_ROBOT = 2;
+/**
+ * Dense-fleet traffic aids for the served runtime (off by default in the
+ * runtime itself, so benchmark runs are unchanged).
+ *
+ * Without them the served fleet froze for good within ten minutes at every
+ * size from ten robots up: no job completed in the last third of any measured
+ * run. The causes, each one measured, were robots that took jobs with no
+ * battery slack and could then not afford a side-step around traffic; robots
+ * holding jobs the move gate would never let them start, and so never charging;
+ * idle robots parked on chargers; queues boxing in the dead-end charger; and
+ * robots drained below the reserve on the way to charge, stranded mid-floor.
+ * Over 8 seeds x 10/15/20 robots x 20 minutes, with these on, see the PR for
+ * #38 for the numbers.
+ */
+export const TRAFFIC_AIDS: FleetTraffic = {
+  loadAwareCharging: true,
+  stationEtiquette: true,
+  deadlockRecovery: true,
+  chargeMarginPercent: 15,
+};
 
 function configFromEnv(): Config {
   let robots = 3;
@@ -95,7 +115,7 @@ function build(config: Config): { runtime: FleetRuntime; map: WarehouseMap } {
     tasks: [],
     metrics: { replans: 0, conflictCount: 0, waitMoves: 0, inheritedPriorities: 0, backtracks: 0 },
   };
-  return { runtime: new FleetRuntime(world), map };
+  return { runtime: new FleetRuntime(world, undefined, { traffic: TRAFFIC_AIDS }), map };
 }
 
 function start(config: Config): Holder {
@@ -148,6 +168,23 @@ function advanceIfDue(current: Holder): void {
 export function stepIfDue(): void { advanceIfDue(holder()); }
 
 export function fleetOrderBook(): OrderBook { return holder().orderBook; }
+
+/**
+ * Commands name the world they were issued against (`expectRuntime`, the
+ * runtimeId the dashboard is showing). On a serverless host each instance runs
+ * its own world, so a command routed to a different instance used to be applied
+ * to a world nobody was looking at: it answered 200 and nothing visible happened.
+ * Now that instance refuses it with 409 and the dashboard retries, which in
+ * practice lands it on the instance that owns the world. Strips the field so the
+ * runtime never sees it. Returns the refusal message, or null to proceed.
+ */
+export function wrongWorld(command: Record<string, unknown>): string | null {
+  const expected = command.expectRuntime;
+  delete command.expectRuntime;
+  if (expected === undefined) return null;
+  const actual = fleetService().runtimeId;
+  return expected === actual ? null : `command was for fleet ${String(expected).slice(0, 8)}, this server runs ${actual.slice(0, 8)}`;
+}
 export function fleetConfig(): Config { return { ...holder().config }; }
 /** The layout the served runtime was actually built with, for the dashboard's controls. */
 export function fleetLayout() {

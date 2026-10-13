@@ -3,14 +3,16 @@ import { groupBid, groupIdentity, bundleExecutionAllowed, type GroupBid } from "
 import { executionActiveTaskAllowed, executionIdleMoveAllowed } from "./execution-energy";
 import { DistributedCharging } from "./charging";
 import { createInitialWorld } from "../simulation/state";
+import { CHARGING_STATIONS, DROPOFF_STATIONS, PICKUP_STATIONS, WAITING_ZONE_CELLS } from "../map/warehouse";
+import { planPath } from "../pathfinding/astar";
 import { BATTERY_PERCENT_PER_CELL, RECHARGE_TARGET_PERCENT } from "../simulation/robotModels";
 import { type LocalBidInput } from "../ml/bidfeatures";
 import { makeLocalBid, type BidModel, type LocalBidPacket } from "../ml/bidmodel";
 import frozen from "../../../artifacts/bid-energy-v4/model.json";
 import { DistributedFleet } from "./fleet";
-import { OwnershipPeer, OWNERSHIP_EPOCH_TICKS, type OwnershipMessage } from "./ownership";
+import { OwnershipPeer, OWNERSHIP_EPOCH_TICKS, PEER_TIMEOUT_TICKS, type OwnershipMessage } from "./ownership";
 import { InMemoryBus, InMemoryTransport } from "./transport";
-import type { Position, Task, WorldState } from "../types";
+import type { Position, RobotState, Task, WorldState } from "../types";
 
 export type RuntimeCommand = { kind: "run" | "pause" | "ai-on" | "ai-off" | "heal" }
   | { kind: "fail"; robotId: string }
@@ -19,6 +21,17 @@ export type RuntimeCommand = { kind: "run" | "pause" | "ai-on" | "ai-off" | "hea
   | { kind: "block"; position: Position; blocked: boolean }
   | { kind: "task"; task: Task };
 export const MOTION_HISTORY_TICKS = 24;
+
+export type FleetTraffic = {
+  /** Choose chargers by expected wait as well as distance. */
+  loadAwareCharging?: boolean;
+  /** Never park on a station, wait clear of a busy charger, one robot per dead-end charger. */
+  stationEtiquette?: boolean;
+  /** Persistent energy refusals send a robot to charge; a robot stuck long enough may limp aside. */
+  deadlockRecovery?: boolean;
+  /** Battery slack kept above job + charger + reserve (see ChargingTraffic.marginPercent). */
+  chargeMarginPercent?: number;
+};
 export class FleetRuntime {
   readonly world: WorldState;
   readonly runtimeId = randomUUID();
@@ -38,11 +51,37 @@ export class FleetRuntime {
   private channels = new Map<string, InMemoryTransport<OwnershipMessage>>();
   private groupCache = new Map<string,{state:string;bid:GroupBid}>();
   private groupedEnergyBlocked = new Set<string>();
+  /**
+   * Robots refused a move toward a job they have not picked up yet, this tick,
+   * and for how many consecutive ticks. The move gate certifies the cell the
+   * robot is stepping INTO, the charging planner only the cell it stands on, so
+   * a robot near its margin forced onto a detour by traffic was "ready" to the
+   * planner and refused every step by the gate. It stood still, holding its jobs,
+   * never going to charge. Two such robots blocking each other froze for good,
+   * and within ten minutes the whole fleet did. With deadlock recovery on, a
+   * refusal that persists counts as unaffordable commitments, which sends the
+   * robot to charge (a carrier keeps its cargo while it does).
+   */
+  private energyRefused = new Set<string>();
+  private energyRefusedStreak = new Map<string, number>();
+  private static readonly ENERGY_REFUSAL_TICKS = 3;
+  /** Consecutive ticks each robot has stood still with somewhere to go. */
+  private stillTicks = new Map<string, number>();
+  /** Stuck this long, a robot may dip into its reserve to step aside. */
+  private static readonly LIMP_AFTER_TICKS = 20;
+  /** The floor limp mode keeps, with a charger still reachable on top of it. */
+  private static readonly LIMP_FLOOR_PERCENT = 5;
   private bidRechargeTargets = new Map<string, number>();
   private dead = new Set<string>();
   running = true;
   aiEnabled = true;
-  constructor(world?: WorldState, private model: BidModel = frozen.model, private options: { motionPolicy?: "stop-and-wait"; fleetSize?: number; allocationMode?: "epoch" | "event-single" | "event-grouped"; groupedQueueRecharge?: boolean } = {}) {
+  constructor(world?: WorldState, private model: BidModel = frozen.model, private options: { motionPolicy?: "stop-and-wait"; fleetSize?: number; allocationMode?: "epoch" | "event-single" | "event-grouped"; groupedQueueRecharge?: boolean;
+    /**
+     * Opt-in dense-fleet traffic aids, off by default so measured runs are
+     * unchanged. The served dashboard runtime turns them all on; see
+     * TRAFFIC_AIDS in server/fleet-service.ts for what each one fixed.
+     */
+    traffic?: FleetTraffic } = {}) {
     this.world = structuredClone(world ?? createInitialWorld());
     if (!world) {
       this.world.tasks = [];
@@ -62,13 +101,16 @@ export class FleetRuntime {
         (tasks, tick, fresh) => this.bundleBid(r.id,tasks,tick,fresh)));
     }
     this.fleet = new DistributedFleet(this.world.map, this.world.robots, this.world.tasks, { commRange: 6, localCommit: true, motionPolicy: options.motionPolicy,
-      goalOverride: r => this.charging.get(r.id)!.active ? this.charging.get(r.id)!.goal ?? null : undefined,
+      goalOverride: r => this.stationGoal(r) ?? (this.charging.get(r.id)!.active ? this.charging.get(r.id)!.goal ?? null : undefined),
       moveAllowed: (r, to) => {
         const charge = this.charging.get(r.id)!, task = this.world.tasks.find(t => t.id === r.currentTaskId);
-        const allowed = charge.active ? charge.allowsMove(r, to, this.world) : task
+        let allowed = charge.active ? charge.allowsMove(r, to, this.world) : task
           ? executionActiveTaskAllowed(r, task, to, this.world) : executionIdleMoveAllowed(r, to, this.world);
+        if (!allowed && options.traffic?.deadlockRecovery && (this.stillTicks.get(r.id) ?? 0) >= FleetRuntime.LIMP_AFTER_TICKS)
+          allowed = this.limpAllowed(r, to);
         const groupedBudget = options.allocationMode !== "event-grouped" || charge.active || !task || bundleExecutionAllowed(r,to,this.world);
         if(options.groupedQueueRecharge && options.allocationMode === "event-grouped" && !charge.active && task && task.status !== "in_progress" && (!allowed || !groupedBudget)) this.groupedEnergyBlocked.add(r.id);
+        if (!allowed && options.traffic?.deadlockRecovery && !charge.active && task) this.energyRefused.add(r.id);
         if (!allowed || !groupedBudget) this.metrics.energyHolds++;
         return allowed && groupedBudget;
       },
@@ -132,6 +174,130 @@ export class FleetRuntime {
       this.bidRechargeTargets.set(id, Math.max(RECHARGE_TARGET_PERCENT, packet.energy.requiredEnergy));
     }
     return packet;
+  }
+  /**
+   * Limp mode. A robot boxed in at the bottom of its battery could not afford
+   * the one side-step that would let its neighbours pass, so it never moved and
+   * neither did they. Once it has been stuck LIMP_AFTER_TICKS it may spend its
+   * reserve down to LIMP_FLOOR_PERCENT, as long as a charger is still reachable
+   * on top of that floor. Safety is unchanged: the sensor and the motion commit
+   * still decide whether the cell is free.
+   */
+  private limpAllowed(r: RobotState, to: Position) {
+    if (r.status === "failed" || Math.abs(to.x - r.position.x) + Math.abs(to.y - r.position.y) !== 1) return false;
+    const map = this.world.map, cell = map.cells[to.y * map.width + to.x];
+    if (!cell || cell.blocked) return false;
+    const left = r.battery - BATTERY_PERCENT_PER_CELL - FleetRuntime.LIMP_FLOOR_PERCENT;
+    return left >= 0 && CHARGING_STATIONS.some(s => {
+      const route = planPath(to, s.position, this.world);
+      return route.found && route.distance * BATTERY_PERCENT_PER_CELL <= left;
+    });
+  }
+  /** Peers one robot has heard from recently: where they are and where their route ends. */
+  private heardPeers(id: string) {
+    const tick = this.world.tick;
+    return [...this.peers.get(id)!.heard].filter(([peer, h]) => peer !== id && tick - h.tick <= PEER_TIMEOUT_TICKS)
+      .map(([, h]) => ({ position: h.position, end: h.path.at(-1) ?? h.position }));
+  }
+  /** Holding cells chosen for the station etiquette, sticky per robot. */
+  private holding = new Map<string, Position>();
+  private static readonly STATIONS = new Set([...CHARGING_STATIONS, ...PICKUP_STATIONS, ...DROPOFF_STATIONS]
+    .map(s => `${s.position.x},${s.position.y}`));
+  /** Waiting before a busy charger closer than this blocks its only way out. */
+  private static readonly CHARGER_HOLD_DISTANCE = 3;
+
+  /**
+   * Station etiquette (opt-in): two rules that broke the dense-fleet deadlock.
+   *
+   * Measured at twenty robots: once a robot reached the recharge target it went
+   * idle and stayed parked ON the charger, while robots at 16-18% queued beside
+   * it; and charger C2 sits at a dead end, so a robot waiting in its only
+   * approach and the robot charging inside blocked each other permanently, with
+   * the queue backing up the corridor behind them. The whole fleet froze.
+   *
+   * 1. A robot with no work that stands on a station moves to a free passing-bay
+   *    cell, so chargers, pickups and dropoffs are never used as parking.
+   * 2. A robot heading to a charger it knows is occupied waits in a free bay once
+   *    it is within CHARGER_HOLD_DISTANCE, instead of in the approach.
+   *
+   * Occupancy comes only from this robot's own received heartbeats; there is no
+   * global reservation. Returns undefined when neither rule applies.
+   */
+  private stationGoal(r: RobotState): Position | null | undefined {
+    if (!this.options.traffic?.stationEtiquette || this.dead.has(r.id)) return undefined;
+    const charge = this.charging.get(r.id)!, state = charge.state;
+    const eq = (a: Position, b: Position) => a.x === b.x && a.y === b.y;
+    const peers = this.heardPeers(r.id);
+    if (charge.active) {
+      const station = state.goal;
+      const busy = !!station && state.mode === "transit" && peers.some(p => eq(p.position, station));
+      if (!busy || Math.abs(r.position.x - station.x) + Math.abs(r.position.y - station.y) > FleetRuntime.CHARGER_HOLD_DISTANCE) {
+        this.holding.delete(r.id);
+        return undefined;
+      }
+      return this.holdingCell(r, peers) ?? null;
+    }
+    const free = !r.currentTaskId && !r.queuedTaskIds?.length;
+    if (!free) { this.holding.delete(r.id); return undefined; }
+    const held = this.holding.get(r.id);
+    if (held && eq(held, r.position)) { this.holding.delete(r.id); return undefined; }
+    if (held) return held;
+    return FleetRuntime.STATIONS.has(`${r.position.x},${r.position.y}`) ? this.holdingCell(r, peers) : undefined;
+  }
+
+  /** Nearest reachable passing-bay cell nobody is known to be in or heading to. */
+  private holdingCell(r: RobotState, peers: { position: Position; end: Position }[]): Position | undefined {
+    const sticky = this.holding.get(r.id);
+    if (sticky) return sticky;
+    const taken = new Set(peers.flatMap(p => [`${p.position.x},${p.position.y}`, `${p.end.x},${p.end.y}`]));
+    const options = [...WAITING_ZONE_CELLS].filter(k => !taken.has(k)).map(k => {
+      const [x, y] = k.split(",").map(Number);
+      return { x, y, d: Math.abs(x - r.position.x) + Math.abs(y - r.position.y) };
+    }).sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    for (const cell of options.slice(0, 4)) {
+      if (this.world.map.cells[cell.y * this.world.map.width + cell.x]?.blocked) continue;
+      if (!planPath(r.position, cell, this.world).found) continue;
+      const at = { x: cell.x, y: cell.y };
+      this.holding.set(r.id, at);
+      return at;
+    }
+    return undefined;
+  }
+
+  /**
+   * Charger load as one robot knows it: peers it has heard from recently whose
+   * reported position, or the end of whose reported route, is that station.
+   * Built from that robot's own received heartbeats, never from the world state.
+   */
+  private stationLoad(id: string, tick: number) {
+    const heard = [...this.peers.get(id)!.heard].filter(([peer, h]) => peer !== id && tick - h.tick <= PEER_TIMEOUT_TICKS);
+    return (station: Position) => heard.filter(([, h]) => {
+      const end = h.path.at(-1) ?? h.position;
+      return (h.position.x === station.x && h.position.y === station.y) || (end.x === station.x && end.y === station.y);
+    }).length;
+  }
+  /**
+   * A dead-end station (one open neighbour) is taken, as one robot knows it,
+   * when a peer it has recently heard stands on it, or is routing to it from
+   * closer (lower id on a tie). Distance first: a robot already in the approach
+   * must never give the station up to one further back, or it is left facing
+   * that robot head-on in the only lane. Ties break the same way on every
+   * robot, so two robots never both give it up or both keep it.
+   */
+  private stationTaken(id: string, tick: number) {
+    const map = this.world.map;
+    const open = (x: number, y: number) => x >= 0 && y >= 0 && x < map.width && y < map.height && !map.cells[y * map.width + x].blocked;
+    const heard = [...this.peers.get(id)!.heard].filter(([peer, h]) => peer !== id && !this.dead.has(peer) && tick - h.tick <= PEER_TIMEOUT_TICKS);
+    const self = this.world.robots.find(r => r.id === id)!.position;
+    const dist = (a: Position, b: Position) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+    return (s: Position) => {
+      if ([[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([dx, dy]) => open(s.x + dx, s.y + dy)).length > 1) return false;
+      const mine = dist(self, s);
+      return heard.some(([peer, h]) => {
+        const end = h.path.at(-1) ?? h.position, theirs = dist(h.position, s);
+        return theirs === 0 || (end.x === s.x && end.y === s.y && (theirs < mine || theirs === mine && peer < id));
+      });
+    };
   }
   private log(text: string) { this.events.push({ tick: this.world.tick, text }); if (this.events.length > 200) this.events.shift(); }
   command(command: RuntimeCommand) {
@@ -231,10 +397,18 @@ export class FleetRuntime {
       // The full commitment guard remains enforced and custody stays sticky.
       const queueRecharge = this.options.groupedQueueRecharge && peer.allocationMode === "event-grouped" && active && active.status !== "in_progress";
       const bidRechargeTarget = !active && !r.queuedTaskIds.length ? this.bidRechargeTargets.get(r.id) : undefined;
-      const commitmentsAffordable = (!queueRecharge || !this.groupedEnergyBlocked.has(r.id) && bundleExecutionAllowed(r,r.position,this.world)) &&
+      const streak = this.energyRefused.has(r.id) ? (this.energyRefusedStreak.get(r.id) ?? 0) + 1 : 0;
+      // Only ever non-zero with deadlock recovery on (energyRefused stays empty otherwise).
+      this.energyRefusedStreak.set(r.id, streak); this.energyRefused.delete(r.id);
+      const commitmentsAffordable = streak < FleetRuntime.ENERGY_REFUSAL_TICKS && (!queueRecharge || !this.groupedEnergyBlocked.has(r.id) && bundleExecutionAllowed(r,r.position,this.world)) &&
         (bidRechargeTarget === undefined || r.battery >= bidRechargeTarget);
       this.groupedEnergyBlocked.delete(r.id);
-      const charge = this.charging.get(r.id)!.prepare(r, this.world, tick, commitmentsAffordable);
+      const traffic = this.options.traffic;
+      const charge = this.charging.get(r.id)!.prepare(r, this.world, tick, commitmentsAffordable, traffic && {
+        stationLoad: traffic.loadAwareCharging ? this.stationLoad(r.id, tick) : undefined,
+        stationTaken: traffic.stationEtiquette ? this.stationTaken(r.id, tick) : undefined,
+        marginPercent: traffic.chargeMarginPercent, cargoTopUp: traffic.deadlockRecovery,
+        strandedFloorPercent: traffic.deadlockRecovery ? FleetRuntime.LIMP_FLOOR_PERCENT : undefined });
       if (bidRechargeTarget !== undefined && charge.mode === "work") this.bidRechargeTargets.delete(r.id);
       this.fleet.setInactive(r.id, charge.hold || r.battery <= 0 || charge.mode === "work" && !!active && !peer.mayExecute(active.id));
       if (active && active.status === "in_progress" && !peer.acknowledged(active.id, "custody")) peer.mark(active.id, "custody");
@@ -246,6 +420,7 @@ export class FleetRuntime {
       const path = this.fleet.getAgent(r.id)!.getLocal().path; r.path = path;
       const moved = before[i].x !== r.position.x || before[i].y !== r.position.y;
       if (moved) { r.battery = Math.max(0, r.battery - BATTERY_PERCENT_PER_CELL); this.metrics.moves++; }
+      this.stillTicks.set(r.id, moved || path.length < 2 ? 0 : (this.stillTicks.get(r.id) ?? 0) + 1);
       if (!this.dead.has(r.id)) this.charging.get(r.id)!.afterMotion(r, this.world, tick);
       if (!moved && paths[i] !== JSON.stringify(path)) { this.metrics.reroutes++; this.world.metrics.replans++; }
       if (!moved && r.currentTaskId) this.world.metrics.waitMoves++;

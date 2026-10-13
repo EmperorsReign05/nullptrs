@@ -176,6 +176,26 @@ describe("order stream", () => {
     expect(runtime.world.tasks.filter((t) => t.status !== "completed")).toHaveLength(4);
   });
 
+  it("never ends a job in a dead end or on a charger", () => {
+    // Two robots meeting in the approach to a dead-end job cell (the corner
+    // (19,0) used to be one) can never pass, and the jobs queued behind them
+    // parked most of the fleet there. A job on a charger boxed in whoever was
+    // charging on it. Checked on every shelf layout, including the fallback pool.
+    for (let columns = MIN_SHELF_COLUMNS; columns <= MAX_SHELF_COLUMNS; columns++) {
+      const rt = new FleetRuntime(worldOf(4, columns));
+      const book = new OrderBook(rt, 7, { maxOutstanding: 400 });
+      for (let i = 0; i < 400; i++) { book.releaseDue(); rt.world.tick++; }
+      const map = rt.world.map;
+      const open = (x: number, y: number) => x >= 0 && y >= 0 && x < map.width && y < map.height && !map.cells[y * map.width + x].blocked;
+      const exits = (p: { x: number; y: number }) => [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([dx, dy]) => open(p.x + dx, p.y + dy)).length;
+      expect(rt.world.tasks.length).toBeGreaterThan(20);
+      for (const t of rt.world.tasks) for (const end of [t.pickup, t.dropoff]) {
+        expect(exits(end), `${t.id} ${columns} cols ${end.x},${end.y}`).toBeGreaterThanOrEqual(2);
+        expect(CHARGING_STATIONS.some((c) => c.position.x === end.x && c.position.y === end.y)).toBe(false);
+      }
+    }
+  });
+
   it("offers a heavy job so the payload eligibility gate is demonstrable", () => {
     const book = new OrderBook(runtime);
     for (let i = 0; i < 40; i++) { runtime.world.tick += RELEASE_INTERVAL_TICKS; book.releaseDue(); }
@@ -286,6 +306,27 @@ describe("the /api/fleet adapter", () => {
     } finally {
       vi.unstubAllGlobals();
     }
+  });
+
+  it("refuses a command meant for another world, and applies one meant for this one", async () => {
+    // On a multi-instance host each instance runs its own world. A command that
+    // landed on the wrong one used to answer 200 and change a world nobody was
+    // looking at, so the dashboard's buttons appeared to do nothing.
+    const { GET, POST } = await import("../src/app/api/fleet/route");
+    const { runtimeId } = await (await GET()).json() as { runtimeId: string };
+    const post = (body: unknown) => POST(new Request("http://local/api/fleet", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+    }));
+    const stray = await post({ kind: "pause", expectRuntime: "some-other-world" });
+    expect(stray.status).toBe(409);
+    expect((await stray.json() as { runtimeId: string }).runtimeId).toBe(runtimeId);
+    expect((await (await GET()).json() as { running: boolean }).running).toBe(true);
+
+    const mine = await post({ kind: "pause", expectRuntime: runtimeId });
+    expect(mine.status).toBe(200);
+    expect((await mine.json() as { running: boolean }).running).toBe(false);
+    // Untagged commands (scripts, curl) keep working as before.
+    expect((await post({ kind: "run" })).status).toBe(200);
   });
 
   it("rejects a malformed reconfigure instead of building an impossible world", async () => {
