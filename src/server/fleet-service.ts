@@ -1,4 +1,4 @@
-import { FleetRuntime } from "../core/distributed/runtime";
+import { FleetRuntime, MOTION_HISTORY_TICKS } from "../core/distributed/runtime";
 import { loadFleetConfig } from "../core/fleet/config";
 import { createWarehouseMap } from "../core/map/warehouse";
 import { createInitialWorld } from "../core/simulation/state";
@@ -28,13 +28,34 @@ type Holder = {
   lastStepAt: number;
 };
 
-/** Must match TICK_MS in the dashboard's interpolation and the interval below. */
+/** Nominal tick. The dashboard measures the real cadence, but it should be this. */
 const TICK_MS = 250;
+/**
+ * The interval only CHECKS whether a tick is due; the schedule itself is
+ * `lastStepAt += TICK_MS`. Stepping on a 250 ms interval and stamping
+ * `lastStepAt = now` let every late timer push the whole schedule back, so the
+ * fleet really ran at ~260 ms and every animated cell ended in a stall.
+ */
+const CHECK_MS = 25;
+/**
+ * A suspended host (serverless) catches up at most this many ticks on wake.
+ * It equals the runtime's retained motion history, so a client that
+ * polls right after a catch-up still receives every committed cell.
+ */
+const MAX_CATCH_UP_TICKS = MOTION_HISTORY_TICKS;
+/**
+ * Fleet size is bounded by the robot templates that exist. The slider used to
+ * allow 20 while only 10 templates existed, so 11..20 silently built 10 robots
+ * and the next poll yanked the slider back.
+ */
+export const MAX_FLEET_ROBOTS = createInitialWorld().robots.length;
+/** Released-but-unfinished jobs per robot before the order stream holds back. */
+const OUTSTANDING_JOBS_PER_ROBOT = 2;
 
 function configFromEnv(): Config {
   let robots = 3;
   try { robots = loadFleetConfig().robots.length; } catch { /* unconfigured local dev */ }
-  return { robots, shelfColumns: 6, orderStream: true };
+  return { robots: Math.min(robots, MAX_FLEET_ROBOTS), shelfColumns: 6, orderStream: true };
 }
 
 /**
@@ -79,10 +100,15 @@ function build(config: Config): { runtime: FleetRuntime; map: WarehouseMap } {
 
 function start(config: Config): Holder {
   const { runtime } = build(config);
-  const orderBook = new OrderBook(runtime);
+  // Demand is bounded by what the fleet can absorb. An unbounded stream piled
+  // up ~480 jobs in ten minutes against ~50 completions with three robots, and
+  // every one of them was cloned, serialised, polled and rendered 4x a second.
+  const orderBook = new OrderBook(runtime, undefined, {
+    maxOutstanding: Math.max(4, OUTSTANDING_JOBS_PER_ROBOT * runtime.world.robots.length),
+  });
   orderBook.setEnabled(config.orderStream);
   orderBook.releaseDue();
-  const timer = setInterval(() => advanceIfDue(current), TICK_MS);
+  const timer = setInterval(() => advanceIfDue(current), CHECK_MS);
   const current: Holder = { runtime, orderBook, config, lastStepAt: Date.now(), timer };
   timer.unref();
   return current;
@@ -109,15 +135,25 @@ export function fleetService(): FleetRuntime { return holder().runtime; }
 function advanceIfDue(current: Holder): void {
   const now = Date.now();
   if (now - current.lastStepAt < TICK_MS) return;
-  current.lastStepAt = now;
-  current.orderBook.releaseDue();
-  current.runtime.step();
+  if (now - current.lastStepAt >= TICK_MS * (MAX_CATCH_UP_TICKS + 1)) {
+    current.lastStepAt = now - TICK_MS * MAX_CATCH_UP_TICKS;
+  }
+  while (now - current.lastStepAt >= TICK_MS) {
+    current.lastStepAt += TICK_MS;
+    current.orderBook.releaseDue();
+    current.runtime.step();
+  }
 }
 
 export function stepIfDue(): void { advanceIfDue(holder()); }
 
 export function fleetOrderBook(): OrderBook { return holder().orderBook; }
 export function fleetConfig(): Config { return { ...holder().config }; }
+/** The layout the served runtime was actually built with, for the dashboard's controls. */
+export function fleetLayout() {
+  const { config, runtime } = holder();
+  return { robots: runtime.world.robots.length, shelfColumns: config.shelfColumns, maxRobots: MAX_FLEET_ROBOTS };
+}
 
 /**
  * Rebuild the runtime with a new fleet size and/or shelf layout, preserving the
@@ -128,7 +164,7 @@ export function fleetConfig(): Config { return { ...holder().config }; }
 export function reconfigureFleet(next: Partial<Config>): Config {
   const current = holder();
   const merged: Config = {
-    robots: next.robots ?? current.config.robots,
+    robots: Math.min(next.robots ?? current.config.robots, MAX_FLEET_ROBOTS),
     shelfColumns: next.shelfColumns ?? current.config.shelfColumns,
     orderStream: next.orderStream ?? current.config.orderStream,
   };

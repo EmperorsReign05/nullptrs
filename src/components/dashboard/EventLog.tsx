@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import type { LogEntry } from './types';
 
 interface EventLogProps {
@@ -9,12 +9,26 @@ interface EventLogProps {
 
 export function EventLog({ logs }: EventLogProps) {
   const logContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (logContainerRef.current) {
-      logContainerRef.current.scrollTop = 0;
-    }
+  // Newest first, keyed by content rather than position: index keys shifted on
+  // every new entry, so every row re-rendered as a different row.
+  const rows = useMemo(() => {
+    const seen = new Map<string, number>();
+    return [...logs].reverse().map((log) => {
+      const base = `${log.time}|${log.text}`;
+      const n = (seen.get(base) ?? 0) + 1;
+      seen.set(base, n);
+      return { log, key: `${base}|${n}` };
+    });
   }, [logs]);
+  const newest = rows[0]?.key;
+
+  // Follow the newest entry only if the reader is already at the top. This
+  // used to run on every render — four times a second — and yanked anyone
+  // reading older entries back to the top, so the log could not be scrolled.
+  useEffect(() => {
+    const el = logContainerRef.current;
+    if (el && el.scrollTop < 40) el.scrollTop = 0;
+  }, [newest]);
 
   return (
     <div className="bg-[#12161F]/35 backdrop-blur-xl rounded-xl border border-white/10 flex flex-col shadow-xl overflow-hidden">
@@ -29,8 +43,8 @@ export function EventLog({ logs }: EventLogProps) {
         ref={logContainerRef} 
         className="h-[250px] overflow-y-auto px-5 py-4 flex flex-col gap-2 text-[12px] tracking-wide"
       >
-        {[...logs].reverse().map((log, idx) => (
-          <div key={idx} className="flex gap-4 items-start opacity-85 hover:opacity-100 transition-opacity pb-2">
+        {rows.map(({ log, key }) => (
+          <div key={key} className="flex gap-4 items-start opacity-85 hover:opacity-100 transition-opacity pb-2">
             <span className="text-[#A8B2C4] font-mono text-[11px] shrink-0 pt-0.5">{log.time}</span>
             <span className={`text-[12px] leading-relaxed ${
               log.type === 'warning' ? 'text-[#FBBF24]' : 

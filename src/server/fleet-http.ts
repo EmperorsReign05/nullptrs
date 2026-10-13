@@ -1,5 +1,6 @@
 import { createServer } from "node:http";
-import { reconfigureFleet, fleetOrderBook, fleetService } from "./fleet-service";
+import { reconfigureFleet, fleetLayout, fleetOrderBook, fleetService, MAX_FLEET_ROBOTS } from "./fleet-service";
+import { dashboardView } from "./dashboard-view";
 import type { RuntimeCommand } from "../core/distributed/runtime";
 
 // The runtime is resolved PER REQUEST, never captured at module load.
@@ -29,16 +30,20 @@ type Reconfigure = { kind: "reconfigure"; robots?: number; shelfColumns?: number
 const RUNTIME_KINDS = ["run", "pause", "ai-on", "ai-off", "heal", "fail", "recover", "link", "block", "task"];
 const HARNESS_KINDS = ["order-stream", "reconfigure"];
 
-const state = () => ({ ...fleetService().snapshot(), orderStream: fleetOrderBook().stats() });
+const fullState = () => ({ ...fleetService().snapshot(), orderStream: fleetOrderBook().stats(), layout: fleetLayout() });
 
 createServer(async (request, response) => {
   response.setHeader("Content-Type", "application/json");
   response.setHeader("Cache-Control", "no-store");
+  // `?view=dashboard` selects the lean payload the dashboard draws; scripts and
+  // benchmarks keep the full snapshot.
+  const [path, query = ""] = (request.url ?? "").split("?");
+  const state = () => new URLSearchParams(query).get("view") === "dashboard" ? dashboardView(fullState()) : fullState();
   try {
-    if (request.method === "GET" && request.url === "/state") {
+    if (request.method === "GET" && path === "/state") {
       response.end(JSON.stringify(state())); return;
     }
-    if (request.method === "POST" && request.url === "/command") {
+    if (request.method === "POST" && path === "/command") {
       let body = "";
       for await (const chunk of request) { body += chunk; if (body.length > 16384) throw new Error("Command too long"); }
       const command = JSON.parse(body) as ({ kind: string } & Record<string, unknown> & Partial<Omit<RuntimeCommand, "kind">>);
@@ -53,8 +58,8 @@ createServer(async (request, response) => {
 
       if (command.kind === "reconfigure") {
         const { robots, shelfColumns, orderStream } = command as Reconfigure;
-        if (robots !== undefined && (!Number.isInteger(robots) || (robots as number) < 1 || (robots as number) > 20)) {
-          throw new Error("robots must be an integer 1..20");
+        if (robots !== undefined && (!Number.isInteger(robots) || (robots as number) < 1 || (robots as number) > MAX_FLEET_ROBOTS)) {
+          throw new Error(`robots must be an integer 1..${MAX_FLEET_ROBOTS}`);
         }
         if (shelfColumns !== undefined && (!Number.isInteger(shelfColumns) || (shelfColumns as number) < 0 || (shelfColumns as number) > 6)) {
           throw new Error("shelfColumns must be an integer 0..6");

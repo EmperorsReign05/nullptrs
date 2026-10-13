@@ -4,6 +4,7 @@ import React from 'react';
 import { BatteryFull, BatteryMedium, BatteryLow } from 'lucide-react';
 import type { RobotState } from '@/core/types';
 import { getRobotColor } from './types';
+import { RollingText, formatBattery } from './RollingText';
 
 interface FleetStatusProps {
   robots: RobotState[];
@@ -19,7 +20,7 @@ export function FleetStatus({ robots, selectedRobotId, onSelectRobot }: FleetSta
       <div className="h-12 px-5 border-b border-white/10 flex justify-between items-center bg-white/[0.03] backdrop-blur-sm shrink-0">
         <h3 className="text-sm font-semibold tracking-wide text-zinc-100">fleet status</h3>
         <span className="text-xs text-zinc-300">
-          active: <span className="text-[#C9F27D] font-semibold">{onlineCount} / {robots.length}</span>
+          active: <RollingText className="text-[#C9F27D] font-semibold" value={`${onlineCount} / ${robots.length}`} />
         </span>
       </div>
       <div className="p-2 flex flex-col gap-1 overflow-y-auto max-h-[580px]">
@@ -57,13 +58,13 @@ export function FleetStatus({ robots, selectedRobotId, onSelectRobot }: FleetSta
                   </div>
                   <div className="text-[12px] text-zinc-300 mt-0.5 flex items-center gap-1.5">
                     {r.status === 'moving' && <span className="w-1.5 h-1.5 rounded-full bg-[#C9F27D] animate-pulse"></span>}
-                    {r.status === 'failed' ? <span className="text-[#F87171] font-bold">failed</span> : r.status}
+                    <RollingText className={r.status === 'failed' ? 'text-[#F87171] font-bold' : undefined} value={r.status} />
                   </div>
                 </div>
               </div>
               <div className="flex flex-col items-end gap-1 font-mono font-medium">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[13px] text-[#E6E9EF]">{r.battery}%</span>
+                  <RollingText className="text-[13px] text-[#E6E9EF] tabular-nums" value={formatBattery(r.battery)} />
                   {r.battery > 70 ? (
                     <BatteryFull size={16} className={batteryTextColor} strokeWidth={2} />
                   ) : r.battery > 30 ? (

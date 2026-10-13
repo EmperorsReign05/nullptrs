@@ -135,6 +135,19 @@ describe("order stream", () => {
     expect(runtime.world.tasks.length).toBeGreaterThan(0);
   });
 
+  it("holds back when the fleet is saturated, and never releases the backlog as a burst", () => {
+    // Unbounded, the stream piled up ~480 jobs in ten minutes against ~50
+    // completions with three robots, and the dashboard polled all of them.
+    const book = new OrderBook(runtime, 0x5EED, { maxOutstanding: 6 });
+    for (let i = 0; i < 60; i++) { runtime.world.tick += RELEASE_INTERVAL_TICKS; book.releaseDue(); }
+    expect(runtime.world.tasks).toHaveLength(6);
+    expect(book.stats().held).toBeGreaterThan(40);
+    // Capacity frees up: at most one new job per release slot, not the backlog.
+    for (const t of runtime.world.tasks.slice(0, 3)) t.status = "completed";
+    runtime.world.tick += RELEASE_INTERVAL_TICKS; book.releaseDue();
+    expect(runtime.world.tasks.filter((t) => t.status !== "completed")).toHaveLength(4);
+  });
+
   it("offers a heavy job so the payload eligibility gate is demonstrable", () => {
     const book = new OrderBook(runtime);
     for (let i = 0; i < 40; i++) { runtime.world.tick += RELEASE_INTERVAL_TICKS; book.releaseDue(); }
@@ -197,6 +210,21 @@ describe("the /api/fleet adapter", () => {
     expect(cell?.blocked).toBe(true);
   });
 
+  it("serves the dashboard a lean payload with exact totals and the real layout", async () => {
+    const { GET, POST } = await import("../src/app/api/fleet/route");
+    await POST(new Request("http://local/api/fleet", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ kind: "reconfigure", robots: 4, shelfColumns: 3 }),
+    }));
+    const body = await (await GET()).json();
+    expect(body.ownership).toBeUndefined();
+    expect(body.charging).toBeUndefined();
+    expect(body.events.length).toBeLessThanOrEqual(20);
+    expect(body.taskTotals.total).toBeGreaterThanOrEqual(body.world.tasks.length);
+    expect(body.layout).toEqual({ robots: 4, shelfColumns: 3, maxRobots: createInitialWorld().robots.length });
+    expect(body.motionHistory.length).toBeGreaterThan(0);
+  });
+
   it("Reset rebuilds a world even when the requested fleet size is unchanged", async () => {
     const { GET, POST } = await import("../src/app/api/fleet/route");
     const before = await (await GET()).json();
@@ -236,7 +264,8 @@ describe("the /api/fleet adapter", () => {
     // The runtime's own `command` silently ignores an unrecognised kind, so the
     // in-process path used to answer 200 to garbage while the proxied path
     // answered 400. Both topologies must reject the same things.
-    for (const bad of [{ kind: "reconfigure", robots: 0 }, { kind: "reconfigure", robots: 99 }, { kind: "reconfigure", shelfColumns: 12 }, { kind: "nonsense" }, {}]) {
+    // 11..20 used to be accepted and silently built a ten-robot fleet.
+    for (const bad of [{ kind: "reconfigure", robots: 0 }, { kind: "reconfigure", robots: 11 }, { kind: "reconfigure", robots: 99 }, { kind: "reconfigure", shelfColumns: 12 }, { kind: "nonsense" }, {}]) {
       const response = await POST(new Request("http://local/api/fleet", {
         method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(bad),
       }));

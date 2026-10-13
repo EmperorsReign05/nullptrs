@@ -15,7 +15,8 @@
 // discard command state and make robot markers jump to unrelated positions.
 //
 // The runtime URL is server configuration, never client input.
-import { reconfigureFleet, fleetOrderBook, fleetService, stepIfDue } from "@/server/fleet-service";
+import { reconfigureFleet, fleetLayout, fleetOrderBook, fleetService, stepIfDue, MAX_FLEET_ROBOTS } from "@/server/fleet-service";
+import { dashboardView } from "@/server/dashboard-view";
 import type { RuntimeCommand } from "@/core/distributed/runtime";
 
 export const runtime = "nodejs";
@@ -30,14 +31,15 @@ function localState(topology: "in-process" | "external"): Snapshot {
   // interval may not have run. Catch up before answering, otherwise a frozen
   // instance serves a permanently stale frame.
   stepIfDue();
-  return { ...fleetService().snapshot(), orderStream: fleetOrderBook().stats(), topology };
+  return dashboardView({ ...fleetService().snapshot(), orderStream: fleetOrderBook().stats(), layout: fleetLayout(), topology });
 }
 
 async function proxy(method: "GET" | "POST", body?: string): Promise<Response> {
   const base = process.env.FLEET_URL;
   if (base) {
     try {
-      const upstream = await fetch(`${base}/${method === "GET" ? "state" : "command"}`, {
+      // `view=dashboard` asks the runtime for the lean payload this page draws.
+      const upstream = await fetch(`${base}/${method === "GET" ? "state" : "command"}?view=dashboard`, {
         method,
         body,
         cache: "no-store",
@@ -87,8 +89,8 @@ async function proxy(method: "GET" | "POST", body?: string): Promise<Response> {
       fleetOrderBook().setEnabled(payload.on);
     } else if (payload.kind === "reconfigure") {
       const { robots, shelfColumns, orderStream } = payload;
-      if (robots !== undefined && (!Number.isInteger(robots) || (robots as number) < 1 || (robots as number) > 20)) {
-        return Response.json({ error: "robots must be an integer 1..20" }, { status: 400 });
+      if (robots !== undefined && (!Number.isInteger(robots) || (robots as number) < 1 || (robots as number) > MAX_FLEET_ROBOTS)) {
+        return Response.json({ error: `robots must be an integer 1..${MAX_FLEET_ROBOTS}` }, { status: 400 });
       }
       if (shelfColumns !== undefined && (!Number.isInteger(shelfColumns) || (shelfColumns as number) < 0 || (shelfColumns as number) > 6)) {
         return Response.json({ error: "shelfColumns must be an integer 0..6" }, { status: 400 });

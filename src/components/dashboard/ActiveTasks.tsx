@@ -3,6 +3,7 @@
 import React from 'react';
 import type { Task, RobotState } from '@/core/types';
 import { getRobotColor } from './types';
+import { RollingText } from './RollingText';
 
 interface ActiveTasksProps {
   tasks: Task[];
@@ -20,20 +21,28 @@ interface ActiveTasksProps {
   awaitingAuction?: readonly string[];
 }
 
+/** Live work first, then waiting work, then the most recent completions. */
+const ORDER: Record<Task['status'], number> = { in_progress: 0, assigned: 1, pending: 2, completed: 3 };
+/** Rows rendered at once. Polled 4x a second, an unbounded list re-rendered every job ever announced. */
+const MAX_ROWS = 40;
+
 export function ActiveTasks({ tasks, robots, awaitingAuction }: ActiveTasksProps) {
   const activeCount = tasks.filter(t => t.status !== 'pending' && t.status !== 'completed').length;
   const awaiting = new Set(awaitingAuction ?? []);
+  const ordered = [...tasks].sort((a, b) => ORDER[a.status] - ORDER[b.status] ||
+    (a.status === 'completed' ? b.createdAt - a.createdAt : a.createdAt - b.createdAt));
+  const shown = ordered.slice(0, MAX_ROWS);
 
   return (
     <div className="bg-[#12161F]/35 backdrop-blur-xl rounded-xl border border-white/10 flex flex-col shrink-0 shadow-xl overflow-hidden">
       <div className="h-12 px-5 border-b border-white/10 flex justify-between items-center bg-white/[0.03] backdrop-blur-sm">
         <h3 className="text-sm font-semibold tracking-wide text-zinc-100">active tasks</h3>
         <span className="text-xs text-zinc-300">
-          active: <span className="text-[#C9F27D] font-semibold">{activeCount}</span>
+          active: <RollingText className="text-[#C9F27D] font-semibold" value={activeCount} />
         </span>
       </div>
       <div className="p-2 flex flex-col max-h-[220px] overflow-y-auto divide-y divide-white/[0.06]">
-        {tasks.map((t) => {
+        {shown.map((t) => {
           const robotColor = t.assignedRobotId
             ? getRobotColor(t.assignedRobotId)
             : '#545C6B';
@@ -51,7 +60,7 @@ export function ActiveTasks({ tasks, robots, awaitingAuction }: ActiveTasksProps
                   <span className="text-[12px] text-[#A8B2C4]">({t.pickup.x},{t.pickup.y}) → ({t.dropoff.x},{t.dropoff.y})</span>
                 </div>
                 <div className="text-[12px] font-bold tracking-wider" style={{ color: robotColor }}>
-                  {t.assignedRobotId ?? (awaiting.has(t.id) ? 'awaiting auction' : 'unassigned')}
+                  <RollingText value={t.assignedRobotId ?? (awaiting.has(t.id) ? 'awaiting auction' : 'unassigned')} />
                 </div>
               </div>
               
@@ -86,6 +95,11 @@ export function ActiveTasks({ tasks, robots, awaitingAuction }: ActiveTasksProps
             </div>
           );
         })}
+        {ordered.length > shown.length && (
+          <div className="px-4 py-2 text-[11px] font-mono text-zinc-400">
+            <RollingText value={`+${ordered.length - shown.length} more queued`} />
+          </div>
+        )}
       </div>
     </div>
   );
